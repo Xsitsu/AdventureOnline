@@ -1,0 +1,11 @@
+allegro
+allegro.log
+
+*.o
+*.exe
+*.dll
+*.a
+*.def
+*.layout
+
+Makefile

@@ -1,0 +1,42 @@
+# depslib dependency file v1.0
+1485922180 source:c:\users\jacob\documents\github\adventure online\server\clientconnection.cpp
+	"clientconnection.hpp"
+	<iostream>
+
+1485922036 c:\users\jacob\documents\github\adventure online\server\clientconnection.hpp
+	<ctime>
+	<list>
+	"GameShared/socket.hpp"
+	"GameShared/packet.hpp"
+	"server.hpp"
+
+1485671105 c:\users\jacob\documents\github\adventure online\gameshared\socket.hpp
+	"main.h"
+	<winsock2.h>
+	<sys/socket.h>
+	<netinet/in.h>
+	<fcntl.h>
+
+1485535155 c:\users\jacob\documents\github\adventure online\gameshared\main.h
+	<windows.h>
+
+1485819208 c:\users\jacob\documents\github\adventure online\gameshared\packet.hpp
+	"main.h"
+	<stdint.h>
+	"socket.hpp"
+
+1485896788 c:\users\jacob\documents\github\adventure online\server\server.hpp
+	<unordered_map>
+	"GameShared/socket.hpp"
+	"GameShared/packet.hpp"
+	"clientconnection.hpp"
+
+1485896788 source:c:\users\jacob\documents\github\adventure online\server\main.cpp
+	<iostream>
+	"GameShared/socket.hpp"
+	"server.hpp"
+
+1485896788 source:c:\users\jacob\documents\github\adventure online\server\server.cpp
+	"server.hpp"
+	<iostream>
+
