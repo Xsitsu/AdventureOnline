@@ -15,7 +15,7 @@ class Server;
 class ClientConnection
 {
 protected:
-    unsigned long int connection_id;
+    unsigned int connection_id;
     unsigned int packet_sequence;
 
     PacketAckList ack_list;
@@ -25,12 +25,12 @@ protected:
     Server* server;
 
 public:
-    ClientConnection(Server* server, Address address, unsigned long int connection_id);
+    ClientConnection(Server* server, Address address, unsigned int connection_id);
 
     void SendPacket(PacketBase* packet);
     void ProcessPacket(PacketBase* packet);
 
-    unsigned long int GetConnectionId() { return this->connection_id; }
+    unsigned int GetConnectionId() { return this->connection_id; }
 
     void TickPacketAcks();
 

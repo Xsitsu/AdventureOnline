@@ -13,7 +13,7 @@ class Client
 protected:
     bool is_connected;
 
-    unsigned long int connection_id;
+    unsigned int connection_id;
     unsigned int packet_sequence;
 
     unsigned short listen_port;

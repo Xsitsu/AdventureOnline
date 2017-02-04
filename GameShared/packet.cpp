@@ -25,7 +25,7 @@ unsigned int PacketBase::Encode(char* buffer)
     this->buffer_pos = 0;
     reader.WriteInt(buffer, this->buffer_pos, PacketBase::PACKET_PREFIX);
     reader.WritePacketType(buffer, this->buffer_pos, this->type);
-    reader.WriteLongInt(buffer, this->buffer_pos, this->connection_id);
+    reader.WriteInt(buffer, this->buffer_pos, this->connection_id);
     reader.WriteInt(buffer, this->buffer_pos, this->sequence);
     reader.WriteInt(buffer, this->buffer_pos, this->ack);
     reader.WriteInt(buffer, this->buffer_pos, this->ack_bitfield);
@@ -40,7 +40,7 @@ void PacketBase::Decode(char* buffer)
     this->buffer_pos = 0;
     reader.ReadInt(buffer, this->buffer_pos);
     reader.ReadPacketType(buffer, this->buffer_pos);
-    this->connection_id = reader.ReadLongInt(buffer, this->buffer_pos);
+    this->connection_id = reader.ReadInt(buffer, this->buffer_pos);
     this->sequence = reader.ReadInt(buffer, this->buffer_pos);
     this->ack = reader.ReadInt(buffer, this->buffer_pos);
     this->ack_bitfield = reader.ReadInt(buffer, this->buffer_pos);

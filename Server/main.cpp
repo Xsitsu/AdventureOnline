@@ -11,7 +11,7 @@ int main(int argc, char** argv)
     InitializeSockets();
 
     const short port = 50000;
-    Server server(port);
+    Server server(port, 2);
     server.Init();
 
     std::cout << "Server started." << std::endl

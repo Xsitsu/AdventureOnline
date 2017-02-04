@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-ClientConnection::ClientConnection(Server* server, Address address, unsigned long int connection_id) :
+ClientConnection::ClientConnection(Server* server, Address address, unsigned int connection_id) :
     server(server), client_address(address), connection_id(connection_id), packet_sequence(0)
 {
 
