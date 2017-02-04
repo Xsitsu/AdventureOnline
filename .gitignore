@@ -7,5 +7,6 @@ allegro.log
 *.a
 *.def
 *.layout
+*.depend
 
 Makefile
