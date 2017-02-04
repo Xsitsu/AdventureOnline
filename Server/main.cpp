@@ -1,5 +1,7 @@
 #include <iostream>
 
+#include <exception>
+
 #include "GameShared/socket.hpp"
 
 #include "server.hpp"

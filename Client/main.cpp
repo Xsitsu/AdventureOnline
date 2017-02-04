@@ -41,8 +41,8 @@ int main(int argc, char** argv)
 	InitializeSockets();
 
 	unsigned short listen_port = 50000;
-	//Client client(Address(127, 0, 0, 1, 50000));
-    Client client(Address(104,255,231,252, 50000));
+	Client client(Address(127, 0, 0, 1, 50000));
+    //Client client(Address(104,255,231,252, 50000));
 
 	while (!client.Init(listen_port))
     {
