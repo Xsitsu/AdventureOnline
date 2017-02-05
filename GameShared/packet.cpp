@@ -15,7 +15,10 @@ const unsigned int PacketBase::PACKET_PREFIX = data;
 PacketBase::PacketBase() : type(PacketBase::PACKET_UNKNOWN)
 {}
 
-PacketBase::PacketBase(PacketBase::PacketType type) : type(type)
+PacketBase::PacketBase(PacketBase::PacketType type) : type(type), needs_ack(true)
+{}
+
+PacketBase::PacketBase(PacketBase::PacketType type, bool needs_ack) : type(type), needs_ack(needs_ack)
 {}
 
 unsigned int PacketBase::Encode(char* buffer)
@@ -181,11 +184,6 @@ void PacketInit::Decode(char* buffer)
 PacketInitResponse::PacketInitResponse() : PacketBase(PacketBase::PACKET_INIT_RESPONSE), assigned_connection_id(0)
 {}
 
-void PacketInitResponse::AssignConnectionId(unsigned long int id)
-{
-    this->assigned_connection_id = id;
-}
-
 unsigned int PacketInitResponse::Encode(char* buffer)
 {
     PacketBase::Encode(buffer);
@@ -205,7 +203,7 @@ void PacketInitResponse::Decode(char* buffer)
 PacketDisconnect::PacketDisconnect() : PacketBase(PacketBase::PACKET_DISCONNECT)
 {}
 
-PacketDisconnectResponse::PacketDisconnectResponse() : PacketBase(PacketBase::PACKET_DISCONNECT_RESPONSE)
+PacketDisconnectResponse::PacketDisconnectResponse() : PacketBase(PacketBase::PACKET_DISCONNECT_RESPONSE, false)
 {}
 
 PacketPing::PacketPing() : PacketBase(PacketBase::PACKET_PING)
