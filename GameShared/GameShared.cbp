@@ -58,6 +58,8 @@
 		<Unit filename="main.h" />
 		<Unit filename="packet.cpp" />
 		<Unit filename="packet.hpp" />
+		<Unit filename="packetacklist.cpp" />
+		<Unit filename="packetacklist.hpp" />
 		<Unit filename="socket.cpp" />
 		<Unit filename="socket.hpp" />
 		<Extensions>
