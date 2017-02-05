@@ -26,9 +26,11 @@ public:
 protected:
     unsigned int buffer_pos;
 
+    bool needs_ack;
+
 protected: // Packet Data
     PacketType type;
-    unsigned long int connection_id;
+    unsigned int connection_id;
     unsigned int sequence;
     unsigned int ack;
     unsigned int ack_bitfield;
@@ -36,24 +38,31 @@ protected: // Packet Data
 public:
     PacketBase();
     PacketBase(PacketType type);
+    PacketBase(PacketType type, bool needs_ack);
     virtual ~PacketBase() {}
 
     virtual unsigned int Encode(char* buffer);
     virtual void Decode(char* buffer);
 
     PacketType GetType() { return this->type; }
-    unsigned long int GetConnectionId() { return this->connection_id; }
+    unsigned int GetConnectionId() { return this->connection_id; }
     unsigned int GetSequence() { return this->sequence; }
     unsigned int GetAck() { return this->ack; }
     unsigned int GetAckBitfield() { return this->ack_bitfield; }
 
-    void SetConnectionId(unsigned long int connection_id) { this->connection_id = connection_id; }
+    void SetConnectionId(unsigned int connection_id) { this->connection_id = connection_id; }
     void SetSequence(unsigned int sequence) { this->sequence = sequence; }
     void SetAck(unsigned int ack) { this->ack = ack; }
     void SetAckBitfield(unsigned int ack_bitfield) { this->ack_bitfield = ack_bitfield; }
+
+
+    bool GetNeedsAck() { return this->needs_ack; }
+    bool SetNeedsAck() { return this->needs_ack; }
+
 };
 
 
+// This is named PacketReader, but it actually handles both reading and writing of packets.
 class DLL_EXPORT PacketReader
 {
 protected:
@@ -96,15 +105,16 @@ public:
     void SetListenPort(unsigned short listen_port) { this->listen_port = listen_port; }
 };
 
+// PacketInitResponse
 class DLL_EXPORT PacketInitResponse : public PacketBase
 {
 protected:
-    unsigned long int assigned_connection_id;
+    unsigned int assigned_connection_id;
 
 public:
     PacketInitResponse();
-    void AssignConnectionId(unsigned long int id);
-    unsigned long int GetAssignedConnectionId() {return this->assigned_connection_id; }
+    void AssignConnectionId(unsigned int id) { this->assigned_connection_id = id; }
+    unsigned int GetAssignedConnectionId() {return this->assigned_connection_id; }
 
     virtual unsigned int Encode(char* buffer);
     virtual void Decode(char* buffer);
@@ -127,7 +137,6 @@ protected:
 public:
     PacketDisconnectResponse();
 };
-
 
 // PacketPing
 class DLL_EXPORT PacketPing : public PacketBase

@@ -3,7 +3,7 @@
 #include <iostream>
 
 Client::Client(Address address) : is_connected(false), server_address(address),
-connection_id(0), packet_sequence(0), packet_ack(0), packet_ack_bitfield(0)
+connection_id(0), packet_sequence(0)
 {}
 
 bool Client::Init(unsigned short listen_port)
@@ -87,10 +87,10 @@ void Client::InternalSendPacket(PacketBase* packet)
 {
     packet->SetConnectionId(this->connection_id);
     packet->SetSequence(this->packet_sequence++);
-    packet->SetAck(this->packet_ack);
-    packet->SetAckBitfield(this->packet_ack_bitfield);
+    packet->SetAck(this->ack_list.GetPacketAck());
+    packet->SetAckBitfield(this->ack_list.GetPacketAckBitfield());
 
-    this->packet_ack_list.push_back(PacketAck(packet, std::time(NULL)));
+    this->ack_list.RegisterPacket(packet);
 
     char buffer[PacketBase::MAX_BUFFER];
     unsigned int data_size = packet->Encode(buffer);
@@ -123,8 +123,8 @@ PacketBase* Client::InternalReceivePacket()
             {
                 reading = false;
 
-                this->UpdatePacketAck(packet->GetSequence());
-                this->ConfirmPacketAcks(packet->GetAck(), packet->GetAckBitfield());
+                this->ack_list.UpdatePacketAck(packet->GetSequence());
+                this->ack_list.ConfirmPacketAcks(packet->GetAck(), packet->GetAckBitfield());
             }
             else
             {
@@ -140,68 +140,6 @@ PacketBase* Client::InternalReceivePacket()
     }
 
     return packet;
-}
-
-// Update the clients current ack number from a received packet.
-void Client::UpdatePacketAck(unsigned int sequence)
-{
-    std::cout << "Ack'ing packet: " << sequence << std::endl;
-
-    long int diff = (long int)sequence - (long int)this->packet_ack;
-    this->packet_ack = sequence;
-    if (diff > 0)
-    {
-        unsigned int bitfield = this->packet_ack_bitfield << 1;
-        bitfield | 1;
-        bitfield << (diff - 1);
-
-        this->packet_ack_bitfield = bitfield;
-    }
-    else if (diff < 0)
-    {
-        unsigned int bitfield_adder = 1 << ((-diff) - 1);
-        this->packet_ack_bitfield = this->packet_ack_bitfield | bitfield_adder;
-    }
-}
-
-// Update client's packet ack list from the ack and ack bitfield from a received packet.
-void Client::ConfirmPacketAcks(unsigned int ack, unsigned int ack_bitfield)
-{
-    std::cout << "Packet was ack'd: " << ack << std::endl;
-
-    if (!this->packet_ack_list.empty())
-    {
-        ack_iter iter = this->packet_ack_list.begin();
-
-        //for(first; first!=last; ++first)
-        while (iter != this->packet_ack_list.end())
-        {
-            unsigned int check_sequence = (*iter).packet->GetSequence();
-            long int diff = (long int)ack - (long int)check_sequence;
-
-            bool was_acked = false;
-            if (diff == 0)
-            {
-                was_acked = true;
-            }
-            else if (diff > 0)
-            {
-                long int shift = diff - 1;
-                was_acked = (((ack_bitfield >> shift) & 1) == 1);
-            }
-
-            if (was_acked)
-            {
-                delete (*iter).packet;
-                ack_iter del_index = iter++;
-                this->packet_ack_list.erase(del_index);
-            }
-            else
-            {
-                ++iter;
-            }
-        }
-    }
 }
 
 void Client::SendPacket(PacketBase* packet)
@@ -223,32 +161,10 @@ PacketBase* Client::ReceivePacket()
 
 void Client::TickPacketAcks()
 {
-    if (!this->packet_ack_list.empty())
+    std::list<PacketBase*> resend_list = this->ack_list.TickPacketAcks();
+    while (!resend_list.empty())
     {
-        std::time_t cur_time = std::time(NULL);
-
-        ack_iter first = this->packet_ack_list.begin();
-
-        unsigned int resend_packet_count = 0;
-        for(first; first!=this->packet_ack_list.end(); ++first)
-        {
-            std::time_t diff = cur_time - (*first).send_time;
-            if (diff > 1)
-            {
-                std::cout << "Didn't receive ack. Resending packet!" << std::endl;
-                resend_packet_count++;
-
-                this->InternalSendPacket((*first).packet);
-            }
-            else
-            {
-                break;
-            }
-        }
-
-        for (unsigned int i = 0; i < resend_packet_count; i++)
-        {
-            this->packet_ack_list.pop_front();
-        }
+        this->InternalSendPacket(resend_list.front());
+        resend_list.pop_front();
     }
 }
