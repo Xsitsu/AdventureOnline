@@ -3,7 +3,9 @@
 
 #include <string>
 
-struct Vector2
+#include "main.h"
+
+struct DLL_EXPORT Vector2
 {
     int x;
     int y;
