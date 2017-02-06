@@ -54,8 +54,8 @@ void Game::Init()
 
 
 	// Initialize game state stuff
-    state = new GameStateInit(this);
-    state->Enter();
+    this->state = new GameStateInit(this);
+    this->state->Enter();
 }
 
 void Game::Run()

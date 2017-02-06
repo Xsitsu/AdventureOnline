@@ -1,5 +1,5 @@
-#ifndef GAMESTATE_HPP_DEFINE
-#define GAMESTATE_HPP_DEFINE
+#ifndef GAMESTATE_HPP_INCLUDE
+#define GAMESTATE_HPP_INCLUDE
 
 #include <iostream>
 #include <string>
@@ -58,4 +58,4 @@ public:
     virtual std::string GetStateName() { return "Title"; }
 };
 
-#endif // GAMESTATE_HPP_DEFINE
+#endif // GAMESTATE_HPP_INCLUDE
