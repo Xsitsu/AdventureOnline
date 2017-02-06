@@ -13,6 +13,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add option="-D_DEBUG" />
 				</Compiler>
 				<Linker>
 					<Add library="../allegro/lib/liballegro-5.0.10-monolith-md-debug.a" />
@@ -41,6 +42,10 @@
 		</Compiler>
 		<Unit filename="client.cpp" />
 		<Unit filename="client.hpp" />
+		<Unit filename="game.cpp" />
+		<Unit filename="game.hpp" />
+		<Unit filename="gamestate.cpp" />
+		<Unit filename="gamestate.hpp" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
