@@ -22,52 +22,47 @@ struct DLL_EXPORT Vector2
         this->y = y;
     }
 
-    Vector2(Vector2& rhs)
+    Vector2(const Vector2& rhs)
     {
         this->x = rhs.x;
         this->y = rhs.y;
     }
 
-    Vector2& operator=(Vector2& rhs)
+    Vector2& operator=(const Vector2& rhs)
     {
         this->x = rhs.x;
         this->y = rhs.y;
         return *this;
     }
 
-    bool operator==(Vector2& rhs)
+    bool operator==(const Vector2& rhs)
     {
         return (this->x == rhs.x && this->y == rhs.y);
     }
 
-    bool operator!=(Vector2& rhs)
+    bool operator!=(const Vector2& rhs)
     {
         return !(*this == rhs);
     }
 
-    Vector2 operator+(Vector2& rhs)
+    Vector2 operator+(const Vector2& rhs)
     {
         return Vector2(this->x + rhs.x, this->y + rhs.y);
     }
 
-    Vector2 operator-(Vector2& rhs)
+    Vector2 operator-(const Vector2& rhs)
     {
         return Vector2(this->x - rhs.x, this->y - rhs.y);
     }
 
-    Vector2 operator*(int num)
+    Vector2 operator*(const int num)
     {
         return Vector2(this->x * num, this->y * num);
     }
 
-    Vector2 operator/(int num)
+    Vector2 operator/(const int num)
     {
         return Vector2(this->x / num, this->y / num);
-    }
-
-    std::string ToString()
-    {
-        return std::string(x) + "/" + y;
     }
 
 };
