@@ -21,12 +21,14 @@ protected:
 
     void UpdateAbsolutePosition();
 
+    void RenderChildren() const;
+
+public:
     GuiBase();
     GuiBase(Vector2 size);
     GuiBase(Vector2 size, Vector2 position);
-    ~GuiBase();
+    virtual ~GuiBase();
 
-public:
     Vector2 GetSize() const;
     Vector2 GetPosition() const;
 
@@ -37,10 +39,14 @@ public:
     void RemoveChild(GuiBase* child);
 
     GuiBase* GetParent() const;
+    std::list<GuiBase*> GetChildren() const;
 
     Vector2 GetAbsolutePosition() const;
+
+    virtual void Render() const = 0;
 };
 
 typedef std::list<GuiBase*>::iterator gui_child_iter;
+typedef std::list<GuiBase*>::const_iterator cgui_child_iter;
 
 #endif // GUIBASE_HPP_INCLUDE

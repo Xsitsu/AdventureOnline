@@ -37,6 +37,7 @@ void Game::Init()
     }
 
     al_install_keyboard();
+    al_init_primitives_addon();
     event_queue = al_create_event_queue();
     timer = al_create_timer(1.0 / 60);
 
