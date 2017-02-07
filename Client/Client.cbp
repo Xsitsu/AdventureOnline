@@ -46,6 +46,8 @@
 		<Unit filename="game.hpp" />
 		<Unit filename="gamestate.cpp" />
 		<Unit filename="gamestate.hpp" />
+		<Unit filename="guibase.cpp" />
+		<Unit filename="guibase.hpp" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
