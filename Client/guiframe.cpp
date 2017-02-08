@@ -2,13 +2,13 @@
 
 #include <iostream>
 
-GuiFrame::GuiFrame() : GuiBase(), is_filled(true), background_color(al_map_rgb(0, 0, 0))
+GuiFrame::GuiFrame() : GuiBase(), is_filled(true), background_color(Color3()), background_alpha(255), bg_draw_color(al_map_rgb(0, 0, 0))
 {}
 
-GuiFrame::GuiFrame(Vector2 size) : GuiBase(size), is_filled(true), background_color(al_map_rgb(0, 0, 0))
+GuiFrame::GuiFrame(Vector2 size) : GuiBase(size), is_filled(true), background_color(Color3()), background_alpha(255), bg_draw_color(al_map_rgb(0, 0, 0))
 {}
 
-GuiFrame::GuiFrame(Vector2 size, Vector2 position) : GuiBase(size, position), is_filled(true), background_color(al_map_rgb(0, 0, 0))
+GuiFrame::GuiFrame(Vector2 size, Vector2 position) : GuiBase(size, position), is_filled(true), background_color(Color3()), background_alpha(0), bg_draw_color(al_map_rgb(0, 0, 0))
 {}
 
 GuiFrame::~GuiFrame()
@@ -27,12 +27,13 @@ void GuiFrame::Draw() const
 
     if (this->is_filled)
     {
-        al_draw_filled_rectangle(pos_x, pos_y, size_x + pos_x, size_y + pos_y, this->background_color);
+        al_draw_filled_rectangle(pos_x, pos_y, size_x + pos_x, size_y + pos_y, this->bg_draw_color);
     }
     else
     {
-        al_draw_rectangle(pos_x, pos_y, size_x + pos_x, size_y + pos_y, this->background_color, 2);
+        al_draw_rectangle(pos_x, pos_y, size_x + pos_x, size_y + pos_y, this->bg_draw_color, 2);
     }
+
     this->DrawChildren();
 }
 
@@ -46,12 +47,30 @@ void GuiFrame::SetIsFilled(bool val)
     this->is_filled = val;
 }
 
-ALLEGRO_COLOR GuiFrame::GetBackgroundColor() const
+Color3 GuiFrame::GetBackgroundColor() const
 {
     return this->background_color;
 }
 
-void GuiFrame::SetBackgroundColor(ALLEGRO_COLOR color)
+void GuiFrame::SetBackgroundColor(Color3 color)
 {
     this->background_color = color;
+    this->UpdateBackgroundDrawColor();
+}
+
+unsigned char GuiFrame::GetBackgroundAlpha() const
+{
+    return this->background_alpha;
+}
+
+void GuiFrame::SetBackgroundAlpha(unsigned char trans)
+{
+    this->background_alpha = trans;
+    this->UpdateBackgroundDrawColor();
+}
+
+void GuiFrame::UpdateBackgroundDrawColor()
+{
+    Color3* color = &this->background_color;
+    this->bg_draw_color = al_map_rgba(color->x, color->y, color->z, this->background_alpha);
 }

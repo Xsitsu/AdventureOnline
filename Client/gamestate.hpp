@@ -11,6 +11,8 @@ class Game;
 #include "guiframe.hpp"
 #include "GameShared/vector2.hpp"
 
+#include "color3.hpp"
+
 class GameStateBase
 {
 protected:

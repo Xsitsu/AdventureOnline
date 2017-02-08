@@ -6,11 +6,18 @@
 
 #include "guibase.hpp"
 
+#include "color3.hpp"
+
 class GuiFrame : public GuiBase
 {
 protected:
     bool is_filled;
-    ALLEGRO_COLOR background_color;
+    Color3 background_color;
+    unsigned char background_alpha;
+
+    ALLEGRO_COLOR bg_draw_color;
+
+    void UpdateBackgroundDrawColor();
 
 public:
     GuiFrame();
@@ -23,8 +30,11 @@ public:
     bool GetIsFilled() const;
     void SetIsFilled(bool val);
 
-    ALLEGRO_COLOR GetBackgroundColor() const;
-    void SetBackgroundColor(ALLEGRO_COLOR color);
+    Color3 GetBackgroundColor() const;
+    void SetBackgroundColor(Color3 color);
+
+    unsigned char GetBackgroundAlpha() const;
+    void SetBackgroundAlpha(unsigned char trans);
 
 };
 

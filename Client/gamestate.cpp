@@ -33,11 +33,12 @@ void GameStateInit::Render()
 GameStateTitle::GameStateTitle(Game* game) : GameStateBase(game)
 {
     this->base_frame = new GuiFrame(Vector2(640 - 40, 480 - 40), Vector2(20, 20));
-    this->base_frame->SetBackgroundColor(al_map_rgb(100, 100, 100));
+    this->base_frame->SetBackgroundColor(Color3(255, 255, 255));
 
-    GuiFrame* frame = new GuiFrame(Vector2(20, 20), Vector2(10, 10));
+    GuiFrame* frame = new GuiFrame(Vector2(80, 80), Vector2(20, 20));
     this->base_frame->AddChild(frame);
-    frame->SetBackgroundColor(al_map_rgb(255, 20, 20));
+    frame->SetBackgroundColor(Color3(0, 0, 0));
+    frame->SetBackgroundAlpha(100);
 }
 
 GameStateTitle::~GameStateTitle()

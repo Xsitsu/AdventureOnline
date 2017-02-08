@@ -42,6 +42,7 @@
 		</Compiler>
 		<Unit filename="client.cpp" />
 		<Unit filename="client.hpp" />
+		<Unit filename="color3.hpp" />
 		<Unit filename="game.cpp" />
 		<Unit filename="game.hpp" />
 		<Unit filename="gamestate.cpp" />
