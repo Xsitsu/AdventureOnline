@@ -1,5 +1,7 @@
 #include "guiframe.hpp"
 
+#include <iostream>
+
 GuiFrame::GuiFrame() : GuiBase(), is_filled(true), background_color(al_map_rgb(0, 0, 0))
 {}
 
@@ -14,7 +16,7 @@ GuiFrame::~GuiFrame()
 
 }
 
-void GuiFrame::Render() const
+void GuiFrame::Draw() const
 {
     Vector2 absolute_position = this->GetAbsolutePosition();
     int pos_x, pos_y, size_x, size_y;
@@ -25,13 +27,13 @@ void GuiFrame::Render() const
 
     if (this->is_filled)
     {
-        al_draw_filled_rectangle(pos_x, pos_y, size_x, size_y, this->background_color);
+        al_draw_filled_rectangle(pos_x, pos_y, size_x + pos_x, size_y + pos_y, this->background_color);
     }
     else
     {
-        al_draw_rectangle(pos_x, pos_y, size_x, size_y, this->background_color, 2);
+        al_draw_rectangle(pos_x, pos_y, size_x + pos_x, size_y + pos_y, this->background_color, 2);
     }
-    this->RenderChildren();
+    this->DrawChildren();
 }
 
 bool GuiFrame::GetIsFilled() const

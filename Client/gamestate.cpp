@@ -31,7 +31,19 @@ void GameStateInit::Render()
 
 
 GameStateTitle::GameStateTitle(Game* game) : GameStateBase(game)
-{}
+{
+    this->base_frame = new GuiFrame(Vector2(640 - 40, 480 - 40), Vector2(20, 20));
+    this->base_frame->SetBackgroundColor(al_map_rgb(100, 100, 100));
+
+    GuiFrame* frame = new GuiFrame(Vector2(20, 20), Vector2(10, 10));
+    this->base_frame->AddChild(frame);
+    frame->SetBackgroundColor(al_map_rgb(255, 20, 20));
+}
+
+GameStateTitle::~GameStateTitle()
+{
+    delete this->base_frame;
+}
 
 void GameStateTitle::Enter()
 {
@@ -59,6 +71,5 @@ void GameStateTitle::Tick()
 
 void GameStateTitle::Render()
 {
-    al_clear_to_color(al_map_rgb(0, 0, 0));
-    al_flip_display();
+    this->base_frame->Draw();
 }

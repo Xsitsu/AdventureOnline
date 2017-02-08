@@ -18,7 +18,7 @@ public:
     GuiFrame(Vector2 size, Vector2 position);
     ~GuiFrame();
 
-    virtual void Render() const;
+    virtual void Draw() const;
 
     bool GetIsFilled() const;
     void SetIsFilled(bool val);

@@ -21,7 +21,7 @@ protected:
 
     void UpdateAbsolutePosition();
 
-    void RenderChildren() const;
+    void DrawChildren() const;
 
 public:
     GuiBase();
@@ -43,7 +43,7 @@ public:
 
     Vector2 GetAbsolutePosition() const;
 
-    virtual void Render() const = 0;
+    virtual void Draw() const = 0;
 };
 
 typedef std::list<GuiBase*>::iterator gui_child_iter;

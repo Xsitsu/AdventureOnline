@@ -96,7 +96,7 @@ Vector2 GuiBase::GetAbsolutePosition() const
     return this->absolute_position;
 }
 
-void GuiBase::RenderChildren() const
+void GuiBase::DrawChildren() const
 {
     if (!this->children.empty())
     {
@@ -105,7 +105,7 @@ void GuiBase::RenderChildren() const
 
         for (iter; iter != last; ++iter)
         {
-            (*iter)->Render();
+            (*iter)->Draw();
         }
     }
 }

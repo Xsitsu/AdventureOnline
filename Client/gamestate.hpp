@@ -8,6 +8,9 @@ class Game;
 
 #include "game.hpp"
 
+#include "guiframe.hpp"
+#include "GameShared/vector2.hpp"
+
 class GameStateBase
 {
 protected:
@@ -46,9 +49,11 @@ public:
 class GameStateTitle : public GameStateBase
 {
 protected:
+    GuiFrame* base_frame;
 
 public:
     GameStateTitle(Game* game);
+    ~GameStateTitle();
 
     virtual void Enter();
     virtual void Exit();
