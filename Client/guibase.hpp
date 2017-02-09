@@ -17,11 +17,15 @@ protected:
     GuiBase* parent;
     std::list<GuiBase*> children;
 
+    bool visible;
+
     void SetParent(GuiBase* parent);
 
     void UpdateAbsolutePosition();
 
     void DrawChildren() const;
+
+    virtual void DoDraw() const = 0;
 
 public:
     GuiBase();
@@ -31,9 +35,11 @@ public:
 
     Vector2 GetSize() const;
     Vector2 GetPosition() const;
+    bool GetVisible() const;
 
     void SetSize(const Vector2& size);
     void SetPosition(const Vector2& position);
+    void SetVisible(bool visible);
 
     void AddChild(GuiBase* child);
     void RemoveChild(GuiBase* child);
@@ -43,7 +49,7 @@ public:
 
     Vector2 GetAbsolutePosition() const;
 
-    virtual void Draw() const = 0;
+    void Draw() const;
 };
 
 typedef std::list<GuiBase*>::iterator gui_child_iter;

@@ -19,13 +19,13 @@ protected:
 
     void UpdateBackgroundDrawColor();
 
+    virtual void DoDraw() const;
+
 public:
     GuiFrame();
     GuiFrame(Vector2 size);
     GuiFrame(Vector2 size, Vector2 position);
-    ~GuiFrame();
-
-    virtual void Draw() const;
+    virtual ~GuiFrame();
 
     bool GetIsFilled() const;
     void SetIsFilled(bool val);

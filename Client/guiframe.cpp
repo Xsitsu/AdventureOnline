@@ -16,7 +16,7 @@ GuiFrame::~GuiFrame()
 
 }
 
-void GuiFrame::Draw() const
+void GuiFrame::DoDraw() const
 {
     Vector2 absolute_position = this->GetAbsolutePosition();
     int pos_x, pos_y, size_x, size_y;
@@ -72,5 +72,5 @@ void GuiFrame::SetBackgroundAlpha(unsigned char trans)
 void GuiFrame::UpdateBackgroundDrawColor()
 {
     Color3* color = &this->background_color;
-    this->bg_draw_color = al_map_rgba(color->x, color->y, color->z, this->background_alpha);
+    this->bg_draw_color = al_map_rgba(color->r, color->g, color->b, this->background_alpha);
 }

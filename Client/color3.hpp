@@ -3,25 +3,23 @@
 
 struct Color3
 {
-    unsigned char x;
-    unsigned char y;
-    unsigned char z;
+    unsigned char r;
+    unsigned char g;
+    unsigned char b;
 
-    Color3() : x(0), y(0), z(0) {}
-    Color3(unsigned char x, unsigned char y, unsigned char z) : x(x), y(y), z(z) {}
+    Color3() : r(0), g(0), b(0) {}
+    Color3(unsigned char r, unsigned char g, unsigned char b) : r(r), g(g), b(b) {}
     Color3& operator=(const Color3& rhs)
     {
-        this->x = rhs.x;
-        this->y = rhs.y;
-        this->z = rhs.z;
+        this->r = rhs.r;
+        this->g = rhs.g;
+        this->b = rhs.b;
     }
 
     bool operator==(const Color3& rhs)
     {
-        return (this->x == rhs.x && this->y == rhs.y && this->z == rhs.z);
+        return (this->r == rhs.r && this->g == rhs.g && this->b == rhs.b);
     }
-
-
 
 };
 

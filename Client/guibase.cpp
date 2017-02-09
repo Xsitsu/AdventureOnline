@@ -1,12 +1,12 @@
 #include "guibase.hpp"
 
-GuiBase::GuiBase() : size(Vector2()), position(Vector2()), absolute_position(Vector2())
+GuiBase::GuiBase() : size(Vector2()), position(Vector2()), absolute_position(Vector2()), visible(true)
 {}
 
-GuiBase::GuiBase(Vector2 size) : size(size), position(Vector2()), absolute_position(Vector2())
+GuiBase::GuiBase(Vector2 size) : size(size), position(Vector2()), absolute_position(Vector2()), visible(true)
 {}
 
-GuiBase::GuiBase(Vector2 size, Vector2 position) : size(size), position(position), absolute_position(position)
+GuiBase::GuiBase(Vector2 size, Vector2 position) : size(size), position(position), absolute_position(position), visible(true)
 {}
 
 GuiBase::~GuiBase()
@@ -28,6 +28,11 @@ Vector2 GuiBase::GetPosition() const
     return this->position;
 }
 
+bool GuiBase::GetVisible() const
+{
+    return this->visible;
+}
+
 void GuiBase::SetSize(const Vector2& size)
 {
     this->size = size;
@@ -37,6 +42,11 @@ void GuiBase::SetPosition(const Vector2& position)
 {
     this->position = position;
     this->UpdateAbsolutePosition();
+}
+
+void GuiBase::SetVisible(bool visible)
+{
+    this->visible = visible;
 }
 
 void GuiBase::AddChild(GuiBase* child)
@@ -107,5 +117,13 @@ void GuiBase::DrawChildren() const
         {
             (*iter)->Draw();
         }
+    }
+}
+
+void GuiBase::Draw() const
+{
+    if (this->visible)
+    {
+        this->DoDraw();
     }
 }
