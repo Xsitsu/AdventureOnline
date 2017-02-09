@@ -14,9 +14,11 @@ struct Color3
         this->r = rhs.r;
         this->g = rhs.g;
         this->b = rhs.b;
+
+        return *this;
     }
 
-    bool operator==(const Color3& rhs)
+    bool operator==(const Color3& rhs) const
     {
         return (this->r == rhs.r && this->g == rhs.g && this->b == rhs.b);
     }

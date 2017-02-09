@@ -50,6 +50,8 @@ public:
     Vector2 GetAbsolutePosition() const;
 
     void Draw() const;
+
+    bool PointIsInBounds(const Vector2& position) const;
 };
 
 typedef std::list<GuiBase*>::iterator gui_child_iter;

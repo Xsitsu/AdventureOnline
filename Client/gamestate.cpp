@@ -36,9 +36,14 @@ GameStateTitle::GameStateTitle(Game* game) : GameStateBase(game)
     this->base_frame->SetBackgroundColor(Color3(255, 255, 255));
 
     GuiFrame* frame = new GuiFrame(Vector2(80, 80), Vector2(20, 20));
-    this->base_frame->AddChild(frame);
     frame->SetBackgroundColor(Color3(0, 0, 0));
     frame->SetBackgroundAlpha(100);
+    this->base_frame->AddChild(frame);
+
+    GuiButton* button = new GuiButton(Vector2(200, 60), Vector2(20, 480 - 40 - 60 - 20));
+    button->SetBackgroundColor(Color3(235, 20, 20));
+    button->SetBackgroundAlpha(180);
+    this->base_frame->AddChild(button);
 }
 
 GameStateTitle::~GameStateTitle()

@@ -49,6 +49,8 @@
 		<Unit filename="gamestate.hpp" />
 		<Unit filename="guibase.cpp" />
 		<Unit filename="guibase.hpp" />
+		<Unit filename="guibutton.cpp" />
+		<Unit filename="guibutton.hpp" />
 		<Unit filename="guiframe.cpp" />
 		<Unit filename="guiframe.hpp" />
 		<Unit filename="main.cpp" />

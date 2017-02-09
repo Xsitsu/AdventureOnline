@@ -9,6 +9,7 @@ class Game;
 #include "game.hpp"
 
 #include "guiframe.hpp"
+#include "guibutton.hpp"
 #include "GameShared/vector2.hpp"
 
 #include "color3.hpp"

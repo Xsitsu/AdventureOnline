@@ -127,3 +127,10 @@ void GuiBase::Draw() const
         this->DoDraw();
     }
 }
+
+bool GuiBase::PointIsInBounds(const Vector2& position) const
+{
+    Vector2 bounds = this->absolute_position + this->size;
+    return (this->absolute_position.x <= position.x <= bounds.x) &&
+    (this->absolute_position.y <= position.y <= bounds.y);
+}
