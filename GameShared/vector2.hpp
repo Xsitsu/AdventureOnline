@@ -35,32 +35,32 @@ struct DLL_EXPORT Vector2
         return *this;
     }
 
-    bool operator==(const Vector2& rhs)
+    bool operator==(const Vector2& rhs) const
     {
         return (this->x == rhs.x && this->y == rhs.y);
     }
 
-    bool operator!=(const Vector2& rhs)
+    bool operator!=(const Vector2& rhs) const
     {
         return !(*this == rhs);
     }
 
-    Vector2 operator+(const Vector2& rhs)
+    Vector2 operator+(const Vector2& rhs) const
     {
         return Vector2(this->x + rhs.x, this->y + rhs.y);
     }
 
-    Vector2 operator-(const Vector2& rhs)
+    Vector2 operator-(const Vector2& rhs) const
     {
         return Vector2(this->x - rhs.x, this->y - rhs.y);
     }
 
-    Vector2 operator*(const int num)
+    Vector2 operator*(const int num) const
     {
         return Vector2(this->x * num, this->y * num);
     }
 
-    Vector2 operator/(const int num)
+    Vector2 operator/(const int num) const
     {
         return Vector2(this->x / num, this->y / num);
     }
