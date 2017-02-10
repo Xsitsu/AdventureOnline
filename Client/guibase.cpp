@@ -147,3 +147,13 @@ bool GuiBase::PointIsInBounds(const Vector2& position) const
     */
     return is_in_x_bounds && is_in_y_bounds;
 }
+
+bool GuiBase::HasAncestor(GuiBase* ancestor) const
+{
+    GuiBase* parent = this->parent;
+    while (parent != NULL)
+    {
+        if (parent == ancestor) return true;
+        parent = parent->GetParent();
+    }
+}

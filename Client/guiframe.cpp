@@ -63,9 +63,9 @@ unsigned char GuiFrame::GetBackgroundAlpha() const
     return this->background_alpha;
 }
 
-void GuiFrame::SetBackgroundAlpha(unsigned char trans)
+void GuiFrame::SetBackgroundAlpha(unsigned char alpha)
 {
-    this->background_alpha = trans;
+    this->background_alpha = alpha;
     this->UpdateBackgroundDrawColor();
 }
 

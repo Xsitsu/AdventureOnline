@@ -34,7 +34,7 @@ public:
     void SetBackgroundColor(Color3 color);
 
     unsigned char GetBackgroundAlpha() const;
-    void SetBackgroundAlpha(unsigned char trans);
+    void SetBackgroundAlpha(unsigned char alpha);
 
 };
 

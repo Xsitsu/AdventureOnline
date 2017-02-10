@@ -10,7 +10,7 @@ class Game;
 #include "game.hpp"
 
 #include "guiframe.hpp"
-#include "guibutton.hpp"
+#include "guitextbutton.hpp"
 #include "guiscreen.hpp"
 #include "GameShared/vector2.hpp"
 

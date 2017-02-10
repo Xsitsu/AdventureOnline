@@ -53,6 +53,8 @@ public:
     void Draw() const;
 
     bool PointIsInBounds(const Vector2& position) const;
+
+    bool HasAncestor(GuiBase* ancestor) const;
 };
 
 typedef std::list<GuiBase*>::iterator gui_child_iter;

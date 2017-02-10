@@ -18,13 +18,18 @@ public:
     GuiButton(Vector2 size, Vector2 position);
     virtual ~GuiButton();
 
-    void DoClick();
-    void DoMouseEnter();
-    void DoMouseLeave();
+    virtual void DoClick();
+    virtual void DoMouseEnter();
+    virtual void DoMouseLeave();
 
     SignalListener RegisterOnClick(signal_callback callback);
     SignalListener RegisterOnMouseEnter(signal_callback callback);
     SignalListener RegisterOnMouseLeave(signal_callback callback);
+};
+
+struct SignalArgsGuiButton : SignalArgs
+{
+    GuiButton* button;
 };
 
 #endif // GUIBUTTON_HPP_INCLUDE

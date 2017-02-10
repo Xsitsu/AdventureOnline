@@ -43,6 +43,8 @@
 		<Unit filename="client.cpp" />
 		<Unit filename="client.hpp" />
 		<Unit filename="color3.hpp" />
+		<Unit filename="fontservice.cpp" />
+		<Unit filename="fontservice.hpp" />
 		<Unit filename="game.cpp" />
 		<Unit filename="game.hpp" />
 		<Unit filename="gamestate.cpp" />
@@ -55,6 +57,8 @@
 		<Unit filename="guiframe.hpp" />
 		<Unit filename="guiscreen.cpp" />
 		<Unit filename="guiscreen.hpp" />
+		<Unit filename="guitextbutton.cpp" />
+		<Unit filename="guitextbutton.hpp" />
 		<Unit filename="inputservice.cpp" />
 		<Unit filename="inputservice.hpp" />
 		<Unit filename="main.cpp" />

@@ -13,8 +13,12 @@ class GuiScreen
 protected:
     GuiBase* base;
     std::list<GuiButton*> buttons;
+    GuiButton* current_mouse_hover_button;
 
     typedef std::list<GuiButton*>::iterator button_iter;
+
+    void RemoveButtonFromList(GuiButton* button);
+    GuiButton* FindButtonCoveringPoint(const Vector2& pos);
 
 public:
     GuiScreen(GuiBase* base);
@@ -23,6 +27,7 @@ public:
 
     bool HandleMouseDown(const Vector2& pos);
     bool HandleMouseUp(const Vector2& pos);
+    bool HandleMouseMove(const Vector2& pos);
 
     void Draw();
 };
