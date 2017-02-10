@@ -100,7 +100,7 @@ void GameStateTitle::Enter()
 
     button_list.push_back(button);
 
-    button->onClick.Connect(func);
+    button->RegisterOnClick(func);
 
     GuiScreen* screen = new GuiScreen(base_frame, button_list);
     this->game->PushScreen(screen);

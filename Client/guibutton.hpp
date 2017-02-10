@@ -8,6 +8,9 @@
 class GuiButton : public GuiFrame
 {
 protected:
+    Signal onClick;
+    Signal onMouseEnter;
+    Signal onMouseLeave;
 
 public:
     GuiButton();
@@ -16,8 +19,12 @@ public:
     virtual ~GuiButton();
 
     void DoClick();
+    void DoMouseEnter();
+    void DoMouseLeave();
 
-    Signal onClick;
+    SignalListener RegisterOnClick(signal_callback callback);
+    SignalListener RegisterOnMouseEnter(signal_callback callback);
+    SignalListener RegisterOnMouseLeave(signal_callback callback);
 };
 
 #endif // GUIBUTTON_HPP_INCLUDE
