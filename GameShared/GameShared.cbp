@@ -60,6 +60,8 @@
 		<Unit filename="packet.hpp" />
 		<Unit filename="packetacklist.cpp" />
 		<Unit filename="packetacklist.hpp" />
+		<Unit filename="signal.cpp" />
+		<Unit filename="signal.hpp" />
 		<Unit filename="socket.cpp" />
 		<Unit filename="socket.hpp" />
 		<Unit filename="vector2.hpp" />
