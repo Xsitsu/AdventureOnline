@@ -5,6 +5,13 @@ Signal::Signal()
 
 }
 
+SignalListener Signal::Connect(signal_callback callback)
+{
+    this->connected_funcs.push_back(callback);
+    SignalListener listener(this, callback);
+    return listener;
+}
+
 void Signal::Fire(SignalArgs* args)
 {
     callback_iter iter = this->connected_funcs.begin();

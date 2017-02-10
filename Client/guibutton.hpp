@@ -3,6 +3,8 @@
 
 #include "guiframe.hpp"
 
+#include "GameShared/signal.hpp"
+
 class GuiButton : public GuiFrame
 {
 protected:
@@ -15,6 +17,7 @@ public:
 
     void DoClick();
 
+    Signal onClick;
 };
 
 #endif // GUIBUTTON_HPP_INCLUDE

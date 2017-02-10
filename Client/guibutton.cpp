@@ -18,5 +18,5 @@ GuiButton::~GuiButton()
 
 void GuiButton::DoClick()
 {
-    std::cout << "Did click!" << std::endl;
+    this->onClick.Fire(NULL);
 }

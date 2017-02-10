@@ -65,6 +65,9 @@ GameStateTitle::~GameStateTitle()
 
 }
 
+void func(const SignalArgs* args)
+    { std::cout << "Got a click lol!" << std::endl; }
+
 void GameStateTitle::Enter()
 {
     this->game->display = al_create_display(640, 480);
@@ -96,6 +99,8 @@ void GameStateTitle::Enter()
     base_frame->AddChild(button);
 
     button_list.push_back(button);
+
+    button->onClick.Connect(func);
 
     GuiScreen* screen = new GuiScreen(base_frame, button_list);
     this->game->PushScreen(screen);

@@ -24,6 +24,9 @@ protected:
 
     void DisconnectFunction(signal_callback callback);
 
+    Signal(const Signal& copy) {}
+    Signal& operator=(const Signal& rhs) {}
+
 public:
     Signal();
 
