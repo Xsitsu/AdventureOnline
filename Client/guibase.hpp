@@ -2,6 +2,7 @@
 #define GUIBASE_HPP_INCLUDE
 
 #include <list>
+#include <iostream>
 
 #include "GameShared/vector2.hpp"
 

@@ -37,12 +37,14 @@ void Game::Init()
     }
 
     al_install_keyboard();
+    al_install_mouse();
     al_init_primitives_addon();
     event_queue = al_create_event_queue();
     timer = al_create_timer(1.0 / 60);
 
     al_register_event_source(event_queue, al_get_timer_event_source(timer));
 	al_register_event_source(event_queue, al_get_keyboard_event_source());
+	al_register_event_source(event_queue, al_get_mouse_event_source());
 
 
 	// Initialize client stuff
@@ -84,14 +86,23 @@ void Game::Run()
         }
         else if (ev.type == ALLEGRO_EVENT_KEY_DOWN)
         {
-            if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE)
-            {
-
-            }
+            this->state->HandleKeyDown(ev.keyboard);
         }
         else if (ev.type == ALLEGRO_EVENT_KEY_UP)
         {
-
+            this->state->HandleKeyUp(ev.keyboard);
+        }
+        else if (ev.type == ALLEGRO_EVENT_MOUSE_AXES)
+        {
+            this->state->HandleMouseMove(ev.mouse);
+        }
+        else if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)
+        {
+            this->state->HandleMouseDown(ev.mouse);
+        }
+        else if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP)
+        {
+            this->state->HandleMouseUp(ev.mouse);
         }
 
 
@@ -109,4 +120,34 @@ void Game::Run()
 
         }
     }
+}
+
+void Game::PushScreen(GuiScreen* screen)
+{
+    this->screen_stack.push_back(screen);
+}
+
+void Game::PopScreen()
+{
+    if (this->screen_stack.empty()) return;
+
+    GuiScreen* screen = this->screen_stack.back();
+    this->screen_stack.pop_back();
+    delete screen;
+}
+
+void Game::DrawScreens()
+{
+    screen_iter iter = this->screen_stack.begin();
+    for (iter; iter != this->screen_stack.end(); ++iter)
+    {
+        GuiScreen* screen = *iter;
+        screen->Draw();
+    }
+}
+
+GuiScreen* Game::GetCurrentScreen()
+{
+    if (this->screen_stack.empty()) return NULL;
+    return this->screen_stack.back();
 }

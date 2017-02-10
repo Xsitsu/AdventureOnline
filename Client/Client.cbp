@@ -53,6 +53,10 @@
 		<Unit filename="guibutton.hpp" />
 		<Unit filename="guiframe.cpp" />
 		<Unit filename="guiframe.hpp" />
+		<Unit filename="guiscreen.cpp" />
+		<Unit filename="guiscreen.hpp" />
+		<Unit filename="inputservice.cpp" />
+		<Unit filename="inputservice.hpp" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />

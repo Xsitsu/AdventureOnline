@@ -131,6 +131,19 @@ void GuiBase::Draw() const
 bool GuiBase::PointIsInBounds(const Vector2& position) const
 {
     Vector2 bounds = this->absolute_position + this->size;
-    return (this->absolute_position.x <= position.x <= bounds.x) &&
-    (this->absolute_position.y <= position.y <= bounds.y);
+
+    /*
+    std::cout << "Min: " << this->absolute_position.x << "/" << this->absolute_position.y << std::endl;
+    std::cout << "Max: " << bounds.x << "/" << bounds.y << std::endl;
+    std::cout << "Size: " << this->size.x << "/" << this->size.y << std::endl;
+    std::cout << "Check: " << position.x << "/" << position.y << std::endl;
+    */
+    bool is_in_x_bounds = (this->absolute_position.x <= position.x && position.x <= bounds.x);
+    bool is_in_y_bounds = (this->absolute_position.y <= position.y && position.y <= bounds.y);
+
+    /*
+    std::cout << "is_in_x_bounds: " << is_in_x_bounds << std::endl;
+    std::cout << "is_in_y_bounds: " << is_in_y_bounds << std::endl;
+    */
+    return is_in_x_bounds && is_in_y_bounds;
 }

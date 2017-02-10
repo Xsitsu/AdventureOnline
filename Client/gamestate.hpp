@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <list>
 
 class Game;
 
@@ -10,9 +11,12 @@ class Game;
 
 #include "guiframe.hpp"
 #include "guibutton.hpp"
+#include "guiscreen.hpp"
 #include "GameShared/vector2.hpp"
 
 #include "color3.hpp"
+
+#include "allegro5/allegro.h"
 
 class GameStateBase
 {
@@ -27,6 +31,12 @@ public:
     virtual void Exit() = 0;
     virtual void Tick() = 0;
     virtual void Render() = 0;
+
+    virtual void HandleKeyDown(const ALLEGRO_KEYBOARD_EVENT& keyboard) = 0;
+    virtual void HandleKeyUp(const ALLEGRO_KEYBOARD_EVENT& keyboard) = 0;
+    virtual void HandleMouseMove(const ALLEGRO_MOUSE_EVENT& mouse) = 0;
+    virtual void HandleMouseDown(const ALLEGRO_MOUSE_EVENT& mouse) = 0;
+    virtual void HandleMouseUp(const ALLEGRO_MOUSE_EVENT& mouse) = 0;
 
     virtual std::string GetStateName() = 0;
 };
@@ -45,6 +55,12 @@ public:
     virtual void Tick();
     virtual void Render();
 
+    virtual void HandleKeyDown(const ALLEGRO_KEYBOARD_EVENT& keyboard);
+    virtual void HandleKeyUp(const ALLEGRO_KEYBOARD_EVENT& keyboard);
+    virtual void HandleMouseMove(const ALLEGRO_MOUSE_EVENT& mouse);
+    virtual void HandleMouseDown(const ALLEGRO_MOUSE_EVENT& mouse);
+    virtual void HandleMouseUp(const ALLEGRO_MOUSE_EVENT& mouse);
+
     virtual std::string GetStateName() { return "Init"; }
 };
 
@@ -52,7 +68,6 @@ public:
 class GameStateTitle : public GameStateBase
 {
 protected:
-    GuiFrame* base_frame;
 
 public:
     GameStateTitle(Game* game);
@@ -62,6 +77,12 @@ public:
     virtual void Exit();
     virtual void Tick();
     virtual void Render();
+
+    virtual void HandleKeyDown(const ALLEGRO_KEYBOARD_EVENT& keyboard);
+    virtual void HandleKeyUp(const ALLEGRO_KEYBOARD_EVENT& keyboard);
+    virtual void HandleMouseMove(const ALLEGRO_MOUSE_EVENT& mouse);
+    virtual void HandleMouseDown(const ALLEGRO_MOUSE_EVENT& mouse);
+    virtual void HandleMouseUp(const ALLEGRO_MOUSE_EVENT& mouse);
 
     virtual std::string GetStateName() { return "Title"; }
 };

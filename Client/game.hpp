@@ -2,6 +2,7 @@
 #define GAME_HPP_INCLUDE
 
 #include <iostream>
+#include <stack>
 
 #include "allegro5/allegro.h"
 #include "allegro5/allegro_primitives.h"
@@ -11,6 +12,8 @@ class GameStateBase;
 #include "GameShared/packet.hpp"
 #include "client.hpp"
 #include "gamestate.hpp"
+
+#include "guiscreen.hpp"
 
 class Game
 {
@@ -29,6 +32,14 @@ protected:
     void ChangeState(GameStateBase* state);
 
     Client* client;
+
+    std::list<GuiScreen*> screen_stack;
+    typedef std::list<GuiScreen*>::iterator screen_iter;
+
+    void PushScreen(GuiScreen* screen);
+    void PopScreen();
+    void DrawScreens();
+    GuiScreen* GetCurrentScreen();
 
 public:
     Game();
