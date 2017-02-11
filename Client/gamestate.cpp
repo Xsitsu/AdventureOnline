@@ -102,6 +102,17 @@ void mouseLeaveFunc(const SignalArgs* args)
     }
 }
 
+void disallowNumFunc(const SignalArgs* args)
+{
+    if (const SignalArgsGuiTextBoxCharTyped* aargs = dynamic_cast<const SignalArgsGuiTextBoxCharTyped*>(args))
+    {
+        if (aargs->character >= '0' && aargs->character <= '9')
+        {
+            aargs->text_box->DoBackspace();
+        }
+    }
+}
+
 void GameStateTitle::Enter()
 {
     this->game->display = al_create_display(640, 480);
@@ -127,6 +138,7 @@ void GameStateTitle::Enter()
     button->SetBackgroundAlpha(180);
     button->SetText("Button 1");
     button->SetTextColor(Color3(255, 255, 0));
+    button->SetTextAlign(GuiTextButton::ALIGN_CENTER);
     button->RegisterOnClick(clickFunc);
     button->RegisterOnMouseEnter(mouseEnterFunc);
     button->RegisterOnMouseLeave(mouseLeaveFunc);
@@ -137,6 +149,7 @@ void GameStateTitle::Enter()
     button->SetBackgroundAlpha(180);
     button->SetText("Button 2");
     button->SetTextColor(Color3(255, 255, 0));
+    button->SetTextAlign(GuiTextButton::ALIGN_CENTER);
     button->RegisterOnClick(clickFunc);
     button->RegisterOnMouseEnter(mouseEnterFunc);
     button->RegisterOnMouseLeave(mouseLeaveFunc);
@@ -148,6 +161,7 @@ void GameStateTitle::Enter()
     button->SetBackgroundAlpha(180);
     button->SetText("Button 3");
     button->SetTextColor(Color3(255, 255, 0));
+    button->SetTextAlign(GuiTextButton::ALIGN_CENTER);
     button->RegisterOnClick(clickFunc);
     button->RegisterOnMouseEnter(mouseEnterFunc);
     button->RegisterOnMouseLeave(mouseLeaveFunc);
@@ -158,6 +172,7 @@ void GameStateTitle::Enter()
     button->SetBackgroundAlpha(180);
     button->SetText("Button 4");
     button->SetTextColor(Color3(255, 255, 0));
+    button->SetTextAlign(GuiTextButton::ALIGN_CENTER);
     button->RegisterOnClick(clickFunc);
     button->RegisterOnMouseEnter(mouseEnterFunc);
     button->RegisterOnMouseLeave(mouseLeaveFunc);
@@ -170,6 +185,7 @@ void GameStateTitle::Enter()
     text_box->SetTextColor(Color3(255, 255, 255));
     base_frame->AddChild(text_box);
     text_box->RegisterOnSelect(clickFunc);
+    text_box->RegisterOnCharacterType(disallowNumFunc);
 
 
 

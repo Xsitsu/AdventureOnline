@@ -3,6 +3,8 @@
 
 class GuiTextBox;
 
+#include "allegro5/allegro.h"
+
 #include "guibase.hpp"
 #include "guitextbox.hpp"
 #include "GameShared/vector2.hpp"
@@ -38,6 +40,8 @@ public:
 
     GuiBase* GetCurrentMouseHover();
     void SetCurrentMouseHover(GuiBase* hover);
+
+    void HandleKeyboardTyping(ALLEGRO_KEYBOARD_EVENT keyboard);
 
 };
 

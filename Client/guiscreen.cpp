@@ -103,6 +103,13 @@ bool GuiScreen::HandleMouseDown(const Vector2& pos)
             was_sunk = true;
         }
     }
+    else
+    {
+        if (GuiSelectionService::Instance()->GetSelectedTextBox())
+        {
+            GuiSelectionService::Instance()->SelectTextBox(NULL);
+        }
+    }
     return was_sunk;
 }
 

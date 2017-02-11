@@ -120,6 +120,10 @@ void Game::Run()
         {
             this->state->HandleMouseUp(ev.mouse);
         }
+        else if (ev.type == ALLEGRO_EVENT_KEY_CHAR)
+        {
+            GuiSelectionService::Instance()->HandleKeyboardTyping(ev.keyboard);
+        }
 
 
         if (needs_render && al_is_event_queue_empty(this->event_queue))

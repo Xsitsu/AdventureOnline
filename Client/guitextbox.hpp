@@ -18,8 +18,12 @@
 
 class GuiTextBox : public GuiFrame
 {
+public:
+    enum TEXTALIGN {ALIGN_LEFT, ALIGN_RIGHT, ALIGN_CENTER};
+
 protected:
     std::string text;
+    TEXTALIGN text_align;
 
     Color3 text_color;
     unsigned char text_alpha;
@@ -45,30 +49,45 @@ public:
     unsigned char GetTextAlpha() const;
     void SetTextAlpha(unsigned char trans);
 
+    TEXTALIGN GetTextAlign() const;
+    void SetTextAlign(TEXTALIGN align);
+
 protected:
     unsigned short cursor_position;
     bool is_selected;
 
     Signal onSelect;
     Signal onDeselect;
+    Signal onCharacterType;
 
     void DoSelect();
     void DoDeselect();
+    void DoCharacterType(char c);
 
     friend class GuiSelectionService;
 
 public:
     SignalListener RegisterOnSelect(signal_callback callback);
     SignalListener RegisterOnDeselect(signal_callback callback);
+    SignalListener RegisterOnCharacterType(signal_callback callback);
 
     void Select();
     void Deselect();
+
+    void AddTextCharacter(char c);
+    void DoBackspace();
+    void AddCursorPosition(int pos);
 
 };
 
 struct SignalArgsGuiTextBox : SignalArgs
 {
     GuiTextBox* text_box;
+};
+
+struct SignalArgsGuiTextBoxCharTyped : SignalArgsGuiTextBox
+{
+    char character;
 };
 
 #endif // GUITEXTBOX_HPP_INCLUDE
