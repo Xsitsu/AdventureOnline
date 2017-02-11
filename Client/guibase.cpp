@@ -125,6 +125,7 @@ void GuiBase::Draw() const
     if (this->visible)
     {
         this->DoDraw();
+        this->DrawChildren();
     }
 }
 

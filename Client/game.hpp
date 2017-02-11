@@ -17,6 +17,8 @@ class GameStateBase;
 
 #include "guiscreen.hpp"
 
+#include "fontservice.hpp"
+
 class Game
 {
 friend class GameStateInit;
