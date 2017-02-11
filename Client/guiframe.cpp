@@ -33,8 +33,6 @@ void GuiFrame::DoDraw() const
     {
         al_draw_rectangle(pos_x, pos_y, size_x + pos_x, size_y + pos_y, this->bg_draw_color, 2);
     }
-
-    this->DrawChildren();
 }
 
 bool GuiFrame::GetIsFilled() const

@@ -67,28 +67,25 @@ GameStateTitle::~GameStateTitle()
 
 void clickFunc(const SignalArgs* args)
 {
-    if ((SignalArgsGuiTextButton*)args)
+    if (const SignalArgsGuiTextButton* aargs = dynamic_cast<const SignalArgsGuiTextButton*>(args))
     {
-        SignalArgsGuiTextButton* aargs = (SignalArgsGuiTextButton*) args;
-        aargs->button->SetText("Wew lad!");
+        aargs->button->SetText("Button was clicked!");
         //aargs->button->GetParent()->RemoveChild(aargs->button);
     }
 }
 
 void mouseEnterFunc(const SignalArgs* args)
 {
-    if ((SignalArgsGuiTextButton*)args)
+    if (const SignalArgsGuiTextButton* aargs = dynamic_cast<const SignalArgsGuiTextButton*>(args))
     {
-        SignalArgsGuiTextButton* aargs = (SignalArgsGuiTextButton*) args;
         aargs->button->SetBackgroundAlpha(255);
     }
 }
 
 void mouseLeaveFunc(const SignalArgs* args)
 {
-    if ((SignalArgsGuiTextButton*)args)
+    if (const SignalArgsGuiTextButton* aargs = dynamic_cast<const SignalArgsGuiTextButton*>(args))
     {
-        SignalArgsGuiTextButton* aargs = (SignalArgsGuiTextButton*) args;
         aargs->button->SetBackgroundAlpha(180);
     }
 }
@@ -113,16 +110,11 @@ void GameStateTitle::Enter()
     base_frame = new GuiFrame(Vector2(640 - 40, 480 - 40), Vector2(20, 20));
     base_frame->SetBackgroundColor(Color3(255, 255, 255));
 
-    GuiFrame* frame = new GuiFrame(Vector2(80, 80), Vector2(20, 20));
-    frame->SetBackgroundColor(Color3(0, 0, 0));
-    frame->SetBackgroundAlpha(100);
-    base_frame->AddChild(frame);
-
     GuiTextButton* button = new GuiTextButton(Vector2(200, 60), Vector2(20, 480 - 40 - 60 - 20));
     button->SetBackgroundColor(Color3(235, 20, 20));
     button->SetBackgroundAlpha(180);
     button->SetText("Button 1");
-    button->SetTextColor(Color3(0, 0, 0));
+    button->SetTextColor(Color3(255, 255, 0));
     base_frame->AddChild(button);
     button_list.push_back(button);
     button->RegisterOnClick(clickFunc);
@@ -133,7 +125,7 @@ void GameStateTitle::Enter()
     button->SetBackgroundColor(Color3(40, 40, 235));
     button->SetBackgroundAlpha(180);
     button->SetText("Button 2");
-    button->SetTextColor(Color3(0, 0, 0));
+    button->SetTextColor(Color3(255, 255, 0));
     base_frame->AddChild(button);
     button_list.push_back(button);
     button->RegisterOnClick(clickFunc);
@@ -145,7 +137,7 @@ void GameStateTitle::Enter()
     button->SetBackgroundColor(Color3(235, 20, 20));
     button->SetBackgroundAlpha(180);
     button->SetText("Button 3");
-    button->SetTextColor(Color3(0, 0, 0));
+    button->SetTextColor(Color3(255, 255, 0));
     base_frame->AddChild(button);
     button_list.push_back(button);
     button->RegisterOnClick(clickFunc);
@@ -156,7 +148,7 @@ void GameStateTitle::Enter()
     button->SetBackgroundColor(Color3(40, 40, 235));
     button->SetBackgroundAlpha(180);
     button->SetText("Button 4");
-    button->SetTextColor(Color3(0, 0, 0));
+    button->SetTextColor(Color3(255, 255, 0));
     base_frame->AddChild(button);
     button_list.push_back(button);
     button->RegisterOnClick(clickFunc);

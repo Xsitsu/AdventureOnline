@@ -58,6 +58,8 @@ void Game::Init()
 	std::cout << "Started listening on port: " << listen_port << std::endl;
 
 
+	FontService::Instance()->LoadFonts();
+
 	// Initialize game state stuff
     this->state = new GameStateInit(this);
     this->state->Enter();
@@ -68,6 +70,10 @@ void Game::Run()
     this->is_running = true;
     bool needs_render = false;
 
+    float game_time = 0;
+    int frame_counter = 0;
+    int game_fps = 0;
+
     al_start_timer(this->timer);
     while(this->is_running)
     {
@@ -77,6 +83,14 @@ void Game::Run()
         if (ev.type == ALLEGRO_EVENT_TIMER)
         {
             needs_render = true;
+
+            frame_counter++;
+            if(al_current_time() - game_time >= 1)
+			{
+				game_time = al_current_time();
+				game_fps = frame_counter;
+				frame_counter = 0;
+			}
 
             this->client->TickPacketAcks();
 
@@ -116,6 +130,8 @@ void Game::Run()
 
             if (this->display)
             {
+                al_draw_textf(FontService::Instance()->GetFont(), al_map_rgb(255, 0, 255), 5, 5, 0, "FPS: %i", game_fps);
+
                 al_wait_for_vsync();
                 al_flip_display();
                 al_clear_to_color(al_map_rgb(0, 0, 0));
