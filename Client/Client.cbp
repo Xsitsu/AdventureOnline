@@ -13,6 +13,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add option="-D_DEBUG" />
 				</Compiler>
 				<Linker>
 					<Add library="../allegro/lib/liballegro-5.0.10-monolith-md-debug.a" />
@@ -41,6 +42,25 @@
 		</Compiler>
 		<Unit filename="client.cpp" />
 		<Unit filename="client.hpp" />
+		<Unit filename="color3.hpp" />
+		<Unit filename="fontservice.cpp" />
+		<Unit filename="fontservice.hpp" />
+		<Unit filename="game.cpp" />
+		<Unit filename="game.hpp" />
+		<Unit filename="gamestate.cpp" />
+		<Unit filename="gamestate.hpp" />
+		<Unit filename="guibase.cpp" />
+		<Unit filename="guibase.hpp" />
+		<Unit filename="guibutton.cpp" />
+		<Unit filename="guibutton.hpp" />
+		<Unit filename="guiframe.cpp" />
+		<Unit filename="guiframe.hpp" />
+		<Unit filename="guiscreen.cpp" />
+		<Unit filename="guiscreen.hpp" />
+		<Unit filename="guitextbutton.cpp" />
+		<Unit filename="guitextbutton.hpp" />
+		<Unit filename="inputservice.cpp" />
+		<Unit filename="inputservice.hpp" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
