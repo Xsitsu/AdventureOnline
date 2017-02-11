@@ -59,7 +59,6 @@
 		<Unit filename="guiscreen.hpp" />
 		<Unit filename="guitextbutton.cpp" />
 		<Unit filename="guitextbutton.hpp" />
-		<Unit filename="inputservice.cpp" />
 		<Unit filename="inputservice.hpp" />
 		<Unit filename="main.cpp" />
 		<Extensions>

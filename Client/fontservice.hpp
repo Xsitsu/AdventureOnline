@@ -30,6 +30,7 @@ protected: // Class stuff
     ALLEGRO_FONT* font;
 
 public:
+    void LoadFonts();
     ALLEGRO_FONT* GetFont();
 
 };
