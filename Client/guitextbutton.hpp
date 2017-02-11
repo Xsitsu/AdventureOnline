@@ -12,8 +12,12 @@
 
 class GuiTextButton : public GuiButton
 {
+public:
+    enum TEXTALIGN {ALIGN_LEFT, ALIGN_RIGHT, ALIGN_CENTER};
+
 protected:
     std::string text;
+    TEXTALIGN text_align;
 
     Color3 text_color;
     unsigned char text_alpha;
@@ -38,6 +42,10 @@ public:
 
     unsigned char GetTextAlpha() const;
     void SetTextAlpha(unsigned char trans);
+
+    TEXTALIGN GetTextAlign() const;
+    void SetTextAlign(TEXTALIGN align);
+
 
     virtual void DoClick();
     virtual void DoMouseEnter();

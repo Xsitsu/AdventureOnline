@@ -18,6 +18,7 @@ class GameStateBase;
 #include "guiscreen.hpp"
 
 #include "fontservice.hpp"
+#include "guiselectionservice.hpp"
 
 class Game
 {

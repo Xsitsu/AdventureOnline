@@ -1,13 +1,8 @@
 #include "guiscreen.hpp"
 
-GuiScreen::GuiScreen(GuiBase* base) : base(base), current_mouse_hover_button(NULL)
+GuiScreen::GuiScreen(GuiBase* base) : base(base)
 {
-
-}
-
-GuiScreen::GuiScreen(GuiBase* base, std::list<GuiButton*> buttons) : base(base), buttons(buttons), current_mouse_hover_button(NULL)
-{
-
+    this->PopulateListFromStructureParse();
 }
 
 GuiScreen::~GuiScreen()
@@ -15,20 +10,49 @@ GuiScreen::~GuiScreen()
     delete this->base;
 }
 
+void GuiScreen::ParseChild(GuiBase* child)
+{
+    if (!child) return;
+
+    if (GuiButton* button = dynamic_cast<GuiButton*>(child))
+    {
+        this->interaction_guis.push_back(button);
+    }
+    else if (GuiTextBox* text_box = dynamic_cast<GuiTextBox*>(child))
+    {
+        this->interaction_guis.push_back(text_box);
+    }
+
+    std::list<GuiBase*> children = child->GetChildren();
+    gui_child_iter iter = children.begin();
+    for (iter; iter != children.end(); ++iter)
+    {
+        this->ParseChild(*iter);
+    }
+}
+
+void GuiScreen::PopulateListFromStructureParse()
+{
+    this->interaction_guis.clear();
+
+    this->ParseChild(this->base);
+}
+
+
 void GuiScreen::Draw()
 {
     this->base->Draw();
 }
 
-void GuiScreen::RemoveButtonFromList(GuiButton* button)
+void GuiScreen::RemoveInteractionGui(GuiBase* gui)
 {
-    button_iter iter = this->buttons.begin();
-    while (iter != this->buttons.end())
+    gui_child_iter iter = this->interaction_guis.begin();
+    while (iter != this->interaction_guis.end())
     {
-        GuiButton* current = *iter;
-        if (current == button)
+        GuiBase* current = *iter;
+        if (current == gui)
         {
-            this->buttons.erase(iter);
+            this->interaction_guis.erase(iter);
             return;
         }
 
@@ -36,24 +60,24 @@ void GuiScreen::RemoveButtonFromList(GuiButton* button)
     }
 }
 
-GuiButton* GuiScreen::FindButtonCoveringPoint(const Vector2& pos)
+GuiBase* GuiScreen::FindGuiCoveringPoint(const Vector2& pos)
 {
-    GuiButton* button = NULL;
-    button_iter iter = this->buttons.begin();
-    while (iter != this->buttons.end())
+    GuiBase* gui = NULL;
+    gui_child_iter iter = this->interaction_guis.begin();
+    while (iter != this->interaction_guis.end())
     {
-        button = *iter;
-        if (!button)
+        gui = *iter;
+        if (!gui)
         {
-            this->RemoveButtonFromList(button);
+            this->RemoveInteractionGui(gui);
         }
-        else if (!button->HasAncestor(this->base))
+        else if (!gui->HasAncestor(this->base))
         {
-            this->RemoveButtonFromList(button);
+            this->RemoveInteractionGui(gui);
         }
-        else if (button->GetVisible() && button->PointIsInBounds(pos))
+        else if (gui->GetVisible() && gui->PointIsInBounds(pos))
         {
-            return button;
+            return gui;
         }
 
         ++iter;
@@ -65,11 +89,26 @@ GuiButton* GuiScreen::FindButtonCoveringPoint(const Vector2& pos)
 bool GuiScreen::HandleMouseDown(const Vector2& pos)
 {
     bool was_sunk = false;
-    GuiButton* button = this->FindButtonCoveringPoint(pos);
-    if (button)
+    GuiBase* gui = this->FindGuiCoveringPoint(pos);
+    if (gui)
     {
-        button->DoClick();
-        was_sunk = true;
+        if (GuiButton* button = dynamic_cast<GuiButton*>(gui))
+        {
+            button->DoClick();
+            was_sunk = true;
+        }
+        else if (GuiTextBox* text_box = dynamic_cast<GuiTextBox*>(gui))
+        {
+            text_box->Select();
+            was_sunk = true;
+        }
+    }
+    else
+    {
+        if (GuiSelectionService::Instance()->GetSelectedTextBox())
+        {
+            GuiSelectionService::Instance()->SelectTextBox(NULL);
+        }
     }
     return was_sunk;
 }
@@ -77,11 +116,19 @@ bool GuiScreen::HandleMouseDown(const Vector2& pos)
 bool GuiScreen::HandleMouseUp(const Vector2& pos)
 {
     bool was_sunk = false;
-    GuiButton* button = this->FindButtonCoveringPoint(pos);
-    if (button)
+    GuiBase* gui = this->FindGuiCoveringPoint(pos);
+    if (gui)
     {
-        //button->DoClick();
-        was_sunk = true;
+        if (GuiButton* button = dynamic_cast<GuiButton*>(gui))
+        {
+            //button->DoClick();
+            was_sunk = true;
+        }
+        else if (GuiTextBox* text_box = dynamic_cast<GuiTextBox*>(gui))
+        {
+            //text_box->Select();
+            was_sunk = true;
+        }
     }
     return was_sunk;
 }
@@ -89,26 +136,42 @@ bool GuiScreen::HandleMouseUp(const Vector2& pos)
 bool GuiScreen::HandleMouseMove(const Vector2& pos)
 {
     bool was_sunk = false;
-    GuiButton* button = this->FindButtonCoveringPoint(pos);
+    GuiBase* gui = this->FindGuiCoveringPoint(pos);
 
-    if (this->current_mouse_hover_button)
+    GuiSelectionService* service = GuiSelectionService::Instance();
+    GuiBase* cur_hover = service->GetCurrentMouseHover();
+
+    if (gui != cur_hover)
     {
-        if (button != this->current_mouse_hover_button)
+        if (cur_hover)
         {
-            this->current_mouse_hover_button->DoMouseLeave();
-
-            this->current_mouse_hover_button = button;
-
-            if (button)
+            if (GuiButton* button = dynamic_cast<GuiButton*>(cur_hover))
             {
-                this->current_mouse_hover_button->DoMouseEnter();
+                button->DoMouseLeave();
+                was_sunk = true;
+            }
+            else if (GuiTextBox* text_box = dynamic_cast<GuiTextBox*>(cur_hover))
+            {
+                //text_box->Select();
+                was_sunk = true;
             }
         }
-    }
-    else if (button)
-    {
-        this->current_mouse_hover_button = button;
-        this->current_mouse_hover_button->DoMouseEnter();
+
+        service->SetCurrentMouseHover(gui);
+
+        if (gui)
+        {
+            if (GuiButton* button = dynamic_cast<GuiButton*>(gui))
+            {
+                button->DoMouseEnter();
+                was_sunk = true;
+            }
+            else if (GuiTextBox* text_box = dynamic_cast<GuiTextBox*>(gui))
+            {
+                //text_box->Select();
+                was_sunk = true;
+            }
+        }
     }
 
     return was_sunk;

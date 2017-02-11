@@ -11,6 +11,7 @@ class Game;
 
 #include "guiframe.hpp"
 #include "guitextbutton.hpp"
+#include "guitextbox.hpp"
 #include "guiscreen.hpp"
 #include "GameShared/vector2.hpp"
 
