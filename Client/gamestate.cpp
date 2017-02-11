@@ -72,6 +72,10 @@ void clickFunc(const SignalArgs* args)
         aargs->button->SetText("Button was clicked!");
         //aargs->button->GetParent()->RemoveChild(aargs->button);
     }
+    else if (const SignalArgsGuiTextBox* aargs = dynamic_cast<const SignalArgsGuiTextBox*>(args))
+    {
+        aargs->text_box->SetText("");
+    }
 }
 
 void mouseEnterFunc(const SignalArgs* args)
@@ -80,6 +84,10 @@ void mouseEnterFunc(const SignalArgs* args)
     {
         aargs->button->SetBackgroundAlpha(255);
     }
+    else if (const SignalArgsGuiTextBox* aargs = dynamic_cast<const SignalArgsGuiTextBox*>(args))
+    {
+        aargs->text_box->SetBackgroundAlpha(255);
+    }
 }
 
 void mouseLeaveFunc(const SignalArgs* args)
@@ -87,6 +95,10 @@ void mouseLeaveFunc(const SignalArgs* args)
     if (const SignalArgsGuiTextButton* aargs = dynamic_cast<const SignalArgsGuiTextButton*>(args))
     {
         aargs->button->SetBackgroundAlpha(180);
+    }
+    else if (const SignalArgsGuiTextBox* aargs = dynamic_cast<const SignalArgsGuiTextBox*>(args))
+    {
+        aargs->text_box->SetBackgroundAlpha(180);
     }
 }
 
@@ -115,22 +127,20 @@ void GameStateTitle::Enter()
     button->SetBackgroundAlpha(180);
     button->SetText("Button 1");
     button->SetTextColor(Color3(255, 255, 0));
-    base_frame->AddChild(button);
-    button_list.push_back(button);
     button->RegisterOnClick(clickFunc);
     button->RegisterOnMouseEnter(mouseEnterFunc);
     button->RegisterOnMouseLeave(mouseLeaveFunc);
+    base_frame->AddChild(button);
 
     button = new GuiTextButton(Vector2(200, 60), Vector2(640 - 40 - 200 - 20, 480 - 40 - 60 - 20));
     button->SetBackgroundColor(Color3(40, 40, 235));
     button->SetBackgroundAlpha(180);
     button->SetText("Button 2");
     button->SetTextColor(Color3(255, 255, 0));
-    base_frame->AddChild(button);
-    button_list.push_back(button);
     button->RegisterOnClick(clickFunc);
     button->RegisterOnMouseEnter(mouseEnterFunc);
     button->RegisterOnMouseLeave(mouseLeaveFunc);
+    base_frame->AddChild(button);
 
 
     button = new GuiTextButton(Vector2(200, 60), Vector2(20, 320 - 40 - 60 - 20));
@@ -138,25 +148,32 @@ void GameStateTitle::Enter()
     button->SetBackgroundAlpha(180);
     button->SetText("Button 3");
     button->SetTextColor(Color3(255, 255, 0));
-    base_frame->AddChild(button);
-    button_list.push_back(button);
     button->RegisterOnClick(clickFunc);
     button->RegisterOnMouseEnter(mouseEnterFunc);
     button->RegisterOnMouseLeave(mouseLeaveFunc);
+    base_frame->AddChild(button);
 
     button = new GuiTextButton(Vector2(200, 60), Vector2(640 - 40 - 200 - 20, 320 - 40 - 60 - 20));
     button->SetBackgroundColor(Color3(40, 40, 235));
     button->SetBackgroundAlpha(180);
     button->SetText("Button 4");
     button->SetTextColor(Color3(255, 255, 0));
-    base_frame->AddChild(button);
-    button_list.push_back(button);
     button->RegisterOnClick(clickFunc);
     button->RegisterOnMouseEnter(mouseEnterFunc);
     button->RegisterOnMouseLeave(mouseLeaveFunc);
+    base_frame->AddChild(button);
+
+    GuiTextBox* text_box = new GuiTextBox(Vector2(200, 60), Vector2(200, 60));
+    text_box->SetBackgroundColor(Color3(0, 0, 0));
+    text_box->SetBackgroundAlpha(180);
+    text_box->SetText("Text Box");
+    text_box->SetTextColor(Color3(255, 255, 255));
+    base_frame->AddChild(text_box);
+    text_box->RegisterOnSelect(clickFunc);
 
 
-    GuiScreen* screen = new GuiScreen(base_frame, button_list);
+
+    GuiScreen* screen = new GuiScreen(base_frame);
     this->game->PushScreen(screen);
 }
 

@@ -3,6 +3,9 @@
 
 #include "guibase.hpp"
 #include "guibutton.hpp"
+#include "guitextbox.hpp"
+
+#include "guiselectionservice.hpp"
 
 #include "GameShared/vector2.hpp"
 
@@ -12,17 +15,16 @@ class GuiScreen
 {
 protected:
     GuiBase* base;
-    std::list<GuiButton*> buttons;
-    GuiButton* current_mouse_hover_button;
+    std::list<GuiBase*> interaction_guis;
 
-    typedef std::list<GuiButton*>::iterator button_iter;
+    void RemoveInteractionGui(GuiBase* gui);
+    GuiBase* FindGuiCoveringPoint(const Vector2& pos);
 
-    void RemoveButtonFromList(GuiButton* button);
-    GuiButton* FindButtonCoveringPoint(const Vector2& pos);
+    void ParseChild(GuiBase* base);
+    void PopulateListFromStructureParse();
 
 public:
     GuiScreen(GuiBase* base);
-    GuiScreen(GuiBase* base, std::list<GuiButton*> buttons);
     ~GuiScreen();
 
     bool HandleMouseDown(const Vector2& pos);
