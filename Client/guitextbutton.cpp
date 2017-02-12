@@ -46,6 +46,16 @@ void GuiTextButton::SetTextAlpha(unsigned char trans)
     this->UpdateTextDrawColor();
 }
 
+GuiTextButton::TEXTALIGN GuiTextButton::GetTextAlign() const
+{
+    return this->text_align;
+}
+
+void GuiTextButton::SetTextAlign(GuiTextButton::TEXTALIGN align)
+{
+    this->text_align = align;
+}
+
 void GuiTextButton::UpdateTextDrawColor()
 {
     Color3* color = &this->text_color;
@@ -60,9 +70,20 @@ void GuiTextButton::DoDraw() const
     ALLEGRO_FONT* font = FontService::Instance()->GetFont();
     if (font)
     {
-        int mid_x = abs_pos.x + (this->size.x / 2);
+        int draw_x = abs_pos.x;
+        int align = 0;
+        if (this->text_align == ALIGN_CENTER)
+        {
+            draw_x += (this->size.x / 2);
+            align = ALLEGRO_ALIGN_CENTER;
+        }
+        else if (this->text_align == ALIGN_RIGHT)
+        {
+            draw_x += this->size.x;
+            align = ALLEGRO_ALIGN_RIGHT;
+        }
         int mid_y = abs_pos.y + (this->size.y / 2) - (font->height / 2);
-        al_draw_text(font, this->text_draw_color, mid_x, mid_y, ALLEGRO_ALIGN_CENTER, this->text.c_str());
+        al_draw_text(font, this->text_draw_color, draw_x, mid_y, align, this->text.c_str());
     }
 
 }
