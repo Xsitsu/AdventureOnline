@@ -14,7 +14,7 @@ class GuiSelectionService
 protected: // Singleton stuff
     static GuiSelectionService* instance;
 
-    GuiSelectionService() : selected_text_box(NULL), current_mouse_hover(NULL) {}
+    GuiSelectionService();
     GuiSelectionService(const GuiSelectionService& copy) {}
     GuiSelectionService& operator=(const GuiSelectionService& rhs) {}
     virtual ~GuiSelectionService() {}
@@ -34,6 +34,15 @@ protected: // Class stuff
     GuiTextBox* selected_text_box;
     GuiBase* current_mouse_hover;
 
+    char lowercase_keys[ALLEGRO_KEY_MAX];
+    char uppercase_keys[ALLEGRO_KEY_MAX];
+
+    void InitKeyList();
+    void SetKey(int index, char lower, char upper);
+
+    bool CheckModifier(unsigned int modifiers, int modifier);
+    char AllegroKeycodeToAscii(int keycode, unsigned int modifiers);
+
 public:
     GuiTextBox* GetSelectedTextBox();
     void SelectTextBox(GuiTextBox* text_box);
@@ -41,6 +50,7 @@ public:
     GuiBase* GetCurrentMouseHover();
     void SetCurrentMouseHover(GuiBase* hover);
 
+    bool TextBoxHasFocus();
     void HandleKeyboardTyping(ALLEGRO_KEYBOARD_EVENT keyboard);
 
 };

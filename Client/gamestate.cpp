@@ -108,7 +108,7 @@ void disallowNumFunc(const SignalArgs* args)
     {
         if (aargs->character >= '0' && aargs->character <= '9')
         {
-            aargs->text_box->DoBackspace();
+            //aargs->text_box->DoBackspace();
         }
     }
 }
