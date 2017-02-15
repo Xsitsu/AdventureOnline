@@ -9,6 +9,8 @@ class GuiButton : public GuiFrame
 {
 protected:
     Signal onClick;
+    Signal onMouseDown;
+    Signal onMouseUp;
     Signal onMouseEnter;
     Signal onMouseLeave;
 
@@ -19,10 +21,14 @@ public:
     virtual ~GuiButton();
 
     virtual void DoClick();
+    virtual void DoMouseDown();
+    virtual void DoMouseUp();
     virtual void DoMouseEnter();
     virtual void DoMouseLeave();
 
     SignalListener RegisterOnClick(signal_callback callback);
+    SignalListener RegisterOnMouseDown(signal_callback callback);
+    SignalListener RegisterOnMouseUp(signal_callback callback);
     SignalListener RegisterOnMouseEnter(signal_callback callback);
     SignalListener RegisterOnMouseLeave(signal_callback callback);
 };

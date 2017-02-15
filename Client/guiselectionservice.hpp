@@ -6,6 +6,7 @@ class GuiTextBox;
 #include "allegro5/allegro.h"
 
 #include "guibase.hpp"
+#include "guibutton.hpp"
 #include "guitextbox.hpp"
 #include "GameShared/vector2.hpp"
 
@@ -34,6 +35,8 @@ protected: // Class stuff
     GuiTextBox* selected_text_box;
     GuiBase* current_mouse_hover;
 
+    GuiButton* current_button_down;
+
     char lowercase_keys[ALLEGRO_KEY_MAX];
     char uppercase_keys[ALLEGRO_KEY_MAX];
 
@@ -52,6 +55,9 @@ public:
 
     bool TextBoxHasFocus();
     void HandleKeyboardTyping(ALLEGRO_KEYBOARD_EVENT keyboard);
+
+    void MouseButtonDown(GuiButton* button);
+    void MouseButtonUp(GuiButton* button);
 
 };
 

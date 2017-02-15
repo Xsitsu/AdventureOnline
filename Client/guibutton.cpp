@@ -23,6 +23,20 @@ void GuiButton::DoClick()
     this->onClick.Fire(&args);
 }
 
+void GuiButton::DoMouseDown()
+{
+    SignalArgsGuiButton args;
+    args.button = this;
+    this->onMouseDown.Fire(&args);
+}
+
+void GuiButton::DoMouseUp()
+{
+    SignalArgsGuiButton args;
+    args.button = this;
+    this->onMouseUp.Fire(&args);
+}
+
 void GuiButton::DoMouseEnter()
 {
     SignalArgsGuiButton args;
@@ -40,6 +54,16 @@ void GuiButton::DoMouseLeave()
 SignalListener GuiButton::RegisterOnClick(signal_callback callback)
 {
     return this->onClick.Connect(callback);
+}
+
+SignalListener GuiButton::RegisterOnMouseDown(signal_callback callback)
+{
+    return this->onMouseDown.Connect(callback);
+}
+
+SignalListener GuiButton::RegisterOnMouseUp(signal_callback callback)
+{
+    return this->onMouseUp.Connect(callback);
 }
 
 SignalListener GuiButton::RegisterOnMouseEnter(signal_callback callback)

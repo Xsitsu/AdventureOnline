@@ -2,7 +2,7 @@
 
 GuiSelectionService* GuiSelectionService::instance = NULL;
 
-GuiSelectionService::GuiSelectionService() : selected_text_box(NULL), current_mouse_hover(NULL)
+GuiSelectionService::GuiSelectionService() : selected_text_box(NULL), current_mouse_hover(NULL), current_button_down(NULL)
 {
     memset(this->lowercase_keys, 0, ALLEGRO_KEY_MAX);
     memset(this->uppercase_keys, 0, ALLEGRO_KEY_MAX);
@@ -107,7 +107,7 @@ char GuiSelectionService::AllegroKeycodeToAscii(int keycode, unsigned int modifi
 
 bool GuiSelectionService::TextBoxHasFocus()
 {
-    return (this->selected_text_box != NULL)
+    return (this->selected_text_box != NULL);
 }
 
 void GuiSelectionService::HandleKeyboardTyping(ALLEGRO_KEYBOARD_EVENT keyboard)
@@ -139,4 +139,21 @@ void GuiSelectionService::HandleKeyboardTyping(ALLEGRO_KEYBOARD_EVENT keyboard)
             }
         }
     }
+}
+
+void GuiSelectionService::MouseButtonDown(GuiButton* button)
+{
+    this->current_button_down = button;
+    button->DoMouseDown();
+}
+
+void GuiSelectionService::MouseButtonUp(GuiButton* button)
+{
+    if (this->current_button_down == button)
+    {
+        button->DoClick();
+    }
+
+    this->current_button_down = NULL;
+    button->DoMouseUp();
 }
