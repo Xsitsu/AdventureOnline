@@ -89,23 +89,27 @@ GuiBase* GuiScreen::FindGuiCoveringPoint(const Vector2& pos)
 bool GuiScreen::HandleMouseDown(const Vector2& pos)
 {
     bool was_sunk = false;
+    bool text_box_selected = false;
     GuiBase* gui = this->FindGuiCoveringPoint(pos);
     if (gui)
     {
         if (GuiButton* button = dynamic_cast<GuiButton*>(gui))
         {
-            button->DoClick();
+            GuiSelectionService::Instance()->MouseButtonDown(button);
             was_sunk = true;
         }
         else if (GuiTextBox* text_box = dynamic_cast<GuiTextBox*>(gui))
         {
             text_box->Select();
             was_sunk = true;
+
+            text_box_selected = true;
         }
     }
-    else
+
+    if (!text_box_selected)
     {
-        if (GuiSelectionService::Instance()->GetSelectedTextBox())
+        if (GuiSelectionService::Instance()->TextBoxHasFocus())
         {
             GuiSelectionService::Instance()->SelectTextBox(NULL);
         }
@@ -121,7 +125,7 @@ bool GuiScreen::HandleMouseUp(const Vector2& pos)
     {
         if (GuiButton* button = dynamic_cast<GuiButton*>(gui))
         {
-            //button->DoClick();
+            GuiSelectionService::Instance()->MouseButtonUp(button);
             was_sunk = true;
         }
         else if (GuiTextBox* text_box = dynamic_cast<GuiTextBox*>(gui))

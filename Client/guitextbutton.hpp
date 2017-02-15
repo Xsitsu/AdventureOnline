@@ -48,6 +48,8 @@ public:
 
 
     virtual void DoClick();
+    virtual void DoMouseDown();
+    virtual void DoMouseUp();
     virtual void DoMouseEnter();
     virtual void DoMouseLeave();
 

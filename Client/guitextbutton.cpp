@@ -95,6 +95,20 @@ void GuiTextButton::DoClick()
     this->onClick.Fire(&args);
 }
 
+void GuiTextButton::DoMouseDown()
+{
+    SignalArgsGuiTextButton args;
+    args.button = this;
+    this->onMouseDown.Fire(&args);
+}
+
+void GuiTextButton::DoMouseUp()
+{
+    SignalArgsGuiTextButton args;
+    args.button = this;
+    this->onMouseUp.Fire(&args);
+}
+
 void GuiTextButton::DoMouseEnter()
 {
     SignalArgsGuiTextButton args;
