@@ -128,7 +128,6 @@ void GameStateTitle::Enter()
 
 
     GuiFrame* base_frame;
-    std::list<GuiButton*> button_list;
 
     base_frame = new GuiFrame(Vector2(640 - 40, 480 - 40), Vector2(20, 20));
     base_frame->SetBackgroundColor(Color3(255, 255, 255));
