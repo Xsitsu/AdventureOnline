@@ -1,12 +1,12 @@
 #include "guitextbutton.hpp"
 
-GuiTextButton::GuiTextButton() : GuiButton(), text_color(Color3()), text_alpha(255), text_draw_color(al_map_rgb(0, 0, 0))
+GuiTextButton::GuiTextButton() : GuiButton(), text_color(Color3()), text_alpha(255), text_draw_color(al_map_rgb(0, 0, 0)), text_draw_font(NULL)
 {}
 
-GuiTextButton::GuiTextButton(Vector2 size) : GuiButton(size), text_color(Color3()), text_alpha(255), text_draw_color(al_map_rgb(0, 0, 0))
+GuiTextButton::GuiTextButton(Vector2 size) : GuiButton(size), text_color(Color3()), text_alpha(255), text_draw_color(al_map_rgb(0, 0, 0)), text_draw_font(NULL)
 {}
 
-GuiTextButton::GuiTextButton(Vector2 size, Vector2 position) : GuiButton(size, position), text_color(Color3()), text_alpha(255), text_draw_color(al_map_rgb(0, 0, 0))
+GuiTextButton::GuiTextButton(Vector2 size, Vector2 position) : GuiButton(size, position), text_color(Color3()), text_alpha(255), text_draw_color(al_map_rgb(0, 0, 0)), text_draw_font(NULL)
 {}
 
 GuiTextButton::~GuiTextButton()
@@ -56,6 +56,16 @@ void GuiTextButton::SetTextAlign(GuiTextButton::TEXTALIGN align)
     this->text_align = align;
 }
 
+ALLEGRO_FONT* GuiTextButton::GetTextFont() const
+{
+    return this->text_draw_font;
+}
+
+void GuiTextButton::SetTextFont(ALLEGRO_FONT* font)
+{
+    this->text_draw_font = font;
+}
+
 void GuiTextButton::UpdateTextDrawColor()
 {
     Color3* color = &this->text_color;
@@ -67,7 +77,7 @@ void GuiTextButton::DoDraw() const
     GuiButton::DoDraw();
 
     Vector2 abs_pos = this->GetAbsolutePosition();
-    ALLEGRO_FONT* font = FontService::Instance()->GetFont();
+    ALLEGRO_FONT* font = this->text_draw_font;
     if (font)
     {
         int draw_x = abs_pos.x;

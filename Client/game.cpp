@@ -57,8 +57,8 @@ void Game::Init()
 	while (!this->client->Init(listen_port)) { ++listen_port; }
 	std::cout << "Started listening on port: " << listen_port << std::endl;
 
-
-	FontService::Instance()->LoadFonts();
+	ALLEGRO_FONT* debug_font = al_load_font("C:/Windows/Fonts/arial.ttf", 18, 0);
+	FontService::Instance()->RegisterFont("debug", debug_font);
 
 	// Initialize game state stuff
     this->state = new GameStateInit(this);
@@ -140,7 +140,7 @@ void Game::Run()
 
             if (this->display)
             {
-                al_draw_textf(FontService::Instance()->GetFont(), al_map_rgb(255, 0, 255), 5, 5, 0, "FPS: %i", game_fps);
+                al_draw_textf(FontService::Instance()->GetFont("debug"), al_map_rgb(255, 0, 255), 5, 5, 0, "FPS: %i", game_fps);
 
                 al_wait_for_vsync();
                 al_flip_display();

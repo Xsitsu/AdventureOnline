@@ -23,6 +23,7 @@ protected:
     unsigned char text_alpha;
 
     ALLEGRO_COLOR text_draw_color;
+    ALLEGRO_FONT* text_draw_font;
 
     void UpdateTextDrawColor();
 
@@ -46,6 +47,8 @@ public:
     TEXTALIGN GetTextAlign() const;
     void SetTextAlign(TEXTALIGN align);
 
+    ALLEGRO_FONT* GetTextFont() const;
+    void SetTextFont(ALLEGRO_FONT* font);
 
     virtual void DoClick();
     virtual void DoMouseDown();
