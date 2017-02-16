@@ -157,3 +157,11 @@ void GuiSelectionService::MouseButtonUp(GuiButton* button)
     this->current_button_down = NULL;
     button->DoMouseUp();
 }
+
+void GuiSelectionService::LetMouseUp()
+{
+    if (this->current_button_down)
+    {
+        this->current_button_down = NULL;
+    }
+}

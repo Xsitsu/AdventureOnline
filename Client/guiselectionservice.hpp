@@ -58,6 +58,7 @@ public:
 
     void MouseButtonDown(GuiButton* button);
     void MouseButtonUp(GuiButton* button);
+    void LetMouseUp();
 
 };
 
