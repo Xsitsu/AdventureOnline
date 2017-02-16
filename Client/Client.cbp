@@ -48,8 +48,9 @@
 		<Unit filename="fontservice.hpp" />
 		<Unit filename="game.cpp" />
 		<Unit filename="game.hpp" />
-		<Unit filename="gamestate.cpp" />
 		<Unit filename="gamestate.hpp" />
+		<Unit filename="gamestateinit.cpp" />
+		<Unit filename="gamestatetitle.cpp" />
 		<Unit filename="guibase.cpp" />
 		<Unit filename="guibase.hpp" />
 		<Unit filename="guibutton.cpp" />

@@ -25,7 +25,7 @@ protected:
     Game* game;
 
 public:
-    GameStateBase(Game* game);
+    GameStateBase(Game* game) : game(game) {}
     virtual ~GameStateBase() {}
 
     virtual void Enter() = 0;
