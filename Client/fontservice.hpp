@@ -1,6 +1,10 @@
 #ifndef FONTSERVICE_HPP_INCLUDE
 #define FONTSERVICE_HPP_INCLUDE
 
+#include <unordered_map>
+
+#include <exception>
+
 #include "allegro5/allegro.h"
 #include "allegro5/allegro_font.h"
 #include "allegro5/allegro_ttf.h"
@@ -27,11 +31,36 @@ public:
 
 
 protected: // Class stuff
-    ALLEGRO_FONT* font;
+    unordered_map<std::string, ALLEGRO_FONT*> fonts;
 
 public:
-    void LoadFonts();
-    ALLEGRO_FONT* GetFont();
+    ALLEGRO_FONT* GetFont(std::string font_name);
+    void RegisterFont(std::string font_name, ALLEGRO_FONT* font);
+    void UnregisterFont(std::string font_name);
+
+};
+
+class FontServiceException : public logic_error
+{
+protected:
+
+public:
+
+};
+
+class FontNotLoadedException : public FontServiceException
+{
+protected:
+
+public:
+
+};
+
+class FontAlreadyLoadedException : public FontServiceException
+{
+protected:
+
+public:
 
 };
 
