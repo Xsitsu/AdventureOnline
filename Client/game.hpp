@@ -24,6 +24,27 @@ class Game
 {
 friend class GameStateInit;
 friend class GameStateTitle;
+friend class GameStateQuit;
+
+protected: // Singleton stuff
+    static Game* instance;
+
+    Game();
+    Game(const Game& copy) {}
+    Game& operator=(const Game& rhs) {}
+    virtual ~Game();
+
+public:
+    static Game* Instance()
+    {
+        if (instance == NULL)
+        {
+            instance = new Game();
+        }
+        return instance;
+    }
+
+
 
 protected:
     ALLEGRO_DISPLAY* display;
@@ -47,9 +68,6 @@ protected:
     GuiScreen* GetCurrentScreen();
 
 public:
-    Game();
-    ~Game();
-
     void Init();
     void Run();
 

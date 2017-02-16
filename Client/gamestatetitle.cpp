@@ -10,6 +10,11 @@ GameStateTitle::~GameStateTitle()
 
 }
 
+void quitGameFunc(const SignalArgs* args)
+{
+    //Game::Instance()->ChangeState(new GameStateQuit(Game::Instance()));
+}
+
 void clickFunc(const SignalArgs* args)
 {
     if (const SignalArgsGuiTextButton* aargs = dynamic_cast<const SignalArgsGuiTextButton*>(args))
@@ -63,9 +68,6 @@ GuiTextButton* CreateTitleButton(int offset, std::string button_text, ALLEGRO_FO
     button->SetTextColor(Color3(255, 255, 255));
     button->SetTextAlign(GuiTextButton::ALIGN_CENTER);
     button->SetTextFont(text_font);
-    button->RegisterOnClick(clickFunc);
-    button->RegisterOnMouseEnter(mouseEnterFunc);
-    button->RegisterOnMouseLeave(mouseLeaveFunc);
 
     return button;
 }
@@ -93,10 +95,31 @@ void GameStateTitle::Enter()
     base_frame = new GuiFrame(Vector2(640, 480), Vector2(0, 0));
     base_frame->SetBackgroundColor(Color3(255, 255, 255));
 
-    base_frame->AddChild(CreateTitleButton(0, "Create Account", button_font));
-    base_frame->AddChild(CreateTitleButton(1, "Play Game", button_font));
-    base_frame->AddChild(CreateTitleButton(2, "Options", button_font));
-    base_frame->AddChild(CreateTitleButton(3, "Quit", button_font));
+    GuiTextButton* button;
+
+    button = CreateTitleButton(0, "Create Account", button_font);
+    button->RegisterOnClick(clickFunc);
+    button->RegisterOnMouseEnter(mouseEnterFunc);
+    button->RegisterOnMouseLeave(mouseLeaveFunc);
+    base_frame->AddChild(button);
+
+    button = CreateTitleButton(1, "Play Game", button_font);
+    button->RegisterOnClick(clickFunc);
+    button->RegisterOnMouseEnter(mouseEnterFunc);
+    button->RegisterOnMouseLeave(mouseLeaveFunc);
+    base_frame->AddChild(button);
+
+    button = CreateTitleButton(2, "Options", button_font);
+    button->RegisterOnClick(clickFunc);
+    button->RegisterOnMouseEnter(mouseEnterFunc);
+    button->RegisterOnMouseLeave(mouseLeaveFunc);
+    base_frame->AddChild(button);
+
+    button = CreateTitleButton(3, "Quit", button_font);
+    button->RegisterOnClick(quitGameFunc);
+    button->RegisterOnMouseEnter(mouseEnterFunc);
+    button->RegisterOnMouseLeave(mouseLeaveFunc);
+    base_frame->AddChild(button);
 
     GuiScreen* screen = new GuiScreen(base_frame);
     this->game->PushScreen(screen);

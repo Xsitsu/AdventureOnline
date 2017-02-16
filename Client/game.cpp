@@ -1,5 +1,7 @@
 #include "game.hpp"
 
+Game* Game::instance = NULL;
+
 Game::Game() : display(NULL), event_queue(NULL), timer(NULL), state(NULL), client(NULL)
 {
 

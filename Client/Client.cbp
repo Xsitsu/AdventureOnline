@@ -50,6 +50,7 @@
 		<Unit filename="game.hpp" />
 		<Unit filename="gamestate.hpp" />
 		<Unit filename="gamestateinit.cpp" />
+		<Unit filename="gamestatequit.cpp" />
 		<Unit filename="gamestatetitle.cpp" />
 		<Unit filename="guibase.cpp" />
 		<Unit filename="guibase.hpp" />
