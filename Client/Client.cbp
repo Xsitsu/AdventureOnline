@@ -37,6 +37,7 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add option="-std=c++11" />
 			<Add directory=".." />
 			<Add directory="../allegro/include" />
 		</Compiler>

@@ -31,7 +31,7 @@ public:
 
 
 protected: // Class stuff
-    unordered_map<std::string, ALLEGRO_FONT*> fonts;
+    std::unordered_map<std::string, ALLEGRO_FONT*> fonts;
 
 public:
     ALLEGRO_FONT* GetFont(std::string font_name);
@@ -40,7 +40,7 @@ public:
 
 };
 
-class FontServiceException : public logic_error
+class FontServiceException : public std::exception
 {
 protected:
 
