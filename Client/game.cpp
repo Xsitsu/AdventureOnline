@@ -102,11 +102,17 @@ void Game::Run()
         }
         else if (ev.type == ALLEGRO_EVENT_KEY_DOWN)
         {
-            this->state->HandleKeyDown(ev.keyboard);
+            if (!GuiSelectionService::Instance()->TextBoxHasFocus())
+            {
+                this->state->HandleKeyDown(ev.keyboard);
+            }
         }
         else if (ev.type == ALLEGRO_EVENT_KEY_UP)
         {
-            this->state->HandleKeyUp(ev.keyboard);
+            if (!GuiSelectionService::Instance()->TextBoxHasFocus())
+            {
+                this->state->HandleKeyUp(ev.keyboard);
+            }
         }
         else if (ev.type == ALLEGRO_EVENT_MOUSE_AXES)
         {
