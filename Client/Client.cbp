@@ -55,6 +55,8 @@
 		<Unit filename="gamestatequit.hpp" />
 		<Unit filename="gamestatetitle.cpp" />
 		<Unit filename="gamestatetitle.hpp" />
+		<Unit filename="gamestatetitlemake.cpp" />
+		<Unit filename="gamestatetitlemake.hpp" />
 		<Unit filename="guibase.cpp" />
 		<Unit filename="guibase.hpp" />
 		<Unit filename="guibutton.cpp" />
