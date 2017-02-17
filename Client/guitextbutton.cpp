@@ -100,35 +100,35 @@ void GuiTextButton::DoDraw() const
 
 void GuiTextButton::DoClick()
 {
-    SignalArgsGuiTextButton args;
+    GuiButtonArgs args;
     args.button = this;
     this->onClick.Fire(&args);
 }
 
 void GuiTextButton::DoMouseDown()
 {
-    SignalArgsGuiTextButton args;
+    GuiButtonArgs args;
     args.button = this;
     this->onMouseDown.Fire(&args);
 }
 
 void GuiTextButton::DoMouseUp()
 {
-    SignalArgsGuiTextButton args;
+    GuiButtonArgs args;
     args.button = this;
     this->onMouseUp.Fire(&args);
 }
 
 void GuiTextButton::DoMouseEnter()
 {
-    SignalArgsGuiTextButton args;
+    GuiButtonArgs args;
     args.button = this;
     this->onMouseEnter.Fire(&args);
 }
 
 void GuiTextButton::DoMouseLeave()
 {
-    SignalArgsGuiTextButton args;
+    GuiButtonArgs args;
     args.button = this;
     this->onMouseLeave.Fire(&args);
 }

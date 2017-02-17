@@ -55,7 +55,7 @@ protected:
 
     GameStateBase* state;
 
-    void ChangeState(GameStateBase* state);
+    //void ChangeState(GameStateBase* state);
 
     Client* client;
 
@@ -70,6 +70,8 @@ protected:
 public:
     void Init();
     void Run();
+
+    void ChangeState(GameStateBase* state);
 
 };
 #endif // GAME_HPP_INCLUDE

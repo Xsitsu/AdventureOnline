@@ -1,5 +1,34 @@
 #include "gamestate.hpp"
 
+class TitleButtonEnterListener : public ListenerBase<GuiButtonArgs*>
+{
+public:
+    virtual void Notify(GuiButtonArgs*& args) const
+    {
+        GuiTextButton* button = static_cast<GuiTextButton*>(args->button);
+        button->SetTextColor(Color3(255, 255, 0));
+    }
+};
+
+class TitleButtonLeaveListener : public ListenerBase<GuiButtonArgs*>
+{
+public:
+    virtual void Notify(GuiButtonArgs*& args) const
+    {
+        GuiTextButton* button = static_cast<GuiTextButton*>(args->button);
+        button->SetTextColor(Color3(255, 255, 255));
+    }
+};
+
+class GameQuitListener : public ListenerBase<GuiButtonArgs*>
+{
+public:
+    virtual void Notify(GuiButtonArgs*& args) const
+    {
+        Game::Instance()->ChangeState(new GameStateQuit(Game::Instance()));
+    }
+};
+
 GameStateTitle::GameStateTitle(Game* game) : GameStateBase(game)
 {
 
@@ -8,48 +37,6 @@ GameStateTitle::GameStateTitle(Game* game) : GameStateBase(game)
 GameStateTitle::~GameStateTitle()
 {
 
-}
-
-void quitGameFunc(const SignalArgs* args)
-{
-    //Game::Instance()->ChangeState(new GameStateQuit(Game::Instance()));
-}
-
-void clickFunc(const SignalArgs* args)
-{
-    if (const SignalArgsGuiTextButton* aargs = dynamic_cast<const SignalArgsGuiTextButton*>(args))
-    {
-        //aargs->button->SetText("Button was clicked!");
-        //aargs->button->GetParent()->RemoveChild(aargs->button);
-    }
-    else if (const SignalArgsGuiTextBox* aargs = dynamic_cast<const SignalArgsGuiTextBox*>(args))
-    {
-        aargs->text_box->SetText("");
-    }
-}
-
-void mouseEnterFunc(const SignalArgs* args)
-{
-    if (const SignalArgsGuiTextButton* aargs = dynamic_cast<const SignalArgsGuiTextButton*>(args))
-    {
-        aargs->button->SetTextColor(Color3(255, 255, 0));
-    }
-    else if (const SignalArgsGuiTextBox* aargs = dynamic_cast<const SignalArgsGuiTextBox*>(args))
-    {
-        aargs->text_box->SetBackgroundAlpha(255);
-    }
-}
-
-void mouseLeaveFunc(const SignalArgs* args)
-{
-    if (const SignalArgsGuiTextButton* aargs = dynamic_cast<const SignalArgsGuiTextButton*>(args))
-    {
-        aargs->button->SetTextColor(Color3(255, 255, 255));
-    }
-    else if (const SignalArgsGuiTextBox* aargs = dynamic_cast<const SignalArgsGuiTextBox*>(args))
-    {
-        aargs->text_box->SetBackgroundAlpha(180);
-    }
 }
 
 GuiTextButton* CreateTitleButton(int offset, std::string button_text, ALLEGRO_FONT* text_font)
@@ -91,6 +78,9 @@ void GameStateTitle::Enter()
 
 
     GuiFrame* base_frame;
+    ListenerBase<GuiButtonArgs*>* mouse_enter_listener = new TitleButtonEnterListener();
+    ListenerBase<GuiButtonArgs*>* mouse_leave_listener = new TitleButtonLeaveListener();
+    ListenerBase<GuiButtonArgs*>* game_quit_listener = new GameQuitListener();
 
     base_frame = new GuiFrame(Vector2(640, 480), Vector2(0, 0));
     base_frame->SetBackgroundColor(Color3(255, 255, 255));
@@ -98,27 +88,24 @@ void GameStateTitle::Enter()
     GuiTextButton* button;
 
     button = CreateTitleButton(0, "Create Account", button_font);
-    button->RegisterOnClick(clickFunc);
-    button->RegisterOnMouseEnter(mouseEnterFunc);
-    button->RegisterOnMouseLeave(mouseLeaveFunc);
+    button->RegisterOnMouseEnter(mouse_enter_listener);
+    button->RegisterOnMouseLeave(mouse_leave_listener);
     base_frame->AddChild(button);
 
     button = CreateTitleButton(1, "Play Game", button_font);
-    button->RegisterOnClick(clickFunc);
-    button->RegisterOnMouseEnter(mouseEnterFunc);
-    button->RegisterOnMouseLeave(mouseLeaveFunc);
+    button->RegisterOnMouseEnter(mouse_enter_listener);
+    button->RegisterOnMouseLeave(mouse_leave_listener);
     base_frame->AddChild(button);
 
     button = CreateTitleButton(2, "Options", button_font);
-    button->RegisterOnClick(clickFunc);
-    button->RegisterOnMouseEnter(mouseEnterFunc);
-    button->RegisterOnMouseLeave(mouseLeaveFunc);
+    button->RegisterOnMouseEnter(mouse_enter_listener);
+    button->RegisterOnMouseLeave(mouse_leave_listener);
     base_frame->AddChild(button);
 
     button = CreateTitleButton(3, "Quit", button_font);
-    button->RegisterOnClick(quitGameFunc);
-    button->RegisterOnMouseEnter(mouseEnterFunc);
-    button->RegisterOnMouseLeave(mouseLeaveFunc);
+    button->RegisterOnMouseEnter(mouse_enter_listener);
+    button->RegisterOnMouseLeave(mouse_leave_listener);
+    button->RegisterOnClick(game_quit_listener);
     base_frame->AddChild(button);
 
     GuiScreen* screen = new GuiScreen(base_frame);

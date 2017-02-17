@@ -58,9 +58,4 @@ public:
 
 };
 
-struct SignalArgsGuiTextButton : SignalArgs
-{
-    GuiTextButton* button;
-};
-
 #endif // GUITEXTBUTTON_HPP_INCLUDE

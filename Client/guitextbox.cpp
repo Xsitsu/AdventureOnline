@@ -128,19 +128,19 @@ void GuiTextBox::DoDraw() const
 
 }
 
-SignalListener GuiTextBox::RegisterOnSelect(signal_callback callback)
+void GuiTextBox::RegisterOnSelect(ListenerBase<TextBoxSelectionArgs*>* listener)
 {
-    return this->onSelect.Connect(callback);
+    this->onSelect.Connect(listener);
 }
 
-SignalListener GuiTextBox::RegisterOnDeselect(signal_callback callback)
+void GuiTextBox::RegisterOnDeselect(ListenerBase<TextBoxSelectionArgs*>* listener)
 {
-    return this->onDeselect.Connect(callback);
+    this->onDeselect.Connect(listener);
 }
 
-SignalListener GuiTextBox::RegisterOnCharacterType(signal_callback callback)
+void GuiTextBox::RegisterOnCharacterType(ListenerBase<TextBoxTypingArgs*>* listener)
 {
-    return this->onCharacterType.Connect(callback);
+    this->onCharacterType.Connect(listener);
 }
 
 void GuiTextBox::DoSelect()
@@ -148,7 +148,7 @@ void GuiTextBox::DoSelect()
     this->cursor_position = this->text.size();
     this->is_selected = true;
 
-    SignalArgsGuiTextBox args;
+    TextBoxSelectionArgs args;
     args.text_box = this;
     this->onSelect.Fire(&args);
 }
@@ -157,14 +157,14 @@ void GuiTextBox::DoDeselect()
 {
     this->is_selected = false;
 
-    SignalArgsGuiTextBox args;
+    TextBoxSelectionArgs args;
     args.text_box = this;
     this->onDeselect.Fire(&args);
 }
 
 void GuiTextBox::DoCharacterType(char c)
 {
-    SignalArgsGuiTextBoxCharTyped args;
+    TextBoxTypingArgs args;
     args.text_box = this;
     args.character = c;
     this->onCharacterType.Fire(&args);

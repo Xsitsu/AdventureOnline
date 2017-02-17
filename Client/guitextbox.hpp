@@ -6,7 +6,7 @@
 #include "guiframe.hpp"
 #include "color3.hpp"
 
-#include "GameShared/signal.hpp"
+#include "observer.hpp"
 
 #include "allegro5/allegro_font.h"
 
@@ -15,6 +15,9 @@
 //class GuiSelectionService;
 
 #include "guiselectionservice.hpp"
+
+struct TextBoxSelectionArgs;
+struct TextBoxTypingArgs;
 
 class GuiTextBox : public GuiFrame
 {
@@ -60,9 +63,9 @@ protected:
     unsigned short cursor_position;
     bool is_selected;
 
-    Signal onSelect;
-    Signal onDeselect;
-    Signal onCharacterType;
+    Observer<TextBoxSelectionArgs*> onSelect;
+    Observer<TextBoxSelectionArgs*> onDeselect;
+    Observer<TextBoxTypingArgs*> onCharacterType;
 
     void DoSelect();
     void DoDeselect();
@@ -71,9 +74,9 @@ protected:
     friend class GuiSelectionService;
 
 public:
-    SignalListener RegisterOnSelect(signal_callback callback);
-    SignalListener RegisterOnDeselect(signal_callback callback);
-    SignalListener RegisterOnCharacterType(signal_callback callback);
+    void RegisterOnSelect(ListenerBase<TextBoxSelectionArgs*>* listener);
+    void RegisterOnDeselect(ListenerBase<TextBoxSelectionArgs*>* listener);
+    void RegisterOnCharacterType(ListenerBase<TextBoxTypingArgs*>* listener);
 
     void Select();
     void Deselect();
@@ -84,13 +87,14 @@ public:
 
 };
 
-struct SignalArgsGuiTextBox : SignalArgs
+struct TextBoxSelectionArgs
 {
     GuiTextBox* text_box;
 };
 
-struct SignalArgsGuiTextBoxCharTyped : SignalArgsGuiTextBox
+struct TextBoxTypingArgs
 {
+    GuiTextBox* text_box;
     char character;
 };
 

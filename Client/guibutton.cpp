@@ -18,60 +18,60 @@ GuiButton::~GuiButton()
 
 void GuiButton::DoClick()
 {
-    SignalArgsGuiButton args;
+    GuiButtonArgs args;
     args.button = this;
     this->onClick.Fire(&args);
 }
 
 void GuiButton::DoMouseDown()
 {
-    SignalArgsGuiButton args;
+    GuiButtonArgs args;
     args.button = this;
     this->onMouseDown.Fire(&args);
 }
 
 void GuiButton::DoMouseUp()
 {
-    SignalArgsGuiButton args;
+    GuiButtonArgs args;
     args.button = this;
     this->onMouseUp.Fire(&args);
 }
 
 void GuiButton::DoMouseEnter()
 {
-    SignalArgsGuiButton args;
+    GuiButtonArgs args;
     args.button = this;
     this->onMouseEnter.Fire(&args);
 }
 
 void GuiButton::DoMouseLeave()
 {
-    SignalArgsGuiButton args;
+    GuiButtonArgs args;
     args.button = this;
     this->onMouseLeave.Fire(&args);
 }
 
-SignalListener GuiButton::RegisterOnClick(signal_callback callback)
+void GuiButton::RegisterOnClick(ListenerBase<GuiButtonArgs*>* listener)
 {
-    return this->onClick.Connect(callback);
+    this->onClick.Connect(listener);
 }
 
-SignalListener GuiButton::RegisterOnMouseDown(signal_callback callback)
+void GuiButton::RegisterOnMouseDown(ListenerBase<GuiButtonArgs*>* listener)
 {
-    return this->onMouseDown.Connect(callback);
+    this->onMouseDown.Connect(listener);
 }
 
-SignalListener GuiButton::RegisterOnMouseUp(signal_callback callback)
+void GuiButton::RegisterOnMouseUp(ListenerBase<GuiButtonArgs*>* listener)
 {
-    return this->onMouseUp.Connect(callback);
+    this->onMouseUp.Connect(listener);
 }
 
-SignalListener GuiButton::RegisterOnMouseEnter(signal_callback callback)
+void GuiButton::RegisterOnMouseEnter(ListenerBase<GuiButtonArgs*>* listener)
 {
-    return this->onMouseEnter.Connect(callback);
+    this->onMouseEnter.Connect(listener);
 }
 
-SignalListener GuiButton::RegisterOnMouseLeave(signal_callback callback)
+void GuiButton::RegisterOnMouseLeave(ListenerBase<GuiButtonArgs*>* listener)
 {
-    return this->onMouseLeave.Connect(callback);
+    this->onMouseLeave.Connect(listener);
 }
