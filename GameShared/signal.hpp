@@ -5,46 +5,58 @@
 
 #include "main.h"
 
-struct DLL_EXPORT SignalArgs
+
+template <class T>
+class DLL_EXPORT SignalListenerBase
 {
-    virtual ~SignalArgs() {}
+protected:
+
+public:
+    SignalListenerBase();
+
+    virtual void Notify(const T& args) const = 0;
 };
 
-typedef DLL_EXPORT void (*signal_callback)(const SignalArgs* args);
-typedef std::list<signal_callback>::iterator callback_iter;
-
-class SignalListener;
-
+template <class T>
 class DLL_EXPORT Signal
 {
-friend class SignalListener;
-
 protected:
-    std::list<signal_callback> connected_funcs;
+    std::list<SignalListenerBase<T>> listeners;
+    typedef typename std::list<SignalListenerBase<T>>::iterator listener_iterator;
+    typedef typename std::list<SignalListenerBase<T>>::const_iterator c_listener_iterator;
 
-    void DisconnectFunction(signal_callback callback);
-
-    Signal(const Signal& copy) {}
-    Signal& operator=(const Signal& rhs) {}
+    Signal(const Signal<T>& copy) {}
+    Signal& operator=(const Signal<T>& rhs) { return *this; }
 
 public:
     Signal();
 
-    SignalListener Connect(signal_callback callback);
-    void Fire(SignalArgs* args);
-};
+    void Connect(SignalListenerBase<T>* listener)
+    {
+        this->listeners.push_back(listener);
+    }
 
-class DLL_EXPORT SignalListener
-{
-protected:
-    bool is_connected;
-    signal_callback callback;
-    Signal* signal;
+    void Disconnect(SignalListenerBase<T>* listener)
+    {
+        listener_iterator iter = this->listeners.front();
+        for (iter; iter != this->listeners.end(); ++iter)
+        {
+            if (*iter == listener)
+            {
+                this->listeners.erase(iter);
+                return;
+            }
+        }
+    }
 
-public:
-    SignalListener(Signal* signal, signal_callback callback);
-    void Disconnect();
-
+    void Fire(const T& args) const
+    {
+        c_listener_iterator iter = this->listeners.begin();
+        for (iter; iter != this->listeners.end(); ++iter)
+        {
+            (*iter)->Notify(args);
+        }
+    }
 };
 
 #endif // SIGNAL_HPP_INCLUDE
