@@ -1,137 +1,67 @@
-#include "gamestate.hpp"
+#include "gamestatetitle.hpp"
 
-class TitleButtonEnterListener : public ListenerBase<GuiButtonArgs*>
-{
-public:
-    virtual void Notify(GuiButtonArgs*& args) const
-    {
-        GuiTextButton* button = static_cast<GuiTextButton*>(args->button);
-        button->SetTextColor(Color3(255, 255, 0));
-    }
-};
-
-class TitleButtonLeaveListener : public ListenerBase<GuiButtonArgs*>
-{
-public:
-    virtual void Notify(GuiButtonArgs*& args) const
-    {
-        GuiTextButton* button = static_cast<GuiTextButton*>(args->button);
-        button->SetTextColor(Color3(255, 255, 255));
-    }
-};
-
-class GameQuitEvent : public GameEventBase
-{
-public:
-    GameQuitEvent(Game* game) : GameEventBase(game) {}
-
-    virtual void HandleEvent()
-    {
-        this->game->ChangeState(new GameStateQuit(this->game));
-    }
-};
-
-class GameQuitListener : public ListenerBase<GuiButtonArgs*>
-{
-protected:
-    Game* game;
-
-public:
-    GameQuitListener(Game* game) : game(game) {}
-
-    virtual void Notify(GuiButtonArgs*& args) const
-    {
-        this->game->RegisterEventToQueue(new GameQuitEvent(this->game));
-    }
-};
-
+#include "gamestatequit.hpp"
 
 GameStateTitle::GameStateTitle(Game* game) : GameStateBase(game)
 {
-
+    this->mouse_enter_listener = new TitleButtonEnterListener();
+    this->mouse_leave_listener = new TitleButtonLeaveListener();
+    this->game_quit_listener = new GameQuitListener(this->game);
 }
 
 GameStateTitle::~GameStateTitle()
 {
-
-}
-
-GuiTextButton* CreateTitleButton(int offset, std::string button_text, ALLEGRO_FONT* text_font)
-{
-    Color3 button_background = Color3(0, 0, 0);
-    char button_background_alpha = 180;
-    Vector2 button_size = Vector2(200, 26);
-    Vector2 button_start_pos = Vector2(640 - button_size.x, 480 + button_size.y) / 2;
-    Vector2 button_offset = Vector2(0, 34);
-
-
-    GuiTextButton* button = new GuiTextButton(button_size, button_start_pos + (button_offset * offset));
-    button->SetBackgroundColor(button_background);
-    button->SetBackgroundAlpha(button_background_alpha);
-    button->SetText(button_text);
-    button->SetTextColor(Color3(255, 255, 255));
-    button->SetTextAlign(GuiTextButton::ALIGN_CENTER);
-    button->SetTextFont(text_font);
-
-    return button;
+    delete this->mouse_enter_listener;
+    delete this->mouse_leave_listener;
+    delete this->game_quit_listener;
 }
 
 void GameStateTitle::Enter()
 {
-    this->game->display = al_create_display(640, 480);
-    if (!this->game->display)
-    {
-        std::cout << "Failed to create display!" <<  std::endl;
-        throw "break";
-    }
-
-    al_register_event_source(this->game->event_queue, al_get_display_event_source(this->game->display));
-
-    al_set_window_position(this->game->display, 100, 100);
-
-
-    ALLEGRO_FONT* button_font = al_load_font("C:/Windows/Fonts/arial.ttf", 22, 0);
-    FontService::Instance()->RegisterFont("title_button", button_font);
-
-
-    GuiFrame* base_frame;
-    ListenerBase<GuiButtonArgs*>* mouse_enter_listener = new TitleButtonEnterListener();
-    ListenerBase<GuiButtonArgs*>* mouse_leave_listener = new TitleButtonLeaveListener();
-    ListenerBase<GuiButtonArgs*>* game_quit_listener = new GameQuitListener(this->game);
-
-    base_frame = new GuiFrame(Vector2(640, 480), Vector2(0, 0));
-    base_frame->SetBackgroundColor(Color3(255, 255, 255));
-
+    GuiScreen* screen = this->game->GetCurrentScreen();
     GuiTextButton* button;
 
-    button = CreateTitleButton(0, "Create Account", button_font);
+    button = static_cast<GuiTextButton*>(screen->GetGuiById("CreateAccount"));
     button->RegisterOnMouseEnter(mouse_enter_listener);
     button->RegisterOnMouseLeave(mouse_leave_listener);
-    base_frame->AddChild(button);
 
-    button = CreateTitleButton(1, "Play Game", button_font);
+    button = static_cast<GuiTextButton*>(screen->GetGuiById("PlayGame"));
     button->RegisterOnMouseEnter(mouse_enter_listener);
     button->RegisterOnMouseLeave(mouse_leave_listener);
-    base_frame->AddChild(button);
 
-    button = CreateTitleButton(2, "Options", button_font);
+    button = static_cast<GuiTextButton*>(screen->GetGuiById("Options"));
     button->RegisterOnMouseEnter(mouse_enter_listener);
     button->RegisterOnMouseLeave(mouse_leave_listener);
-    base_frame->AddChild(button);
 
-    button = CreateTitleButton(3, "Quit", button_font);
+    button = static_cast<GuiTextButton*>(screen->GetGuiById("Quit"));
     button->RegisterOnMouseEnter(mouse_enter_listener);
     button->RegisterOnMouseLeave(mouse_leave_listener);
     button->RegisterOnClick(game_quit_listener);
-    base_frame->AddChild(button);
 
-    GuiScreen* screen = new GuiScreen(base_frame);
-    this->game->PushScreen(screen);
+
 }
 
 void GameStateTitle::Exit()
 {
-    this->game->PopScreen();
+    GuiScreen* screen = this->game->GetCurrentScreen();
+    GuiTextButton* button;
+
+    button = static_cast<GuiTextButton*>(screen->GetGuiById("CreateAccount"));
+    button->UnregisterOnMouseEnter(mouse_enter_listener);
+    button->UnregisterOnMouseLeave(mouse_leave_listener);
+
+    button = static_cast<GuiTextButton*>(screen->GetGuiById("PlayGame"));
+    button->UnregisterOnMouseEnter(mouse_enter_listener);
+    button->UnregisterOnMouseLeave(mouse_leave_listener);
+
+    button = static_cast<GuiTextButton*>(screen->GetGuiById("Options"));
+    button->UnregisterOnMouseEnter(mouse_enter_listener);
+    button->UnregisterOnMouseLeave(mouse_leave_listener);
+
+    button = static_cast<GuiTextButton*>(screen->GetGuiById("Quit"));
+    button->UnregisterOnMouseEnter(mouse_enter_listener);
+    button->UnregisterOnMouseLeave(mouse_leave_listener);
+    button->UnregisterOnClick(game_quit_listener);
 }
 
 void GameStateTitle::Tick()

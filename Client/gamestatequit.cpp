@@ -1,4 +1,4 @@
-#include "gamestate.hpp"
+#include "gamestatequit.hpp"
 
 GameStateQuit::GameStateQuit(Game* game) : GameStateBase(game)
 {}

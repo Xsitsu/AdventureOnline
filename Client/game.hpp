@@ -66,8 +66,7 @@ protected:
 
     std::list<GameEventBase*> game_event_queue;
 
-    void PushScreen(GuiScreen* screen);
-    void PopScreen();
+
     GuiScreen* GetCurrentScreen();
     void DrawScreens();
 
@@ -79,6 +78,8 @@ public:
     void RegisterEventToQueue(GameEventBase* event);
 
     void ChangeState(GameStateBase* state);
+    void PushScreen(GuiScreen* screen);
+    void PopScreen();
 
 };
 

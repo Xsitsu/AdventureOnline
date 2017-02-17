@@ -1,4 +1,5 @@
 #include "game.hpp"
+#include "gamestateinit.hpp"
 
 Game* Game::instance = NULL;
 

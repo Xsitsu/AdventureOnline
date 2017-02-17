@@ -33,6 +33,12 @@ public:
     void RegisterOnMouseUp(ListenerBase<GuiButtonArgs*>* listener);
     void RegisterOnMouseEnter(ListenerBase<GuiButtonArgs*>* listener);
     void RegisterOnMouseLeave(ListenerBase<GuiButtonArgs*>* listener);
+
+    void UnregisterOnClick(ListenerBase<GuiButtonArgs*>* listener);
+    void UnregisterOnMouseDown(ListenerBase<GuiButtonArgs*>* listener);
+    void UnregisterOnMouseUp(ListenerBase<GuiButtonArgs*>* listener);
+    void UnregisterOnMouseEnter(ListenerBase<GuiButtonArgs*>* listener);
+    void UnregisterOnMouseLeave(ListenerBase<GuiButtonArgs*>* listener);
 };
 
 struct GuiButtonArgs

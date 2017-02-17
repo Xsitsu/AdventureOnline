@@ -75,3 +75,28 @@ void GuiButton::RegisterOnMouseLeave(ListenerBase<GuiButtonArgs*>* listener)
 {
     this->onMouseLeave.Connect(listener);
 }
+
+void GuiButton::UnregisterOnClick(ListenerBase<GuiButtonArgs*>* listener)
+{
+    this->onClick.Disconnect(listener);
+}
+
+void GuiButton::UnregisterOnMouseDown(ListenerBase<GuiButtonArgs*>* listener)
+{
+    this->onMouseDown.Disconnect(listener);
+}
+
+void GuiButton::UnregisterOnMouseUp(ListenerBase<GuiButtonArgs*>* listener)
+{
+    this->onMouseUp.Disconnect(listener);
+}
+
+void GuiButton::UnregisterOnMouseEnter(ListenerBase<GuiButtonArgs*>* listener)
+{
+    this->onMouseEnter.Disconnect(listener);
+}
+
+void GuiButton::UnregisterOnMouseLeave(ListenerBase<GuiButtonArgs*>* listener)
+{
+    this->onMouseLeave.Disconnect(listener);
+}

@@ -187,3 +187,18 @@ bool GuiScreen::HandleMouseMove(const Vector2& pos)
 
     return was_sunk;
 }
+
+void GuiScreen::SetGuiId(std::string id, GuiBase* gui)
+{
+    if (gui != this->base && !gui->HasAncestor(this->base))
+    {
+        throw "error";
+    }
+
+    this->gui_id_map[id] = gui;
+}
+
+GuiBase* GuiScreen::GetGuiById(std::string id)
+{
+    return this->gui_id_map[id];
+}
