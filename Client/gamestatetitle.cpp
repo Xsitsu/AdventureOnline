@@ -20,14 +20,31 @@ public:
     }
 };
 
-class GameQuitListener : public ListenerBase<GuiButtonArgs*>
+class GameQuitEvent : public GameEventBase
 {
 public:
-    virtual void Notify(GuiButtonArgs*& args) const
+    GameQuitEvent(Game* game) : GameEventBase(game) {}
+
+    virtual void HandleEvent()
     {
-        Game::Instance()->ChangeState(new GameStateQuit(Game::Instance()));
+        this->game->ChangeState(new GameStateQuit(this->game));
     }
 };
+
+class GameQuitListener : public ListenerBase<GuiButtonArgs*>
+{
+protected:
+    Game* game;
+
+public:
+    GameQuitListener(Game* game) : game(game) {}
+
+    virtual void Notify(GuiButtonArgs*& args) const
+    {
+        this->game->RegisterEventToQueue(new GameQuitEvent(this->game));
+    }
+};
+
 
 GameStateTitle::GameStateTitle(Game* game) : GameStateBase(game)
 {
@@ -80,7 +97,7 @@ void GameStateTitle::Enter()
     GuiFrame* base_frame;
     ListenerBase<GuiButtonArgs*>* mouse_enter_listener = new TitleButtonEnterListener();
     ListenerBase<GuiButtonArgs*>* mouse_leave_listener = new TitleButtonLeaveListener();
-    ListenerBase<GuiButtonArgs*>* game_quit_listener = new GameQuitListener();
+    ListenerBase<GuiButtonArgs*>* game_quit_listener = new GameQuitListener(this->game);
 
     base_frame = new GuiFrame(Vector2(640, 480), Vector2(0, 0));
     base_frame->SetBackgroundColor(Color3(255, 255, 255));

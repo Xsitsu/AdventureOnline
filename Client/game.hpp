@@ -20,6 +20,8 @@ class GameStateBase;
 #include "fontservice.hpp"
 #include "guiselectionservice.hpp"
 
+class GameEventBase;
+
 class Game
 {
 friend class GameStateInit;
@@ -55,23 +57,41 @@ protected:
 
     GameStateBase* state;
 
-    //void ChangeState(GameStateBase* state);
+
 
     Client* client;
 
     std::list<GuiScreen*> screen_stack;
     typedef std::list<GuiScreen*>::iterator screen_iter;
 
+    std::list<GameEventBase*> game_event_queue;
+
     void PushScreen(GuiScreen* screen);
     void PopScreen();
-    void DrawScreens();
     GuiScreen* GetCurrentScreen();
+    void DrawScreens();
+
 
 public:
     void Init();
     void Run();
 
+    void RegisterEventToQueue(GameEventBase* event);
+
     void ChangeState(GameStateBase* state);
 
 };
+
+class GameEventBase
+{
+protected:
+    Game* game;
+
+public:
+    GameEventBase(Game* game) : game(game) {}
+    virtual ~GameEventBase() {}
+
+    virtual void HandleEvent() = 0;
+};
+
 #endif // GAME_HPP_INCLUDE
