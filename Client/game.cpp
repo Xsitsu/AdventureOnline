@@ -1,5 +1,5 @@
 #include "game.hpp"
-#include "gamestateinit.hpp"
+#include "gamestateserverconnect.hpp"
 
 Game* Game::instance = NULL;
 
@@ -64,7 +64,7 @@ void Game::Init()
 	FontService::Instance()->RegisterFont("debug", debug_font);
 
 	// Initialize game state stuff
-    this->state = new GameStateInit(this);
+    this->state = new GameStateServerConnect(this);
     this->state->Enter();
 }
 

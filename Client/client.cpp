@@ -51,36 +51,35 @@ bool Client::GetConnectResponse()
     return this->is_connected;
 }
 
-void Client::Disconnect()
+bool Client::SendDisconnectRequest()
 {
-    if (this->is_connected)
+    if (!this->is_connected) return false;
+
+    PacketDisconnect packet = PacketDisconnect();
+    this->InternalSendPacket((PacketBase*)&packet);
+
+    return true;
+}
+
+bool Client::GetDisconnectResponse()
+{
+    if (!this->is_connected) return false;
+
+    PacketBase* response = this->InternalReceivePacket();
+    if (response)
     {
-        PacketDisconnect packet = PacketDisconnect();
-        this->InternalSendPacket((PacketBase*)&packet);
-
-        PacketBase* response = NULL;
-
-        bool wait_for_response = true;
-        while (wait_for_response)
+        if (response->GetType() == PacketBase::PACKET_DISCONNECT_RESPONSE)
         {
-            std::cout << "Waiting for response..." << std::endl;
+            this->is_connected = false;
+            this->socket.Close();
 
-            response = this->InternalReceivePacket();
-            if (response)
-            {
-                if (response->GetType() == PacketBase::PACKET_DISCONNECT_RESPONSE)
-                {
-                    wait_for_response = false;
-                }
-
-                delete response;
-            }
+            std::cout << "Disconnected!" << std::endl;
         }
-        std::cout << "Disconnected!" << std::endl;
 
-        this->is_connected = false;
-        this->socket.Close();
+        delete response;
     }
+
+    return !this->is_connected;
 }
 
 void Client::InternalSendPacket(PacketBase* packet)
@@ -90,7 +89,10 @@ void Client::InternalSendPacket(PacketBase* packet)
     packet->SetAck(this->ack_list.GetPacketAck());
     packet->SetAckBitfield(this->ack_list.GetPacketAckBitfield());
 
-    this->ack_list.RegisterPacket(packet);
+    if (packet->GetNeedsAck())
+    {
+        this->ack_list.RegisterPacket(packet);
+    }
 
     char buffer[PacketBase::MAX_BUFFER];
     unsigned int data_size = packet->Encode(buffer);

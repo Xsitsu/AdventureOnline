@@ -32,7 +32,8 @@ public:
     bool Init(unsigned short listen_port);
     bool SendConnectRequest();
     bool GetConnectResponse();
-    void Disconnect();
+    bool SendDisconnectRequest();
+    bool GetDisconnectResponse();
 
     bool IsConnected() { return this->is_connected; }
 
