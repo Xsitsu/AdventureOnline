@@ -1,15 +1,15 @@
 #include "guitextbox.hpp"
 
 GuiTextBox::GuiTextBox() : GuiFrame(), text_color(Color3()), text_alpha(255), text_draw_color(al_map_rgb(0, 0, 0)),
-cursor_position(0), is_selected(false), text_align(ALIGN_LEFT)
+cursor_position(0), is_selected(false), text_align(ALIGN_LEFT), text_draw_font(NULL)
 {}
 
 GuiTextBox::GuiTextBox(Vector2 size) : GuiFrame(size), text_color(Color3()), text_alpha(255), text_draw_color(al_map_rgb(0, 0, 0)),
-cursor_position(0), is_selected(false), text_align(ALIGN_LEFT)
+cursor_position(0), is_selected(false), text_align(ALIGN_LEFT), text_draw_font(NULL)
 {}
 
 GuiTextBox::GuiTextBox(Vector2 size, Vector2 position) : GuiFrame(size, position), text_color(Color3()), text_alpha(255), text_draw_color(al_map_rgb(0, 0, 0)),
-cursor_position(0), is_selected(false), text_align(ALIGN_LEFT)
+cursor_position(0), is_selected(false), text_align(ALIGN_LEFT), text_draw_font(NULL)
 {}
 
 GuiTextBox::~GuiTextBox()
@@ -60,6 +60,16 @@ void GuiTextBox::SetTextAlign(GuiTextBox::TEXTALIGN align)
     this->text_align = align;
 }
 
+ALLEGRO_FONT* GuiTextBox::GetTextFont() const
+{
+    return this->text_draw_font;
+}
+
+void GuiTextBox::SetTextFont(ALLEGRO_FONT* font)
+{
+    this->text_draw_font = font;
+}
+
 void GuiTextBox::UpdateTextDrawColor()
 {
     Color3* color = &this->text_color;
@@ -71,7 +81,7 @@ void GuiTextBox::DoDraw() const
     GuiFrame::DoDraw();
 
     Vector2 abs_pos = this->GetAbsolutePosition();
-    ALLEGRO_FONT* font = FontService::Instance()->GetFont();
+    ALLEGRO_FONT* font = this->text_draw_font;
     if (font)
     {
         int draw_x = abs_pos.x;
@@ -118,19 +128,19 @@ void GuiTextBox::DoDraw() const
 
 }
 
-SignalListener GuiTextBox::RegisterOnSelect(signal_callback callback)
+void GuiTextBox::RegisterOnSelect(ListenerBase<TextBoxSelectionArgs*>* listener)
 {
-    return this->onSelect.Connect(callback);
+    this->onSelect.Connect(listener);
 }
 
-SignalListener GuiTextBox::RegisterOnDeselect(signal_callback callback)
+void GuiTextBox::RegisterOnDeselect(ListenerBase<TextBoxSelectionArgs*>* listener)
 {
-    return this->onDeselect.Connect(callback);
+    this->onDeselect.Connect(listener);
 }
 
-SignalListener GuiTextBox::RegisterOnCharacterType(signal_callback callback)
+void GuiTextBox::RegisterOnCharacterType(ListenerBase<TextBoxTypingArgs*>* listener)
 {
-    return this->onCharacterType.Connect(callback);
+    this->onCharacterType.Connect(listener);
 }
 
 void GuiTextBox::DoSelect()
@@ -138,7 +148,7 @@ void GuiTextBox::DoSelect()
     this->cursor_position = this->text.size();
     this->is_selected = true;
 
-    SignalArgsGuiTextBox args;
+    TextBoxSelectionArgs args;
     args.text_box = this;
     this->onSelect.Fire(&args);
 }
@@ -147,14 +157,14 @@ void GuiTextBox::DoDeselect()
 {
     this->is_selected = false;
 
-    SignalArgsGuiTextBox args;
+    TextBoxSelectionArgs args;
     args.text_box = this;
     this->onDeselect.Fire(&args);
 }
 
 void GuiTextBox::DoCharacterType(char c)
 {
-    SignalArgsGuiTextBoxCharTyped args;
+    TextBoxTypingArgs args;
     args.text_box = this;
     args.character = c;
     this->onCharacterType.Fire(&args);

@@ -1,4 +1,7 @@
 #include "game.hpp"
+#include "gamestateinit.hpp"
+
+Game* Game::instance = NULL;
 
 Game::Game() : display(NULL), event_queue(NULL), timer(NULL), state(NULL), client(NULL)
 {
@@ -57,8 +60,8 @@ void Game::Init()
 	while (!this->client->Init(listen_port)) { ++listen_port; }
 	std::cout << "Started listening on port: " << listen_port << std::endl;
 
-
-	FontService::Instance()->LoadFonts();
+	ALLEGRO_FONT* debug_font = al_load_font("C:/Windows/Fonts/arial.ttf", 18, 0);
+	FontService::Instance()->RegisterFont("debug", debug_font);
 
 	// Initialize game state stuff
     this->state = new GameStateInit(this);
@@ -77,6 +80,15 @@ void Game::Run()
     al_start_timer(this->timer);
     while(this->is_running)
     {
+        while (!this->game_event_queue.empty())
+        {
+            GameEventBase* event = this->game_event_queue.front();
+            this->game_event_queue.pop_front();
+
+            event->HandleEvent();
+            delete event;
+        }
+
         ALLEGRO_EVENT ev;
         al_wait_for_event(event_queue, &ev);
 
@@ -140,7 +152,7 @@ void Game::Run()
 
             if (this->display)
             {
-                al_draw_textf(FontService::Instance()->GetFont(), al_map_rgb(255, 0, 255), 5, 5, 0, "FPS: %i", game_fps);
+                al_draw_textf(FontService::Instance()->GetFont("debug"), al_map_rgb(255, 0, 255), 5, 5, 0, "FPS: %i", game_fps);
 
                 al_wait_for_vsync();
                 al_flip_display();
@@ -179,4 +191,9 @@ GuiScreen* Game::GetCurrentScreen()
 {
     if (this->screen_stack.empty()) return NULL;
     return this->screen_stack.back();
+}
+
+void Game::RegisterEventToQueue(GameEventBase* event)
+{
+    this->game_event_queue.push_back(event);
 }

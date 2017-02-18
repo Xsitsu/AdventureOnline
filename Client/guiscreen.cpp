@@ -120,6 +120,7 @@ bool GuiScreen::HandleMouseDown(const Vector2& pos)
 bool GuiScreen::HandleMouseUp(const Vector2& pos)
 {
     bool was_sunk = false;
+    bool did_mouse_up = false;
     GuiBase* gui = this->FindGuiCoveringPoint(pos);
     if (gui)
     {
@@ -127,6 +128,8 @@ bool GuiScreen::HandleMouseUp(const Vector2& pos)
         {
             GuiSelectionService::Instance()->MouseButtonUp(button);
             was_sunk = true;
+
+            did_mouse_up = true;
         }
         else if (GuiTextBox* text_box = dynamic_cast<GuiTextBox*>(gui))
         {
@@ -134,6 +137,10 @@ bool GuiScreen::HandleMouseUp(const Vector2& pos)
             was_sunk = true;
         }
     }
+
+    if (!did_mouse_up)
+        GuiSelectionService::Instance()->LetMouseUp();
+
     return was_sunk;
 }
 
@@ -179,4 +186,19 @@ bool GuiScreen::HandleMouseMove(const Vector2& pos)
     }
 
     return was_sunk;
+}
+
+void GuiScreen::SetGuiId(std::string id, GuiBase* gui)
+{
+    if (gui != this->base && !gui->HasAncestor(this->base))
+    {
+        throw "error";
+    }
+
+    this->gui_id_map[id] = gui;
+}
+
+GuiBase* GuiScreen::GetGuiById(std::string id)
+{
+    return this->gui_id_map[id];
 }

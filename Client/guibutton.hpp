@@ -3,16 +3,18 @@
 
 #include "guiframe.hpp"
 
-#include "GameShared/signal.hpp"
+#include "observer.hpp"
+
+struct GuiButtonArgs;
 
 class GuiButton : public GuiFrame
 {
 protected:
-    Signal onClick;
-    Signal onMouseDown;
-    Signal onMouseUp;
-    Signal onMouseEnter;
-    Signal onMouseLeave;
+    Observer<GuiButtonArgs*> onClick;
+    Observer<GuiButtonArgs*> onMouseDown;
+    Observer<GuiButtonArgs*> onMouseUp;
+    Observer<GuiButtonArgs*> onMouseEnter;
+    Observer<GuiButtonArgs*> onMouseLeave;
 
 public:
     GuiButton();
@@ -26,14 +28,20 @@ public:
     virtual void DoMouseEnter();
     virtual void DoMouseLeave();
 
-    SignalListener RegisterOnClick(signal_callback callback);
-    SignalListener RegisterOnMouseDown(signal_callback callback);
-    SignalListener RegisterOnMouseUp(signal_callback callback);
-    SignalListener RegisterOnMouseEnter(signal_callback callback);
-    SignalListener RegisterOnMouseLeave(signal_callback callback);
+    void RegisterOnClick(ListenerBase<GuiButtonArgs*>* listener);
+    void RegisterOnMouseDown(ListenerBase<GuiButtonArgs*>* listener);
+    void RegisterOnMouseUp(ListenerBase<GuiButtonArgs*>* listener);
+    void RegisterOnMouseEnter(ListenerBase<GuiButtonArgs*>* listener);
+    void RegisterOnMouseLeave(ListenerBase<GuiButtonArgs*>* listener);
+
+    void UnregisterOnClick(ListenerBase<GuiButtonArgs*>* listener);
+    void UnregisterOnMouseDown(ListenerBase<GuiButtonArgs*>* listener);
+    void UnregisterOnMouseUp(ListenerBase<GuiButtonArgs*>* listener);
+    void UnregisterOnMouseEnter(ListenerBase<GuiButtonArgs*>* listener);
+    void UnregisterOnMouseLeave(ListenerBase<GuiButtonArgs*>* listener);
 };
 
-struct SignalArgsGuiButton : SignalArgs
+struct GuiButtonArgs
 {
     GuiButton* button;
 };
