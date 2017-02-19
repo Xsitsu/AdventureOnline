@@ -162,6 +162,22 @@ uint16_t PacketReader::ReadShort(char* buffer, unsigned int& pos)
     return ntohs(val);
 }
 
+
+void PacketReader::WriteByte(char* buffer, unsigned int& pos, uint8_t value)
+{
+    char* buf_pos = buffer + pos;
+    *((uint8_t*)buf_pos) = value;
+    pos+=sizeof(uint8_t);
+}
+
+uint8_t PacketReader::ReadByte(char* buffer, unsigned int& pos)
+{
+    char* buf_pos = buffer + pos;
+    uint8_t val = *((uint8_t*)buf_pos);
+    pos+=sizeof(uint8_t);
+    return val;
+}
+
 PacketInit::PacketInit() : PacketBase(PacketBase::PACKET_INIT)
 {}
 
@@ -181,13 +197,14 @@ void PacketInit::Decode(char* buffer)
     this->listen_port = reader.ReadShort(buffer, this->buffer_pos);
 }
 
-PacketInitResponse::PacketInitResponse() : PacketBase(PacketBase::PACKET_INIT_RESPONSE), assigned_connection_id(0)
+PacketInitResponse::PacketInitResponse() : PacketBase(PacketBase::PACKET_INIT_RESPONSE), assigned_connection_id(0), connection_accepted(true)
 {}
 
 unsigned int PacketInitResponse::Encode(char* buffer)
 {
     PacketBase::Encode(buffer);
     PacketReader reader;
+    reader.WriteByte(buffer, this->buffer_pos, this->connection_accepted);
     reader.WriteLongInt(buffer, this->buffer_pos, this->assigned_connection_id);
 
     return this->buffer_pos;
@@ -197,6 +214,7 @@ void PacketInitResponse::Decode(char* buffer)
 {
     PacketBase::Decode(buffer);
     PacketReader reader;
+    this->connection_accepted = reader.ReadByte(buffer, this-> buffer_pos);
     this->assigned_connection_id = reader.ReadLongInt(buffer, this->buffer_pos);
 }
 

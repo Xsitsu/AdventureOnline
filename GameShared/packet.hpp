@@ -81,6 +81,9 @@ public:
 
     void WriteShort(char* buffer, unsigned int& pos, uint16_t value);
     uint16_t ReadShort(char* buffer, unsigned int& pos);
+
+    void WriteByte(char* buffer, unsigned int& pos, uint8_t value);
+    uint8_t ReadByte(char* buffer, unsigned int& pos);
 };
 
 
@@ -109,12 +112,16 @@ public:
 class DLL_EXPORT PacketInitResponse : public PacketBase
 {
 protected:
+    bool connection_accepted;
     unsigned int assigned_connection_id;
 
 public:
     PacketInitResponse();
     void AssignConnectionId(unsigned int id) { this->assigned_connection_id = id; }
     unsigned int GetAssignedConnectionId() {return this->assigned_connection_id; }
+
+    void SetConnectionAccepted(bool accepted) { this->connection_accepted = accepted; }
+    bool GetConnectionAccepted() { return this->connection_accepted; }
 
     virtual unsigned int Encode(char* buffer);
     virtual void Decode(char* buffer);

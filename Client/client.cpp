@@ -33,22 +33,32 @@ bool Client::GetConnectResponse()
 {
     if (this->is_connected) return false;
 
+    bool ret_val = false;
     PacketBase* response = this->InternalReceivePacket();
     if (response)
     {
         if (response->GetType() == PacketBase::PACKET_INIT_RESPONSE)
         {
-            PacketInitResponse* res = (PacketInitResponse*)response;
-            this->connection_id = res->GetAssignedConnectionId();
-            this->is_connected = true;
+            ret_val = true;
 
-            std::cout << "Connected!" << std::endl;
+            PacketInitResponse* res = (PacketInitResponse*)response;
+            if (res->GetConnectionAccepted())
+            {
+                this->connection_id = res->GetAssignedConnectionId();
+                this->is_connected = true;
+
+                std::cout << "Connected!" << std::endl;
+            }
+            else
+            {
+                std::cout << "Connection Refused!" << std::endl;
+            }
         }
 
         delete response;
     }
 
-    return this->is_connected;
+    return ret_val;
 }
 
 bool Client::SendDisconnectRequest()
