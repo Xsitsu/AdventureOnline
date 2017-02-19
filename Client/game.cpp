@@ -73,6 +73,8 @@ void Game::Run()
     this->is_running = true;
     bool needs_render = false;
 
+    bool show_debug_menu = false;
+
     float game_time = 0;
     int frame_counter = 0;
     int game_fps = 0;
@@ -116,7 +118,14 @@ void Game::Run()
         {
             if (!GuiSelectionService::Instance()->TextBoxHasFocus())
             {
-                this->state->HandleKeyDown(ev.keyboard);
+                if (ev.keyboard.keycode == ALLEGRO_KEY_F5)
+                {
+                    show_debug_menu = !show_debug_menu;
+                }
+                else
+                {
+                    this->state->HandleKeyDown(ev.keyboard);
+                }
             }
         }
         else if (ev.type == ALLEGRO_EVENT_KEY_UP)
@@ -152,7 +161,13 @@ void Game::Run()
 
             if (this->display)
             {
-                al_draw_textf(FontService::Instance()->GetFont("debug"), al_map_rgb(255, 0, 255), 5, 5, 0, "FPS: %i", game_fps);
+                if (show_debug_menu)
+                {
+                    ALLEGRO_FONT* font = FontService::Instance()->GetFont("debug");
+                    ALLEGRO_COLOR color = al_map_rgb(255, 0, 255);
+                    al_draw_textf(font, color, 5, 5, 0, "FPS: %i", game_fps);
+                    al_draw_textf(font, color, 5, 5 + font->height, 0, "GameState: %s", this->state->GetStateName().c_str());
+                }
 
                 al_wait_for_vsync();
                 al_flip_display();
