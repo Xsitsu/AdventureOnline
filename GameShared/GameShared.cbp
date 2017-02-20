@@ -46,6 +46,7 @@
 			</Target>
 		</Build>
 		<Compiler>
+			<Add option="-std=c++11" />
 			<Add option="-DPLATFORM_WINDOWS=1" />
 			<Add option="-DPLATFORM_MAC=2" />
 			<Add option="-DPLATFORM_UNIX=3" />
