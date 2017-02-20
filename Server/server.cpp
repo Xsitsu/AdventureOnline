@@ -43,7 +43,7 @@ unsigned int Server::FindOpenConnectionId()
         this->connection_id_counter -= max;
     }
 
-    std::cout << "Returning: " << id << std::endl;
+    std::cout << "Returning Connection Id: " << id << std::endl;
     return id;
 }
 
@@ -87,6 +87,7 @@ void Server::Tick()
                 return;
             }
 
+            std::cout << "New client connected!" << std::endl;
             client = new ClientConnection(this, clientAddress, con_id);
             this->clients[con_id] = client;
         }

@@ -13,12 +13,16 @@ void GameStateQuit::Enter()
 
 void GameStateQuit::Tick()
 {
-    if (this->game->client->IsConnected())
-    {
-        this->game->client->GetDisconnectResponse();
-    }
-    else
+    if (!this->game->client->IsConnected())
     {
         this->game->is_running = false;
+    }
+}
+
+void GameStateQuit::HandlePacket(PacketBase* packet)
+{
+    if (packet->GetType() == PacketBase::PACKET_DISCONNECT_RESPONSE)
+    {
+        this->game->client->FinalizeDisconnect();
     }
 }

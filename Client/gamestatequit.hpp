@@ -13,6 +13,8 @@ public:
     virtual void Enter();
     virtual void Tick();
 
+    virtual void HandlePacket(PacketBase* packet);
+
     virtual std::string GetStateName() { return "Quit"; }
 };
 

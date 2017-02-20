@@ -75,6 +75,7 @@ protected:
 public:
     void Init();
     void Run();
+    void Cleanup();
 
     void RegisterEventToQueue(GameEventBase* event);
 
