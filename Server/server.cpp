@@ -43,7 +43,7 @@ unsigned int Server::FindOpenConnectionId()
         this->connection_id_counter -= max;
     }
 
-    std::cout << "Returning: " << id << std::endl;
+    std::cout << "Returning Connection Id: " << id << std::endl;
     return id;
 }
 
@@ -70,8 +70,9 @@ void Server::Tick()
         {
             std::cout << "PacketInit" << std::endl;
             unsigned short listen_port = ((PacketInit*)packet)->GetListenPort();
+            Address clientAddress(sender.GetAddress(), listen_port);
 
-            unsigned int con_id;
+            unsigned int con_id = 0;
             try
             {
                 con_id = this->FindOpenConnectionId();
@@ -79,11 +80,14 @@ void Server::Tick()
             catch (...)
             {
                 std::cout << "Refusing connection!" << std::endl;
-                delete packet;
+                PacketInitResponse* res = new PacketInitResponse();
+                res->SetConnectionAccepted(false);
+                this->SendPacketToAddress(res, &clientAddress);
+                delete res;
                 return;
             }
 
-            Address clientAddress(sender.GetAddress(), listen_port);
+            std::cout << "New client connected!" << std::endl;
             client = new ClientConnection(this, clientAddress, con_id);
             this->clients[con_id] = client;
         }

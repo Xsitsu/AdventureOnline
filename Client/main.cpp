@@ -8,9 +8,9 @@ int main(int argc, char** argv)
 {
     InitializeSockets();
 
-    Game game;
-    game.Init();
-    game.Run();
+    Game::Instance()->Init();
+    Game::Instance()->Run();
+    Game::Instance()->Cleanup();
 
 	ShutdownSockets();
 

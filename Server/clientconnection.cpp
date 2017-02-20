@@ -14,9 +14,16 @@ void ClientConnection::SendPacket(PacketBase* packet)
     packet->SetAck(this->ack_list.GetPacketAck());
     packet->SetAckBitfield(this->ack_list.GetPacketAckBitfield());
 
-    this->ack_list.RegisterPacket(packet);
-
     this->server->SendPacketToAddress(packet, &(this->client_address));
+
+    if (packet->GetNeedsAck())
+    {
+        this->ack_list.RegisterPacket(packet);
+    }
+    else
+    {
+        delete packet;
+    }
 }
 
 void ClientConnection::ProcessPacket(PacketBase* packet)
@@ -33,11 +40,15 @@ void ClientConnection::ProcessPacket(PacketBase* packet)
     }
     else if (packet->GetType() == PacketBase::PACKET_DISCONNECT)
     {
-        this->SendPacket(new PacketDisconnectResponse());
+        PacketDisconnectResponse* packet = new PacketDisconnectResponse();
+        packet->SetNeedsAck(false);
+        this->SendPacket(packet);
     }
     else if (packet->GetType() == PacketBase::PACKET_PING)
     {
-        this->SendPacket(new PacketPong());
+        PacketPong* packet = new PacketPong();
+        packet->SetNeedsAck(false);
+        this->SendPacket(packet);
     }
 }
 

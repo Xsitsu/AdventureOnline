@@ -37,6 +37,7 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add option="-std=c++11" />
 			<Add directory=".." />
 			<Add directory="../allegro/include" />
 		</Compiler>
@@ -47,8 +48,17 @@
 		<Unit filename="fontservice.hpp" />
 		<Unit filename="game.cpp" />
 		<Unit filename="game.hpp" />
-		<Unit filename="gamestate.cpp" />
 		<Unit filename="gamestate.hpp" />
+		<Unit filename="gamestateinit.cpp" />
+		<Unit filename="gamestateinit.hpp" />
+		<Unit filename="gamestatequit.cpp" />
+		<Unit filename="gamestatequit.hpp" />
+		<Unit filename="gamestateserverconnect.cpp" />
+		<Unit filename="gamestateserverconnect.hpp" />
+		<Unit filename="gamestatetitle.cpp" />
+		<Unit filename="gamestatetitle.hpp" />
+		<Unit filename="gamestatetitlemake.cpp" />
+		<Unit filename="gamestatetitlemake.hpp" />
 		<Unit filename="guibase.cpp" />
 		<Unit filename="guibase.hpp" />
 		<Unit filename="guibutton.cpp" />
@@ -64,6 +74,7 @@
 		<Unit filename="guitextbutton.cpp" />
 		<Unit filename="guitextbutton.hpp" />
 		<Unit filename="main.cpp" />
+		<Unit filename="observer.hpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

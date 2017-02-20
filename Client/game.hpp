@@ -20,10 +20,34 @@ class GameStateBase;
 #include "fontservice.hpp"
 #include "guiselectionservice.hpp"
 
+class GameEventBase;
+
 class Game
 {
 friend class GameStateInit;
+friend class GameStateServerConnect;
 friend class GameStateTitle;
+friend class GameStateQuit;
+
+protected: // Singleton stuff
+    static Game* instance;
+
+    Game();
+    Game(const Game& copy) {}
+    Game& operator=(const Game& rhs) {}
+    virtual ~Game();
+
+public:
+    static Game* Instance()
+    {
+        if (instance == NULL)
+        {
+            instance = new Game();
+        }
+        return instance;
+    }
+
+
 
 protected:
     ALLEGRO_DISPLAY* display;
@@ -34,24 +58,45 @@ protected:
 
     GameStateBase* state;
 
-    void ChangeState(GameStateBase* state);
+
 
     Client* client;
 
     std::list<GuiScreen*> screen_stack;
     typedef std::list<GuiScreen*>::iterator screen_iter;
 
-    void PushScreen(GuiScreen* screen);
-    void PopScreen();
-    void DrawScreens();
+    std::list<GameEventBase*> game_event_queue;
+
+
     GuiScreen* GetCurrentScreen();
+    void DrawScreens();
+
 
 public:
-    Game();
-    ~Game();
-
     void Init();
     void Run();
+    void Cleanup();
+
+    void RegisterEventToQueue(GameEventBase* event);
+
+    void ChangeState(GameStateBase* state);
+    void PushScreen(GuiScreen* screen);
+    void PopScreen();
+
+    bool IsClientConnected() { return this->client->IsConnected(); }
 
 };
+
+class GameEventBase
+{
+protected:
+    Game* game;
+
+public:
+    GameEventBase(Game* game) : game(game) {}
+    virtual ~GameEventBase() {}
+
+    virtual void HandleEvent() = 0;
+};
+
 #endif // GAME_HPP_INCLUDE
