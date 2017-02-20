@@ -3,7 +3,7 @@
 #include <iostream>
 
 Client::Client(Address address) : is_connected(false), server_address(address),
-connection_id(0), packet_sequence(0), packet_ack(0), packet_ack_bitfield(0)
+connection_id(0), packet_sequence(0), last_communication(0)
 {}
 
 bool Client::Init(unsigned short listen_port)
@@ -33,52 +33,61 @@ bool Client::GetConnectResponse()
 {
     if (this->is_connected) return false;
 
+    bool ret_val = false;
     PacketBase* response = this->InternalReceivePacket();
     if (response)
     {
         if (response->GetType() == PacketBase::PACKET_INIT_RESPONSE)
         {
-            PacketInitResponse* res = (PacketInitResponse*)response;
-            this->connection_id = res->GetAssignedConnectionId();
-            this->is_connected = true;
+            ret_val = true;
 
-            std::cout << "Connected!" << std::endl;
+            PacketInitResponse* res = (PacketInitResponse*)response;
+            if (res->GetConnectionAccepted())
+            {
+                this->connection_id = res->GetAssignedConnectionId();
+                this->is_connected = true;
+
+                std::cout << "Connected!" << std::endl;
+            }
+            else
+            {
+                std::cout << "Connection Refused!" << std::endl;
+            }
         }
 
         delete response;
     }
 
-    return this->is_connected;
+    return ret_val;
 }
 
-void Client::Disconnect()
+bool Client::SendDisconnectRequest()
 {
-    if (this->is_connected)
+    if (!this->is_connected) return false;
+
+    PacketDisconnect* packet = new PacketDisconnect();
+    this->InternalSendPacket(packet);
+
+    return true;
+}
+
+void Client::FinalizeDisconnect()
+{
+    if (!this->is_connected) return;
+
+    this->DoDisconnect();
+    std::cout << "Disconnected!" << std::endl;
+}
+
+void Client::DoDisconnect()
+{
+    this->is_connected = false;
+}
+
+void Client::Cleanup()
+{
+    if(this->socket.IsOpen())
     {
-        PacketDisconnect packet = PacketDisconnect();
-        this->InternalSendPacket((PacketBase*)&packet);
-
-        PacketBase* response = NULL;
-
-        bool wait_for_response = true;
-        while (wait_for_response)
-        {
-            std::cout << "Waiting for response..." << std::endl;
-
-            response = this->InternalReceivePacket();
-            if (response)
-            {
-                if (response->GetType() == PacketBase::PACKET_DISCONNECT_RESPONSE)
-                {
-                    wait_for_response = false;
-                }
-
-                delete response;
-            }
-        }
-        std::cout << "Disconnected!" << std::endl;
-
-        this->is_connected = false;
         this->socket.Close();
     }
 }
@@ -87,15 +96,22 @@ void Client::InternalSendPacket(PacketBase* packet)
 {
     packet->SetConnectionId(this->connection_id);
     packet->SetSequence(this->packet_sequence++);
-    packet->SetAck(this->packet_ack);
-    packet->SetAckBitfield(this->packet_ack_bitfield);
-
-    this->packet_ack_list.push_back(PacketAck(packet, std::time(NULL)));
+    packet->SetAck(this->ack_list.GetPacketAck());
+    packet->SetAckBitfield(this->ack_list.GetPacketAckBitfield());
 
     char buffer[PacketBase::MAX_BUFFER];
     unsigned int data_size = packet->Encode(buffer);
 
     this->socket.Send(this->server_address, buffer, data_size);
+
+    if (packet->GetNeedsAck())
+    {
+        this->ack_list.RegisterPacket(packet);
+    }
+    else
+    {
+        delete packet;
+    }
 }
 
 PacketBase* Client::InternalReceivePacket()
@@ -122,9 +138,10 @@ PacketBase* Client::InternalReceivePacket()
             if (packet)
             {
                 reading = false;
+                this->last_communication = std::time(NULL);
 
-                this->UpdatePacketAck(packet->GetSequence());
-                this->ConfirmPacketAcks(packet->GetAck(), packet->GetAckBitfield());
+                this->ack_list.UpdatePacketAck(packet->GetSequence());
+                this->ack_list.ConfirmPacketAcks(packet->GetAck(), packet->GetAckBitfield());
             }
             else
             {
@@ -142,73 +159,15 @@ PacketBase* Client::InternalReceivePacket()
     return packet;
 }
 
-// Update the clients current ack number from a received packet.
-void Client::UpdatePacketAck(unsigned int sequence)
-{
-    std::cout << "Ack'ing packet: " << sequence << std::endl;
-
-    long int diff = (long int)sequence - (long int)this->packet_ack;
-    this->packet_ack = sequence;
-    if (diff > 0)
-    {
-        unsigned int bitfield = this->packet_ack_bitfield << 1;
-        bitfield | 1;
-        bitfield << (diff - 1);
-
-        this->packet_ack_bitfield = bitfield;
-    }
-    else if (diff < 0)
-    {
-        unsigned int bitfield_adder = 1 << ((-diff) - 1);
-        this->packet_ack_bitfield = this->packet_ack_bitfield | bitfield_adder;
-    }
-}
-
-// Update client's packet ack list from the ack and ack bitfield from a received packet.
-void Client::ConfirmPacketAcks(unsigned int ack, unsigned int ack_bitfield)
-{
-    std::cout << "Packet was ack'd: " << ack << std::endl;
-
-    if (!this->packet_ack_list.empty())
-    {
-        ack_iter iter = this->packet_ack_list.begin();
-
-        //for(first; first!=last; ++first)
-        while (iter != this->packet_ack_list.end())
-        {
-            unsigned int check_sequence = (*iter).packet->GetSequence();
-            long int diff = (long int)ack - (long int)check_sequence;
-
-            bool was_acked = false;
-            if (diff == 0)
-            {
-                was_acked = true;
-            }
-            else if (diff > 0)
-            {
-                long int shift = diff - 1;
-                was_acked = (((ack_bitfield >> shift) & 1) == 1);
-            }
-
-            if (was_acked)
-            {
-                delete (*iter).packet;
-                ack_iter del_index = iter++;
-                this->packet_ack_list.erase(del_index);
-            }
-            else
-            {
-                ++iter;
-            }
-        }
-    }
-}
-
 void Client::SendPacket(PacketBase* packet)
 {
     if (this->is_connected)
     {
         this->InternalSendPacket(packet);
+    }
+    else
+    {
+        delete packet;
     }
 }
 
@@ -221,34 +180,17 @@ PacketBase* Client::ReceivePacket()
     return NULL;
 }
 
+bool Client::CheckForTimeout()
+{
+    return (std::time(NULL) - this->last_communication > this->CONNECTION_TIMEOUT);
+}
+
 void Client::TickPacketAcks()
 {
-    if (!this->packet_ack_list.empty())
+    std::list<PacketBase*> resend_list = this->ack_list.TickPacketAcks();
+    while (!resend_list.empty())
     {
-        std::time_t cur_time = std::time(NULL);
-
-        ack_iter first = this->packet_ack_list.begin();
-
-        unsigned int resend_packet_count = 0;
-        for(first; first!=this->packet_ack_list.end(); ++first)
-        {
-            std::time_t diff = cur_time - (*first).send_time;
-            if (diff > 1)
-            {
-                std::cout << "Didn't receive ack. Resending packet!" << std::endl;
-                resend_packet_count++;
-
-                this->InternalSendPacket((*first).packet);
-            }
-            else
-            {
-                break;
-            }
-        }
-
-        for (unsigned int i = 0; i < resend_packet_count; i++)
-        {
-            this->packet_ack_list.pop_front();
-        }
+        this->InternalSendPacket(resend_list.front());
+        resend_list.pop_front();
     }
 }

@@ -13,15 +13,21 @@ class ClientConnection;
 class Server
 {
 protected:
-    unsigned long int connection_id_counter;
+    unsigned int connection_id_counter;
 
     Socket socket;
     unsigned short port;
 
-    std::unordered_map<unsigned long int, ClientConnection*> clients;
+    const unsigned int max_connections;
+
+    //std::unordered_map<unsigned long int, ClientConnection*> clients;
+    ClientConnection** clients;
+
+    unsigned int FindOpenConnectionId();
 
 public:
-    Server(unsigned short port);
+    Server(unsigned short port, unsigned int max_connections);
+    ~Server();
 
     bool Init();
     void Tick();
@@ -29,5 +35,6 @@ public:
     PacketBase* ReceivePacket(Address& sender);
     void SendPacketToAddress(PacketBase* packet, Address* address);
 
+    void TickPacketAcks();
 };
 #endif // SERVER_HPP_INCLUDE

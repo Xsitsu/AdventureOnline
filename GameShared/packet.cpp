@@ -15,7 +15,10 @@ const unsigned int PacketBase::PACKET_PREFIX = data;
 PacketBase::PacketBase() : type(PacketBase::PACKET_UNKNOWN)
 {}
 
-PacketBase::PacketBase(PacketBase::PacketType type) : type(type)
+PacketBase::PacketBase(PacketBase::PacketType type) : type(type), needs_ack(true)
+{}
+
+PacketBase::PacketBase(PacketBase::PacketType type, bool needs_ack) : type(type), needs_ack(needs_ack)
 {}
 
 unsigned int PacketBase::Encode(char* buffer)
@@ -25,7 +28,7 @@ unsigned int PacketBase::Encode(char* buffer)
     this->buffer_pos = 0;
     reader.WriteInt(buffer, this->buffer_pos, PacketBase::PACKET_PREFIX);
     reader.WritePacketType(buffer, this->buffer_pos, this->type);
-    reader.WriteLongInt(buffer, this->buffer_pos, this->connection_id);
+    reader.WriteInt(buffer, this->buffer_pos, this->connection_id);
     reader.WriteInt(buffer, this->buffer_pos, this->sequence);
     reader.WriteInt(buffer, this->buffer_pos, this->ack);
     reader.WriteInt(buffer, this->buffer_pos, this->ack_bitfield);
@@ -40,7 +43,7 @@ void PacketBase::Decode(char* buffer)
     this->buffer_pos = 0;
     reader.ReadInt(buffer, this->buffer_pos);
     reader.ReadPacketType(buffer, this->buffer_pos);
-    this->connection_id = reader.ReadLongInt(buffer, this->buffer_pos);
+    this->connection_id = reader.ReadInt(buffer, this->buffer_pos);
     this->sequence = reader.ReadInt(buffer, this->buffer_pos);
     this->ack = reader.ReadInt(buffer, this->buffer_pos);
     this->ack_bitfield = reader.ReadInt(buffer, this->buffer_pos);
@@ -159,6 +162,22 @@ uint16_t PacketReader::ReadShort(char* buffer, unsigned int& pos)
     return ntohs(val);
 }
 
+
+void PacketReader::WriteByte(char* buffer, unsigned int& pos, uint8_t value)
+{
+    char* buf_pos = buffer + pos;
+    *((uint8_t*)buf_pos) = value;
+    pos+=sizeof(uint8_t);
+}
+
+uint8_t PacketReader::ReadByte(char* buffer, unsigned int& pos)
+{
+    char* buf_pos = buffer + pos;
+    uint8_t val = *((uint8_t*)buf_pos);
+    pos+=sizeof(uint8_t);
+    return val;
+}
+
 PacketInit::PacketInit() : PacketBase(PacketBase::PACKET_INIT)
 {}
 
@@ -178,18 +197,14 @@ void PacketInit::Decode(char* buffer)
     this->listen_port = reader.ReadShort(buffer, this->buffer_pos);
 }
 
-PacketInitResponse::PacketInitResponse() : PacketBase(PacketBase::PACKET_INIT_RESPONSE), assigned_connection_id(0)
+PacketInitResponse::PacketInitResponse() : PacketBase(PacketBase::PACKET_INIT_RESPONSE), assigned_connection_id(0), connection_accepted(true)
 {}
-
-void PacketInitResponse::AssignConnectionId(unsigned long int id)
-{
-    this->assigned_connection_id = id;
-}
 
 unsigned int PacketInitResponse::Encode(char* buffer)
 {
     PacketBase::Encode(buffer);
     PacketReader reader;
+    reader.WriteByte(buffer, this->buffer_pos, this->connection_accepted);
     reader.WriteLongInt(buffer, this->buffer_pos, this->assigned_connection_id);
 
     return this->buffer_pos;
@@ -199,13 +214,14 @@ void PacketInitResponse::Decode(char* buffer)
 {
     PacketBase::Decode(buffer);
     PacketReader reader;
+    this->connection_accepted = reader.ReadByte(buffer, this-> buffer_pos);
     this->assigned_connection_id = reader.ReadLongInt(buffer, this->buffer_pos);
 }
 
 PacketDisconnect::PacketDisconnect() : PacketBase(PacketBase::PACKET_DISCONNECT)
 {}
 
-PacketDisconnectResponse::PacketDisconnectResponse() : PacketBase(PacketBase::PACKET_DISCONNECT_RESPONSE)
+PacketDisconnectResponse::PacketDisconnectResponse() : PacketBase(PacketBase::PACKET_DISCONNECT_RESPONSE, false)
 {}
 
 PacketPing::PacketPing() : PacketBase(PacketBase::PACKET_PING)

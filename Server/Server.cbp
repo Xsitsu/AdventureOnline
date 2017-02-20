@@ -13,9 +13,12 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add directory="include" />
+					<Add directory="../Server" />
 				</Compiler>
 				<Linker>
 					<Add library="../GameShared/bin/Debug/libGameShared.a" />
+					<Add library="odbc32" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -25,10 +28,13 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add directory="include" />
+					<Add directory="../Server" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
 					<Add library="../GameShared/bin/Release/libGameShared.a" />
+					<Add library="odbc32" />
 				</Linker>
 			</Target>
 		</Build>
@@ -37,6 +43,10 @@
 			<Add option="-std=c++11" />
 			<Add directory=".." />
 		</Compiler>
+		<Unit filename="DB_Bridge.cpp" />
+		<Unit filename="DB_Bridge.h" />
+		<Unit filename="Player.cpp" />
+		<Unit filename="Player.h" />
 		<Unit filename="clientconnection.cpp" />
 		<Unit filename="clientconnection.hpp" />
 		<Unit filename="main.cpp" />
