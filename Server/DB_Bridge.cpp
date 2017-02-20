@@ -1,19 +1,9 @@
 #include "DB_Bridge.h"
 #include <iostream>
-//#include <string.h>>
+#include <stdio.h>
+
 DB_Bridge::DB_Bridge()
 {
-    Player * newPlayer = new Player(-1, "Jose@oit.edu", "salt", "hash");
-    char query[1000] = "execute CreateUser ";
-
-    //build command for creating user
-    strcat(query, newPlayer->GetEmailAddress().c_str());
-    strcat(query, ", ");
-    strcat(query, newPlayer->GetSalt().c_str());
-    strcat(query, ", ");
-    strcat(query, newPlayer->GetHash().c_str());
-    delete newPlayer;
-
 	SQLCHAR OutConnStr[255];
 	SQLCHAR InConnStr[512] = "driver={ODBC Driver 13 for SQL Server};Server=aura.students.cset.oit.edu;Database=AdventureOnline;uid=AdventureOnline_rw;pwd=Pa$$W0rd_0K@y";
 	//SQLCHAR driver[256];
@@ -48,7 +38,6 @@ DB_Bridge::DB_Bridge()
 				{
 					r_ReturnCode = SQLAllocHandle(SQL_HANDLE_STMT, h_DBC, &h_Statement);
 
-					SQLExecDirect(h_Statement, (unsigned char *)query, SQL_NTS);
 
 					//SQLDisconnect(h_DBC);
 				}
@@ -94,22 +83,105 @@ SQLRETURN DB_Bridge::GetReturnCode()
 int DB_Bridge::CreatePlayer(Player * newPlayer)
 {
     SQLRETURN localRetcode;
-    char query[1000] = "execute CreateUser ";
+    SQLINTEGER sqlInt;
+    int localID = 0;
+    char getID[1000] = "select userid from users where UserEmail =";
+    char insertUser[1000] = "INSERT INTO Users(UserEmail, UserSalt, UserHash) VALUES(";
 
     //build command for creating user
-    strcat(query, newPlayer->GetEmailAddress().c_str());
-    strcat(query, ", ");
-    strcat(query, newPlayer->GetSalt().c_str());
-    strcat(query, ", ");
-    strcat(query, newPlayer->GetHash().c_str());
+    strcat(insertUser, "'");
+    strcat(insertUser, newPlayer->GetEmailAddress().c_str());
+    strcat(insertUser, "','");
+    strcat(insertUser, newPlayer->GetSalt().c_str());
+    strcat(insertUser, "','");
+    strcat(insertUser, newPlayer->GetHash().c_str());
+    strcat(insertUser, "')");
 
+    //build command to get UserID
+    strcat(getID, "'");
+    strcat(getID, newPlayer->GetEmailAddress().c_str());
+    strcat(getID, "'");
     //debug code
-    std::cout << query << std::endl;
+    std::cout << insertUser << std::endl << getID << std::endl;
 
-    //localRetcode = SQLAllocHandle(SQL_HANDLE_STMT, h_DBC, &h_Statement);
+    localRetcode = SQLAllocHandle(SQL_HANDLE_STMT, h_DBC, &h_Statement);
     //std::cout << localRetcode << std::endl;
-    localRetcode = SQLExecDirect(h_Statement, (unsigned char *)query, SQL_NTS);
+    localRetcode = SQLExecDirect(h_Statement, (unsigned char *)insertUser, SQL_NTS);
     std::cout << localRetcode << std::endl;
+
+    localRetcode = SQLExecDirect(h_Statement, (unsigned char *)getID, SQL_NTS);
+    SQLFetch(h_Statement);
+    SQLGetData(h_Statement, 1, SQL_INTEGER, &localID, sizeof(localID), &sqlInt );
+    newPlayer->SetID(localID);
+
+    return (int)localRetcode;
+}
+
+Player DB_Bridge::ReadPlayer( string eMail)
+{
+
+    char getUser[1000] = "select * from users where UserEmail =";
+    int localID;
+    char localEmail[255];
+    char localSalt[255];
+    char localHash[510];
+    SQLRETURN localRetcode;
+    SQLINTEGER sqlInt;
+    SDWORD sqlThing;
+
+    strcat(getUser, "'");
+    strcat(getUser, eMail.c_str());
+    strcat(getUser, "'");
+
+    localRetcode = SQLAllocHandle(SQL_HANDLE_STMT, h_DBC, &h_Statement);
+    localRetcode = SQLExecDirect(h_Statement, (unsigned char *)getUser, SQL_NTS);
+    SQLFetch(h_Statement);
+    SQLGetData(h_Statement, 1, SQL_INTEGER, &localID, sizeof(localID), &sqlInt );
+    SQLGetData(h_Statement, 2, SQL_C_CHAR, &localEmail, 255, &sqlThing );
+    SQLGetData(h_Statement, 3, SQL_C_CHAR, &localSalt, 255, &sqlThing );
+    SQLGetData(h_Statement, 4, SQL_C_CHAR, &localHash, 510, &sqlThing );
+
+    return Player(localID, localEmail , localSalt, localHash);
+}
+
+int DB_Bridge::UpdatePlayer(Player * morphling)
+{
+    SQLRETURN localRetcode;
+    char updatePlayer[1000] = "UPDATE Users SET UserEmail =";
+    char ita[1000];
+
+    std::cout << "ID : " << ita << std::endl;
+
+    //build command
+    snprintf(ita, 1000, "%d",morphling->GetID());
+    strcat(updatePlayer, "'");
+    strcat(updatePlayer, morphling->GetEmailAddress().c_str());
+    strcat(updatePlayer, "', UserSalt = '");
+    strcat(updatePlayer, morphling->GetSalt().c_str());
+    strcat(updatePlayer, "', UserHash = '");
+    strcat(updatePlayer, morphling->GetHash().c_str());
+    strcat(updatePlayer, "' WHERE Users.UserID =");
+    strcat(updatePlayer, ita);
+
+    localRetcode = SQLAllocHandle(SQL_HANDLE_STMT, h_DBC, &h_Statement);
+    localRetcode = SQLExecDirect(h_Statement, (unsigned char *)updatePlayer, SQL_NTS);
+    std::cout << localRetcode << std::endl;
+
+    return (int)localRetcode;
+}
+
+int DB_Bridge::DeletePlayer(Player* oldbie)
+{
+    SQLRETURN localRetcode;
+    char deletePlayer[1000] = "DELETE FROM Users WHERE UserID =";
+    char localID[100];
+
+    //build command
+    snprintf(localID, 100, "%d", oldbie->GetID());
+    strcat(deletePlayer, localID);
+
+    localRetcode = SQLAllocHandle(SQL_HANDLE_STMT, h_DBC, &h_Statement);
+    localRetcode = SQLExecDirect(h_Statement, (unsigned char *)deletePlayer, SQL_NTS);
 
     return (int)localRetcode;
 }

@@ -15,6 +15,9 @@ class DB_Bridge
         SQLRETURN GetReturnCode();
 
         int CreatePlayer(Player* newbie);
+        Player ReadPlayer( string);
+        int UpdatePlayer(Player* oldbie);
+        int DeletePlayer(Player* oldbie);
 
     protected:
         SQLHANDLE h_Enviornment;
