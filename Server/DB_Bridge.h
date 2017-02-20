@@ -4,6 +4,7 @@
 #include<windows.h>
 #include<sql.h>
 #include<sqlext.h>
+#include"Player.h"
 
 
 class DB_Bridge
@@ -12,6 +13,8 @@ class DB_Bridge
         DB_Bridge();
         ~DB_Bridge();
         SQLRETURN GetReturnCode();
+
+        int CreatePlayer(Player* newbie);
 
     protected:
         SQLHANDLE h_Enviornment;

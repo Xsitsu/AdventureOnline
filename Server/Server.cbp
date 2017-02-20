@@ -14,6 +14,7 @@
 				<Compiler>
 					<Add option="-g" />
 					<Add directory="include" />
+					<Add directory="../Server" />
 				</Compiler>
 				<Linker>
 					<Add library="../GameShared/bin/Debug/libGameShared.a" />
@@ -28,6 +29,7 @@
 				<Compiler>
 					<Add option="-O2" />
 					<Add directory="include" />
+					<Add directory="../Server" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -41,13 +43,15 @@
 			<Add option="-std=c++11" />
 			<Add directory=".." />
 		</Compiler>
+		<Unit filename="DB_Bridge.cpp" />
+		<Unit filename="DB_Bridge.h" />
+		<Unit filename="Player.cpp" />
+		<Unit filename="Player.h" />
 		<Unit filename="clientconnection.cpp" />
 		<Unit filename="clientconnection.hpp" />
-		<Unit filename="include/DB_Bridge.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="server.cpp" />
 		<Unit filename="server.hpp" />
-		<Unit filename="src/DB_Bridge.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />
