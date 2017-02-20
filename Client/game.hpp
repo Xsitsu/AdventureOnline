@@ -25,6 +25,7 @@ class GameEventBase;
 class Game
 {
 friend class GameStateInit;
+friend class GameStateServerConnect;
 friend class GameStateTitle;
 friend class GameStateQuit;
 
@@ -74,12 +75,15 @@ protected:
 public:
     void Init();
     void Run();
+    void Cleanup();
 
     void RegisterEventToQueue(GameEventBase* event);
 
     void ChangeState(GameStateBase* state);
     void PushScreen(GuiScreen* screen);
     void PopScreen();
+
+    bool IsClientConnected() { return this->client->IsConnected(); }
 
 };
 

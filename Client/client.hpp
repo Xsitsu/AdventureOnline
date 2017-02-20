@@ -10,6 +10,8 @@
 
 class Client
 {
+    const int CONNECTION_TIMEOUT = 5;
+
 protected:
     bool is_connected;
 
@@ -23,6 +25,8 @@ protected:
     Socket socket;
     Address server_address;
 
+    std::time_t last_communication;
+
     void InternalSendPacket(PacketBase* packet);
     PacketBase* InternalReceivePacket();
 
@@ -30,9 +34,15 @@ public:
     Client(Address address);
 
     bool Init(unsigned short listen_port);
+
     bool SendConnectRequest();
     bool GetConnectResponse();
-    void Disconnect();
+
+    bool SendDisconnectRequest();
+    void FinalizeDisconnect();
+    void DoDisconnect();
+
+    void Cleanup();
 
     bool IsConnected() { return this->is_connected; }
 
@@ -40,5 +50,6 @@ public:
     PacketBase* ReceivePacket();
 
     void TickPacketAcks();
+    bool CheckForTimeout();
 };
 #endif // CLIENT_HPP_INCLUDE

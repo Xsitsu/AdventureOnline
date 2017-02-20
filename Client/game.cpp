@@ -1,5 +1,10 @@
 #include "game.hpp"
-#include "gamestateinit.hpp"
+#include "gamestateserverconnect.hpp"
+#include "gamestatequit.hpp"
+
+#include <allegro5/allegro_native_dialog.h>
+
+#include <chrono>
 
 Game* Game::instance = NULL;
 
@@ -64,7 +69,7 @@ void Game::Init()
 	FontService::Instance()->RegisterFont("debug", debug_font);
 
 	// Initialize game state stuff
-    this->state = new GameStateInit(this);
+    this->state = new GameStateServerConnect(this);
     this->state->Enter();
 }
 
@@ -73,9 +78,15 @@ void Game::Run()
     this->is_running = true;
     bool needs_render = false;
 
+    bool show_debug_menu = false;
+
     float game_time = 0;
     int frame_counter = 0;
     int game_fps = 0;
+
+    std::list<int> ping_calcs;
+    double ping = 0;
+    uint64_t ping_send_time;
 
     al_start_timer(this->timer);
     while(this->is_running)
@@ -102,7 +113,61 @@ void Game::Run()
 				game_time = al_current_time();
 				game_fps = frame_counter;
 				frame_counter = 0;
+
+                ping = 0;
+                std::list<int>::iterator iter = ping_calcs.begin();
+                for (iter; iter != ping_calcs.end(); ++iter)
+                {
+                    ping += *iter;
+                }
+
+                ping /= ping_calcs.size();
+                ping_calcs.clear();
 			}
+
+			if (this->client->IsConnected())
+            {
+                bool did_timeout = this->client->CheckForTimeout();
+                if (did_timeout)
+                {
+                    this->client->DoDisconnect();
+                    al_show_native_message_box(this->display, "Connection Error",
+                                               "Lost Connection To Server",
+                                               "The connection to the server was lost. The game will now shut down.",
+                                               0, ALLEGRO_MESSAGEBOX_ERROR);
+
+                    this->ChangeState(new GameStateQuit(this));
+                }
+                else
+                {
+                    PacketBase* packet = this->client->ReceivePacket();
+                    if (packet)
+                    {
+                        if (packet->GetType() == PacketBase::PACKET_PONG)
+                        {
+                            uint64_t tick;
+                            tick = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+
+                            ping_calcs.push_back(tick - ping_send_time);
+                        }
+                        else
+                        {
+                            this->state->HandlePacket(packet);
+                        }
+                    }
+                    delete packet;
+
+                    if (frame_counter % 3 == 0)
+                    {
+                        PacketPing* packet = new PacketPing();
+                        packet->SetNeedsAck(false);
+                        this->client->SendPacket(packet);
+
+                        ping_send_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+
+                    }
+                }
+            }
 
             this->client->TickPacketAcks();
 
@@ -116,7 +181,14 @@ void Game::Run()
         {
             if (!GuiSelectionService::Instance()->TextBoxHasFocus())
             {
-                this->state->HandleKeyDown(ev.keyboard);
+                if (ev.keyboard.keycode == ALLEGRO_KEY_F5)
+                {
+                    show_debug_menu = !show_debug_menu;
+                }
+                else
+                {
+                    this->state->HandleKeyDown(ev.keyboard);
+                }
             }
         }
         else if (ev.type == ALLEGRO_EVENT_KEY_UP)
@@ -152,7 +224,14 @@ void Game::Run()
 
             if (this->display)
             {
-                al_draw_textf(FontService::Instance()->GetFont("debug"), al_map_rgb(255, 0, 255), 5, 5, 0, "FPS: %i", game_fps);
+                if (show_debug_menu)
+                {
+                    ALLEGRO_FONT* font = FontService::Instance()->GetFont("debug");
+                    ALLEGRO_COLOR color = al_map_rgb(255, 0, 255);
+                    al_draw_textf(font, color, 5, 5, 0, "FPS: %i", game_fps);
+                    al_draw_textf(font, color, 5, 5 + font->height, 0, "Ping: %i", (int)ping);
+                    al_draw_textf(font, color, 5, 5 + font->height * 2, 0, "GameState: %s", this->state->GetStateName().c_str());
+                }
 
                 al_wait_for_vsync();
                 al_flip_display();
@@ -161,6 +240,11 @@ void Game::Run()
 
         }
     }
+}
+
+void Game::Cleanup()
+{
+    this->client->Cleanup();
 }
 
 void Game::PushScreen(GuiScreen* screen)

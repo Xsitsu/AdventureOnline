@@ -10,6 +10,7 @@ int main(int argc, char** argv)
 
     Game::Instance()->Init();
     Game::Instance()->Run();
+    Game::Instance()->Cleanup();
 
 	ShutdownSockets();
 

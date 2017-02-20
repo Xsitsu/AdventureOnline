@@ -3,52 +3,26 @@
 GameStateQuit::GameStateQuit(Game* game) : GameStateBase(game)
 {}
 
-GameStateQuit::~GameStateQuit()
-{
-
-}
-
 void GameStateQuit::Enter()
 {
-
-}
-
-void GameStateQuit::Exit()
-{
-
+    if (this->game->client->IsConnected())
+    {
+        this->game->client->SendDisconnectRequest();
+    }
 }
 
 void GameStateQuit::Tick()
 {
-    this->game->is_running = false;
+    if (!this->game->client->IsConnected())
+    {
+        this->game->is_running = false;
+    }
 }
 
-void GameStateQuit::Render()
+void GameStateQuit::HandlePacket(PacketBase* packet)
 {
-
-}
-
-void GameStateQuit::HandleKeyDown(const ALLEGRO_KEYBOARD_EVENT& keyboard)
-{
-
-}
-
-void GameStateQuit::HandleKeyUp(const ALLEGRO_KEYBOARD_EVENT& keyboard)
-{
-
-}
-
-void GameStateQuit::HandleMouseMove(const ALLEGRO_MOUSE_EVENT& mouse)
-{
-
-}
-
-void GameStateQuit::HandleMouseDown(const ALLEGRO_MOUSE_EVENT& mouse)
-{
-
-}
-
-void GameStateQuit::HandleMouseUp(const ALLEGRO_MOUSE_EVENT& mouse)
-{
-
+    if (packet->GetType() == PacketBase::PACKET_DISCONNECT_RESPONSE)
+    {
+        this->game->client->FinalizeDisconnect();
+    }
 }

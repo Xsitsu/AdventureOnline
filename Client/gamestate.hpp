@@ -7,6 +7,8 @@
 
 class Game;
 
+#include "GameShared/packet.hpp"
+
 #include "game.hpp"
 
 #include "guiframe.hpp"
@@ -32,6 +34,8 @@ public:
     virtual void Exit() {}
     virtual void Tick() {}
     virtual void Render() {}
+
+    virtual void HandlePacket(PacketBase* packet) {}
 
     virtual void HandleKeyDown(const ALLEGRO_KEYBOARD_EVENT& keyboard) {}
     virtual void HandleKeyUp(const ALLEGRO_KEYBOARD_EVENT& keyboard) {}

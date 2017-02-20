@@ -3,7 +3,7 @@
 #include <iostream>
 
 Client::Client(Address address) : is_connected(false), server_address(address),
-connection_id(0), packet_sequence(0)
+connection_id(0), packet_sequence(0), last_communication(0)
 {}
 
 bool Client::Init(unsigned short listen_port)
@@ -33,52 +33,61 @@ bool Client::GetConnectResponse()
 {
     if (this->is_connected) return false;
 
+    bool ret_val = false;
     PacketBase* response = this->InternalReceivePacket();
     if (response)
     {
         if (response->GetType() == PacketBase::PACKET_INIT_RESPONSE)
         {
-            PacketInitResponse* res = (PacketInitResponse*)response;
-            this->connection_id = res->GetAssignedConnectionId();
-            this->is_connected = true;
+            ret_val = true;
 
-            std::cout << "Connected!" << std::endl;
+            PacketInitResponse* res = (PacketInitResponse*)response;
+            if (res->GetConnectionAccepted())
+            {
+                this->connection_id = res->GetAssignedConnectionId();
+                this->is_connected = true;
+
+                std::cout << "Connected!" << std::endl;
+            }
+            else
+            {
+                std::cout << "Connection Refused!" << std::endl;
+            }
         }
 
         delete response;
     }
 
-    return this->is_connected;
+    return ret_val;
 }
 
-void Client::Disconnect()
+bool Client::SendDisconnectRequest()
 {
-    if (this->is_connected)
+    if (!this->is_connected) return false;
+
+    PacketDisconnect* packet = new PacketDisconnect();
+    this->InternalSendPacket(packet);
+
+    return true;
+}
+
+void Client::FinalizeDisconnect()
+{
+    if (!this->is_connected) return;
+
+    this->DoDisconnect();
+    std::cout << "Disconnected!" << std::endl;
+}
+
+void Client::DoDisconnect()
+{
+    this->is_connected = false;
+}
+
+void Client::Cleanup()
+{
+    if(this->socket.IsOpen())
     {
-        PacketDisconnect packet = PacketDisconnect();
-        this->InternalSendPacket((PacketBase*)&packet);
-
-        PacketBase* response = NULL;
-
-        bool wait_for_response = true;
-        while (wait_for_response)
-        {
-            std::cout << "Waiting for response..." << std::endl;
-
-            response = this->InternalReceivePacket();
-            if (response)
-            {
-                if (response->GetType() == PacketBase::PACKET_DISCONNECT_RESPONSE)
-                {
-                    wait_for_response = false;
-                }
-
-                delete response;
-            }
-        }
-        std::cout << "Disconnected!" << std::endl;
-
-        this->is_connected = false;
         this->socket.Close();
     }
 }
@@ -90,12 +99,19 @@ void Client::InternalSendPacket(PacketBase* packet)
     packet->SetAck(this->ack_list.GetPacketAck());
     packet->SetAckBitfield(this->ack_list.GetPacketAckBitfield());
 
-    this->ack_list.RegisterPacket(packet);
-
     char buffer[PacketBase::MAX_BUFFER];
     unsigned int data_size = packet->Encode(buffer);
 
     this->socket.Send(this->server_address, buffer, data_size);
+
+    if (packet->GetNeedsAck())
+    {
+        this->ack_list.RegisterPacket(packet);
+    }
+    else
+    {
+        delete packet;
+    }
 }
 
 PacketBase* Client::InternalReceivePacket()
@@ -122,6 +138,7 @@ PacketBase* Client::InternalReceivePacket()
             if (packet)
             {
                 reading = false;
+                this->last_communication = std::time(NULL);
 
                 this->ack_list.UpdatePacketAck(packet->GetSequence());
                 this->ack_list.ConfirmPacketAcks(packet->GetAck(), packet->GetAckBitfield());
@@ -148,6 +165,10 @@ void Client::SendPacket(PacketBase* packet)
     {
         this->InternalSendPacket(packet);
     }
+    else
+    {
+        delete packet;
+    }
 }
 
 PacketBase* Client::ReceivePacket()
@@ -157,6 +178,11 @@ PacketBase* Client::ReceivePacket()
         return this->InternalReceivePacket();
     }
     return NULL;
+}
+
+bool Client::CheckForTimeout()
+{
+    return (std::time(NULL) - this->last_communication > this->CONNECTION_TIMEOUT);
 }
 
 void Client::TickPacketAcks()
