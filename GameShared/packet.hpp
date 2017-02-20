@@ -57,7 +57,7 @@ public:
 
 
     bool GetNeedsAck() { return this->needs_ack; }
-    bool SetNeedsAck(bool val) { this->needs_ack = val; }
+    void SetNeedsAck(bool val) { this->needs_ack = val; }
 
 };
 
