@@ -3,16 +3,28 @@
 
 #include <iostream>
 
+class AbstractListener
+{
+public:
+    virtual ~AbstractListener() {}
+};
+
 template <class T>
-class ListenerBase
+class ListenerBase : public AbstractListener
 {
 public:
     virtual ~ListenerBase() {}
     virtual void Notify(T& args) const = 0;
 };
 
+class AbstractObserver
+{
+public:
+    virtual ~AbstractObserver() {}
+};
+
 template <class T>
-class Observer
+class Observer : public AbstractObserver
 {
 protected:
     std::list<ListenerBase<T>*> listeners;
@@ -21,6 +33,9 @@ protected:
     typedef typename std::list<ListenerBase<T>*>::const_iterator const_listener_iter;
 
 public:
+    Observer() {}
+    ~Observer() {}
+
     void Connect(ListenerBase<T>* listener)
     {
         this->listeners.push_back(listener);
