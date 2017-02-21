@@ -45,10 +45,13 @@
 			<Add option="-std=c++11" />
 			<Add directory=".." />
 		</Compiler>
+		<Unit filename="Character.h" />
 		<Unit filename="DB_Bridge.cpp" />
 		<Unit filename="DB_Bridge.h" />
 		<Unit filename="Player.cpp" />
 		<Unit filename="Player.h" />
+		<Unit filename="PlayerCharacter.cpp" />
+		<Unit filename="PlayerCharacter.h" />
 		<Unit filename="clientconnection.cpp" />
 		<Unit filename="clientconnection.hpp" />
 		<Unit filename="main.cpp" />

@@ -5,6 +5,7 @@
 #include<sql.h>
 #include<sqlext.h>
 #include"Player.h"
+#include"PlayerCharacter.h"
 
 
 class DB_Bridge
@@ -18,6 +19,8 @@ class DB_Bridge
         Player ReadPlayer( string);
         int UpdatePlayer(Player* oldbie);
         int DeletePlayer(Player* oldbie);
+
+        int CreatePlayerCharacter(PlayerCharacter * );
 
     protected:
         SQLHANDLE h_Enviornment;

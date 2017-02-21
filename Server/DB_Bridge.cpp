@@ -185,3 +185,45 @@ int DB_Bridge::DeletePlayer(Player* oldbie)
 
     return (int)localRetcode;
 }
+
+int DB_Bridge::CreatePlayerCharacter(PlayerCharacter * newChar)
+{
+    SQLRETURN localRetcode;
+    SQLINTEGER sqlInt;
+    int localID = 0;
+    char itoa[100];
+    char insertChar[1000] = "INSERT INTO PlayerChar(CharName, UserID, Position_X, Position_Y, MapID) OUTPUT Inserted.CharID VALUES(";
+
+    //build command for creating user
+    strcat(insertChar, "'");
+    strcat(insertChar, newChar->GetName().c_str());
+    strcat(insertChar, "',");
+
+    snprintf(itoa, 100, "%d", newChar->GetPlayerID());
+    strcat(insertChar, itoa);
+    strcat(insertChar, ",");
+
+    snprintf(itoa, 100, "%d", newChar->GetPosX());
+    strcat(insertChar, itoa);
+    strcat(insertChar, ",");
+
+    snprintf(itoa, 100, "%d", newChar->GetPosY());
+    strcat(insertChar, itoa);
+    strcat(insertChar, ",");
+
+    snprintf(itoa, 100, "%d", newChar->GetMap());
+    strcat(insertChar, itoa);
+    strcat(insertChar, ")");
+
+
+    localRetcode = SQLAllocHandle(SQL_HANDLE_STMT, h_DBC, &h_Statement);
+    //std::cout << localRetcode << std::endl;
+    localRetcode = SQLExecDirect(h_Statement, (unsigned char *)insertChar, SQL_NTS);
+    std::cout << "CharacterCreation Code: " << localRetcode << std::endl;
+
+    SQLFetch(h_Statement);
+    SQLGetData(h_Statement, 1, SQL_INTEGER, &localID, sizeof(localID), &sqlInt );
+    newChar->SetID(localID);
+
+    return (int)localRetcode;
+}

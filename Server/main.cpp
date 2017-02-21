@@ -41,4 +41,7 @@ void testCode()
     std::cout << testPlayer->GetEmailAddress() << testPlayer->GetID() << testPlayer->GetSalt() << testPlayer->GetHash() << std::endl;
     database.DeletePlayer(testPlayer);
     delete testPlayer;
+
+    PlayerCharacter * testCharacter = new PlayerCharacter(55, "Josb", 10, 12, 1, 3, 4, 5);
+    database.CreatePlayerCharacter(testCharacter);
 }
