@@ -1,6 +1,8 @@
 #include "gamestatetitlemake.hpp"
 
 #include "gamestatetitle.hpp"
+#include "gamestatequit.hpp"
+#include "gamestatecharacterviewmake.hpp"
 
 
 
@@ -51,6 +53,31 @@ public:
 };
 
 
+class OptionsEvent : public GameEventBase
+{
+public:
+    OptionsEvent(Game* game) : GameEventBase(game) {}
+
+    virtual void HandleEvent()
+    {
+        this->game->PopScreen();
+        this->game->ChangeState(new GameStateCharacterViewMake(this->game));
+    }
+};
+
+class OptionsListener : public ListenerBase<GuiButtonArgs*>
+{
+protected:
+    Game* game;
+
+public:
+    OptionsListener(Game* game) : game(game) {}
+
+    virtual void Notify(GuiButtonArgs*& args) const
+    {
+        this->game->RegisterEventToQueue(new OptionsEvent(this->game));
+    }
+};
 
 
 
@@ -84,6 +111,7 @@ void GameStateTitleMake::Enter()
     TitleButtonEnterListener* mouse_enter_listener = new TitleButtonEnterListener();
     TitleButtonLeaveListener* mouse_leave_listener = new TitleButtonLeaveListener();
     GameQuitListener* game_quit_listener = new GameQuitListener(this->game);
+    OptionsListener* option_listener = new OptionsListener(this->game);
 
     GuiFrame* base_frame;
     base_frame = new GuiFrame(Vector2(640, 480), Vector2(0, 0));
@@ -102,6 +130,7 @@ void GameStateTitleMake::Enter()
     GuiTextButton* button3 = CreateTitleButton(2, "Options", button_font);
     button3->RegisterOnMouseEnter(mouse_enter_listener);
     button3->RegisterOnMouseLeave(mouse_leave_listener);
+    button3->RegisterOnClick(option_listener);
     base_frame->AddChild(button3);
 
     GuiTextButton* button4 = CreateTitleButton(3, "Quit", button_font);
@@ -114,6 +143,7 @@ void GameStateTitleMake::Enter()
     screen->RegisterListener(mouse_enter_listener);
     screen->RegisterListener(mouse_leave_listener);
     screen->RegisterListener(game_quit_listener);
+    screen->RegisterListener(option_listener);
     //screen->SetGuiId("CreateAccount", button1);
     //screen->SetGuiId("PlayGame", button2);
     //screen->SetGuiId("Options", button3);

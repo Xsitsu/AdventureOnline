@@ -60,6 +60,7 @@ public:
     void MouseButtonUp(GuiButton* button);
     void LetMouseUp();
 
+    void HandleCurrentScreenChanged();
 };
 
 #endif // GUISELECTIONSERVICE_HPP_INCLUDE

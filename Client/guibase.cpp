@@ -91,7 +91,7 @@ std::list<GuiBase*> GuiBase::GetChildren() const
 
 void GuiBase::UpdateAbsolutePosition()
 {
-    if (this->parent)
+    if (this->parent != NULL)
     {
         this->absolute_position = this->parent->GetAbsolutePosition() + this->position;
     }
@@ -99,6 +99,17 @@ void GuiBase::UpdateAbsolutePosition()
     {
         this->absolute_position = this->position;
     }
+
+    if (!this->children.empty())
+    {
+        gui_child_iter iter = this->children.begin();
+        for (iter; iter != this->children.end(); ++iter)
+        {
+            GuiBase* gui = *iter;
+            gui->UpdateAbsolutePosition();
+        }
+    }
+
 }
 
 Vector2 GuiBase::GetAbsolutePosition() const

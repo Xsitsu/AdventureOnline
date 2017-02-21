@@ -8,7 +8,7 @@ GuiFrame::GuiFrame() : GuiBase(), is_filled(true), background_color(Color3()), b
 GuiFrame::GuiFrame(Vector2 size) : GuiBase(size), is_filled(true), background_color(Color3()), background_alpha(255), bg_draw_color(al_map_rgb(0, 0, 0))
 {}
 
-GuiFrame::GuiFrame(Vector2 size, Vector2 position) : GuiBase(size, position), is_filled(true), background_color(Color3()), background_alpha(0), bg_draw_color(al_map_rgb(0, 0, 0))
+GuiFrame::GuiFrame(Vector2 size, Vector2 position) : GuiBase(size, position), is_filled(true), background_color(Color3()), background_alpha(255), bg_draw_color(al_map_rgb(0, 0, 0))
 {}
 
 GuiFrame::~GuiFrame()
