@@ -22,11 +22,15 @@ class DB_Bridge
 
         int CreatePlayerCharacter(PlayerCharacter * );
 
+
     protected:
         SQLHANDLE h_Enviornment;
         SQLHANDLE h_DBC;
         SQLHANDLE h_Statement;
         SQLRETURN r_ReturnCode;
+
+        int GetStatID(string);
+        void SetCharStat(int, int, int);
 
     private:
 };

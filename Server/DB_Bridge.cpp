@@ -225,5 +225,41 @@ int DB_Bridge::CreatePlayerCharacter(PlayerCharacter * newChar)
     SQLGetData(h_Statement, 1, SQL_INTEGER, &localID, sizeof(localID), &sqlInt );
     newChar->SetID(localID);
 
+    //setting strength
+    localID = GetStatID("strength");
+    SetCharStat(localID, newChar->GetID(), newChar->GetStr());
+
+    //setting endurance
+    localID = GetStatID("endurance");
+    SetCharStat(localID, newChar->GetID(), newChar->GetEnd());
+
+    //setting intelligence
+    localID = GetStatID("intelligence");
+    SetCharStat(localID, newChar->GetID(), newChar->GetEnd());
+
     return (int)localRetcode;
+}
+
+int DB_Bridge::GetStatID(string name)
+{
+    int localID;
+    char findStat[1000] = "SELECT statID FROM STATS WHERE statName =";
+    SQLINTEGER sqlInt;
+
+    strcat(findStat, " '");
+    strcat(findStat, name.c_str());
+    strcat(findStat, "'");
+
+    SQLAllocHandle(SQL_HANDLE_STMT, h_DBC, &h_Statement);
+    SQLExecDirect(h_Statement, (unsigned char*)findStat, SQL_NTS);
+
+    SQLFetch(h_Statement);
+    SQLGetData(h_Statement, 1, SQL_INTEGER, &localID, sizeof(localID), &sqlInt);
+
+    return localID;
+}
+
+void DB_Bridge::SetCharStat(int StatID, int CharID, int StatValue)
+{
+
 }

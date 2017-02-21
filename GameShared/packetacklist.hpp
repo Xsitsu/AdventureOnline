@@ -12,6 +12,8 @@ struct PacketAck
     std::time_t send_time;
 
     PacketAck(PacketBase* packet, std::time_t send_time) : packet(packet), send_time(send_time) {}
+    PacketAck(const PacketAck& original) { send_time = original.send_time; packet = original.packet;}
+    PacketAck& operator= (const PacketAck& rhs) { this->send_time = rhs.send_time; this->packet = rhs.packet; }
 };
 
 typedef std::list<PacketAck>::iterator ack_iter;
