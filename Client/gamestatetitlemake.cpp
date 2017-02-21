@@ -111,6 +111,9 @@ void GameStateTitleMake::Enter()
     base_frame->AddChild(button4);
 
     GuiScreen* screen = new GuiScreen(base_frame);
+    screen->RegisterListener(mouse_enter_listener);
+    screen->RegisterListener(mouse_leave_listener);
+    screen->RegisterListener(game_quit_listener);
     //screen->SetGuiId("CreateAccount", button1);
     //screen->SetGuiId("PlayGame", button2);
     //screen->SetGuiId("Options", button3);
