@@ -14,6 +14,7 @@ GuiFrame* CreateCharacterFrame(ALLEGRO_FONT* font)
     character_name->SetText("Character");
     character_name->SetTextColor(Color3(255, 255, 255));
     character_name->SetBackgroundAlpha(0);
+    character_name->SetTextFont(font);
 
     base->AddChild(character_image);
     base->AddChild(character_name);
@@ -25,7 +26,7 @@ void GameStateCharacterViewMake::Enter()
 {
     GuiFrame* base_frame;
     base_frame = new GuiFrame(Vector2(640, 480), Vector2(0, 0));
-    base_frame->SetBackgroundColor(Color3(255, 0, 255));
+    base_frame->SetBackgroundColor(Color3(255, 255, 255));
 
 
     ALLEGRO_FONT* font = FontService::Instance()->GetFont("title_button");
