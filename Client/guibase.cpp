@@ -1,12 +1,12 @@
 #include "guibase.hpp"
 
-GuiBase::GuiBase() : size(Vector2()), position(Vector2()), absolute_position(Vector2()), visible(true)
+GuiBase::GuiBase() : size(Vector2()), position(Vector2()), absolute_position(Vector2()), visible(true), parent(NULL)
 {}
 
-GuiBase::GuiBase(Vector2 size) : size(size), position(Vector2()), absolute_position(Vector2()), visible(true)
+GuiBase::GuiBase(Vector2 size) : size(size), position(Vector2()), absolute_position(Vector2()), visible(true), parent(NULL)
 {}
 
-GuiBase::GuiBase(Vector2 size, Vector2 position) : size(size), position(position), absolute_position(position), visible(true)
+GuiBase::GuiBase(Vector2 size, Vector2 position) : size(size), position(position), absolute_position(position), visible(true), parent(NULL)
 {}
 
 GuiBase::~GuiBase()
