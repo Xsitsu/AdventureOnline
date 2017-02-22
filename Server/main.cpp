@@ -44,4 +44,5 @@ void testCode()
 
     PlayerCharacter * testCharacter = new PlayerCharacter(55, "Josb", 10, 12, 1, 3, 4, 5);
     database.CreatePlayerCharacter(testCharacter);
+    delete testCharacter;
 }

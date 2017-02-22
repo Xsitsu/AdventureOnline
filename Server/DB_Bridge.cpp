@@ -224,6 +224,7 @@ int DB_Bridge::CreatePlayerCharacter(PlayerCharacter * newChar)
     SQLFetch(h_Statement);
     SQLGetData(h_Statement, 1, SQL_INTEGER, &localID, sizeof(localID), &sqlInt );
     newChar->SetID(localID);
+    std::cout << "New CHaracter ID: " << newChar->GetID() << std::endl;
 
     //setting strength
     localID = GetStatID("strength");
