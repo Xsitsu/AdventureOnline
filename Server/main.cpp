@@ -42,7 +42,7 @@ void testCode()
     database.DeletePlayer(testPlayer);
     delete testPlayer;
 
-    PlayerCharacter * testCharacter = new PlayerCharacter(55, "Josb", 10, 12, 1, 3, 4, 5);
+    PlayerCharacter * testCharacter = new PlayerCharacter(55, "Jose the Eight", 10, 12, 1, 23, 24, 25);
     database.CreatePlayerCharacter(testCharacter);
     delete testCharacter;
 }

@@ -228,14 +228,17 @@ int DB_Bridge::CreatePlayerCharacter(PlayerCharacter * newChar)
 
     //setting strength
     localID = GetStatID("strength");
+    std::cout << "strength id: " << localID << std::endl;
     SetCharStat(localID, newChar->GetID(), newChar->GetStr());
 
     //setting endurance
     localID = GetStatID("endurance");
+    std::cout << "endurance id: " << localID << std::endl;
     SetCharStat(localID, newChar->GetID(), newChar->GetEnd());
 
     //setting intelligence
     localID = GetStatID("intelligence");
+    std::cout << "intelligence id: " << localID << std::endl;
     SetCharStat(localID, newChar->GetID(), newChar->GetEnd());
 
     return (int)localRetcode;
@@ -244,7 +247,7 @@ int DB_Bridge::CreatePlayerCharacter(PlayerCharacter * newChar)
 int DB_Bridge::GetStatID(string name)
 {
     int localID;
-    char findStat[1000] = "SELECT statID FROM STATS WHERE statName =";
+    char findStat[1000] = "SELECT statID FROM stat WHERE statName =";
     SQLINTEGER sqlInt;
 
     strcat(findStat, " '");
@@ -262,5 +265,28 @@ int DB_Bridge::GetStatID(string name)
 
 void DB_Bridge::SetCharStat(int StatID, int CharID, int StatValue)
 {
+    char insertStat[1000] = "INSERT INTO CharStats(CharID, StatID, StatValue) VALUES(";
+    SQLINTEGER sqlInt;
+    char itoa[100];
+    SQLRETURN localRetcode;
 
+    snprintf(itoa, 100, "%d", CharID);
+    strcat(insertStat, itoa);
+    strcat(insertStat, ",");
+    std::cout << "char code:" << itoa << std::endl;
+
+    snprintf(itoa, 100, "%d", StatID);
+    strcat(insertStat, itoa);
+    strcat(insertStat, ",");
+    std::cout << "stat code:" << itoa << std::endl;
+
+    snprintf(itoa, 100, "%d", StatValue);
+    strcat(insertStat, itoa);
+    strcat(insertStat, ")");
+    std::cout << "stat val:" << itoa << std::endl;
+
+    localRetcode = SQLAllocHandle(SQL_HANDLE_STMT, h_DBC, &h_Statement);
+
+    localRetcode = SQLExecDirect(h_Statement, (unsigned char*)insertStat, SQL_NTS);
+    std::cout << "CharStat set, retcode: " << localRetcode << std::endl;
 }
