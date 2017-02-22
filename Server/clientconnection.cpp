@@ -61,3 +61,13 @@ void ClientConnection::TickPacketAcks()
         resend_list.pop_front();
     }
 }
+
+bool ClientConnection::CheckForTimeout()
+{
+    return (std::time(NULL) - this->last_communication > this->CONNECTION_TIMEOUT);
+}
+
+void ClientConnection::UpdateLastCommunicationTime()
+{
+    this->last_communication = std::time(NULL);
+}
