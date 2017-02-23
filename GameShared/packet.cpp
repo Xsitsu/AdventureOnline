@@ -2,8 +2,8 @@
 
 #include <iostream>
 
-char first = 'E';   //Endless
-char second = 'R';  //Rebirth
+char first = 'A';   //Adventure
+char second = 'O';  //Online
 char third = 'P';   //Packet
 char fourth = 'F';  //Format
 
