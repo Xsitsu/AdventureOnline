@@ -49,6 +49,10 @@
 		<Unit filename="game.cpp" />
 		<Unit filename="game.hpp" />
 		<Unit filename="gamestate.hpp" />
+		<Unit filename="gamestatecharacterview.cpp" />
+		<Unit filename="gamestatecharacterview.hpp" />
+		<Unit filename="gamestatecharacterviewmake.cpp" />
+		<Unit filename="gamestatecharacterviewmake.hpp" />
 		<Unit filename="gamestateinit.cpp" />
 		<Unit filename="gamestateinit.hpp" />
 		<Unit filename="gamestatequit.cpp" />

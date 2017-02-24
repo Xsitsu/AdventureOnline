@@ -7,6 +7,12 @@ GuiScreen::GuiScreen(GuiBase* base) : base(base)
 
 GuiScreen::~GuiScreen()
 {
+    while (!this->listeners.empty())
+    {
+        delete this->listeners.front();
+        this->listeners.pop_front();
+    }
+
     delete this->base;
 }
 
@@ -201,4 +207,9 @@ void GuiScreen::SetGuiId(std::string id, GuiBase* gui)
 GuiBase* GuiScreen::GetGuiById(std::string id)
 {
     return this->gui_id_map[id];
+}
+
+void GuiScreen::RegisterListener(AbstractListener* listener)
+{
+    this->listeners.push_back(listener);
 }

@@ -10,23 +10,11 @@ struct DLL_EXPORT Vector2
     int x;
     int y;
 
-    Vector2()
-    {
-        this->x = 0;
-        this->y = 0;
-    }
+    Vector2() : x(0), y(0) {}
 
-    Vector2(int x, int y)
-    {
-        this->x = x;
-        this->y = y;
-    }
+    Vector2(int x, int y) : x(x), y(y) {}
 
-    Vector2(const Vector2& rhs)
-    {
-        this->x = rhs.x;
-        this->y = rhs.y;
-    }
+    Vector2(const Vector2& rhs) : x(rhs.x), y(rhs.y) {}
 
     Vector2& operator=(const Vector2& rhs)
     {
