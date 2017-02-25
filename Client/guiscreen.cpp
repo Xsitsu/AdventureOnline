@@ -22,10 +22,12 @@ void GuiScreen::ParseChild(GuiBase* child)
 
     if (GuiButton* button = dynamic_cast<GuiButton*>(child))
     {
+        button->SetScreen(this);
         this->interaction_guis.push_back(button);
     }
     else if (GuiTextBox* text_box = dynamic_cast<GuiTextBox*>(child))
     {
+        text_box->SetScreen(this);
         this->interaction_guis.push_back(text_box);
     }
 
