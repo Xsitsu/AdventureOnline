@@ -54,8 +54,8 @@ DB_Bridge::DB_Bridge()
 					do
 					{
 						ret = SQLGetDiagRec(SQL_HANDLE_DBC, h_DBC, ++i, state, &native, text, sizeof(text), &len);
-						//if (SQL_SUCCEEDED(ret))
-							//cout << state << ' ' << i << ' ' << native << ' ' << text << endl;//printf("%s:%ld:%ld:%s\n", state, i, native, text);
+						if (SQL_SUCCEEDED(ret))
+							std::cout << state << ' ' << i << ' ' << native << ' ' << text << std::endl;//printf("%s:%ld:%ld:%s\n", state, i, native, text);
 					} while (ret == SQL_SUCCESS);
 
 					//SQLFreeHandle(SQL_HANDLE_DBC, h_DBC);
@@ -97,17 +97,15 @@ int DB_Bridge::CreatePlayer(Player * newPlayer)
     strcat(insertUser, newPlayer->GetHash().c_str());
     strcat(insertUser, "')");
 
-    //build command to get UserID
+    //build the command to grab the ID once the  player is created
     strcat(getID, "'");
     strcat(getID, newPlayer->GetEmailAddress().c_str());
     strcat(getID, "'");
-    //debug code
-    //std::cout << insertUser << std::endl << getID << std::endl;   //debug output
+
 
     localRetcode = SQLAllocHandle(SQL_HANDLE_STMT, h_DBC, &h_Statement);
-    //std::cout << localRetcode << std::endl;
+
     localRetcode = SQLExecDirect(h_Statement, (unsigned char *)insertUser, SQL_NTS);
-    //std::cout << localRetcode << std::endl; //debug output
 
     localRetcode = SQLExecDirect(h_Statement, (unsigned char *)getID, SQL_NTS);
     SQLFetch(h_Statement);
@@ -150,8 +148,6 @@ int DB_Bridge::UpdatePlayer(Player * morphling)
     char updatePlayer[1000] = "UPDATE Users SET UserEmail =";
     char ita[1000];
 
-    //std::cout << "ID : " << ita << std::endl; //debug output
-
     //build command
     snprintf(ita, 1000, "%d",morphling->GetID());
     strcat(updatePlayer, "'");
@@ -165,7 +161,6 @@ int DB_Bridge::UpdatePlayer(Player * morphling)
 
     localRetcode = SQLAllocHandle(SQL_HANDLE_STMT, h_DBC, &h_Statement);
     localRetcode = SQLExecDirect(h_Statement, (unsigned char *)updatePlayer, SQL_NTS);
-    //std::cout << localRetcode << std::endl;   //debug output
 
     return (int)localRetcode;
 }
@@ -217,28 +212,24 @@ int DB_Bridge::CreatePlayerCharacter(PlayerCharacter * newChar)
 
 
     localRetcode = SQLAllocHandle(SQL_HANDLE_STMT, h_DBC, &h_Statement);
-    //std::cout << localRetcode << std::endl; //debug output
+
     localRetcode = SQLExecDirect(h_Statement, (unsigned char *)insertChar, SQL_NTS);
-    //std::cout << "CharacterCreation Code: " << localRetcode << std::endl;//debug output
+
 
     SQLFetch(h_Statement);
     SQLGetData(h_Statement, 1, SQL_INTEGER, &localID, sizeof(localID), &sqlInt );
     newChar->SetID(localID);
-    //std::cout << "New CHaracter ID: " << newChar->GetID() << std::endl; //debug output
 
     //setting strength
     localID = GetStatID("strength");
-    //std::cout << "strength id: " << localID << std::endl;   //debug code
     SetCharStat(localID, newChar->GetID(), newChar->GetStr());
 
     //setting endurance
     localID = GetStatID("endurance");
-    //std::cout << "endurance id: " << localID << std::endl; //debug code
     SetCharStat(localID, newChar->GetID(), newChar->GetEnd());
 
     //setting intelligence
     localID = GetStatID("intelligence");
-    //std::cout << "intelligence id: " << localID << std::endl; //debug code
     SetCharStat(localID, newChar->GetID(), newChar->GetEnd());
 
     return (int)localRetcode;
@@ -273,20 +264,16 @@ void DB_Bridge::SetCharStat(int StatID, int CharID, int StatValue)
     snprintf(itoa, 100, "%d", CharID);
     strcat(insertStat, itoa);
     strcat(insertStat, ",");
-    std::cout << "char code:" << itoa << std::endl;
 
     snprintf(itoa, 100, "%d", StatID);
     strcat(insertStat, itoa);
     strcat(insertStat, ",");
-    std::cout << "stat code:" << itoa << std::endl;
 
     snprintf(itoa, 100, "%d", StatValue);
     strcat(insertStat, itoa);
     strcat(insertStat, ")");
-    std::cout << "stat val:" << itoa << std::endl;
 
     localRetcode = SQLAllocHandle(SQL_HANDLE_STMT, h_DBC, &h_Statement);
 
     localRetcode = SQLExecDirect(h_Statement, (unsigned char*)insertStat, SQL_NTS);
-    std::cout << "CharStat set, retcode: " << localRetcode << std::endl;
 }
