@@ -110,13 +110,16 @@ void Server::Tick()
 
             this->clients[con_id] = NULL;
 
-            //std::cout << "Client disconnected with id: " << con_id << std::endl;
+            std::cout << "Client disconnected with id: " << con_id << std::endl;
 
             return;
         }
         else
         {
-            //std::cout << "OtherPacket: " << packet->GetType() << std::endl;
+            std::cout << "OtherPacket: " << packet->GetType() << std::endl;
+            PacketRegistrationRequest * debugPacket = dynamic_cast<PacketRegistrationRequest*>(packet);
+            if(debugPacket)
+                std::cout << "packetinfo "  << debugPacket->GetEmail() << std::endl;
 
             unsigned int connection_id = packet->GetConnectionId();
             client = this->clients[connection_id];
