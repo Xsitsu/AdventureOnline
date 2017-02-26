@@ -21,8 +21,8 @@ void PacketAckList::UpdatePacketAck(unsigned int sequence)
     if (diff > 0)
     {
         unsigned int bitfield = this->packet_ack_bitfield << 1;
-        bitfield | 1;
-        bitfield << (diff - 1);
+        bitfield = bitfield | 1;
+        bitfield = bitfield << (diff - 1);
 
         this->packet_ack_bitfield = bitfield;
     }
