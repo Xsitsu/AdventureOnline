@@ -175,7 +175,7 @@ void Game::Run()
         }
         else if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
         {
-            this->is_running = false;
+            this->ChangeState(new GameStateQuit(this));
         }
         else if (ev.type == ALLEGRO_EVENT_KEY_DOWN)
         {
@@ -250,6 +250,7 @@ void Game::Cleanup()
 void Game::PushScreen(GuiScreen* screen)
 {
     this->screen_stack.push_back(screen);
+    GuiSelectionService::Instance()->HandleCurrentScreenChanged();
 }
 
 void Game::PopScreen()
@@ -259,6 +260,8 @@ void Game::PopScreen()
     GuiScreen* screen = this->screen_stack.back();
     this->screen_stack.pop_back();
     delete screen;
+
+    GuiSelectionService::Instance()->HandleCurrentScreenChanged();
 }
 
 void Game::DrawScreens()

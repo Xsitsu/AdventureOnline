@@ -10,8 +10,6 @@ struct PacketAck
 {
     PacketBase* packet;
     std::time_t send_time;
-
-    PacketAck(PacketBase* packet, std::time_t send_time) : packet(packet), send_time(send_time) {}
 };
 
 typedef std::list<PacketAck>::iterator ack_iter;

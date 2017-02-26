@@ -1,15 +1,14 @@
-#ifndef GAMESTATETITLE_HPP_INCLUDE
-#define GAMESTATETITLE_HPP_INCLUDE
+#ifndef GAMESTATEACCOUNTCREATION_H
+#define GAMESTATEACCOUNTCREATION_H
 
 #include "gamestate.hpp"
-#include "gamestatequit.hpp"
 
 
-class GameStateTitle : public GameStateBase
+class GameStateAccountCreation : public GameStateBase
 {
-public:
-    GameStateTitle(Game* game);
-    ~GameStateTitle();
+    public:
+        GameStateAccountCreation(Game * game);
+        virtual ~GameStateAccountCreation();
 
     virtual void Enter();
     virtual void Exit();
@@ -22,7 +21,7 @@ public:
     virtual void HandleMouseDown(const ALLEGRO_MOUSE_EVENT& mouse);
     virtual void HandleMouseUp(const ALLEGRO_MOUSE_EVENT& mouse);
 
-    virtual std::string GetStateName() { return "Title"; }
+    virtual std::string GetStateName() { return "AccountCreation"; }
 };
 
-#endif // GAMESTATETITLE_HPP_INCLUDE
+#endif // GAMESTATEACCOUNTCREATION_H

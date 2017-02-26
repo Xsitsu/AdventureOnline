@@ -1,12 +1,15 @@
 #include "guitextbutton.hpp"
 
-GuiTextButton::GuiTextButton() : GuiButton(), text_color(Color3()), text_alpha(255), text_draw_color(al_map_rgb(0, 0, 0)), text_draw_font(NULL)
+GuiTextButton::GuiTextButton() : GuiButton(), text_color(Color3()), text_alpha(255),
+text_draw_color(al_map_rgb(0, 0, 0)), text_draw_font(NULL), text_align(ALIGN_LEFT)
 {}
 
-GuiTextButton::GuiTextButton(Vector2 size) : GuiButton(size), text_color(Color3()), text_alpha(255), text_draw_color(al_map_rgb(0, 0, 0)), text_draw_font(NULL)
+GuiTextButton::GuiTextButton(Vector2 size) : GuiButton(size), text_color(Color3()), text_alpha(255),
+text_draw_color(al_map_rgb(0, 0, 0)), text_draw_font(NULL), text_align(ALIGN_LEFT)
 {}
 
-GuiTextButton::GuiTextButton(Vector2 size, Vector2 position) : GuiButton(size, position), text_color(Color3()), text_alpha(255), text_draw_color(al_map_rgb(0, 0, 0)), text_draw_font(NULL)
+GuiTextButton::GuiTextButton(Vector2 size, Vector2 position) : GuiButton(size, position), text_color(Color3()),
+text_alpha(255), text_draw_color(al_map_rgb(0, 0, 0)), text_draw_font(NULL), text_align(ALIGN_LEFT)
 {}
 
 GuiTextButton::~GuiTextButton()

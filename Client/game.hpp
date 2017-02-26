@@ -28,6 +28,8 @@ friend class GameStateInit;
 friend class GameStateServerConnect;
 friend class GameStateTitle;
 friend class GameStateQuit;
+friend class GameStateCharacterView;
+friend class GameStateAccountCreation;
 
 protected: // Singleton stuff
     static Game* instance;
@@ -84,6 +86,7 @@ public:
     void PopScreen();
 
     bool IsClientConnected() { return this->client->IsConnected(); }
+    void SendPacket(PacketBase* packet) { this->client->SendPacket(packet); }
 
 };
 

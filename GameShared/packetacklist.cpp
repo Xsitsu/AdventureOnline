@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-PacketAckList::PacketAckList() : packet_ack(0), packet_ack_bitfield(0)
+PacketAckList::PacketAckList() : packet_ack(0), packet_ack_bitfield(0), packet_ack_list(std::list<PacketAck>())
 {}
 
 PacketAckList::~PacketAckList()
@@ -21,8 +21,8 @@ void PacketAckList::UpdatePacketAck(unsigned int sequence)
     if (diff > 0)
     {
         unsigned int bitfield = this->packet_ack_bitfield << 1;
-        bitfield | 1;
-        bitfield << (diff - 1);
+        bitfield = bitfield | 1;
+        bitfield = bitfield << (diff - 1);
 
         this->packet_ack_bitfield = bitfield;
     }
@@ -35,7 +35,7 @@ void PacketAckList::UpdatePacketAck(unsigned int sequence)
 
 void PacketAckList::ConfirmPacketAcks(unsigned int ack, unsigned int ack_bitfield)
 {
-    std::cout << "Packet was ack'd: " << ack << std::endl;
+    //std::cout << "Packet was ack'd: " << ack << std::endl;
 
     if (!this->packet_ack_list.empty())
     {
@@ -88,7 +88,7 @@ std::list<PacketBase*> PacketAckList::TickPacketAcks()
             std::time_t diff = cur_time - (*first).send_time;
             if (diff > 1)
             {
-                std::cout << "Didn't receive ack. Resending packet!" << std::endl;
+                //std::cout << "Didn't receive ack. Resending packet!" << std::endl;
                 resend_packet_count++;
 
                 resend_list.push_back((*first).packet);
@@ -110,5 +110,8 @@ std::list<PacketBase*> PacketAckList::TickPacketAcks()
 
 void PacketAckList::RegisterPacket(PacketBase* packet)
 {
-    this->packet_ack_list.push_back(PacketAck(packet, std::time(NULL)));
+    PacketAck ack;
+    ack.packet = packet;
+    ack.send_time = std::time(NULL);
+    this->packet_ack_list.push_back(ack);
 }

@@ -165,3 +165,10 @@ void GuiSelectionService::LetMouseUp()
         this->current_button_down = NULL;
     }
 }
+
+void GuiSelectionService::HandleCurrentScreenChanged()
+{
+    this->selected_text_box = NULL;
+    this->current_mouse_hover = NULL;
+    this->current_button_down = NULL;
+}
