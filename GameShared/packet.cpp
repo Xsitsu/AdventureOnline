@@ -289,7 +289,7 @@ void PacketRegistrationRequest::Decode(char* buffer)
     }
     pass[password_length] = 0;
 
-    this->SetEmai(email);
+    this->SetEmail(email);
     this->SetPassword(pass);
 }
 

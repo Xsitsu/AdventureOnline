@@ -111,7 +111,7 @@ public:
         if (e_password == e_confirmation)
         {
             PacketRegistrationRequest * packet = new PacketRegistrationRequest();
-            packet->SetEmai(e_email);
+            packet->SetEmail(e_email);
             packet->SetPassword(e_password);
 
             std::cout << "Packet sent :\t" << packet->GetEmail() << '\t' << packet->GetPassword() << '\t'  << std::endl;
