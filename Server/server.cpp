@@ -117,14 +117,24 @@ void Server::Tick()
         }
         else if ( packet->GetType() == PacketBase::PACKET_REGISTRATION_REQUEST)
         {
-            PacketRegistrationRequest * registrationInfo = static_cast<PacketRegistrationRequest *>(packet);
-            DB_Bridge * database = new DB_Bridge();
-            std::cout << "Registration info:\t" << registrationInfo->GetEmail() << '\t' << registrationInfo->GetPassword() << std::endl;
-            Player * newPlayer = new Player(0, registrationInfo->GetEmail(), "salt", strcpy(registrationInfo->GetPassword(), "salt") );
-            std::cout << "Player info:\t" << newPlayer->GetEmailAddress() << '\t' << newPlayer->GetHash() << std::endl;
-            database->CreatePlayer(newPlayer);
-            delete newPlayer;
-            delete database;
+            PacketRegistrationRequest * registrationInfo = dynamic_cast<PacketRegistrationRequest *>(packet);
+
+            if(registrationInfo)
+            {
+                DB_Bridge * database = new DB_Bridge();
+                std::cout << "Registration info:\t" << registrationInfo->GetEmail() << '\t' << registrationInfo->GetPassword() << std::endl;
+
+                Player * newPlayer = new Player(0, registrationInfo->GetEmail(), "salt", registrationInfo->GetPassword() += "salt" );
+                std::cout << "Player info:\t" << newPlayer->GetEmailAddress() << '\t' << newPlayer->GetHash() << std::endl;
+                database->CreatePlayer(newPlayer);
+                delete newPlayer;
+                delete database;
+            }
+            else
+            {
+                std::cout << "nullptr" << std::endl;
+            }
+
         }
         else
         {

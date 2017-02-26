@@ -235,17 +235,23 @@ PacketPong::PacketPong() : PacketBase(PacketBase::PACKET_PONG)
 
 unsigned int PacketRegistrationRequest::Encode(char* buffer)
 {
+    const char * email = p_email.c_str();
+    const char * password = p_password.c_str();
     PacketReader reader;
 
     PacketBase::Encode(buffer);
-    for (int c = 0; c < 255 ; c++)
+    reader.WriteByte(buffer, this->buffer_pos, this->email_length);
+    reader.WriteByte(buffer, this->buffer_pos, this->password_length);
+
+
+    for (uint8_t c = 0; c < email_length ; c++)
     {
-        reader.WriteByte(buffer, buffer_pos, p_User[0][c]);
+        reader.WriteByte(buffer, this->buffer_pos, email[c]);
     }
 
-    for (int c = 0; c < 255 ; c++)
+    for (uint8_t c = 0; c < password_length ; c++)
     {
-        reader.WriteByte(buffer, buffer_pos, p_User[1][c]);
+        reader.WriteByte(buffer, this->buffer_pos, password[c]);
     }
 
     return this->buffer_pos;
@@ -254,41 +260,47 @@ unsigned int PacketRegistrationRequest::Encode(char* buffer)
 void PacketRegistrationRequest::Decode(char* buffer)
 {
     PacketReader reader;
-    char buff = 1;
-
+    char buff;
     PacketBase::Decode(buffer);
+    uint8_t email_length = reader.ReadByte(buffer, buffer_pos);
+    uint8_t password_length = reader.ReadByte(buffer, buffer_pos);
 
-    for(int i = 0; i < 255; i++)
+    char * email = new char[email_length];
+    char * pass = new char [password_length];
+
+    for(int i = 0; i < email_length; i++)
     {
         buff = reader.ReadByte(buffer, buffer_pos);
-        p_User[0][i] = buff;
+        email[i] = buff;
     }
 
-    for(int i = 0; i < 255; i++)
+    for(int i = 0; i < password_length; i++)
     {
         buff = reader.ReadByte(buffer, buffer_pos);
-        p_User[1][i] = buff;
+        pass[i] = buff;
     }
 }
 
-char * PacketRegistrationRequest::GetEmail()
+string PacketRegistrationRequest::GetEmail()
 {
-    return p_User[0];
+    return p_email;
 }
 
-char * PacketRegistrationRequest::GetPassword()
+string PacketRegistrationRequest::GetPassword()
 {
-    return p_User[1];
+    return p_password;
 }
 
 void PacketRegistrationRequest::SetEmai( string email )
 {
-    strcpy(p_User[0], email.c_str());
+    p_email = email;
+    email_length = p_email.size();
 }
 
 void PacketRegistrationRequest::SetPassword( string password )
 {
-    strcpy(p_User[1], password.c_str());
+    p_password = password;
+    password_length = p_password.size();
 }
 
-PacketRegistrationRequest::PacketRegistrationRequest(): PacketBase(PacketBase::PACKET_REGISTRATION_REQUEST){}
+PacketRegistrationRequest::PacketRegistrationRequest(): PacketBase(PacketBase::PACKET_REGISTRATION_REQUEST), p_email(""), p_password(""), email_length(0), password_length(0){}

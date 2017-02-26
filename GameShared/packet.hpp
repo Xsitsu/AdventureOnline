@@ -171,13 +171,18 @@ public:
 class DLL_EXPORT PacketRegistrationRequest: public PacketBase
 {
 protected:
-    char p_User[2][255];
+    uint8_t email_length;
+    uint8_t password_length;
+    std::string p_email;
+    std::string p_password;
+
+
 public:
     PacketRegistrationRequest();
     //PacketRegistrationRequest(std::string email, std::string password ){ p_User[0] = email; p_User[1] = password; }
 
-    char * GetEmail();
-    char * GetPassword();
+    std::string GetEmail();
+    std::string GetPassword();
     void SetEmai( string email );
     void SetPassword( string password );
 
