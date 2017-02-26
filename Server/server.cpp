@@ -1,6 +1,7 @@
 #include "server.hpp"
 
 #include <iostream>
+#include "DB_Bridge.h"
 
 Server::Server(unsigned short port, unsigned int max_connections) : port(port), connection_id_counter(0),
 max_connections(max_connections), last_timeout_check(std::time(NULL))
@@ -113,6 +114,17 @@ void Server::Tick()
             std::cout << "Client disconnected with id: " << con_id << std::endl;
 
             return;
+        }
+        else if ( packet->GetType() == PacketBase::PACKET_REGISTRATION_REQUEST)
+        {
+            PacketRegistrationRequest * registrationInfo = static_cast<PacketRegistrationRequest *>(packet);
+            DB_Bridge * database = new DB_Bridge();
+            std::cout << "Registration info:\t" << registrationInfo->GetEmail() << '\t' << registrationInfo->GetPassword() << std::endl;
+            Player * newPlayer = new Player(0, registrationInfo->GetEmail(), "salt", strcpy(registrationInfo->GetPassword(), "salt") );
+            std::cout << "Player info:\t" << newPlayer->GetEmailAddress() << '\t' << newPlayer->GetHash() << std::endl;
+            database->CreatePlayer(newPlayer);
+            delete newPlayer;
+            delete database;
         }
         else
         {

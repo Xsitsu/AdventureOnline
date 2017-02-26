@@ -7,7 +7,7 @@
 class GameStateAccountCreation : public GameStateBase
 {
     public:
-        GameStateAccountCreation(Game *  game);
+        GameStateAccountCreation(Game * game);
         virtual ~GameStateAccountCreation();
 
     virtual void Enter();

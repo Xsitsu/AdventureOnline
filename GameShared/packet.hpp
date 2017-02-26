@@ -4,8 +4,11 @@
 #include "main.h"
 
 #include <stdint.h>
+#include <string>
 
 #include "socket.hpp"
+
+using std::string;
 
 class DLL_EXPORT PacketBase
 {
@@ -20,7 +23,9 @@ public:
         PACKET_DISCONNECT,
         PACKET_DISCONNECT_RESPONSE,
         PACKET_PING,
-        PACKET_PONG
+        PACKET_PONG,
+        PACKET_REGISTRATION_REQUEST,
+        PACKET_REGISTRATION_RESPONSE
     };
 
 protected:
@@ -163,4 +168,20 @@ public:
     PacketPong();
 };
 
+class DLL_EXPORT PacketRegistrationRequest: public PacketBase
+{
+protected:
+    char p_User[2][255];
+public:
+    PacketRegistrationRequest();
+    //PacketRegistrationRequest(std::string email, std::string password ){ p_User[0] = email; p_User[1] = password; }
+
+    char * GetEmail();
+    char * GetPassword();
+    void SetEmai( string email );
+    void SetPassword( string password );
+
+    virtual unsigned int Encode(char* buffer);
+    virtual void Decode(char* buffer);
+};
 #endif // PACKET_HPP_INCLUDE

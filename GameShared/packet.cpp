@@ -81,6 +81,9 @@ PacketBase* PacketReader::ReadPacket(char* buffer, int bytes_read)
     case PacketBase::PACKET_PONG:
         packet = new PacketPong();
         break;
+    case PacketBase::PACKET_REGISTRATION_REQUEST:
+        packet = new PacketRegistrationRequest();
+        break;
     default:
         //std::cout << "bad type: " << (unsigned int) type << std::endl;s
         break;
@@ -230,4 +233,62 @@ PacketPing::PacketPing() : PacketBase(PacketBase::PACKET_PING)
 PacketPong::PacketPong() : PacketBase(PacketBase::PACKET_PONG)
 {}
 
+unsigned int PacketRegistrationRequest::Encode(char* buffer)
+{
+    PacketReader reader;
 
+    PacketBase::Encode(buffer);
+    for (int c = 0; c < 255 ; c++)
+    {
+        reader.WriteByte(buffer, buffer_pos, p_User[0][c]);
+    }
+
+    for (int c = 0; c < 255 ; c++)
+    {
+        reader.WriteByte(buffer, buffer_pos, p_User[1][c]);
+    }
+
+    return this->buffer_pos;
+}
+
+void PacketRegistrationRequest::Decode(char* buffer)
+{
+    PacketReader reader;
+    char buff = 1;
+
+    PacketBase::Decode(buffer);
+
+    for(int i = 0; i < 255; i++)
+    {
+        buff = reader.ReadByte(buffer, buffer_pos);
+        p_User[0][i] = buff;
+    }
+
+    for(int i = 0; i < 255; i++)
+    {
+        buff = reader.ReadByte(buffer, buffer_pos);
+        p_User[1][i] = buff;
+    }
+}
+
+char * PacketRegistrationRequest::GetEmail()
+{
+    return p_User[0];
+}
+
+char * PacketRegistrationRequest::GetPassword()
+{
+    return p_User[1];
+}
+
+void PacketRegistrationRequest::SetEmai( string email )
+{
+    strcpy(p_User[0], email.c_str());
+}
+
+void PacketRegistrationRequest::SetPassword( string password )
+{
+    strcpy(p_User[1], password.c_str());
+}
+
+PacketRegistrationRequest::PacketRegistrationRequest(): PacketBase(PacketBase::PACKET_REGISTRATION_REQUEST){}

@@ -3,6 +3,7 @@
 #include "gamestatetitle.hpp"
 #include "gamestatetitlemake.hpp"
 #include "gamestateaccountcreation.hpp"
+#include "GameShared/packet.hpp"
 
 GuiTextButton* CreateAccountCreationButton(int offset, std::string button_text, ALLEGRO_FONT* text_font)
 {
@@ -109,7 +110,13 @@ public:
     {
         if (e_password == e_confirmation)
         {
-            //send out confirmation request
+            PacketRegistrationRequest * packet = new PacketRegistrationRequest();
+            packet->SetEmai(e_email);
+            packet->SetPassword(e_password);
+
+            this->game->SendPacket(packet);
+            std::cout << "Packet sent :\t" << packet->GetEmail() << '\t' << packet->GetPassword()  << std::endl;
+            //send out registration request
         }
         else
         {
