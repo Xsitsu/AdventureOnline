@@ -9,6 +9,7 @@
 #include "GameShared/packetacklist.hpp"
 
 #include "server.hpp"
+#include "account.hpp"
 
 class Server;
 
@@ -27,6 +28,8 @@ protected:
     std::time_t last_communication;
 
     Server* server;
+
+    Account* account;
 
 public:
     ClientConnection(Server* server, Address address, unsigned int connection_id);

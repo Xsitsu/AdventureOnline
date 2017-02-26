@@ -7,6 +7,7 @@
 #include "GameShared/packet.hpp"
 
 #include "clientconnection.hpp"
+#include "world.hpp"
 
 class ClientConnection;
 
@@ -22,8 +23,8 @@ protected:
 
     const unsigned int max_connections;
 
-    //std::unordered_map<unsigned long int, ClientConnection*> clients;
     ClientConnection** clients;
+    World* world;
 
     unsigned int FindOpenConnectionId();
 

@@ -4,7 +4,7 @@
 #include "DB_Bridge.h"
 
 ClientConnection::ClientConnection(Server* server, Address address, unsigned int connection_id) :
-    server(server), client_address(address), connection_id(connection_id), packet_sequence(0)
+    server(server), client_address(address), connection_id(connection_id), packet_sequence(0), account(NULL)
 {
 
 }

@@ -3,7 +3,7 @@
 #include <iostream>
 
 Server::Server(unsigned short port, unsigned int max_connections) : port(port), connection_id_counter(0),
-max_connections(max_connections), last_timeout_check(std::time(NULL))
+max_connections(max_connections), last_timeout_check(std::time(NULL)), world(NULL)
 {
     clients = new ClientConnection*[this->max_connections];
     for (unsigned int i = 0; i < this->max_connections; i++)
@@ -15,6 +15,7 @@ max_connections(max_connections), last_timeout_check(std::time(NULL))
 Server::~Server()
 {
     delete[] clients;
+    delete[] world;
 }
 
 unsigned int Server::FindOpenConnectionId()
