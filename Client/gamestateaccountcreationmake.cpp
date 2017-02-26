@@ -114,8 +114,9 @@ public:
             packet->SetEmai(e_email);
             packet->SetPassword(e_password);
 
+            std::cout << "Packet sent :\t" << packet->GetEmail() << '\t' << packet->GetPassword() << '\t'  << std::endl;
             this->game->SendPacket(packet);
-            std::cout << "Packet sent :\t" << packet->GetEmail() << '\t' << packet->GetPassword()  << std::endl;
+
             //send out registration request
         }
         else

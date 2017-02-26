@@ -9,4 +9,6 @@ allegro.log
 *.layout
 *.depend
 
+Client/bin/
+
 Makefile

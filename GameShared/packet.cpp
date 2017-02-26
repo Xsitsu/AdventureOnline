@@ -13,13 +13,19 @@ const unsigned int PacketBase::MAX_BUFFER = 1024;
 const unsigned int PacketBase::PACKET_PREFIX = data;
 
 PacketBase::PacketBase() : type(PacketBase::PACKET_UNKNOWN)
-{}
+{
+    //this->buffer_pos = 0;
+}
 
 PacketBase::PacketBase(PacketBase::PacketType type) : type(type), needs_ack(true)
-{}
+{
+    //this->buffer_pos = 0;
+}
 
 PacketBase::PacketBase(PacketBase::PacketType type, bool needs_ack) : type(type), needs_ack(needs_ack)
-{}
+{
+    //this->buffer_pos = 0;
+}
 
 unsigned int PacketBase::Encode(char* buffer)
 {
@@ -238,6 +244,7 @@ unsigned int PacketRegistrationRequest::Encode(char* buffer)
     const char * email = p_email.c_str();
     const char * password = p_password.c_str();
     PacketReader reader;
+    //this->buffer_pos = 0;
 
     PacketBase::Encode(buffer);
     reader.WriteByte(buffer, this->buffer_pos, this->email_length);
