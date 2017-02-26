@@ -116,7 +116,7 @@ void Server::Tick()
         }
         else
         {
-            //std::cout << "OtherPacket: " << packet->GetType() << std::endl;
+//            std::cout << "OtherPacket: " << packet->GetType() << std::endl;
 
             unsigned int connection_id = packet->GetConnectionId();
             client = this->clients[connection_id];

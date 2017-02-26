@@ -3,6 +3,7 @@
 #include "gamestatetitle.hpp"
 #include "gamestatequit.hpp"
 #include "gamestatecharacterviewmake.hpp"
+#include "gamestateaccountcreationmake.h"
 
 
 
@@ -80,7 +81,31 @@ public:
 };
 
 
+class CreateAccountEvent : public GameEventBase
+{
+public:
+    CreateAccountEvent(Game* game) : GameEventBase(game) {}
 
+    virtual void HandleEvent()
+    {
+        this->game->PopScreen();
+        this->game->ChangeState(new GameStateAccountCreationMake(this->game));
+    }
+};
+
+class CreateAccountListener : public ListenerBase<GuiButtonArgs*>
+{
+protected:
+    Game* game;
+
+public:
+    CreateAccountListener(Game* game) : game(game) {}
+
+    virtual void Notify(GuiButtonArgs*& args) const
+    {
+        this->game->RegisterEventToQueue(new CreateAccountEvent(this->game));
+    }
+};
 
 
 
@@ -112,6 +137,7 @@ void GameStateTitleMake::Enter()
     TitleButtonLeaveListener* mouse_leave_listener = new TitleButtonLeaveListener();
     GameQuitListener* game_quit_listener = new GameQuitListener(this->game);
     OptionsListener* option_listener = new OptionsListener(this->game);
+    CreateAccountListener* create_account_listener = new CreateAccountListener(this->game);
 
     GuiFrame* base_frame;
     base_frame = new GuiFrame(Vector2(640, 480), Vector2(0, 0));
@@ -120,6 +146,7 @@ void GameStateTitleMake::Enter()
     GuiTextButton* button1 = CreateTitleButton(0, "Create Account", button_font);
     button1->RegisterOnMouseEnter(mouse_enter_listener);
     button1->RegisterOnMouseLeave(mouse_leave_listener);
+    button1->RegisterOnClick(create_account_listener);
     base_frame->AddChild(button1);
 
     GuiTextButton* button2 = CreateTitleButton(1, "Play Game", button_font);
@@ -144,6 +171,7 @@ void GameStateTitleMake::Enter()
     screen->RegisterListener(mouse_leave_listener);
     screen->RegisterListener(game_quit_listener);
     screen->RegisterListener(option_listener);
+    screen->RegisterListener(create_account_listener);
     //screen->SetGuiId("CreateAccount", button1);
     //screen->SetGuiId("PlayGame", button2);
     //screen->SetGuiId("Options", button3);

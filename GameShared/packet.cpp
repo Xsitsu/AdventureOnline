@@ -13,13 +13,19 @@ const unsigned int PacketBase::MAX_BUFFER = 1024;
 const unsigned int PacketBase::PACKET_PREFIX = data;
 
 PacketBase::PacketBase() : type(PacketBase::PACKET_UNKNOWN)
-{}
+{
+    //this->buffer_pos = 0;
+}
 
 PacketBase::PacketBase(PacketBase::PacketType type) : type(type), needs_ack(true)
-{}
+{
+    //this->buffer_pos = 0;
+}
 
 PacketBase::PacketBase(PacketBase::PacketType type, bool needs_ack) : type(type), needs_ack(needs_ack)
-{}
+{
+    //this->buffer_pos = 0;
+}
 
 unsigned int PacketBase::Encode(char* buffer)
 {
@@ -80,6 +86,9 @@ PacketBase* PacketReader::ReadPacket(char* buffer, int bytes_read)
         break;
     case PacketBase::PACKET_PONG:
         packet = new PacketPong();
+        break;
+    case PacketBase::PACKET_REGISTRATION_REQUEST:
+        packet = new PacketRegistrationRequest();
         break;
     default:
         //std::cout << "bad type: " << (unsigned int) type << std::endl;s
@@ -230,4 +239,80 @@ PacketPing::PacketPing() : PacketBase(PacketBase::PACKET_PING)
 PacketPong::PacketPong() : PacketBase(PacketBase::PACKET_PONG)
 {}
 
+unsigned int PacketRegistrationRequest::Encode(char* buffer)
+{
+    const char * email = p_email.c_str();
+    const char * password = p_password.c_str();
+    PacketReader reader;
+    //this->buffer_pos = 0;
 
+    PacketBase::Encode(buffer);
+    reader.WriteByte(buffer, this->buffer_pos, this->email_length);
+    reader.WriteByte(buffer, this->buffer_pos, this->password_length);
+
+
+    for (uint8_t c = 0; c < email_length ; c++)
+    {
+        reader.WriteByte(buffer, this->buffer_pos, email[c]);
+    }
+
+    for (uint8_t c = 0; c < password_length ; c++)
+    {
+        reader.WriteByte(buffer, this->buffer_pos, password[c]);
+    }
+
+    return this->buffer_pos;
+}
+
+void PacketRegistrationRequest::Decode(char* buffer)
+{
+    PacketReader reader;
+    char buff;
+    PacketBase::Decode(buffer);
+    uint8_t email_length = reader.ReadByte(buffer, buffer_pos);
+    uint8_t password_length = reader.ReadByte(buffer, buffer_pos);
+
+    char * email = new char[email_length+1];
+    char * pass = new char [password_length+1];
+
+    for(int i = 0; i < email_length; i++)
+    {
+        buff = reader.ReadByte(buffer, buffer_pos);
+        email[i] = buff;
+    }
+    email[email_length] = 0;
+
+    for(int i = 0; i < password_length; i++)
+    {
+        buff = reader.ReadByte(buffer, buffer_pos);
+        pass[i] = buff;
+    }
+    pass[password_length] = 0;
+
+    this->SetEmail(email);
+    this->SetPassword(pass);
+}
+
+string PacketRegistrationRequest::GetEmail()
+{
+    return p_email;
+}
+
+string PacketRegistrationRequest::GetPassword()
+{
+    return p_password;
+}
+
+void PacketRegistrationRequest::SetEmail( string email )
+{
+    p_email = email;
+    email_length = p_email.size();
+}
+
+void PacketRegistrationRequest::SetPassword( string password )
+{
+    p_password = password;
+    password_length = p_password.size();
+}
+
+PacketRegistrationRequest::PacketRegistrationRequest(): PacketBase(PacketBase::PACKET_REGISTRATION_REQUEST), p_email(""), p_password(""), email_length(0), password_length(0){}

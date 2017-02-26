@@ -51,6 +51,10 @@
 		<Unit filename="game.cpp" />
 		<Unit filename="game.hpp" />
 		<Unit filename="gamestate.hpp" />
+		<Unit filename="gamestateaccountcreation.cpp" />
+		<Unit filename="gamestateaccountcreation.hpp" />
+		<Unit filename="gamestateaccountcreationmake.cpp" />
+		<Unit filename="gamestateaccountcreationmake.h" />
 		<Unit filename="gamestatecharacterview.cpp" />
 		<Unit filename="gamestatecharacterview.hpp" />
 		<Unit filename="gamestatecharacterviewmake.cpp" />

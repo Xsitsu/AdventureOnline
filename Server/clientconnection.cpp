@@ -1,6 +1,7 @@
 #include "clientconnection.hpp"
 
 #include <iostream>
+#include "DB_Bridge.h"
 
 ClientConnection::ClientConnection(Server* server, Address address, unsigned int connection_id) :
     server(server), client_address(address), connection_id(connection_id), packet_sequence(0)
@@ -49,6 +50,16 @@ void ClientConnection::ProcessPacket(PacketBase* packet)
         PacketPong* packet = new PacketPong();
         packet->SetNeedsAck(false);
         this->SendPacket(packet);
+    }
+    else if ( packet->GetType() == PacketBase::PACKET_REGISTRATION_REQUEST)
+    {
+        PacketRegistrationRequest * registrationInfo = static_cast<PacketRegistrationRequest *>(packet);
+
+        DB_Bridge * database = new DB_Bridge();
+        Player * newPlayer = new Player(0, registrationInfo->GetEmail(), "salt", registrationInfo->GetPassword() += "salt" );
+        database->CreatePlayer(newPlayer);
+        delete newPlayer;
+        delete database;
     }
 }
 

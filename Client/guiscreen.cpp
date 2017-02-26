@@ -20,6 +20,8 @@ void GuiScreen::ParseChild(GuiBase* child)
 {
     if (!child) return;
 
+    child->SetScreen(this);
+
     if (GuiButton* button = dynamic_cast<GuiButton*>(child))
     {
         this->interaction_guis.push_back(button);

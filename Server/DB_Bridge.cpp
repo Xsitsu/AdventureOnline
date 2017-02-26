@@ -54,8 +54,8 @@ DB_Bridge::DB_Bridge()
 					do
 					{
 						ret = SQLGetDiagRec(SQL_HANDLE_DBC, h_DBC, ++i, state, &native, text, sizeof(text), &len);
-						//if (SQL_SUCCEEDED(ret))
-							//cout << state << ' ' << i << ' ' << native << ' ' << text << endl;//printf("%s:%ld:%ld:%s\n", state, i, native, text);
+						if (SQL_SUCCEEDED(ret))
+							std::cout << state << ' ' << i << ' ' << native << ' ' << text << std::endl;//printf("%s:%ld:%ld:%s\n", state, i, native, text);
 					} while (ret == SQL_SUCCESS);
 
 					//SQLFreeHandle(SQL_HANDLE_DBC, h_DBC);
@@ -97,17 +97,15 @@ int DB_Bridge::CreatePlayer(Player * newPlayer)
     strcat(insertUser, newPlayer->GetHash().c_str());
     strcat(insertUser, "')");
 
-    //build command to get UserID
+    //build the command to grab the ID once the  player is created
     strcat(getID, "'");
     strcat(getID, newPlayer->GetEmailAddress().c_str());
     strcat(getID, "'");
-    //debug code
-    std::cout << insertUser << std::endl << getID << std::endl;
+
 
     localRetcode = SQLAllocHandle(SQL_HANDLE_STMT, h_DBC, &h_Statement);
-    //std::cout << localRetcode << std::endl;
+
     localRetcode = SQLExecDirect(h_Statement, (unsigned char *)insertUser, SQL_NTS);
-    std::cout << localRetcode << std::endl;
 
     localRetcode = SQLExecDirect(h_Statement, (unsigned char *)getID, SQL_NTS);
     SQLFetch(h_Statement);
@@ -150,8 +148,6 @@ int DB_Bridge::UpdatePlayer(Player * morphling)
     char updatePlayer[1000] = "UPDATE Users SET UserEmail =";
     char ita[1000];
 
-    std::cout << "ID : " << ita << std::endl;
-
     //build command
     snprintf(ita, 1000, "%d",morphling->GetID());
     strcat(updatePlayer, "'");
@@ -165,7 +161,6 @@ int DB_Bridge::UpdatePlayer(Player * morphling)
 
     localRetcode = SQLAllocHandle(SQL_HANDLE_STMT, h_DBC, &h_Statement);
     localRetcode = SQLExecDirect(h_Statement, (unsigned char *)updatePlayer, SQL_NTS);
-    std::cout << localRetcode << std::endl;
 
     return (int)localRetcode;
 }
@@ -184,4 +179,101 @@ int DB_Bridge::DeletePlayer(Player* oldbie)
     localRetcode = SQLExecDirect(h_Statement, (unsigned char *)deletePlayer, SQL_NTS);
 
     return (int)localRetcode;
+}
+
+int DB_Bridge::CreatePlayerCharacter(PlayerCharacter * newChar)
+{
+    SQLRETURN localRetcode;
+    SQLINTEGER sqlInt;
+    int localID = 0;
+    char itoa[100];
+    char insertChar[1000] = "INSERT INTO PlayerChar(CharName, UserID, Position_X, Position_Y, MapID) OUTPUT Inserted.CharID VALUES(";
+
+    //build command for creating user
+    strcat(insertChar, "'");
+    strcat(insertChar, newChar->GetName().c_str());
+    strcat(insertChar, "',");
+
+    snprintf(itoa, 100, "%d", newChar->GetPlayerID());
+    strcat(insertChar, itoa);
+    strcat(insertChar, ",");
+
+    snprintf(itoa, 100, "%d", newChar->GetPosX());
+    strcat(insertChar, itoa);
+    strcat(insertChar, ",");
+
+    snprintf(itoa, 100, "%d", newChar->GetPosY());
+    strcat(insertChar, itoa);
+    strcat(insertChar, ",");
+
+    snprintf(itoa, 100, "%d", newChar->GetMap());
+    strcat(insertChar, itoa);
+    strcat(insertChar, ")");
+
+
+    localRetcode = SQLAllocHandle(SQL_HANDLE_STMT, h_DBC, &h_Statement);
+
+    localRetcode = SQLExecDirect(h_Statement, (unsigned char *)insertChar, SQL_NTS);
+
+
+    SQLFetch(h_Statement);
+    SQLGetData(h_Statement, 1, SQL_INTEGER, &localID, sizeof(localID), &sqlInt );
+    newChar->SetID(localID);
+
+    //setting strength
+    localID = GetStatID("strength");
+    SetCharStat(localID, newChar->GetID(), newChar->GetStr());
+
+    //setting endurance
+    localID = GetStatID("endurance");
+    SetCharStat(localID, newChar->GetID(), newChar->GetEnd());
+
+    //setting intelligence
+    localID = GetStatID("intelligence");
+    SetCharStat(localID, newChar->GetID(), newChar->GetEnd());
+
+    return (int)localRetcode;
+}
+
+int DB_Bridge::GetStatID(string name)
+{
+    int localID;
+    char findStat[1000] = "SELECT statID FROM stat WHERE statName =";
+    SQLINTEGER sqlInt;
+
+    strcat(findStat, " '");
+    strcat(findStat, name.c_str());
+    strcat(findStat, "'");
+
+    SQLAllocHandle(SQL_HANDLE_STMT, h_DBC, &h_Statement);
+    SQLExecDirect(h_Statement, (unsigned char*)findStat, SQL_NTS);
+
+    SQLFetch(h_Statement);
+    SQLGetData(h_Statement, 1, SQL_INTEGER, &localID, sizeof(localID), &sqlInt);
+
+    return localID;
+}
+
+void DB_Bridge::SetCharStat(int StatID, int CharID, int StatValue)
+{
+    char insertStat[1000] = "INSERT INTO CharStats(CharID, StatID, StatValue) VALUES(";
+    SQLINTEGER sqlInt;
+    char itoa[100];
+    SQLRETURN localRetcode;
+
+    snprintf(itoa, 100, "%d", CharID);
+    strcat(insertStat, itoa);
+    strcat(insertStat, ",");
+
+    snprintf(itoa, 100, "%d", StatID);
+    strcat(insertStat, itoa);
+    strcat(insertStat, ",");
+
+    snprintf(itoa, 100, "%d", StatValue);
+    strcat(insertStat, itoa);
+    strcat(insertStat, ")");
+
+    localRetcode = SQLAllocHandle(SQL_HANDLE_STMT, h_DBC, &h_Statement);
+
+    localRetcode = SQLExecDirect(h_Statement, (unsigned char*)insertStat, SQL_NTS);
 }

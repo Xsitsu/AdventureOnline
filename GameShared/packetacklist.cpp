@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-PacketAckList::PacketAckList() : packet_ack(0), packet_ack_bitfield(0)
+PacketAckList::PacketAckList() : packet_ack(0), packet_ack_bitfield(0), packet_ack_list(std::list<PacketAck>())
 {}
 
 PacketAckList::~PacketAckList()

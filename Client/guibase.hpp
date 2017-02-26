@@ -5,11 +5,13 @@
 #include <iostream>
 
 #include "GameShared/vector2.hpp"
-
+//#include "guiscreen.hpp"
+class GuiScreen;
 class GuiBase
 {
 private:
     Vector2 absolute_position;
+    GuiScreen * parent_screen;
 
 protected:
     Vector2 size;
@@ -55,6 +57,9 @@ public:
     bool PointIsInBounds(const Vector2& position) const;
 
     bool HasAncestor(GuiBase* ancestor) const;
+
+    GuiScreen * GetScreen() { return parent_screen; }
+    void SetScreen(GuiScreen * screen) { parent_screen = screen; }
 };
 
 typedef std::list<GuiBase*>::iterator gui_child_iter;
