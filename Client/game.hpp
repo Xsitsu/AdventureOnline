@@ -28,6 +28,7 @@ friend class GameStateInit;
 friend class GameStateServerConnect;
 friend class GameStateTitle;
 friend class GameStateQuit;
+friend class GameStateCharacterView;
 
 protected: // Singleton stuff
     static Game* instance;

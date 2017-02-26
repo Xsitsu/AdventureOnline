@@ -1,7 +1,7 @@
 #ifndef SERVER_HPP_INCLUDE
 #define SERVER_HPP_INCLUDE
 
-#include <unordered_map>
+#include <ctime>
 
 #include "GameShared/socket.hpp"
 #include "GameShared/packet.hpp"
@@ -14,6 +14,8 @@ class Server
 {
 protected:
     unsigned int connection_id_counter;
+
+    std::time_t last_timeout_check;
 
     Socket socket;
     unsigned short port;
@@ -36,5 +38,6 @@ public:
     void SendPacketToAddress(PacketBase* packet, Address* address);
 
     void TickPacketAcks();
+    void TickClientTimeout();
 };
 #endif // SERVER_HPP_INCLUDE

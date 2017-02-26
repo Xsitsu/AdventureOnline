@@ -9,6 +9,8 @@
 
 #include "GameShared/vector2.hpp"
 
+#include "observer.hpp"
+
 #include <iostream>
 
 class GuiScreen
@@ -17,6 +19,8 @@ protected:
     GuiBase* base;
     std::list<GuiBase*> interaction_guis;
     std::unordered_map<std::string, GuiBase*> gui_id_map;
+
+    std::list<AbstractListener*> listeners;
 
     void RemoveInteractionGui(GuiBase* gui);
     GuiBase* FindGuiCoveringPoint(const Vector2& pos);
@@ -36,6 +40,8 @@ public:
 
     void SetGuiId(std::string id, GuiBase* gui);
     GuiBase* GetGuiById(std::string id);
+
+    void RegisterListener(AbstractListener* listener);
 };
 
 #endif // GUISCREEN_HPP_INCLUDE

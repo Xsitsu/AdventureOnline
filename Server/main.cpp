@@ -10,11 +10,11 @@ void testCode();        //function to test classes incrementally
 
 int main(int argc, char** argv)
 {
-    testCode();
+    //testCode();
     InitializeSockets();
 
     const short port = 50000;
-    Server server(port, 2);
+    Server server(port, 500);
     server.Init();
 
     std::cout << "Server started." << std::endl

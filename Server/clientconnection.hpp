@@ -14,6 +14,8 @@ class Server;
 
 class ClientConnection
 {
+    const int CONNECTION_TIMEOUT = 5;
+
 protected:
     unsigned int connection_id;
     unsigned int packet_sequence;
@@ -21,6 +23,8 @@ protected:
     PacketAckList ack_list;
 
     Address client_address;
+
+    std::time_t last_communication;
 
     Server* server;
 
@@ -33,6 +37,7 @@ public:
     unsigned int GetConnectionId() { return this->connection_id; }
 
     void TickPacketAcks();
-
+    bool CheckForTimeout();
+    void UpdateLastCommunicationTime();
 };
 #endif // CLIENTCONNECTION_HPP_INCLUDE
