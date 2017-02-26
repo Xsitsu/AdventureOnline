@@ -60,7 +60,6 @@ void ClientConnection::ProcessPacket(PacketBase* packet)
         database->CreatePlayer(newPlayer);
         delete newPlayer;
         delete database;
-
     }
 }
 

@@ -303,7 +303,7 @@ string PacketRegistrationRequest::GetPassword()
     return p_password;
 }
 
-void PacketRegistrationRequest::SetEmai( string email )
+void PacketRegistrationRequest::SetEmail( string email )
 {
     p_email = email;
     email_length = p_email.size();

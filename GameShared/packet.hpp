@@ -183,7 +183,7 @@ public:
 
     std::string GetEmail();
     std::string GetPassword();
-    void SetEmai( string email );
+    void SetEmail( string email );
     void SetPassword( string password );
 
     virtual unsigned int Encode(char* buffer);
