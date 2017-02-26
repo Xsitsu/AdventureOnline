@@ -272,20 +272,25 @@ void PacketRegistrationRequest::Decode(char* buffer)
     uint8_t email_length = reader.ReadByte(buffer, buffer_pos);
     uint8_t password_length = reader.ReadByte(buffer, buffer_pos);
 
-    char * email = new char[email_length];
-    char * pass = new char [password_length];
+    char * email = new char[email_length+1];
+    char * pass = new char [password_length+1];
 
     for(int i = 0; i < email_length; i++)
     {
         buff = reader.ReadByte(buffer, buffer_pos);
         email[i] = buff;
     }
+    email[email_length] = 0;
 
     for(int i = 0; i < password_length; i++)
     {
         buff = reader.ReadByte(buffer, buffer_pos);
         pass[i] = buff;
     }
+    pass[password_length] = 0;
+
+    this->SetEmai(email);
+    this->SetPassword(pass);
 }
 
 string PacketRegistrationRequest::GetEmail()
