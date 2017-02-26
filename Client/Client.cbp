@@ -41,6 +41,8 @@
 			<Add directory=".." />
 			<Add directory="../allegro/include" />
 		</Compiler>
+		<Unit filename="bitmapservice.cpp" />
+		<Unit filename="bitmapservice.hpp" />
 		<Unit filename="client.cpp" />
 		<Unit filename="client.hpp" />
 		<Unit filename="color3.hpp" />
