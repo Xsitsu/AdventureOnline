@@ -189,4 +189,22 @@ public:
     virtual unsigned int Encode(char* buffer);
     virtual void Decode(char* buffer);
 };
+
+class DLL_EXPORT PacketRegistrationResponse : public PacketBase
+{
+protected:
+    int returnCode;
+
+public:
+    PacketRegistrationResponse();
+
+    int GetResponse();
+    void SetResponse(int);
+    int operator=(int);
+    bool operator==(const PacketRegistrationResponse& rhs);
+    bool operator==(int val);
+
+    virtual unsigned int Encode(char* buffer);
+    virtual void Decode(char* buffer);
+};
 #endif // PACKET_HPP_INCLUDE

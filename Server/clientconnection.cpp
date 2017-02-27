@@ -54,10 +54,14 @@ void ClientConnection::ProcessPacket(PacketBase* packet)
     else if ( packet->GetType() == PacketBase::PACKET_REGISTRATION_REQUEST)
     {
         PacketRegistrationRequest * registrationInfo = static_cast<PacketRegistrationRequest *>(packet);
+        PacketRegistrationResponse * registrationResponse = new PacketRegistrationResponse();
 
         DB_Bridge * database = new DB_Bridge();
         Player * newPlayer = new Player(0, registrationInfo->GetEmail(), "salt", registrationInfo->GetPassword() += "salt" );
-        database->CreatePlayer(newPlayer);
+        registrationResponse = database->CreatePlayer(newPlayer);
+        SendPacket(registrationResponse);
+
+        delete registrationResponse;
         delete newPlayer;
         delete database;
     }

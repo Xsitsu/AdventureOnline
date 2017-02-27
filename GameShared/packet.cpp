@@ -316,3 +316,26 @@ void PacketRegistrationRequest::SetPassword( string password )
 }
 
 PacketRegistrationRequest::PacketRegistrationRequest(): PacketBase(PacketBase::PACKET_REGISTRATION_REQUEST), p_email(""), p_password(""), email_length(0), password_length(0){}
+
+PacketRegistrationResponse::PacketRegistrationResponse(): PacketBase(PacketBase::PACKET_REGISTRATION_RESPONSE) {}
+
+int PacketRegistrationResponse::GetResponse() { return returnCode; }
+void PacketRegistrationResponse::SetResponse(int val) { returnCode = val; }
+int PacketRegistrationResponse::operator=(int val) { returnCode = val; }
+bool PacketRegistrationResponse::operator==(const PacketRegistrationResponse& rhs) { return returnCode == rhs.returnCode; }
+bool PacketRegistrationResponse::operator==(int val) { return returnCode == val; }
+
+unsigned int PacketRegistrationResponse::Encode(char* buffer)
+{
+    PacketReader reader;
+    PacketBase::Encode(buffer);
+    reader.WriteInt(buffer, buffer_pos, returnCode);
+    return buffer_pos;
+}
+
+void PacketRegistrationResponse::Decode(char* buffer)
+{
+    PacketReader reader;
+    PacketBase::Decode(buffer);
+    returnCode = reader.ReadInt(buffer, buffer_pos);
+}

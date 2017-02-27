@@ -1,4 +1,5 @@
 #include "gamestateaccountcreation.hpp"
+#include "gamestatetitlemake.hpp"
 
 GameStateAccountCreation::GameStateAccountCreation(Game* game) : GameStateBase(game)
 {
@@ -9,7 +10,18 @@ GameStateAccountCreation::~GameStateAccountCreation()
 {
 
 }
-
+void GameStateAccountCreation::HandlePacket(PacketBase* packet)
+{
+    if(packet->GetType() == PacketBase::PACKET_REGISTRATION_RESPONSE)
+    {
+        PacketRegistrationResponse * response = static_cast<PacketRegistrationResponse*>(packet);
+        if(response == 0)
+        {
+            game->PopScreen();
+            game->ChangeState(new GameStateTitleMake(game));
+        }
+    }
+}
 void GameStateAccountCreation::Enter()
 {
 
