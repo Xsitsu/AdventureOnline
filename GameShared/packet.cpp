@@ -90,6 +90,9 @@ PacketBase* PacketReader::ReadPacket(char* buffer, int bytes_read)
     case PacketBase::PACKET_REGISTRATION_REQUEST:
         packet = new PacketRegistrationRequest();
         break;
+    case PacketBase::PACKET_REGISTRATION_RESPONSE:
+        packet = new PacketRegistrationResponse();
+        break;
     default:
         //std::cout << "bad type: " << (unsigned int) type << std::endl;s
         break;

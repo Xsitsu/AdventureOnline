@@ -58,10 +58,11 @@ void ClientConnection::ProcessPacket(PacketBase* packet)
 
         DB_Bridge * database = new DB_Bridge();
         Player * newPlayer = new Player(0, registrationInfo->GetEmail(), "salt", registrationInfo->GetPassword() += "salt" );
-        registrationResponse = database->CreatePlayer(newPlayer);
+        registrationResponse->SetResponse( database->CreatePlayer(newPlayer) );
         SendPacket(registrationResponse);
+        int rc = registrationResponse->GetResponse();
 
-        delete registrationResponse;
+        //delete registrationResponse;
         delete newPlayer;
         delete database;
     }
