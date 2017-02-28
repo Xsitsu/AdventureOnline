@@ -5,19 +5,15 @@
 #include "GameShared/socket.hpp"
 
 #include "server.hpp"
-#include "DB_Bridge.h"
-void testCode();        //function to test classes incrementally
 
 int main(int argc, char** argv)
 {
-
-    //testCode();   //debug code
-
     InitializeSockets();
 
     const short port = 50000;
     Server server(port, 500);
     server.Init();
+    server.EstablishDatabaseConnection();
 
     std::cout << "Server started." << std::endl
                 << "Waiting for connections..." << std::endl << std::endl;
@@ -26,9 +22,12 @@ int main(int argc, char** argv)
         server.Tick();
     }
 
+    server.CloseDatabaseConnection();
+
     ShutdownSockets();
 }
 
+/*
 void testCode()
 {
     DB_Bridge   database;
@@ -48,3 +47,4 @@ void testCode()
     database.CreatePlayerCharacter(testCharacter);
     delete testCharacter;
 }
+*/

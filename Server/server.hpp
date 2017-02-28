@@ -9,6 +9,8 @@
 #include "clientconnection.hpp"
 #include "world.hpp"
 
+#include "database.hpp"
+
 class ClientConnection;
 
 class Server
@@ -25,6 +27,7 @@ protected:
 
     ClientConnection** clients;
     World* world;
+    Database* database;
 
     unsigned int FindOpenConnectionId();
 
@@ -34,6 +37,10 @@ public:
 
     bool Init();
     void Tick();
+
+    void EstablishDatabaseConnection();
+    void CloseDatabaseConnection();
+    Database* GetDatabaseConnection() const;
 
     PacketBase* ReceivePacket(Address& sender);
     void SendPacketToAddress(PacketBase* packet, Address* address);
