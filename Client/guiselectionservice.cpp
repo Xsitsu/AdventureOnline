@@ -42,6 +42,7 @@ void GuiSelectionService::InitKeyList()
     this->SetKey(ALLEGRO_KEY_OPENBRACE, '[', '{');
     this->SetKey(ALLEGRO_KEY_CLOSEBRACE, ']', '}');
     this->SetKey(ALLEGRO_KEY_SEMICOLON, ';', ':');
+    this->SetKey(ALLEGRO_KEY_QUOTE, '\'', '\"');
 
 
 }

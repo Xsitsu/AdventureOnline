@@ -1,10 +1,9 @@
 #include "clientconnection.hpp"
 
 #include <iostream>
-#include "DB_Bridge.h"
 
 ClientConnection::ClientConnection(Server* server, Address address, unsigned int connection_id) :
-    server(server), client_address(address), connection_id(connection_id), packet_sequence(0)
+    server(server), client_address(address), connection_id(connection_id), packet_sequence(0), account(NULL)
 {
 
 }
@@ -53,13 +52,30 @@ void ClientConnection::ProcessPacket(PacketBase* packet)
     }
     else if ( packet->GetType() == PacketBase::PACKET_REGISTRATION_REQUEST)
     {
-        PacketRegistrationRequest * registrationInfo = static_cast<PacketRegistrationRequest *>(packet);
+        PacketRegistrationRequest* registration_info = static_cast<PacketRegistrationRequest*>(packet);
 
-        DB_Bridge * database = new DB_Bridge();
-        Player * newPlayer = new Player(0, registrationInfo->GetEmail(), "salt", registrationInfo->GetPassword() += "salt" );
-        database->CreatePlayer(newPlayer);
-        delete newPlayer;
-        delete database;
+        Database* database = this->server->GetDatabaseConnection();
+        Account* account = database->ReadAccount(registration_info->GetEmail());
+        if (account)
+        {
+            // notify client that account already exists
+            std::cout << "Account with email already exists: " << registration_info->GetEmail() << std::endl;
+        }
+        else
+        {
+            try
+            {
+                database->CreateAccount(registration_info->GetEmail(), registration_info->GetPassword());
+
+                // notify client that account was successfully created
+                std::cout << "Account with email was created: " << registration_info->GetEmail() << std::endl;
+            }
+            catch (DatabaseCreateException &ex)
+            {
+                // notify client that account creation failed
+                std::cout << "Account creation with email failed: " << registration_info->GetEmail() << std::endl;
+            }
+        }
     }
 }
 
