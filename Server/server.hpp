@@ -7,6 +7,9 @@
 #include "GameShared/packet.hpp"
 
 #include "clientconnection.hpp"
+#include "world.hpp"
+
+#include "database.hpp"
 
 class ClientConnection;
 
@@ -22,8 +25,9 @@ protected:
 
     const unsigned int max_connections;
 
-    //std::unordered_map<unsigned long int, ClientConnection*> clients;
     ClientConnection** clients;
+    World* world;
+    Database* database;
 
     unsigned int FindOpenConnectionId();
 
@@ -33,6 +37,10 @@ public:
 
     bool Init();
     void Tick();
+
+    void EstablishDatabaseConnection();
+    void CloseDatabaseConnection();
+    Database* GetDatabaseConnection() const;
 
     PacketBase* ReceivePacket(Address& sender);
     void SendPacketToAddress(PacketBase* packet, Address* address);

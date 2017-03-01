@@ -3,7 +3,7 @@
 #include <iostream>
 
 Server::Server(unsigned short port, unsigned int max_connections) : port(port), connection_id_counter(0),
-max_connections(max_connections), last_timeout_check(std::time(NULL))
+max_connections(max_connections), last_timeout_check(std::time(NULL)), world(NULL), database(NULL)
 {
     clients = new ClientConnection*[this->max_connections];
     for (unsigned int i = 0; i < this->max_connections; i++)
@@ -15,6 +15,7 @@ max_connections(max_connections), last_timeout_check(std::time(NULL))
 Server::~Server()
 {
     delete[] clients;
+    delete[] world;
 }
 
 unsigned int Server::FindOpenConnectionId()
@@ -231,4 +232,28 @@ void Server::TickClientTimeout()
             }
         }
     }
+}
+
+void Server::EstablishDatabaseConnection()
+{
+    if (!this->database)
+    {
+        this->database = new Database();
+        this->database->Connect();
+    }
+}
+
+void Server::CloseDatabaseConnection()
+{
+    if (this->database && this->database->IsConnected())
+    {
+        this->database->Disconnect();
+        delete this->database;
+        this->database = nullptr;
+    }
+}
+
+Database* Server::GetDatabaseConnection() const
+{
+    return this->database;
 }
