@@ -53,12 +53,8 @@
 		<Unit filename="gamestate.hpp" />
 		<Unit filename="gamestateaccountcreation.cpp" />
 		<Unit filename="gamestateaccountcreation.hpp" />
-		<Unit filename="gamestateaccountcreationmake.cpp" />
-		<Unit filename="gamestateaccountcreationmake.h" />
 		<Unit filename="gamestatecharacterview.cpp" />
 		<Unit filename="gamestatecharacterview.hpp" />
-		<Unit filename="gamestatecharacterviewmake.cpp" />
-		<Unit filename="gamestatecharacterviewmake.hpp" />
 		<Unit filename="gamestateinit.cpp" />
 		<Unit filename="gamestateinit.hpp" />
 		<Unit filename="gamestatequit.cpp" />
@@ -67,8 +63,6 @@
 		<Unit filename="gamestateserverconnect.hpp" />
 		<Unit filename="gamestatetitle.cpp" />
 		<Unit filename="gamestatetitle.hpp" />
-		<Unit filename="gamestatetitlemake.cpp" />
-		<Unit filename="gamestatetitlemake.hpp" />
 		<Unit filename="guibase.cpp" />
 		<Unit filename="guibase.hpp" />
 		<Unit filename="guibutton.cpp" />
@@ -85,6 +79,11 @@
 		<Unit filename="guitextbutton.hpp" />
 		<Unit filename="main.cpp" />
 		<Unit filename="observer.hpp" />
+		<Unit filename="screenmaker.hpp" />
+		<Unit filename="screenmakeraccountcreation.cpp" />
+		<Unit filename="screenmakercharacterview.cpp" />
+		<Unit filename="screenmakerlogin.cpp" />
+		<Unit filename="screenmakertitle.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

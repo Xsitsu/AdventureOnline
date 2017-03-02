@@ -1,9 +1,8 @@
-#include "gamestatetitlemake.hpp"
+#include "screenmaker.hpp"
 
-#include "gamestatetitle.hpp"
+#include "gamestateaccountcreation.hpp"
+#include "gamestatecharacterview.hpp"
 #include "gamestatequit.hpp"
-#include "gamestatecharacterviewmake.hpp"
-#include "gamestateaccountcreationmake.h"
 
 
 
@@ -62,7 +61,11 @@ public:
     virtual void HandleEvent()
     {
         this->game->PopScreen();
-        this->game->ChangeState(new GameStateCharacterViewMake(this->game));
+
+        ScreenMakerCharacterView maker(this->game);
+        GuiScreen* screen = maker.MakeScreen();
+        this->game->PushScreen(screen);
+        this->game->ChangeState(new GameStateCharacterView(this->game));
     }
 };
 
@@ -89,7 +92,11 @@ public:
     virtual void HandleEvent()
     {
         this->game->PopScreen();
-        this->game->ChangeState(new GameStateAccountCreationMake(this->game));
+
+        ScreenMakerAccountCreation maker(this->game);
+        GuiScreen* screen = maker.MakeScreen();
+        this->game->PushScreen(screen);
+        this->game->ChangeState(new GameStateAccountCreation(this->game));
     }
 };
 
@@ -106,6 +113,10 @@ public:
         this->game->RegisterEventToQueue(new CreateAccountEvent(this->game));
     }
 };
+
+
+
+
 
 
 
@@ -129,7 +140,14 @@ GuiTextButton* CreateTitleButton(int offset, std::string button_text, ALLEGRO_FO
     return button;
 }
 
-void GameStateTitleMake::Enter()
+
+
+
+
+
+
+
+GuiScreen* ScreenMakerTitle::MakeScreen()
 {
     ALLEGRO_FONT* button_font = FontService::Instance()->GetFont("title_button");
 
@@ -177,7 +195,5 @@ void GameStateTitleMake::Enter()
     //screen->SetGuiId("Options", button3);
     //screen->SetGuiId("Quit",  button4);
 
-    this->game->PushScreen(screen);
-
-    this->game->ChangeState(new GameStateTitle(this->game));
+    return screen;
 }
