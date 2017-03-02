@@ -22,7 +22,7 @@ void Database::Connect()
 
 
     SQLCHAR OutConnStr[255];
-	SQLCHAR InConnStr[512] = "driver={ODBC Driver 13 for SQL Server};Server=aura.students.cset.oit.edu;Database=AdventureOnline;uid=AdventureOnline_admin;pwd=Pa$$W0rd_G00d";
+	SQLCHAR InConnStr[512] = "driver={ODBC Driver 13 for SQL Server};Server=aura.students.cset.oit.edu;Database=AdventureOnline;uid=AdventureOnline_rw;pwd=Pa$$W0rd_0K@y";
 	SQLSMALLINT OutConnStrLen;
 
 	HWND desktopHandle = GetDesktopWindow();   // desktop's window handle
@@ -70,7 +70,7 @@ void Database::CreateAccount(std::string email, std::string password)
     if (account_exists) throw DatabaseDataAlreadyExistsException();
 
     SQLRETURN localRetcode;
-    SQLINTEGER sqlInt;
+    //SQLINTEGER sqlInt;
     char insertUser[1000] = "INSERT INTO Users(UserEmail, UserSalt, UserHash) VALUES(";
     strcat(insertUser, "'");
     strcat(insertUser, email.c_str());
@@ -143,8 +143,8 @@ Account* Database::ReadAccount(std::string email)
 
 void Database::UpdateAccount(Account* account)
 {
-    //bool account_exists = (this->ReadAccount(account->GetEmail()) != nullptr);
-    //if (!account_exists) throw DataDoesNotExistException();
+    bool account_exists = (this->ReadAccount(account->GetEmail()) != nullptr);
+    if (!account_exists) throw DataDoesNotExistException();
 
     char email[255];
     char salt[255];
@@ -155,7 +155,7 @@ void Database::UpdateAccount(Account* account)
     SQLLEN cBind2 = SQL_NTS;
     SQLLEN cBind3 = SQL_NTS;
     SQLLEN cBind4 = SQL_NTS;
-    SQLLEN cBind5 = SQL_NTS;
+    //SQLLEN cBind5 = SQL_NTS;
     int emailLen = account->GetEmail().size();
     int saltLen = account->GetSalt().size();
     int hashLen = account->GetHash().size();
@@ -164,26 +164,20 @@ void Database::UpdateAccount(Account* account)
     strcpy( salt, account->GetSalt().c_str() );
     strcpy( accountHash, account->GetHash().c_str() );
 
-    char SQL_Code[1000] = "{CALL UpdateUser(?, ?, ?, ?) }";
+    char SQL_Code[1000] = "{CALL UpdateUser(?, ?, ?, ?) }"; //setup command
 
-//    strcat(SQL_Code, email);
-//    strcat(SQL_Code, "','");
-//    strcat(SQL_Code, salt);
-//    strcat(SQL_Code, "','");
 
-    rc = SQLAllocHandle(SQL_HANDLE_STMT, h_DBC, &h_Statement);
+    rc = SQLAllocHandle(SQL_HANDLE_STMT, h_DBC, &h_Statement);//alloc handle
 
-    rc = SQLBindParameter(h_Statement, 1, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &id, 0, &cBind);
+    rc = SQLBindParameter(h_Statement, 1, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &id, 0, &cBind); //bind ID
 
-    rc = SQLBindParameter(h_Statement, 2, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, emailLen, 0, email, emailLen, &cBind2);
+    rc = SQLBindParameter(h_Statement, 2, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, emailLen, 0, email, emailLen, &cBind2); // bind email
 
-    rc = SQLBindParameter(h_Statement, 3, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, saltLen, 0, salt, saltLen, &cBind3);
+    rc = SQLBindParameter(h_Statement, 3, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, saltLen, 0, salt, saltLen, &cBind3); // bind salt
 
-    rc = SQLBindParameter(h_Statement, 4, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, hashLen, 0, accountHash, hashLen, &cBind4);
-
+    rc = SQLBindParameter(h_Statement, 4, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, hashLen, 0, accountHash, hashLen, &cBind4); // bind hash
 
     rc = SQLExecDirect(h_Statement, (unsigned char *)SQL_Code, strlen(SQL_Code));
-    std::cout << rc << std::endl;
 
 }
 
