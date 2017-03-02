@@ -1,8 +1,8 @@
-#include "gamestatecharacterviewmake.hpp"
+#include "screenmaker.hpp"
+
 
 #include "gamestatecharacterview.hpp"
-#include "gamestatetitlemake.hpp"
-
+#include "gamestatetitle.hpp"
 
 
 class LogoutEvent : public GameEventBase
@@ -13,7 +13,11 @@ public:
     virtual void HandleEvent()
     {
         this->game->PopScreen();
-        this->game->ChangeState(new GameStateTitleMake(this->game));
+
+        ScreenMakerTitle maker(this->game);
+        GuiScreen* screen = maker.MakeScreen();
+        this->game->PushScreen(screen);
+        this->game->ChangeState(new GameStateTitle(this->game));
     }
 };
 
@@ -76,7 +80,12 @@ GuiFrame* CreateCharacterFrame(ALLEGRO_FONT* font)
     return base;
 }
 
-void GameStateCharacterViewMake::Enter()
+
+
+
+
+
+GuiScreen* ScreenMakerCharacterView::MakeScreen()
 {
     LogoutListener* logout_listener = new LogoutListener(this->game);
 
@@ -123,8 +132,5 @@ void GameStateCharacterViewMake::Enter()
     GuiScreen* screen = new GuiScreen(base_frame);
     screen->RegisterListener(logout_listener);
 
-    this->game->PushScreen(screen);
-
-    this->game->ChangeState(new GameStateCharacterView(this->game));
-
+    return screen;
 }

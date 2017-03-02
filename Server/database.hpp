@@ -76,6 +76,14 @@ public:
 
 };
 
+class DatabaseReadException : public DatabaseException
+{
+protected:
+
+public:
+
+};
+
 class DatabaseDataAlreadyExistsException : public DatabaseException
 {
 protected:

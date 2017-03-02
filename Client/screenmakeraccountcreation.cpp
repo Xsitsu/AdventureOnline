@@ -1,9 +1,11 @@
-#include "gamestateaccountcreationmake.h"
+#include "screenmaker.hpp"
+
 
 #include "gamestatetitle.hpp"
-#include "gamestatetitlemake.hpp"
 #include "gamestateaccountcreation.hpp"
 #include "GameShared/packet.hpp"
+
+
 
 GuiTextButton* CreateAccountCreationButton(int offset, std::string button_text, ALLEGRO_FONT* text_font)
 {
@@ -73,7 +75,11 @@ public:
     virtual void HandleEvent()
     {
         this->game->PopScreen();
-        this->game->ChangeState(new GameStateTitleMake(this->game));
+
+        ScreenMakerTitle maker(this->game);
+        GuiScreen* screen = maker.MakeScreen();
+        this->game->PushScreen(screen);
+        this->game->ChangeState(new GameStateTitle(this->game));
     }
 };
 
@@ -149,9 +155,22 @@ public:
     }
 };
 
-void GameStateAccountCreationMake::Enter()
+
+
+
+
+
+
+
+
+
+
+
+
+
+GuiScreen* ScreenMakerAccountCreation::MakeScreen()
 {
-    //font
+//font
     ALLEGRO_FONT* button_font = FontService::Instance()->GetFont("title_button");
 
     //listeners
@@ -200,18 +219,16 @@ void GameStateAccountCreationMake::Enter()
     account_creation_frame->AddChild(done_button);
 
     //screen
-    GuiScreen * account_creation_screen = new GuiScreen(account_creation_frame);
+    GuiScreen* screen = new GuiScreen(account_creation_frame);
 
     //setup screen
-    account_creation_screen->RegisterListener(mouse_enter_listener);
-    account_creation_screen->RegisterListener(mouse_leave_listener);
-    account_creation_screen->RegisterListener(done_listener);
-    account_creation_screen->RegisterListener(registration_listener);
-    account_creation_screen->SetGuiId("Email", user_email );
-    account_creation_screen->SetGuiId("Password", user_password );
-    account_creation_screen->SetGuiId("Confirmation", user_password_confirmation );
+    screen->RegisterListener(mouse_enter_listener);
+    screen->RegisterListener(mouse_leave_listener);
+    screen->RegisterListener(done_listener);
+    screen->RegisterListener(registration_listener);
+    screen->SetGuiId("Email", user_email );
+    screen->SetGuiId("Password", user_password );
+    screen->SetGuiId("Confirmation", user_password_confirmation );
 
-
-    this->game->PushScreen(account_creation_screen);
-    this->game->ChangeState(new GameStateAccountCreation(this->game));
+    return screen;
 }
