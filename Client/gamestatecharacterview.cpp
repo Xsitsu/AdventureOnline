@@ -1,6 +1,5 @@
 #include "gamestatecharacterview.hpp"
 
-#include "gamestatetitlemake.hpp"
 #include "gamestatequit.hpp"
 
 GameStateCharacterView::GameStateCharacterView(Game* game) : GameStateBase(game)
