@@ -76,7 +76,6 @@ void ClientConnection::ProcessPacket(PacketBase* packet)
                 std::cout << "Account creation with email failed: " << registration_info->GetEmail() << std::endl;
             }
         }
->>>>>>> cfa9f74efeca4fb1dc87b6bfb9170434df6dab6c
     }
 }
 
