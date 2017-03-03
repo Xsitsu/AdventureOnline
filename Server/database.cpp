@@ -101,11 +101,7 @@ void Database::CreateAccount(std::string email, std::string password)
 
     localRetcode = SQLExecDirect(h_Statement, (unsigned char *)insertUser, SQL_NTS);
 
-    if (localRetcode == SQL_SUCCESS || localRetcode == SQL_SUCCESS_WITH_INFO)
-    {
-
-    }
-    else
+    if (localRetcode != SQL_SUCCESS && localRetcode != SQL_SUCCESS_WITH_INFO)
     {
         throw DatabaseCreateException();
     }
@@ -158,7 +154,7 @@ Account* Database::ReadAccount(std::string email)
     }
     else
     {
-        throw "break";
+        throw DatabaseReadException();
     }
 }
 
@@ -203,5 +199,5 @@ void Database::UpdateAccount(Account* account)
 
 void Database::DeleteAccount(Account* account)
 {
-
+    // ToDo
 }
