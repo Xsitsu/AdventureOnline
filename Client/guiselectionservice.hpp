@@ -3,12 +3,22 @@
 
 class GuiTextBox;
 
+#include <stack>
+
 #include "allegro5/allegro.h"
 
 #include "guibase.hpp"
 #include "guibutton.hpp"
 #include "guitextbox.hpp"
 #include "GameShared/vector2.hpp"
+
+struct GuiSelectionContext
+{
+    GuiTextBox* selected_text_box;
+    GuiBase* current_mouse_hover;
+
+    GuiButton* current_button_down;
+};
 
 class GuiSelectionService
 {
@@ -32,6 +42,8 @@ public:
 
 
 protected: // Class stuff
+    std::stack<GuiSelectionContext> selection_context_stack;
+
     GuiTextBox* selected_text_box;
     GuiBase* current_mouse_hover;
 
@@ -60,7 +72,8 @@ public:
     void MouseButtonUp(GuiButton* button);
     void LetMouseUp();
 
-    void HandleCurrentScreenChanged();
+    void HandleScreenPush();
+    void HandleScreenPop();
 };
 
 #endif // GUISELECTIONSERVICE_HPP_INCLUDE
