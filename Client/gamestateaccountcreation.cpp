@@ -1,5 +1,6 @@
 #include "gamestateaccountcreation.hpp"
-#include "gamestatetitlemake.hpp"
+#include "screenmaker.hpp"
+#include "gamestatetitle.hpp"
 
 GameStateAccountCreation::GameStateAccountCreation(Game* game) : GameStateBase(game)
 {
@@ -17,8 +18,12 @@ void GameStateAccountCreation::HandlePacket(PacketBase* packet)
         PacketRegistrationResponse * response = static_cast<PacketRegistrationResponse*>(packet);
         if(response->GetResponse() == 0)
         {
+            ScreenMakerTitle maker(game);
+            GuiScreen* screen = maker.MakeScreen();
+
             game->PopScreen();
-            game->ChangeState(new GameStateTitleMake(game));
+            game->PushScreen(screen);
+            game->ChangeState(new GameStateTitle(game));
         }
     }
 }
