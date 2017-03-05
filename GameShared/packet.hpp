@@ -171,10 +171,11 @@ public:
 class DLL_EXPORT PacketRegistrationRequest: public PacketBase
 {
 protected:
-    uint8_t email_length;
-    uint8_t password_length;
     std::string p_email;
     std::string p_password;
+    uint8_t email_length;
+    uint8_t password_length;
+
 
 
 public:

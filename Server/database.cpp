@@ -1,7 +1,7 @@
 #include "database.hpp"
 
 #include <iostream>
-#include <cstdio>
+
 Database::Database() : is_connected(false)
 {
 
@@ -66,20 +66,20 @@ void Database::Disconnect()
 
 void Database::CreateAccount(std::string email, std::string password)
 {
-    bool account_exists = (this->ReadAccount(email) != nullptr);
-    if (account_exists) throw DatabaseDataAlreadyExistsException();
+    //bool account_exists = (this->ReadAccount(email) != nullptr);
+    //if (account_exists) throw DatabaseDataAlreadyExistsException();
 
     char email_str[255];
     char salt_str[255];
     char hash_str[255];
 
-    SQLLEN cBind = SQL_NTS;
-    SQLLEN cBind2 = SQL_NTS;
-    SQLLEN cBind3 = SQL_NTS;
+    SQLLEN caBind = SQL_NTS;
+    SQLLEN caBind2 = SQL_NTS;
+    SQLLEN caBind3 = SQL_NTS;
 
-    int emailLen = email.size();
-    int saltLen = password.size();
-    int hashLen = password.size() + email.size();
+    int caemailLen = email.size();
+    int casaltLen = password.size();
+    int cahashLen = password.size() + email.size();
 
     strcpy( email_str, email.c_str() );
     strcpy( salt_str, password.c_str() );           //needs to be replaced with salt string
@@ -93,11 +93,11 @@ void Database::CreateAccount(std::string email, std::string password)
 
     localRetcode = SQLAllocHandle(SQL_HANDLE_STMT, h_DBC, &h_Statement);
 
-    SQLBindParameter(h_Statement, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, emailLen, 0, email_str, emailLen, &cBind); // bind email
+    SQLBindParameter(h_Statement, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, caemailLen, 0, email_str, caemailLen, &caBind); // bind email
 
-    SQLBindParameter(h_Statement, 2, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, saltLen, 0, salt_str, saltLen, &cBind2); // bind salt
+    SQLBindParameter(h_Statement, 2, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, casaltLen, 0, salt_str, casaltLen, &caBind2); // bind salt
 
-    SQLBindParameter(h_Statement, 3, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, hashLen, 0, hash_str, hashLen, &cBind3); // bind hash
+    SQLBindParameter(h_Statement, 3, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, cahashLen, 0, hash_str, cahashLen, &caBind3); // bind hash
 
     localRetcode = SQLExecDirect(h_Statement, (unsigned char *)insertUser, SQL_NTS);
 
@@ -105,6 +105,7 @@ void Database::CreateAccount(std::string email, std::string password)
     {
         throw DatabaseCreateException();
     }
+    SQLFreeHandle(SQL_HANDLE_STMT, h_Statement);
 }
 
 Account* Database::ReadAccount(std::string email)
@@ -156,6 +157,7 @@ Account* Database::ReadAccount(std::string email)
     {
         throw DatabaseReadException();
     }
+    SQLFreeHandle(SQL_HANDLE_STMT, h_Statement);
 }
 
 void Database::UpdateAccount(Account* account)
@@ -195,6 +197,8 @@ void Database::UpdateAccount(Account* account)
     SQLBindParameter(h_Statement, 4, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, hashLen, 0, hash_str, hashLen, &cBind4); // bind hash
 
     SQLExecDirect(h_Statement, (unsigned char *)SQL_Code, strlen(SQL_Code));
+
+    SQLFreeHandle(SQL_HANDLE_STMT, h_Statement);
 }
 
 void Database::DeleteAccount(Account* account)
