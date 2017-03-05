@@ -63,6 +63,7 @@ void ClientConnection::ProcessPacket(PacketBase* packet)
         }
         else
         {
+
             try
             {
                 database->CreateAccount(registration_info->GetEmail(), registration_info->GetPassword());

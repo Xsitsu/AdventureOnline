@@ -324,9 +324,6 @@ PacketRegistrationResponse::PacketRegistrationResponse(): PacketBase(PacketBase:
 
 int PacketRegistrationResponse::GetResponse() { return returnCode; }
 void PacketRegistrationResponse::SetResponse(int val) { returnCode = val; }
-int PacketRegistrationResponse::operator=(int val) { returnCode = val; }
-bool PacketRegistrationResponse::operator==(const PacketRegistrationResponse& rhs) { return returnCode == rhs.returnCode; }
-bool PacketRegistrationResponse::operator==(int val) { return returnCode == val; }
 
 unsigned int PacketRegistrationResponse::Encode(char* buffer)
 {

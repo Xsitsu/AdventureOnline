@@ -66,8 +66,8 @@ void Database::Disconnect()
 
 void Database::CreateAccount(std::string email, std::string password)
 {
-    //bool account_exists = (this->ReadAccount(email) != nullptr);
-    //if (account_exists) throw DatabaseDataAlreadyExistsException();
+    bool account_exists = (this->ReadAccount(email) != nullptr);
+    if (account_exists) throw DatabaseDataAlreadyExistsException();
 
     char email_str[255];
     char salt_str[255];
@@ -112,7 +112,7 @@ Account* Database::ReadAccount(std::string email)
 {
     char SQL_Code[1000] = "{CALL ReadUserInfo(?) }";
     SQLLEN cBind = SQL_NTS;
-    char * email_str;
+    char email_str[255];
     int emailLen = email.size();
     strcpy(email_str, email.c_str());
 
@@ -158,6 +158,7 @@ Account* Database::ReadAccount(std::string email)
         throw DatabaseReadException();
     }
     SQLFreeHandle(SQL_HANDLE_STMT, h_Statement);
+    delete email_str;
 }
 
 void Database::UpdateAccount(Account* account)

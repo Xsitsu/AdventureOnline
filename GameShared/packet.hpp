@@ -201,9 +201,6 @@ public:
 
     int GetResponse();
     void SetResponse(int);
-    int operator=(int);
-    bool operator==(const PacketRegistrationResponse& rhs);
-    bool operator==(int val);
 
     virtual unsigned int Encode(char* buffer);
     virtual void Decode(char* buffer);
