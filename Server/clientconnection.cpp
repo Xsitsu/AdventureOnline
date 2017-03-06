@@ -91,8 +91,7 @@ void ClientConnection::ProcessPacket(PacketBase* packet)
             account = database->ReadAccount(login_request->GetEmail());
             if (account)
             {
-                std::string check_pass = login_request->GetPassword();
-                did_login = (account->GetHash() == check_pass);
+                did_login = (account->GetHash() == login_request->GetPassword());
             }
         }
         catch (DatabaseReadException &ex)
