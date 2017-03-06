@@ -106,7 +106,7 @@ void ClientConnection::ProcessPacket(PacketBase* packet)
             response->SetResponse(PacketLoginResponse::LOGINRESPONSE_SUCCESS);
             this->account = account;
 
-            std::cout << "Set valid" << std::endl;
+            std::cout << "Client[" << this->connection_id  << "] logged in as account: " << account->GetEmail() << std::endl;
         }
         else if (was_error)
         {

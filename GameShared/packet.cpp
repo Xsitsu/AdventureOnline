@@ -417,8 +417,6 @@ unsigned int PacketLoginResponse::Encode(char* buffer)
     PacketReader reader;
     reader.WriteByte(buffer, this->buffer_pos, static_cast<uint8_t>(this->response));
 
-    std::cout << "Encoded: " << (int)this->response << std::endl;
-
     return this->buffer_pos;
 }
 
@@ -428,6 +426,4 @@ void PacketLoginResponse::Decode(char* buffer)
 
     PacketReader reader;
     this->response = static_cast<PacketLoginResponse::LoginResponse>(reader.ReadByte(buffer, this->buffer_pos));
-
-    std::cout << "Decoded as: " << (int)this->response << std::endl;
 }

@@ -79,7 +79,7 @@ public:
 
     virtual void Notify(GuiButtonArgs*& args) const
     {
-        this->game->RegisterEventToQueue(new OptionsEvent(this->game));
+        //this->game->RegisterEventToQueue(new OptionsEvent(this->game));
     }
 };
 
@@ -126,7 +126,6 @@ public:
         ScreenMakerLogin maker(this->game);
         GuiScreen* screen = maker.MakeScreen();
         this->game->PushScreen(screen);
-        //this->game->ChangeState(new GameStateAccountCreation(this->game));
     }
 };
 
