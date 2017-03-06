@@ -28,7 +28,7 @@ namespace LoginScreenListeners
 
             ScreenMakerEmpty maker(this->game);
             GuiScreen* screen = maker.MakeScreen();
-            //this->game->PushScreen(screen);
+            this->game->PushScreen(screen);
             this->game->ChangeState(new GameStateLoginAwaitResponse(this->game));
         }
     };

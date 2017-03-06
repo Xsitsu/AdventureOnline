@@ -230,5 +230,8 @@ public:
 
     void SetResponse(LoginResponse response) { this->response = response; }
     LoginResponse GetResponse() { return this->response; }
+
+    virtual unsigned int Encode(char* buffer);
+    virtual void Decode(char* buffer);
 };
 #endif // PACKET_HPP_INCLUDE

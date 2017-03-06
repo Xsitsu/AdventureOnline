@@ -90,6 +90,12 @@ PacketBase* PacketReader::ReadPacket(char* buffer, int bytes_read)
     case PacketBase::PACKET_REGISTRATION_REQUEST:
         packet = new PacketRegistrationRequest();
         break;
+    case PacketBase::PACKET_LOGIN_REQUEST:
+        packet = new PacketLoginRequest();
+        break;
+    case PacketBase::PACKET_LOGIN_RESPONSE:
+        packet = new PacketLoginResponse();
+        break;
     default:
         //std::cout << "bad type: " << (unsigned int) type << std::endl;s
         break;
@@ -399,7 +405,29 @@ void PacketLoginRequest::Decode(char* buffer)
 
 
 
-PacketLoginResponse::PacketLoginResponse() : PacketBase(PacketBase::PACKET_LOGIN_RESPONSE)
+PacketLoginResponse::PacketLoginResponse() : PacketBase(PacketBase::PACKET_LOGIN_RESPONSE), response(PacketLoginResponse::LOGINRESPONSE_FAIL)
 {
 
+}
+
+unsigned int PacketLoginResponse::Encode(char* buffer)
+{
+    PacketBase::Encode(buffer);
+
+    PacketReader reader;
+    reader.WriteByte(buffer, this->buffer_pos, static_cast<uint8_t>(this->response));
+
+    std::cout << "Encoded: " << (int)this->response << std::endl;
+
+    return this->buffer_pos;
+}
+
+void PacketLoginResponse::Decode(char* buffer)
+{
+    PacketBase::Decode(buffer);
+
+    PacketReader reader;
+    this->response = static_cast<PacketLoginResponse::LoginResponse>(reader.ReadByte(buffer, this->buffer_pos));
+
+    std::cout << "Decoded as: " << (int)this->response << std::endl;
 }

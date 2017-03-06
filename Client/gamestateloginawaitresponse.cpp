@@ -36,11 +36,13 @@ void GameStateLoginAwaitResponse::HandlePacket(PacketBase* packet)
         {
             std::cout << "Invalid login credentials." << std::endl;
             this->game->PopScreen();
+            this->game->ChangeState(new GameStateTitle(this->game));
         }
         else if (res == PacketLoginResponse::LOGINRESPONSE_ERROR)
         {
             std::cout << "Login failed due to unknown error." << std::endl;
             this->game->PopScreen();
+            this->game->ChangeState(new GameStateTitle(this->game));
         }
     }
 }

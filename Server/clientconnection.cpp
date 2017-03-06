@@ -77,6 +77,48 @@ void ClientConnection::ProcessPacket(PacketBase* packet)
             }
         }
     }
+    else if (packet->GetType() == PacketBase::PACKET_LOGIN_REQUEST)
+    {
+        PacketLoginRequest* login_request = static_cast<PacketLoginRequest*>(packet);
+        Database* database = this->server->GetDatabaseConnection();
+        Account* account = nullptr;
+
+        bool did_login = false;
+        bool was_error = false;
+
+        try
+        {
+            account = database->ReadAccount(login_request->GetEmail());
+            if (account)
+            {
+                std::string check_pass = login_request->GetPassword();
+                did_login = (account->GetHash() == check_pass);
+            }
+        }
+        catch (DatabaseReadException &ex)
+        {
+            was_error = true;
+        }
+
+        PacketLoginResponse* response = new PacketLoginResponse();
+        if (did_login)
+        {
+            response->SetResponse(PacketLoginResponse::LOGINRESPONSE_SUCCESS);
+            this->account = account;
+
+            std::cout << "Set valid" << std::endl;
+        }
+        else if (was_error)
+        {
+            response->SetResponse(PacketLoginResponse::LOGINRESPONSE_ERROR);
+        }
+        else
+        {
+            response->SetResponse(PacketLoginResponse::LOGINRESPONSE_FAIL);
+        }
+
+        this->SendPacket(response);
+    }
 }
 
 void ClientConnection::TickPacketAcks()
