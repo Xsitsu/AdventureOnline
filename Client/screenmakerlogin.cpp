@@ -1,6 +1,7 @@
 #include "screenmaker.hpp"
 
 #include "gamestatetitle.hpp"
+#include "gamestateloginawaitresponse.hpp"
 
 namespace LoginScreenListeners
 {
@@ -13,7 +14,22 @@ namespace LoginScreenListeners
 
         virtual void HandleEvent()
         {
-            //this->game->ChangeState(new GameStateQuit(this->game));
+            GuiScreen* cur_screen = this->game->GetCurrentScreen();
+            GuiTextBox* email_textbox = static_cast<GuiTextBox*>(cur_screen->GetGuiById("email_textbox"));
+            GuiTextBox* password_textbox = static_cast<GuiTextBox*>(cur_screen->GetGuiById("password_textbox"));
+            std::string email = email_textbox->GetText();
+            std::string password = password_textbox->GetText();
+
+            PacketLoginRequest* packet = new PacketLoginRequest();
+            packet->SetEmail(email);
+            packet->SetPassword(password);
+
+            this->game->SendPacket(packet);
+
+            ScreenMakerEmpty maker(this->game);
+            GuiScreen* screen = maker.MakeScreen();
+            //this->game->PushScreen(screen);
+            this->game->ChangeState(new GameStateLoginAwaitResponse(this->game));
         }
     };
 
@@ -64,6 +80,7 @@ namespace LoginScreenListeners
 
 GuiScreen* ScreenMakerLogin::MakeScreen()
 {
+    LoginScreenListeners::LoginListener* login_listener = new LoginScreenListeners::LoginListener(this->game);
     LoginScreenListeners::CancelListener* cancel_listener = new LoginScreenListeners::CancelListener(this->game);
 
 
@@ -117,6 +134,7 @@ GuiScreen* ScreenMakerLogin::MakeScreen()
     login_button->SetTextColor(Color3(255, 255, 255));
     login_button->SetText("Login");
     login_button->SetTextAlign(GuiTextButton::ALIGN_CENTER);
+    login_button->RegisterOnClick(login_listener);
 
     GuiTextButton* cancel_button = new GuiTextButton(button_size, button_pos + pos_adder);
     cancel_button->SetTextFont(text_font);
@@ -133,10 +151,11 @@ GuiScreen* ScreenMakerLogin::MakeScreen()
     base_frame->AddChild(cancel_button);
 
     GuiScreen* screen = new GuiScreen(base_frame);
-    screen->SetGuiId("email", email_textbox);
-    screen->SetGuiId("password", password_textbox);
+    screen->SetGuiId("email_textbox", email_textbox);
+    screen->SetGuiId("password_textbox", password_textbox);
 
 
+    screen->RegisterListener(login_listener);
     screen->RegisterListener(cancel_listener);
 
     return screen;

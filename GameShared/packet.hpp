@@ -215,9 +215,20 @@ public:
 
 class DLL_EXPORT PacketLoginResponse : public PacketBase
 {
+public:
+    enum LoginResponse
+    {
+        LOGINRESPONSE_SUCCESS,
+        LOGINRESPONSE_FAIL,
+        LOGINRESPONSE_ERROR
+    };
 protected:
+    LoginResponse response;
 
 public:
     PacketLoginResponse();
+
+    void SetResponse(LoginResponse response) { this->response = response; }
+    LoginResponse GetResponse() { return this->response; }
 };
 #endif // PACKET_HPP_INCLUDE

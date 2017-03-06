@@ -20,6 +20,13 @@ public:
 };
 
 
+class ScreenMakerEmpty : public AbstractScreenMaker
+{
+public:
+    ScreenMakerEmpty(Game* game) : AbstractScreenMaker(game) {}
+    virtual GuiScreen* MakeScreen();
+};
+
 class ScreenMakerTitle : public AbstractScreenMaker
 {
 public:
