@@ -195,10 +195,8 @@ void Server::SendPacketToAddress(PacketBase* packet, Address* address)
 
     unsigned int data_size;
     char buffer[PacketBase::MAX_BUFFER];
-    if(packet->GetType() == PacketBase::PACKET_REGISTRATION_RESPONSE)
-        data_size = static_cast<PacketRegistrationResponse*>(packet)->Encode(buffer);
-    else
-        data_size = packet->Encode(buffer);
+
+    data_size = packet->Encode(buffer);
 
     this->socket.Send(*address, buffer, data_size);
 }
