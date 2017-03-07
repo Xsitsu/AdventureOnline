@@ -81,6 +81,7 @@
 		<Unit filename="observer.hpp" />
 		<Unit filename="screenmaker.hpp" />
 		<Unit filename="screenmakeraccountcreation.cpp" />
+		<Unit filename="screenmakeraccountcreationresponsewait.cpp" />
 		<Unit filename="screenmakercharacterview.cpp" />
 		<Unit filename="screenmakerlogin.cpp" />
 		<Unit filename="screenmakertitle.cpp" />

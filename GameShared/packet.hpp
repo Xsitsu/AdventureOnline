@@ -27,6 +27,11 @@ public:
         PACKET_REGISTRATION_REQUEST,
         PACKET_REGISTRATION_RESPONSE
     };
+    enum Response
+    {
+        RESPONSE_SUCCESFUL,
+        RESPONSE_FAILED
+    };
 
 protected:
     unsigned int buffer_pos;
@@ -194,13 +199,13 @@ public:
 class DLL_EXPORT PacketRegistrationResponse : public PacketBase
 {
 protected:
-    int returnCode;
+    PacketBase::Response returnCode;
 
 public:
     PacketRegistrationResponse();
 
-    int GetResponse();
-    void SetResponse(int);
+    PacketBase::Response GetResponse();
+    void SetResponse(PacketBase::Response);
 
     virtual unsigned int Encode(char* buffer);
     virtual void Decode(char* buffer);

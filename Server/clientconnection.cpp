@@ -53,6 +53,7 @@ void ClientConnection::ProcessPacket(PacketBase* packet)
     else if ( packet->GetType() == PacketBase::PACKET_REGISTRATION_REQUEST)
     {
         PacketRegistrationRequest* registration_info = static_cast<PacketRegistrationRequest*>(packet);
+        PacketRegistrationResponse * registration_response = new PacketRegistrationResponse();
 
         Database* database = this->server->GetDatabaseConnection();
         Account* account = database->ReadAccount(registration_info->GetEmail());
@@ -70,11 +71,15 @@ void ClientConnection::ProcessPacket(PacketBase* packet)
 
                 // notify client that account was successfully created
                 std::cout << "Account with email was created: " << registration_info->GetEmail() << std::endl;
+                registration_response->SetResponse(PacketBase::RESPONSE_SUCCESFUL);
+                SendPacket(registration_response);
             }
             catch (DatabaseCreateException &ex)
             {
                 // notify client that account creation failed
                 std::cout << "Account creation with email failed: " << registration_info->GetEmail() << std::endl;
+                registration_response->SetResponse(PacketBase::RESPONSE_FAILED);
+                SendPacket(registration_response);
             }
         }
     }

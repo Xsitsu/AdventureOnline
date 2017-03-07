@@ -123,6 +123,10 @@ public:
             std::cout << "Packet sent :\t" << packet->GetEmail() << '\t' << packet->GetPassword() << '\t'  << std::endl;
             this->game->SendPacket(packet);
 
+            ScreenMakerAccountCreationResponseWait maker(game);
+            GuiScreen* screen = maker.MakeScreen();
+            game->PushScreen(screen);
+
             //send out registration request
         }
         else
@@ -187,7 +191,7 @@ GuiScreen* ScreenMakerAccountCreation::MakeScreen()
     GuiTextButton * user_password_text = CreateAccountCreationButton(2, "Enter Password ",button_font);
     GuiTextButton * user_confirm_text = CreateAccountCreationButton(4, "Confirm Password", button_font);
     GuiTextButton * register_button = CreateAccountCreationButton(7, "Register", button_font);
-    GuiTextButton * done_button = CreateAccountCreationButton(8, "Cancel", button_font);
+    GuiTextButton * done_button = CreateAccountCreationButton(8, "Exit", button_font);
 
     //text boxes
     GuiTextBox * user_email = CreateAccountCreationBox(1, "email@oit.edu", button_font);

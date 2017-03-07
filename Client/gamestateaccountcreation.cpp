@@ -16,14 +16,25 @@ void GameStateAccountCreation::HandlePacket(PacketBase* packet)
     if(packet->GetType() == PacketBase::PACKET_REGISTRATION_RESPONSE)
     {
         PacketRegistrationResponse * response = static_cast<PacketRegistrationResponse*>(packet);
-        if(response->GetResponse() == 0)
+        if(response->GetResponse() == PacketBase::RESPONSE_SUCCESFUL)
         {
-            ScreenMakerTitle maker(game);
-            GuiScreen* screen = maker.MakeScreen();
+            game->GetCurrentScreen()->GetGuiById("Continue")->SetVisible(true);
+            game->GetCurrentScreen()->GetGuiById("Confirmation")->SetVisible(false);
+            game->GetCurrentScreen()->GetGuiById("success")->SetVisible(true);
 
-            game->PopScreen();
-            game->PushScreen(screen);
-            game->ChangeState(new GameStateTitle(game));
+//            ScreenMakerTitle maker(game);
+//            GuiScreen* screen = maker.MakeScreen();
+//
+//            game->PopScreen();
+//            game->PushScreen(screen);
+//            game->ChangeState(new GameStateTitle(game));
+
+        }
+        else
+        {
+            game->GetCurrentScreen()->GetGuiById("Continue")->SetVisible(true);
+            game->GetCurrentScreen()->GetGuiById("Confirmation")->SetVisible(false);
+            game->GetCurrentScreen()->GetGuiById("failure")->SetVisible(true);
         }
     }
 }
