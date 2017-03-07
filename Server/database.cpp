@@ -164,7 +164,7 @@ Account* Database::ReadAccount(std::string email)
 void Database::UpdateAccount(Account* account)
 {
     bool account_exists = (this->ReadAccount(account->GetEmail()) != nullptr);
-    if (!account_exists) throw DataDoesNotExistException();
+    if (!account_exists) throw DatabaseDataDoesNotExistException();
 
     char email_str[255];
     char salt_str[255];

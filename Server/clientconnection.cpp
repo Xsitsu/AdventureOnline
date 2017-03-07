@@ -71,17 +71,58 @@ void ClientConnection::ProcessPacket(PacketBase* packet)
 
                 // notify client that account was successfully created
                 std::cout << "Account with email was created: " << registration_info->GetEmail() << std::endl;
-                registration_response->SetResponse(PacketBase::RESPONSE_SUCCESFUL);
+                registration_response->SetResponse(PacketBase::RESPOND_SUCCESFUL);
                 SendPacket(registration_response);
             }
             catch (DatabaseCreateException &ex)
             {
                 // notify client that account creation failed
                 std::cout << "Account creation with email failed: " << registration_info->GetEmail() << std::endl;
-                registration_response->SetResponse(PacketBase::RESPONSE_FAILED);
+                registration_response->SetResponse(PacketBase::RESPOND_FAILED);
                 SendPacket(registration_response);
             }
         }
+    }
+    else if (packet->GetType() == PacketBase::PACKET_LOGIN_REQUEST)
+    {
+        PacketLoginRequest* login_request = static_cast<PacketLoginRequest*>(packet);
+        Database* database = this->server->GetDatabaseConnection();
+        Account* account = nullptr;
+
+        bool did_login = false;
+        bool was_error = false;
+
+        try
+        {
+            account = database->ReadAccount(login_request->GetEmail());
+            if (account)
+            {
+                did_login = (account->GetHash() == login_request->GetPassword());
+            }
+        }
+        catch (DatabaseReadException &ex)
+        {
+            was_error = true;
+        }
+
+        PacketLoginResponse* response = new PacketLoginResponse();
+        if (did_login)
+        {
+            response->SetResponse(PacketLoginResponse::LOGINRESPONSE_SUCCESS);
+            this->account = account;
+
+            std::cout << "Client[" << this->connection_id  << "] logged in as account: " << account->GetEmail() << std::endl;
+        }
+        else if (was_error)
+        {
+            response->SetResponse(PacketLoginResponse::LOGINRESPONSE_ERROR);
+        }
+        else
+        {
+            response->SetResponse(PacketLoginResponse::LOGINRESPONSE_FAIL);
+        }
+
+        this->SendPacket(response);
     }
 }
 

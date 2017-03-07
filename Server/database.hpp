@@ -93,7 +93,7 @@ public:
 
 };
 
-class DataDoesNotExistException : public DatabaseException
+class DatabaseDataDoesNotExistException : public DatabaseException
 {
 protected:
 

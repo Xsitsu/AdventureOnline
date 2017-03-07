@@ -79,7 +79,7 @@ public:
 
     virtual void Notify(GuiButtonArgs*& args) const
     {
-        this->game->RegisterEventToQueue(new OptionsEvent(this->game));
+        //this->game->RegisterEventToQueue(new OptionsEvent(this->game));
     }
 };
 
@@ -115,6 +115,33 @@ public:
 };
 
 
+
+class PlayGameEvent : public GameEventBase
+{
+public:
+    PlayGameEvent(Game* game) : GameEventBase(game) {}
+
+    virtual void HandleEvent()
+    {
+        ScreenMakerLogin maker(this->game);
+        GuiScreen* screen = maker.MakeScreen();
+        this->game->PushScreen(screen);
+    }
+};
+
+class PlayGameListener : public ListenerBase<GuiButtonArgs*>
+{
+protected:
+    Game* game;
+
+public:
+    PlayGameListener(Game* game) : game(game) {}
+
+    virtual void Notify(GuiButtonArgs*& args) const
+    {
+        this->game->RegisterEventToQueue(new PlayGameEvent(this->game));
+    }
+};
 
 
 
@@ -156,6 +183,7 @@ GuiScreen* ScreenMakerTitle::MakeScreen()
     GameQuitListener* game_quit_listener = new GameQuitListener(this->game);
     OptionsListener* option_listener = new OptionsListener(this->game);
     CreateAccountListener* create_account_listener = new CreateAccountListener(this->game);
+    PlayGameListener* play_game_listener = new PlayGameListener(this->game);
 
     GuiFrame* base_frame;
     base_frame = new GuiFrame(Vector2(640, 480), Vector2(0, 0));
@@ -170,6 +198,7 @@ GuiScreen* ScreenMakerTitle::MakeScreen()
     GuiTextButton* button2 = CreateTitleButton(1, "Play Game", button_font);
     button2->RegisterOnMouseEnter(mouse_enter_listener);
     button2->RegisterOnMouseLeave(mouse_leave_listener);
+    button2->RegisterOnClick(play_game_listener);
     base_frame->AddChild(button2);
 
     GuiTextButton* button3 = CreateTitleButton(2, "Options", button_font);
@@ -190,10 +219,7 @@ GuiScreen* ScreenMakerTitle::MakeScreen()
     screen->RegisterListener(game_quit_listener);
     screen->RegisterListener(option_listener);
     screen->RegisterListener(create_account_listener);
-    //screen->SetGuiId("CreateAccount", button1);
-    //screen->SetGuiId("PlayGame", button2);
-    //screen->SetGuiId("Options", button3);
-    //screen->SetGuiId("Quit",  button4);
+    screen->RegisterListener(play_game_listener);
 
     return screen;
 }

@@ -57,6 +57,8 @@
 		<Unit filename="gamestatecharacterview.hpp" />
 		<Unit filename="gamestateinit.cpp" />
 		<Unit filename="gamestateinit.hpp" />
+		<Unit filename="gamestateloginawaitresponse.cpp" />
+		<Unit filename="gamestateloginawaitresponse.hpp" />
 		<Unit filename="gamestatequit.cpp" />
 		<Unit filename="gamestatequit.hpp" />
 		<Unit filename="gamestateserverconnect.cpp" />
@@ -83,6 +85,7 @@
 		<Unit filename="screenmakeraccountcreation.cpp" />
 		<Unit filename="screenmakeraccountcreationresponsewait.cpp" />
 		<Unit filename="screenmakercharacterview.cpp" />
+		<Unit filename="screenmakerempty.cpp" />
 		<Unit filename="screenmakerlogin.cpp" />
 		<Unit filename="screenmakertitle.cpp" />
 		<Extensions>

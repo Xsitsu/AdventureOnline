@@ -16,7 +16,7 @@ void GameStateAccountCreation::HandlePacket(PacketBase* packet)
     if(packet->GetType() == PacketBase::PACKET_REGISTRATION_RESPONSE)
     {
         PacketRegistrationResponse * response = static_cast<PacketRegistrationResponse*>(packet);
-        if(response->GetResponse() == PacketBase::RESPONSE_SUCCESFUL)
+        if(response->GetResponse() == PacketBase::RESPOND_SUCCESFUL)
         {
             game->GetCurrentScreen()->GetGuiById("Continue")->SetVisible(true);
             game->GetCurrentScreen()->GetGuiById("Confirmation")->SetVisible(false);

@@ -167,9 +167,25 @@ void GuiSelectionService::LetMouseUp()
     }
 }
 
-void GuiSelectionService::HandleCurrentScreenChanged()
+void GuiSelectionService::HandleScreenPush()
 {
+    GuiSelectionContext context;
+    context.selected_text_box = this->selected_text_box;
+    context.current_mouse_hover = this->current_mouse_hover;
+    context.current_button_down = this->current_button_down;
+
+    this->selection_context_stack.push(context);
+
     this->selected_text_box = NULL;
     this->current_mouse_hover = NULL;
     this->current_button_down = NULL;
+}
+
+void GuiSelectionService::HandleScreenPop()
+{
+    GuiSelectionContext context = this->selection_context_stack.top();
+    this->selection_context_stack.pop();
+    this->selected_text_box = context.selected_text_box;
+    this->current_mouse_hover = context.current_mouse_hover;
+    this->current_button_down = context.current_button_down;
 }
