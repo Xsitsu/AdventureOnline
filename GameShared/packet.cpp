@@ -331,18 +331,14 @@ PacketRegistrationRequest::PacketRegistrationRequest(): PacketBase(PacketBase::P
 
 PacketRegistrationResponse::PacketRegistrationResponse(): PacketBase(PacketBase::PACKET_REGISTRATION_RESPONSE) {}
 
-PacketBase::Response PacketRegistrationResponse::GetResponse() { return returnCode; }
-void PacketRegistrationResponse::SetResponse(PacketBase::Response val) { returnCode = val; }
+PacketRegistrationResponse::Response PacketRegistrationResponse::GetResponse() { return returnCode; }
+void PacketRegistrationResponse::SetResponse(PacketRegistrationResponse::Response val) { returnCode = val; }
 
 unsigned int PacketRegistrationResponse::Encode(char* buffer)
 {
     PacketReader reader;
     PacketBase::Encode(buffer);
-    if(returnCode == RESPOND_SUCCESFUL)
-        reader.WriteInt(buffer, buffer_pos, 0);
-    else
-        reader.WriteInt(buffer, buffer_pos, 1);
-    return buffer_pos;
+    reader.WriteByte(buffer, buffer_pos, static_cast<uint8_t>(returnCode));
 }
 
 void PacketRegistrationResponse::Decode(char* buffer)
@@ -350,11 +346,7 @@ void PacketRegistrationResponse::Decode(char* buffer)
     uint32_t rc;
     PacketReader reader;
     PacketBase::Decode(buffer);
-    rc = reader.ReadInt(buffer, buffer_pos);
-    if(rc == 0)
-        returnCode = RESPOND_SUCCESFUL;
-    else
-        returnCode = RESPOND_FAILED;
+    returnCode = static_cast<Response>(reader.ReadByte(buffer, buffer_pos));
 }
 
 

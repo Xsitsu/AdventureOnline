@@ -88,8 +88,8 @@ GuiScreen * ScreenMakerAccountCreationResponseWait::MakeScreen()
 
     //buttons
     GuiTextButton * information = CreateAccountCreationWaitButton(5, "Waiting for response from server", button_font);
-    GuiTextButton * failure = CreateAccountCreationWaitButton(5, "Account created!", button_font);
-    GuiTextButton * success = CreateAccountCreationWaitButton(5, "Account creation failed.", button_font);
+    //GuiTextButton * failure = CreateAccountCreationWaitButton(5, "Account created!", button_font);
+    //GuiTextButton * success = CreateAccountCreationWaitButton(5, "Account creation failed.", button_font);
     GuiTextButton * accept_button = CreateAccountCreationWaitButton(1, "Continue", button_font);
 
     //setup buttons
@@ -97,15 +97,15 @@ GuiScreen * ScreenMakerAccountCreationResponseWait::MakeScreen()
     accept_button->RegisterOnMouseLeave(mouse_leave_listener);
     accept_button->RegisterOnClick(done_listener);
     accept_button->SetVisible(false);
-    failure->SetVisible(false);
-    success->SetVisible(false);
+    //failure->SetVisible(false);
+    //success->SetVisible(false);
 
     //frame setup
     waitFrame->SetBackgroundColor(Color3(0, 50, 0));
     waitFrame->AddChild(information);
     waitFrame->AddChild(accept_button);
-    waitFrame->AddChild(failure);
-    waitFrame->AddChild(success);
+    //waitFrame->AddChild(failure);
+    //waitFrame->AddChild(success);
 
     //screen
     GuiScreen* screen = new GuiScreen(waitFrame);
@@ -116,8 +116,8 @@ GuiScreen * ScreenMakerAccountCreationResponseWait::MakeScreen()
     screen->RegisterListener(mouse_leave_listener);
     screen->SetGuiId("Confirmation", information);
     screen->SetGuiId("Continue", accept_button);
-    screen->SetGuiId("failure", failure);
-    screen->SetGuiId("success", success);
+    //screen->SetGuiId("failure", failure);
+    //screen->SetGuiId("success", success);
 
     return screen;
 }

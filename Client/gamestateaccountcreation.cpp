@@ -16,25 +16,20 @@ void GameStateAccountCreation::HandlePacket(PacketBase* packet)
     if(packet->GetType() == PacketBase::PACKET_REGISTRATION_RESPONSE)
     {
         PacketRegistrationResponse * response = static_cast<PacketRegistrationResponse*>(packet);
-        if(response->GetResponse() == PacketBase::RESPOND_SUCCESFUL)
+        if(response->GetResponse() == PacketRegistrationResponse::RESPONSE_ACCOUNT_CREATED)
         {
             game->GetCurrentScreen()->GetGuiById("Continue")->SetVisible(true);
-            game->GetCurrentScreen()->GetGuiById("Confirmation")->SetVisible(false);
-            game->GetCurrentScreen()->GetGuiById("success")->SetVisible(true);
-
-//            ScreenMakerTitle maker(game);
-//            GuiScreen* screen = maker.MakeScreen();
-//
-//            game->PopScreen();
-//            game->PushScreen(screen);
-//            game->ChangeState(new GameStateTitle(game));
-
+            static_cast<GuiTextButton*>(game->GetCurrentScreen()->GetGuiById("Confirmation"))->SetText("Account creation successful.");
+            //game->GetCurrentScreen()->GetGuiById("success")->SetVisible(true);
         }
         else
         {
             game->GetCurrentScreen()->GetGuiById("Continue")->SetVisible(true);
-            game->GetCurrentScreen()->GetGuiById("Confirmation")->SetVisible(false);
-            game->GetCurrentScreen()->GetGuiById("failure")->SetVisible(true);
+            if(response->GetResponse()== PacketRegistrationResponse::RESPONSE_ACCOUNT_ALREADY_EXISTS)
+                static_cast<GuiTextButton*>(game->GetCurrentScreen()->GetGuiById("Confirmation"))->SetText("Account already exists.");
+            else
+                static_cast<GuiTextButton*>(game->GetCurrentScreen()->GetGuiById("Confirmation"))->SetText("Unknown error creating account.");
+            //game->GetCurrentScreen()->GetGuiById("failure")->SetVisible(true);
         }
     }
 }
