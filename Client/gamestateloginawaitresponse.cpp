@@ -5,7 +5,7 @@
 
 #include "screenmaker.hpp"
 
-#include "GameShared/packet.hpp"
+#include "GameNetwork/packet.hpp"
 
 
 void GameStateLoginAwaitResponse::Render()

@@ -4,8 +4,8 @@
 #include <list>
 #include <iostream>
 
-#include "GameShared/vector2.hpp"
-//#include "guiscreen.hpp"
+#include "vector2.hpp"
+
 class GuiScreen;
 class GuiBase
 {

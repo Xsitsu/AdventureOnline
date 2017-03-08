@@ -3,8 +3,8 @@
 
 #include <ctime>
 
-#include "GameShared/socket.hpp"
-#include "GameShared/packet.hpp"
+#include "GameNetwork/socket.hpp"
+#include "GameNetwork/packet.hpp"
 
 #include "clientconnection.hpp"
 #include "world.hpp"
