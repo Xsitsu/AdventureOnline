@@ -52,11 +52,11 @@ public:
     virtual void HandleEvent()
     {
         this->game->PopScreen();
-//
-//        ScreenMakerTitle maker(this->game);
-//        GuiScreen* screen = maker.MakeScreen();
-//        this->game->PushScreen(screen);
-//        this->game->ChangeState(new GameStateTitle(this->game));
+
+        ScreenMakerAccountCreation maker(this->game);
+        GuiScreen* screen = maker.MakeScreen();
+        this->game->PushScreen(screen);
+        this->game->ChangeState(new GameStateAccountCreation(this->game));
     }
 };
 
@@ -87,25 +87,25 @@ GuiScreen * ScreenMakerAccountCreationResponseWait::MakeScreen()
     GuiFrame * waitFrame = new GuiFrame(Vector2(640 * 0.7,480 * 0.7), Vector2(640*0.15, 480*0.15));
 
     //buttons
-    GuiTextButton * information = CreateAccountCreationWaitButton(5, "Waiting for response from server", button_font);
-    //GuiTextButton * failure = CreateAccountCreationWaitButton(5, "Account created!", button_font);
-    //GuiTextButton * success = CreateAccountCreationWaitButton(5, "Account creation failed.", button_font);
-    GuiTextButton * accept_button = CreateAccountCreationWaitButton(1, "Continue", button_font);
+    GuiTextButton * information = CreateAccountCreationWaitButton(3, "Waiting for response from server", button_font);
+    GuiTextButton * success = CreateAccountCreationWaitButton(7, "Account created!", button_font);
+    GuiTextButton * failure = CreateAccountCreationWaitButton(7, "Account creation failed.", button_font);
+    GuiTextButton * accept_button = CreateAccountCreationWaitButton(5, "Continue", button_font);
 
     //setup buttons
     accept_button->RegisterOnMouseEnter(mouse_enter_listener);
     accept_button->RegisterOnMouseLeave(mouse_leave_listener);
     accept_button->RegisterOnClick(done_listener);
     accept_button->SetVisible(false);
-    //failure->SetVisible(false);
-    //success->SetVisible(false);
+    failure->SetVisible(false);
+    success->SetVisible(false);
 
     //frame setup
     waitFrame->SetBackgroundColor(Color3(0, 50, 0));
     waitFrame->AddChild(information);
     waitFrame->AddChild(accept_button);
-    //waitFrame->AddChild(failure);
-    //waitFrame->AddChild(success);
+    waitFrame->AddChild(failure);
+    waitFrame->AddChild(success);
 
     //screen
     GuiScreen* screen = new GuiScreen(waitFrame);
@@ -116,8 +116,8 @@ GuiScreen * ScreenMakerAccountCreationResponseWait::MakeScreen()
     screen->RegisterListener(mouse_leave_listener);
     screen->SetGuiId("Confirmation", information);
     screen->SetGuiId("Continue", accept_button);
-    //screen->SetGuiId("failure", failure);
-    //screen->SetGuiId("success", success);
+    screen->SetGuiId("failure", failure);
+    screen->SetGuiId("success", success);
 
     return screen;
 }

@@ -83,6 +83,7 @@ void ClientConnection::ProcessPacket(PacketBase* packet)
             }
         }
         SendPacket(registration_response);
+        std::cout << "Sent response package with code: " << registration_response->GetResponse() << std::endl;
     }
     else if (packet->GetType() == PacketBase::PACKET_LOGIN_REQUEST)
     {
