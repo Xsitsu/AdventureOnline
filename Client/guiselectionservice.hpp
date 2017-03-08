@@ -10,7 +10,7 @@ class GuiTextBox;
 #include "guibase.hpp"
 #include "guibutton.hpp"
 #include "guitextbox.hpp"
-#include "GameShared/vector2.hpp"
+#include "vector2.hpp"
 
 struct GuiSelectionContext
 {
