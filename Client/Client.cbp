@@ -87,6 +87,7 @@
 		<Unit filename="screenmakerempty.cpp" />
 		<Unit filename="screenmakerlogin.cpp" />
 		<Unit filename="screenmakertitle.cpp" />
+		<Unit filename="vector2.hpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />
