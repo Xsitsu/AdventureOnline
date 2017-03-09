@@ -7,7 +7,7 @@
 
 #include "guiselectionservice.hpp"
 
-#include "vector2.hpp"
+#include "GameUtil/vector2.hpp"
 
 #include "observer.hpp"
 

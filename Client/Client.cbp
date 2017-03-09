@@ -18,6 +18,8 @@
 				<Linker>
 					<Add library="../allegro/lib/liballegro-5.0.10-monolith-md-debug.a" />
 					<Add library="../GameNetwork/bin/Debug/libGameNetwork.a" />
+					<Add library="../GameWorld/bin/Debug/libGameWorld.a" />
+					<Add library="../GameUtil/bin/Debug/libGameUtil.a" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -32,6 +34,8 @@
 					<Add option="-s" />
 					<Add library="../allegro/lib/liballegro-5.0.10-monolith-md.a" />
 					<Add library="../GameNetwork/bin/Release/libGameNetwork.a" />
+					<Add library="../GameWorld/bin/Release/libGameWorld.a" />
+					<Add library="../GameUtil/bin/Release/libGameUtil.a" />
 				</Linker>
 			</Target>
 		</Build>
@@ -87,7 +91,6 @@
 		<Unit filename="screenmakerempty.cpp" />
 		<Unit filename="screenmakerlogin.cpp" />
 		<Unit filename="screenmakertitle.cpp" />
-		<Unit filename="vector2.hpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

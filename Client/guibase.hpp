@@ -4,7 +4,7 @@
 #include <list>
 #include <iostream>
 
-#include "vector2.hpp"
+#include "GameUtil/vector2.hpp"
 
 class GuiScreen;
 class GuiBase
