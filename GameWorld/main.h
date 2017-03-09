@@ -19,8 +19,6 @@ extern "C"
 {
 #endif
 
-void DLL_EXPORT SomeFunction(const LPCSTR sometext);
-
 #ifdef __cplusplus
 }
 #endif
