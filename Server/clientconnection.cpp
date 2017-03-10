@@ -61,6 +61,7 @@ void ClientConnection::ProcessPacket(PacketBase* packet)
         {
             // notify client that account already exists
             std::cout << "Account with email already exists: " << registration_info->GetEmail() << std::endl;
+            registration_response->SetResponse(PacketRegistrationResponse::RESPONSE_ACCOUNT_ALREADY_EXISTS);
         }
         else
         {
@@ -71,17 +72,18 @@ void ClientConnection::ProcessPacket(PacketBase* packet)
 
                 // notify client that account was successfully created
                 std::cout << "Account with email was created: " << registration_info->GetEmail() << std::endl;
-                registration_response->SetResponse(PacketBase::RESPOND_SUCCESFUL);
-                SendPacket(registration_response);
+                registration_response->SetResponse(PacketRegistrationResponse::RESPONSE_ACCOUNT_CREATED);
             }
             catch (DatabaseCreateException &ex)
             {
                 // notify client that account creation failed
                 std::cout << "Account creation with email failed: " << registration_info->GetEmail() << std::endl;
-                registration_response->SetResponse(PacketBase::RESPOND_FAILED);
-                SendPacket(registration_response);
+                registration_response->SetResponse(PacketRegistrationResponse::RESPONSE_ERROR);
+
             }
         }
+        SendPacket(registration_response);
+        std::cout << "Sent response package with code: " << registration_response->GetResponse() << std::endl;
     }
     else if (packet->GetType() == PacketBase::PACKET_LOGIN_REQUEST)
     {
