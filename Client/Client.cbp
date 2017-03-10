@@ -17,7 +17,9 @@
 				</Compiler>
 				<Linker>
 					<Add library="../allegro/lib/liballegro-5.0.10-monolith-md-debug.a" />
-					<Add library="../GameShared/bin/Debug/libGameShared.a" />
+					<Add library="../GameNetwork/bin/Debug/libGameNetwork.a" />
+					<Add library="../GameWorld/bin/Debug/libGameWorld.a" />
+					<Add library="../GameUtil/bin/Debug/libGameUtil.a" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -31,7 +33,9 @@
 				<Linker>
 					<Add option="-s" />
 					<Add library="../allegro/lib/liballegro-5.0.10-monolith-md.a" />
-					<Add library="../GameShared/bin/Release/libGameShared.a" />
+					<Add library="../GameNetwork/bin/Release/libGameNetwork.a" />
+					<Add library="../GameWorld/bin/Release/libGameWorld.a" />
+					<Add library="../GameUtil/bin/Release/libGameUtil.a" />
 				</Linker>
 			</Target>
 		</Build>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="GameWorld" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/GameWorld" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-g" />
+					<Add option="-DBUILD_DLL" />
+				</Compiler>
+				<Linker>
+					<Add library="user32" />
+					<Add library="../GameUtil/bin/Debug/libGameUtil.a" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/GameWorld" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-Wall" />
+					<Add option="-DBUILD_DLL" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="user32" />
+					<Add library="../GameUtil/bin/Release/libGameUtil.a" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-std=c++11" />
+			<Add directory=".." />
+		</Compiler>
+		<ExtraCommands>
+			<Add after='cmd /c copy &quot;$(PROJECT_DIR)$(TARGET_OUTPUT_FILE)&quot; &quot;$(PROJECT_DIR)..\Client\bin\$(TARGET_NAME)&quot;' />
+			<Add after='cmd /c copy &quot;$(PROJECT_DIR)$(TARGET_OUTPUT_FILE)&quot; &quot;$(PROJECT_DIR)..\Server\bin\$(TARGET_NAME)&quot;' />
+		</ExtraCommands>
+		<Unit filename="actor.cpp" />
+		<Unit filename="actor.hpp" />
+		<Unit filename="character.cpp" />
+		<Unit filename="character.hpp" />
+		<Unit filename="main.cpp" />
+		<Unit filename="main.h" />
+		<Unit filename="map.cpp" />
+		<Unit filename="map.hpp" />
+		<Unit filename="maptile.cpp" />
+		<Unit filename="maptile.hpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

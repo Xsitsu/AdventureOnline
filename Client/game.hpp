@@ -11,7 +11,7 @@
 
 class GameStateBase;
 
-#include "GameShared/packet.hpp"
+#include "GameNetwork/packet.hpp"
 #include "client.hpp"
 #include "gamestate.hpp"
 

@@ -2,7 +2,7 @@
 
 #include <exception>
 
-#include "GameShared/socket.hpp"
+#include "GameNetwork/socket.hpp"
 
 #include "server.hpp"
 

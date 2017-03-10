@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "GameShared/socket.hpp"
+#include "GameNetwork/socket.hpp"
 
 #include "game.hpp"
 

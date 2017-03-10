@@ -3,7 +3,7 @@
 
 #include "gamestatetitle.hpp"
 #include "gamestateaccountcreation.hpp"
-#include "GameShared/packet.hpp"
+#include "GameNetwork/packet.hpp"
 
 
 
