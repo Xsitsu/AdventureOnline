@@ -19,6 +19,8 @@
 				<Linker>
 					<Add library="../GameNetwork/bin/Debug/libGameNetwork.a" />
 					<Add library="odbc32" />
+					<Add library="../GameWorld/bin/Debug/libGameWorld.a" />
+					<Add library="../GameUtil/bin/Debug/libGameUtil.a" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -35,6 +37,8 @@
 					<Add option="-s" />
 					<Add library="../GameNetwork/bin/Release/libGameNetwork.a" />
 					<Add library="odbc32" />
+					<Add library="../GameWorld/bin/Release/libGameWorld.a" />
+					<Add library="../GameUtil/bin/Release/libGameUtil.a" />
 				</Linker>
 			</Target>
 		</Build>
@@ -45,16 +49,11 @@
 		</Compiler>
 		<Unit filename="account.cpp" />
 		<Unit filename="account.hpp" />
-		<Unit filename="actor.hpp" />
-		<Unit filename="character.cpp" />
-		<Unit filename="character.hpp" />
 		<Unit filename="clientconnection.cpp" />
 		<Unit filename="clientconnection.hpp" />
 		<Unit filename="database.cpp" />
 		<Unit filename="database.hpp" />
 		<Unit filename="main.cpp" />
-		<Unit filename="map.cpp" />
-		<Unit filename="map.hpp" />
 		<Unit filename="server.cpp" />
 		<Unit filename="server.hpp" />
 		<Unit filename="world.cpp" />

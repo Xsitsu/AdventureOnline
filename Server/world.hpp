@@ -1,7 +1,7 @@
 #ifndef WORLD_HPP_INCLUDE
 #define WORLD_HPP_INCLUDE
 
-#include "map.hpp"
+#include "GameWorld\map.hpp"
 
 class World
 {

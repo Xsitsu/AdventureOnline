@@ -15,7 +15,7 @@ class Game;
 #include "guitextbutton.hpp"
 #include "guitextbox.hpp"
 #include "guiscreen.hpp"
-#include "vector2.hpp"
+#include "GameUtil/vector2.hpp"
 
 #include "color3.hpp"
 
