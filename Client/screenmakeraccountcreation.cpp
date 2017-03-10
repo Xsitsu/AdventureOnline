@@ -122,14 +122,16 @@ public:
             packet->SetPassword(e_password);
 
             std::cout << "Packet sent :\t" << packet->GetEmail() << '\t' << packet->GetPassword() << '\t'  << std::endl;
-            this->game->SendPacket(packet);
+            this->game->SendPacket(packet);            //send out registration request
 
-            ScreenMakerAccountCreationResponseWait maker(game);
-            GuiScreen* screen = maker.MakeScreen();
-            game->PushScreen(screen);
-            game->ChangeState(new GameStateAccountCreationAwaitResponse(game));
+        //this->game->PopScreen();
 
-            //send out registration request
+        ScreenMakerAccountCreationResponseWait maker(this->game);
+        GuiScreen* screen = maker.MakeScreen();
+        this->game->PushScreen(screen);
+        this->game->ChangeState(new GameStateAccountCreationAwaitResponse(this->game));
+
+
         }
         else
         {
@@ -206,7 +208,7 @@ GuiScreen* ScreenMakerAccountCreation::MakeScreen()
 
     //setup frame
     account_creation_frame->SetBackgroundColor(Color3(255, 155, 100));
-    account_creation_frame->SetBackgroundAlpha(200);
+    //account_creation_frame->SetBackgroundAlpha(200);
     account_creation_frame->AddChild(user_email_text);
     account_creation_frame->AddChild(user_email);
     account_creation_frame->AddChild(user_password);

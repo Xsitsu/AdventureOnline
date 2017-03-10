@@ -340,6 +340,7 @@ unsigned int PacketRegistrationResponse::Encode(char* buffer)
     PacketBase::Encode(buffer);
     reader.WriteByte(buffer, buffer_pos, static_cast<uint8_t>(returnCode));
     std::cout << "Response Encoded Code: " << returnCode << std::endl;
+    return buffer_pos;
 }
 
 void PacketRegistrationResponse::Decode(char* buffer)

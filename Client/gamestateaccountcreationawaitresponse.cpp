@@ -30,3 +30,21 @@ void GameStateAccountCreationAwaitResponse::HandlePacket(PacketBase* packet)
         }
     }
 }
+
+void GameStateAccountCreationAwaitResponse::HandleMouseMove(const ALLEGRO_MOUSE_EVENT& mouse)
+{
+    Vector2 pos(mouse.x, mouse.y);
+    this->game->GetCurrentScreen()->HandleMouseMove(pos);
+}
+
+void GameStateAccountCreationAwaitResponse::HandleMouseDown(const ALLEGRO_MOUSE_EVENT& mouse)
+{
+    Vector2 pos(mouse.x, mouse.y);
+    this->game->GetCurrentScreen()->HandleMouseDown(pos);
+}
+
+void GameStateAccountCreationAwaitResponse::HandleMouseUp(const ALLEGRO_MOUSE_EVENT& mouse)
+{
+    Vector2 pos(mouse.x, mouse.y);
+    this->game->GetCurrentScreen()->HandleMouseUp(pos);
+}
