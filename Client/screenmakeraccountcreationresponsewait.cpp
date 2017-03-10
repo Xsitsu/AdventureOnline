@@ -2,7 +2,7 @@
 
 #include "gamestatetitle.hpp"
 #include "gamestateaccountcreation.hpp"
-#include "GameShared/packet.hpp"
+#include "GameNetwork/packet.hpp"
 
 GuiTextButton* CreateAccountCreationWaitButton(int offset, std::string button_text, ALLEGRO_FONT* text_font)
 {
@@ -96,12 +96,13 @@ GuiScreen * ScreenMakerAccountCreationResponseWait::MakeScreen()
     accept_button->RegisterOnMouseEnter(mouse_enter_listener);
     accept_button->RegisterOnMouseLeave(mouse_leave_listener);
     accept_button->RegisterOnClick(done_listener);
-    accept_button->SetVisible(false);
+    //accept_button->SetVisible(false);
     failure->SetVisible(false);
     success->SetVisible(false);
 
     //frame setup
     waitFrame->SetBackgroundColor(Color3(0, 50, 0));
+    waitFrame->SetBackgroundAlpha( 200);
     waitFrame->AddChild(information);
     waitFrame->AddChild(accept_button);
     waitFrame->AddChild(failure);

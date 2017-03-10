@@ -31,6 +31,7 @@ friend class GameStateQuit;
 friend class GameStateCharacterView;
 friend class GameStateAccountCreation;
 friend class GameStateLoginAwaitResponse;
+friend class GameStateAccountCreationAwaitResponse;
 
 protected: // Singleton stuff
     static Game* instance;

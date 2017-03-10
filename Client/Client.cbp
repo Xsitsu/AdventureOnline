@@ -57,6 +57,8 @@
 		<Unit filename="gamestate.hpp" />
 		<Unit filename="gamestateaccountcreation.cpp" />
 		<Unit filename="gamestateaccountcreation.hpp" />
+		<Unit filename="gamestateaccountcreationawaitresponse.cpp" />
+		<Unit filename="gamestateaccountcreationawaitresponse.hpp" />
 		<Unit filename="gamestatecharacterview.cpp" />
 		<Unit filename="gamestatecharacterview.hpp" />
 		<Unit filename="gamestateinit.cpp" />

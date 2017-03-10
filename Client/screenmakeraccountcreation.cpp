@@ -4,6 +4,7 @@
 #include "gamestatetitle.hpp"
 #include "gamestateaccountcreation.hpp"
 #include "GameNetwork/packet.hpp"
+#include "gamestateaccountcreationawaitresponse.hpp"
 
 
 
@@ -126,6 +127,7 @@ public:
             ScreenMakerAccountCreationResponseWait maker(game);
             GuiScreen* screen = maker.MakeScreen();
             game->PushScreen(screen);
+            game->ChangeState(new GameStateAccountCreationAwaitResponse(game));
 
             //send out registration request
         }
@@ -158,15 +160,6 @@ public:
         this->game->RegisterEventToQueue(new RegisterEvent(this->game,email_box, password_box, confirmation_box ));
     }
 };
-
-
-
-
-
-
-
-
-
 
 
 
@@ -213,6 +206,7 @@ GuiScreen* ScreenMakerAccountCreation::MakeScreen()
 
     //setup frame
     account_creation_frame->SetBackgroundColor(Color3(255, 155, 100));
+    account_creation_frame->SetBackgroundAlpha(200);
     account_creation_frame->AddChild(user_email_text);
     account_creation_frame->AddChild(user_email);
     account_creation_frame->AddChild(user_password);
