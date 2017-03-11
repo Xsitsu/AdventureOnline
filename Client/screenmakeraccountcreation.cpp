@@ -126,10 +126,10 @@ public:
 
         //this->game->PopScreen();
 
-        ScreenMakerAccountCreationResponseWait maker(this->game);
-        GuiScreen* screen = maker.MakeScreen();
-        this->game->PushScreen(screen);
-        this->game->ChangeState(new GameStateAccountCreationAwaitResponse(this->game));
+            ScreenMakerAccountCreationResponseWait maker(this->game);
+            GuiScreen* screen = maker.MakeScreen();
+            this->game->PushScreen(screen);
+            this->game->ChangeState(new GameStateAccountCreationAwaitResponse(this->game));
 
 
         }

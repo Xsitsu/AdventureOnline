@@ -339,18 +339,14 @@ unsigned int PacketRegistrationResponse::Encode(char* buffer)
     PacketReader reader;
     PacketBase::Encode(buffer);
     reader.WriteByte(buffer, buffer_pos, static_cast<uint8_t>(returnCode));
-    std::cout << "Response Encoded Code: " << returnCode << std::endl;
     return buffer_pos;
 }
 
 void PacketRegistrationResponse::Decode(char* buffer)
 {
-    uint8_t rc;
     PacketReader reader;
     PacketBase::Decode(buffer);
-    rc = static_cast<Response>(reader.ReadByte(buffer, buffer_pos));
-    returnCode = static_cast<Response>(rc);
-    std::cout << "Response Decoded Code: " << returnCode << std::endl;
+    returnCode = static_cast<Response>(reader.ReadByte(buffer, buffer_pos));
 }
 
 

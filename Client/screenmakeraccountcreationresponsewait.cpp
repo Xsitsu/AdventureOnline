@@ -55,9 +55,9 @@ namespace AccountCreationAwaitListeners
         {
             this->game->PopScreen();
 
-            ScreenMakerAccountCreation maker(this->game);
-            GuiScreen * screen = maker.MakeScreen();
-            this->game->PushScreen(screen);
+//            ScreenMakerAccountCreation maker(this->game);
+//            GuiScreen * screen = maker.MakeScreen();
+//            this->game->PushScreen(screen);
             this->game->ChangeState(new GameStateAccountCreation(this->game));
         }
     };
