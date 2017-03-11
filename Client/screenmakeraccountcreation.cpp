@@ -4,6 +4,7 @@
 #include "gamestatetitle.hpp"
 #include "gamestateaccountcreation.hpp"
 #include "GameNetwork/packet.hpp"
+#include "gamestateaccountcreationawaitresponse.hpp"
 
 
 
@@ -121,9 +122,16 @@ public:
             packet->SetPassword(e_password);
 
             std::cout << "Packet sent :\t" << packet->GetEmail() << '\t' << packet->GetPassword() << '\t'  << std::endl;
-            this->game->SendPacket(packet);
+            this->game->SendPacket(packet);            //send out registration request
 
-            //send out registration request
+        //this->game->PopScreen();
+
+            ScreenMakerAccountCreationResponseWait maker(this->game);
+            GuiScreen* screen = maker.MakeScreen();
+            this->game->PushScreen(screen);
+            this->game->ChangeState(new GameStateAccountCreationAwaitResponse(this->game));
+
+
         }
         else
         {
@@ -159,15 +167,6 @@ public:
 
 
 
-
-
-
-
-
-
-
-
-
 GuiScreen* ScreenMakerAccountCreation::MakeScreen()
 {
 //font
@@ -187,7 +186,7 @@ GuiScreen* ScreenMakerAccountCreation::MakeScreen()
     GuiTextButton * user_password_text = CreateAccountCreationButton(2, "Enter Password ",button_font);
     GuiTextButton * user_confirm_text = CreateAccountCreationButton(4, "Confirm Password", button_font);
     GuiTextButton * register_button = CreateAccountCreationButton(7, "Register", button_font);
-    GuiTextButton * done_button = CreateAccountCreationButton(8, "Cancel", button_font);
+    GuiTextButton * done_button = CreateAccountCreationButton(8, "Exit", button_font);
 
     //text boxes
     GuiTextBox * user_email = CreateAccountCreationBox(1, "email@oit.edu", button_font);
@@ -209,6 +208,7 @@ GuiScreen* ScreenMakerAccountCreation::MakeScreen()
 
     //setup frame
     account_creation_frame->SetBackgroundColor(Color3(255, 155, 100));
+    //account_creation_frame->SetBackgroundAlpha(200);
     account_creation_frame->AddChild(user_email_text);
     account_creation_frame->AddChild(user_email);
     account_creation_frame->AddChild(user_password);

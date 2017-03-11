@@ -173,10 +173,11 @@ public:
 class DLL_EXPORT PacketRegistrationRequest: public PacketBase
 {
 protected:
-    uint8_t email_length;
-    uint8_t password_length;
     std::string p_email;
     std::string p_password;
+    uint8_t email_length;
+    uint8_t password_length;
+
 
 
 public:
@@ -191,6 +192,31 @@ public:
     virtual void Decode(char* buffer);
 };
 
+
+class DLL_EXPORT PacketRegistrationResponse : public PacketBase
+{
+
+
+public:
+    enum Response
+    {
+        RESPONSE_ACCOUNT_CREATED,
+        RESPONSE_ACCOUNT_ALREADY_EXISTS,
+        RESPONSE_ERROR
+    };
+    PacketRegistrationResponse();
+
+    Response GetResponse();
+    void SetResponse(Response);
+
+    virtual unsigned int Encode(char* buffer);
+    virtual void Decode(char* buffer);
+
+
+
+protected:
+    Response returnCode;
+};
 
 class DLL_EXPORT PacketLoginRequest : public PacketBase
 {

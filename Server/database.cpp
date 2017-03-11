@@ -69,45 +69,67 @@ void Database::CreateAccount(std::string email, std::string password)
     bool account_exists = (this->ReadAccount(email) != nullptr);
     if (account_exists) throw DatabaseDataAlreadyExistsException();
 
+    char email_str[255];
+    char salt_str[255];
+    char hash_str[255];
+
+    SQLLEN caBind = SQL_NTS;
+    SQLLEN caBind2 = SQL_NTS;
+    SQLLEN caBind3 = SQL_NTS;
+
+    int caemailLen = email.size();
+    int casaltLen = password.size();
+    int cahashLen = password.size() + email.size();
+
+    strcpy( email_str, email.c_str() );
+    strcpy( salt_str, password.c_str() );           //needs to be replaced with salt string
+    strcpy( hash_str, email.c_str() );              //needs to be replaced with hash string
+    strcat( hash_str, password.c_str() );
+
     SQLRETURN localRetcode;
-    SQLINTEGER sqlInt;
-    char insertUser[1000] = "INSERT INTO Users(UserEmail, UserSalt, UserHash) VALUES(";
-    strcat(insertUser, "'");
-    strcat(insertUser, email.c_str());
-    strcat(insertUser, "','");
-    strcat(insertUser, password.c_str());
-    strcat(insertUser, "','");
-    strcat(insertUser, password.c_str());
-    strcat(insertUser, "')");
+
+    char insertUser[1000] = "{ CALL CreateUser( ?, ? , ?) }";
+
 
     localRetcode = SQLAllocHandle(SQL_HANDLE_STMT, h_DBC, &h_Statement);
+
+    SQLBindParameter(h_Statement, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, caemailLen, 0, email_str, caemailLen, &caBind); // bind email
+
+    SQLBindParameter(h_Statement, 2, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, casaltLen, 0, salt_str, casaltLen, &caBind2); // bind salt
+
+    SQLBindParameter(h_Statement, 3, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, cahashLen, 0, hash_str, cahashLen, &caBind3); // bind hash
+
     localRetcode = SQLExecDirect(h_Statement, (unsigned char *)insertUser, SQL_NTS);
 
     if (localRetcode != SQL_SUCCESS && localRetcode != SQL_SUCCESS_WITH_INFO)
     {
         throw DatabaseCreateException();
     }
+    SQLFreeHandle(SQL_HANDLE_STMT, h_Statement);
 }
 
 Account* Database::ReadAccount(std::string email)
 {
-    char SQL_Code[1000] = "select * from users where UserEmail =";
+    char SQL_Code[1000] = "{CALL ReadUserInfo(?) }";
+    SQLLEN cBind = SQL_NTS;
+    char email_str[255];
+    int emailLen = email.size();
+    strcpy(email_str, email.c_str());
 
     SQLRETURN localRetcode;
     SQLINTEGER sqlInt;
     SDWORD sqlThing;
 
-    strcat(SQL_Code, "'");
-    strcat(SQL_Code, email.c_str());
-    strcat(SQL_Code, "'");
-
     localRetcode = SQLAllocHandle(SQL_HANDLE_STMT, h_DBC, &h_Statement);
+
+    localRetcode = SQLBindParameter(h_Statement, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, emailLen, 0, email_str, emailLen, &cBind);
+
     localRetcode = SQLExecDirect(h_Statement, (unsigned char *)SQL_Code, SQL_NTS);
 
     if (localRetcode == SQL_SUCCESS || localRetcode == SQL_SUCCESS_WITH_INFO)
     {
         unsigned int data_ID;
-        char data_email[255];
+        //char data_email[255];
         char data_salt[255];
         char data_hash[510];
 
@@ -119,11 +141,11 @@ Account* Database::ReadAccount(std::string email)
         }
 
         SQLGetData(h_Statement, 1, SQL_INTEGER, &data_ID, sizeof(data_ID), &sqlInt );
-        SQLGetData(h_Statement, 2, SQL_C_CHAR, &data_email, 255, &sqlThing );
-        SQLGetData(h_Statement, 3, SQL_C_CHAR, &data_salt, 255, &sqlThing );
-        SQLGetData(h_Statement, 4, SQL_C_CHAR, &data_hash, 510, &sqlThing );
+        //SQLGetData(h_Statement, 2, SQL_C_CHAR, &data_email, 255, &sqlThing );
+        SQLGetData(h_Statement, 2, SQL_C_CHAR, &data_salt, 255, &sqlThing );
+        SQLGetData(h_Statement, 3, SQL_C_CHAR, &data_hash, 510, &sqlThing );
 
-        Account* account = new Account(data_ID, data_email, data_salt, data_hash);
+        Account* account = new Account(data_ID, email, data_salt, data_hash);
         return account;
     }
     else if (localRetcode == SQL_NO_DATA)
@@ -135,6 +157,8 @@ Account* Database::ReadAccount(std::string email)
     {
         throw DatabaseReadException();
     }
+    SQLFreeHandle(SQL_HANDLE_STMT, h_Statement);
+    delete email_str;
 }
 
 void Database::UpdateAccount(Account* account)
@@ -142,7 +166,40 @@ void Database::UpdateAccount(Account* account)
     bool account_exists = (this->ReadAccount(account->GetEmail()) != nullptr);
     if (!account_exists) throw DatabaseDataDoesNotExistException();
 
-    // ToDo
+    char email_str[255];
+    char salt_str[255];
+    char hash_str[255];
+    int id = account->GetAccountId();
+
+    SQLLEN cBind = SQL_NTS;
+    SQLLEN cBind2 = SQL_NTS;
+    SQLLEN cBind3 = SQL_NTS;
+    SQLLEN cBind4 = SQL_NTS;
+
+    int emailLen = account->GetEmail().size();
+    int saltLen = account->GetSalt().size();
+    int hashLen = account->GetHash().size();
+
+    strcpy( email_str, account->GetEmail().c_str() );
+    strcpy( salt_str, account->GetSalt().c_str() );
+    strcpy( hash_str, account->GetHash().c_str() );
+
+    char SQL_Code[1000] = "{CALL UpdateUser(?, ?, ?, ?) }"; //setup command
+
+
+    SQLAllocHandle(SQL_HANDLE_STMT, h_DBC, &h_Statement);//alloc handle
+
+    SQLBindParameter(h_Statement, 1, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &id, 0, &cBind); //bind ID
+
+    SQLBindParameter(h_Statement, 2, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, emailLen, 0, email_str, emailLen, &cBind2); // bind email
+
+    SQLBindParameter(h_Statement, 3, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, saltLen, 0, salt_str, saltLen, &cBind3); // bind salt
+
+    SQLBindParameter(h_Statement, 4, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, hashLen, 0, hash_str, hashLen, &cBind4); // bind hash
+
+    SQLExecDirect(h_Statement, (unsigned char *)SQL_Code, strlen(SQL_Code));
+
+    SQLFreeHandle(SQL_HANDLE_STMT, h_Statement);
 }
 
 void Database::DeleteAccount(Account* account)

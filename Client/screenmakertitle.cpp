@@ -91,7 +91,7 @@ public:
 
     virtual void HandleEvent()
     {
-        this->game->PopScreen();
+        //this->game->PopScreen();
 
         ScreenMakerAccountCreation maker(this->game);
         GuiScreen* screen = maker.MakeScreen();

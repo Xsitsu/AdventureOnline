@@ -191,10 +191,12 @@ void Server::SendPacketToAddress(PacketBase* packet, Address* address)
 
   std::cout << "Addr: " << (int)address->GetAddress() << std::endl;
   */
-  packet->SetConnectionId(0);
+    packet->SetConnectionId(0);
 
+    unsigned int data_size;
     char buffer[PacketBase::MAX_BUFFER];
-    unsigned int data_size = packet->Encode(buffer);
+
+    data_size = packet->Encode(buffer);
 
     this->socket.Send(*address, buffer, data_size);
 }

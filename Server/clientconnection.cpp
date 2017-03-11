@@ -53,6 +53,7 @@ void ClientConnection::ProcessPacket(PacketBase* packet)
     else if ( packet->GetType() == PacketBase::PACKET_REGISTRATION_REQUEST)
     {
         PacketRegistrationRequest* registration_info = static_cast<PacketRegistrationRequest*>(packet);
+        PacketRegistrationResponse * registration_response = new PacketRegistrationResponse();
 
         Database* database = this->server->GetDatabaseConnection();
         Account* account = database->ReadAccount(registration_info->GetEmail());
@@ -60,22 +61,29 @@ void ClientConnection::ProcessPacket(PacketBase* packet)
         {
             // notify client that account already exists
             std::cout << "Account with email already exists: " << registration_info->GetEmail() << std::endl;
+            registration_response->SetResponse(PacketRegistrationResponse::RESPONSE_ACCOUNT_ALREADY_EXISTS);
         }
         else
         {
+
             try
             {
                 database->CreateAccount(registration_info->GetEmail(), registration_info->GetPassword());
 
                 // notify client that account was successfully created
                 std::cout << "Account with email was created: " << registration_info->GetEmail() << std::endl;
+                registration_response->SetResponse(PacketRegistrationResponse::RESPONSE_ACCOUNT_CREATED);
             }
             catch (DatabaseCreateException &ex)
             {
                 // notify client that account creation failed
                 std::cout << "Account creation with email failed: " << registration_info->GetEmail() << std::endl;
+                registration_response->SetResponse(PacketRegistrationResponse::RESPONSE_ERROR);
+
             }
         }
+        this->SendPacket(registration_response);
+        std::cout << "Sent response package with code: " << registration_response->GetResponse() << std::endl;
     }
     else if (packet->GetType() == PacketBase::PACKET_LOGIN_REQUEST)
     {

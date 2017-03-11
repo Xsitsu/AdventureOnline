@@ -42,6 +42,13 @@ public:
     virtual GuiScreen* MakeScreen();
 };
 
+class ScreenMakerAccountCreationResponseWait : public AbstractScreenMaker
+{
+public :
+    ScreenMakerAccountCreationResponseWait(Game * game) : AbstractScreenMaker(game) {}
+    virtual GuiScreen * MakeScreen();
+};
+
 
 class ScreenMakerLogin : public AbstractScreenMaker
 {

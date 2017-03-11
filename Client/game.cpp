@@ -152,6 +152,7 @@ void Game::Run()
                         }
                         else
                         {
+                            std::cout << "Received packet code: " << packet->GetType() << std::endl;
                             this->state->HandlePacket(packet);
                         }
                     }

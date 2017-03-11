@@ -90,6 +90,9 @@ PacketBase* PacketReader::ReadPacket(char* buffer, int bytes_read)
     case PacketBase::PACKET_REGISTRATION_REQUEST:
         packet = new PacketRegistrationRequest();
         break;
+    case PacketBase::PACKET_REGISTRATION_RESPONSE:
+        packet = new PacketRegistrationResponse();
+        break;
     case PacketBase::PACKET_LOGIN_REQUEST:
         packet = new PacketLoginRequest();
         break;
@@ -326,6 +329,25 @@ void PacketRegistrationRequest::SetPassword( string password )
 
 PacketRegistrationRequest::PacketRegistrationRequest(): PacketBase(PacketBase::PACKET_REGISTRATION_REQUEST), p_email(""), p_password(""), email_length(0), password_length(0){}
 
+PacketRegistrationResponse::PacketRegistrationResponse(): PacketBase(PacketBase::PACKET_REGISTRATION_RESPONSE) {}
+
+PacketRegistrationResponse::Response PacketRegistrationResponse::GetResponse() { return returnCode; }
+void PacketRegistrationResponse::SetResponse(PacketRegistrationResponse::Response val) { returnCode = val; }
+
+unsigned int PacketRegistrationResponse::Encode(char* buffer)
+{
+    PacketReader reader;
+    PacketBase::Encode(buffer);
+    reader.WriteByte(buffer, buffer_pos, static_cast<uint8_t>(returnCode));
+    return buffer_pos;
+}
+
+void PacketRegistrationResponse::Decode(char* buffer)
+{
+    PacketReader reader;
+    PacketBase::Decode(buffer);
+    returnCode = static_cast<Response>(reader.ReadByte(buffer, buffer_pos));
+}
 
 
 
