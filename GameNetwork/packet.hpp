@@ -5,7 +5,9 @@
 
 #include <stdint.h>
 #include <string>
+#include <vector>
 
+#include "character.hpp"
 #include "socket.hpp"
 
 using std::string;
@@ -27,7 +29,9 @@ public:
         PACKET_REGISTRATION_REQUEST,
         PACKET_REGISTRATION_RESPONSE,
         PACKET_LOGIN_REQUEST,
-        PACKET_LOGIN_RESPONSE
+        PACKET_LOGIN_RESPONSE,
+        PACKET_DATA_REQUEST,
+        PACKET_CHARACTER
     };
 
 protected:
@@ -259,5 +263,44 @@ public:
 
     virtual unsigned int Encode(char* buffer);
     virtual void Decode(char* buffer);
+};
+
+class DLL_EXPORT PacketDataRequest : public PacketBase
+{
+
+
+public:
+    enum DataType
+    {
+        USER_DATA,
+        USER_CHARACTERS_DATA,
+        CHARACTER_DATA
+    };
+    PacketDataRequest();
+
+    DataType GetRequest() { return request; }
+    void SetRequest(DataType val) { request = val; }
+
+    virtual unsigned int Encode(char* buffer);
+    virtual void Decode(char* buffer);
+
+
+
+protected:
+    DataType request;
+};
+
+class DLL_EXPORT PacketCharacter : public PacketBase
+{
+public:
+    PacketCharacter();
+
+    virtual unsigned int Encode(char* buffer);
+    virtual void Decode(char* buffer);
+
+    Character GetCharacters() { return character; }
+    void SetCharacters(Character val) { character = val; }
+protected:
+    Character character;
 };
 #endif // PACKET_HPP_INCLUDE

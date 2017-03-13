@@ -99,6 +99,12 @@ PacketBase* PacketReader::ReadPacket(char* buffer, int bytes_read)
     case PacketBase::PACKET_LOGIN_RESPONSE:
         packet = new PacketLoginResponse();
         break;
+    case PacketBase::PACKET_DATA_REQUEST:
+        packet = new PacketDataRequest();
+        break;
+    case PacketBase::PACKET_CHARACTER:
+        packet = new PacketCharacter();
+        break;
     default:
         //std::cout << "bad type: " << (unsigned int) type << std::endl;s
         break;
@@ -448,4 +454,44 @@ void PacketLoginResponse::Decode(char* buffer)
 
     PacketReader reader;
     this->response = static_cast<PacketLoginResponse::LoginResponse>(reader.ReadByte(buffer, this->buffer_pos));
+}
+
+unsigned int PacketDataRequest::Encode(char* buffer)
+{
+    this->buffer_pos = 0;
+    PacketBase::Encode(buffer);
+
+    PacketReader reader;
+    reader.WriteByte(buffer, this->buffer_pos, static_cast<uint8_t>(this->request));
+
+    return this->buffer_pos;
+}
+void PacketDataRequest::Decode(char* buffer)
+{
+    this->buffer_pos = 0;
+    PacketBase::Decode(buffer);
+    PacketReader reader;
+    this->request = static_cast<PacketDataRequest::DataType>(reader.ReadByte(buffer, this->buffer_pos));
+}
+PacketDataRequest::PacketDataRequest(): PacketBase(PacketBase::PACKET_DATA_REQUEST) {}
+
+PacketCharacter::PacketCharacter(): PacketBase(PacketBase::PACKET_CHARACTER) {}
+
+unsigned int PacketCharacter::Encode(char* buffer)
+{
+    PacketBase::Encode(buffer);
+    uint8_t maxhp;
+    uint8_t currenthp;
+    uint8_t strength;
+    uint8_t endurance;
+    uint8_t direction;
+    uint8_t position_x;
+    uint8_t position_y;
+    uint8_t name_length = character.GetName().size();
+    const char * name = character.GetName().c_str();
+
+}
+void PacketCharacter::Decode(char* buffer)
+{
+    PacketBase::Decode(buffer);
 }

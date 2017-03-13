@@ -21,6 +21,8 @@ protected:
 
     unsigned short health;
     unsigned short max_health;
+    unsigned short strength;
+    unsigned short endurance;
 
 public:
     virtual bool IsNPC() const = 0;
@@ -31,5 +33,16 @@ public:
     void Warp(Map* map, Vector2 coords);
     void Move(Vector2 coords);
 
+    void SetMaxHealth( unsigned short val) { max_health = val; }
+    void SetHealth( unsigned short val) { health = val; }
+    void SetStrength( unsigned short val ) { strength = val; }
+    void SetEndurance( unsigned short val ) { endurance = val; }
+    void SetDirection( DIRECTION val ) { direction = val; }
+
+    unsigned short GetMaxHealth() { return max_health; }
+    unsigned short GetHealth() { return health; }
+    unsigned short GetStrength() { return strength; }
+    unsigned short GetEndurance() { return endurance; }
+    DIRECTION GetDirection() { return direction; }
 };
 #endif // ACTOR_HPP_INCLUDE

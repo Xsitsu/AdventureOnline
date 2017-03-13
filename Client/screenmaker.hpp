@@ -5,6 +5,7 @@
 #include "guiframe.hpp"
 #include "guitextbutton.hpp"
 #include "guitextbox.hpp"
+#include "guiimageframe.h"
 
 #include "game.hpp"
 #include "observer.hpp"

@@ -126,6 +126,10 @@ void ClientConnection::ProcessPacket(PacketBase* packet)
 
         this->SendPacket(response);
     }
+    else if(packet->GetType() == PacketBase::PACKET_DATA_REQUEST)
+    {
+        this->SendPacket(packet);
+    }
 }
 
 void ClientConnection::TickPacketAcks()

@@ -1,4 +1,5 @@
 #include "gamestatecharacterview.hpp"
+#include "screenmaker.hpp"
 
 #include "gamestatequit.hpp"
 
@@ -22,6 +23,16 @@ void GameStateCharacterView::Exit()
 
 }
 
+void GameStateCharacterView::HandlePacket(PacketBase * packet)
+{
+    this->game->PopScreen();
+    this->game->PopScreen();
+    this->game->PopScreen();
+    ScreenMakerCharacterView maker(this->game);
+    GuiScreen* screen = maker.MakeScreen();
+
+    this->game->PushScreen(screen);
+}
 void GameStateCharacterView::Tick()
 {
 

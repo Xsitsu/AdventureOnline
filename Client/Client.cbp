@@ -45,6 +45,12 @@
 			<Add directory=".." />
 			<Add directory="../allegro/include" />
 		</Compiler>
+		<Unit filename="Images/Asdfstuff-asdf-movie-30876901-200-200.jpg">
+			<Option compile="1" />
+		</Unit>
+		<Unit filename="Images/Asdfstuff-asdf-movie-30876901-200-200.png">
+			<Option compile="1" />
+		</Unit>
 		<Unit filename="bitmapservice.cpp" />
 		<Unit filename="bitmapservice.hpp" />
 		<Unit filename="client.cpp" />
@@ -77,6 +83,8 @@
 		<Unit filename="guibutton.hpp" />
 		<Unit filename="guiframe.cpp" />
 		<Unit filename="guiframe.hpp" />
+		<Unit filename="guiimageframe.cpp" />
+		<Unit filename="guiimageframe.h" />
 		<Unit filename="guiscreen.cpp" />
 		<Unit filename="guiscreen.hpp" />
 		<Unit filename="guiselectionservice.cpp" />

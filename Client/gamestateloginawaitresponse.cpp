@@ -25,12 +25,15 @@ void GameStateLoginAwaitResponse::HandlePacket(PacketBase* packet)
             this->game->PopScreen();
             this->game->PopScreen();
             this->game->PopScreen();
+//            PacketDataRequest * datarequest = new PacketDataRequest();
+//            datarequest->SetRequest(PacketDataRequest::USER_CHARACTERS_DATA);
 
             ScreenMakerCharacterView maker(this->game);
             GuiScreen* screen = maker.MakeScreen();
 
             this->game->PushScreen(screen);
             this->game->ChangeState(new GameStateCharacterView(this->game));
+
         }
         else if (res == PacketLoginResponse::LOGINRESPONSE_FAIL)
         {
