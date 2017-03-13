@@ -29,3 +29,13 @@ void Actor::Move(Vector2 coords)
 {
     this->map_position = coords;
 }
+
+Vector2 Actor::GetPosition() const
+{
+    return this->map_position;
+}
+
+Actor::DIRECTION Actor::GetDirection() const
+{
+    return this->direction;
+}

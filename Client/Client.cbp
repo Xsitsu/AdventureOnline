@@ -65,6 +65,8 @@
 		<Unit filename="gamestateinit.hpp" />
 		<Unit filename="gamestateloginawaitresponse.cpp" />
 		<Unit filename="gamestateloginawaitresponse.hpp" />
+		<Unit filename="gamestateplaying.cpp" />
+		<Unit filename="gamestateplaying.hpp" />
 		<Unit filename="gamestatequit.cpp" />
 		<Unit filename="gamestatequit.hpp" />
 		<Unit filename="gamestateserverconnect.cpp" />

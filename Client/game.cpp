@@ -8,7 +8,7 @@
 
 Game* Game::instance = NULL;
 
-Game::Game() : display(NULL), event_queue(NULL), timer(NULL), state(NULL), client(NULL)
+Game::Game() : display(NULL), event_queue(NULL), timer(NULL), state(NULL), client(NULL), current_character(nullptr), current_map(nullptr)
 {
 
 }

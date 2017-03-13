@@ -31,5 +31,8 @@ public:
     void Warp(Map* map, Vector2 coords);
     void Move(Vector2 coords);
 
+    Vector2 GetPosition() const;
+    DIRECTION GetDirection() const;
+
 };
 #endif // ACTOR_HPP_INCLUDE
