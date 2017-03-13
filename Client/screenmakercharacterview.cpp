@@ -3,44 +3,76 @@
 
 #include "gamestatecharacterview.hpp"
 #include "gamestatetitle.hpp"
+#include "gamestateplaying.hpp"
 
-
-class LogoutEvent : public GameEventBase
+namespace CharacterViewScreenListeners
 {
-public:
-    LogoutEvent(Game* game) : GameEventBase(game) {}
-
-    virtual void HandleEvent()
+    class LogoutEvent : public GameEventBase
     {
-        this->game->PopScreen();
+    public:
+        LogoutEvent(Game* game) : GameEventBase(game) {}
 
-        ScreenMakerTitle maker(this->game);
-        GuiScreen* screen = maker.MakeScreen();
-        this->game->PushScreen(screen);
-        this->game->ChangeState(new GameStateTitle(this->game));
-    }
-};
+        virtual void HandleEvent()
+        {
+            this->game->PopScreen();
 
-class LogoutListener : public ListenerBase<GuiButtonArgs*>
-{
-protected:
-    Game* game;
+            ScreenMakerTitle maker(this->game);
+            GuiScreen* screen = maker.MakeScreen();
+            this->game->PushScreen(screen);
+            this->game->ChangeState(new GameStateTitle(this->game));
+        }
+    };
 
-public:
-    LogoutListener(Game* game) : game(game) {}
-
-    virtual void Notify(GuiButtonArgs*& args) const
+    class LogoutListener : public ListenerBase<GuiButtonArgs*>
     {
-        this->game->RegisterEventToQueue(new LogoutEvent(this->game));
-    }
-};
+    protected:
+        Game* game;
+
+    public:
+        LogoutListener(Game* game) : game(game) {}
+
+        virtual void Notify(GuiButtonArgs*& args) const
+        {
+            this->game->RegisterEventToQueue(new LogoutEvent(this->game));
+        }
+    };
+
+
+    class LoginEvent : public GameEventBase
+    {
+    public:
+        LoginEvent(Game* game) : GameEventBase(game) {}
+
+        virtual void HandleEvent()
+        {
+            this->game->PopScreen();
+
+            //ScreenMakerPlaying maker(this->game);
+            //GuiScreen* screen = maker.MakeScreen();
+            //this->game->PushScreen(screen);
+            this->game->ChangeState(new GameStatePlaying(this->game));
+        }
+    };
+
+    class LoginListener : public ListenerBase<GuiButtonArgs*>
+    {
+    protected:
+        Game* game;
+
+    public:
+        LoginListener(Game* game) : game(game) {}
+
+        virtual void Notify(GuiButtonArgs*& args) const
+        {
+            this->game->RegisterEventToQueue(new LoginEvent(this->game));
+        }
+    };
+}
 
 
 
 
-
-
-GuiFrame* CreateCharacterFrame(ALLEGRO_FONT* font)
+GuiFrame* CreateCharacterFrame(ALLEGRO_FONT* font, CharacterViewScreenListeners::LoginListener* login_listener)
 {
     GuiFrame* base = new GuiFrame(Vector2(345, 180), Vector2(0, 0));
     base->SetBackgroundColor(Color3(124, 57, 21));
@@ -66,6 +98,8 @@ GuiFrame* CreateCharacterFrame(ALLEGRO_FONT* font)
     login_button->SetTextFont(font);
     login_button->SetTextAlign(GuiTextButton::ALIGN_CENTER);
 
+    login_button->RegisterOnClick(login_listener);
+
     GuiTextButton* delete_button = new GuiTextButton(button_size, start + Vector2(button_size.x + 10, 0));
     delete_button->SetText("Delete");
     delete_button->SetTextColor(color_white);
@@ -87,7 +121,8 @@ GuiFrame* CreateCharacterFrame(ALLEGRO_FONT* font)
 
 GuiScreen* ScreenMakerCharacterView::MakeScreen()
 {
-    LogoutListener* logout_listener = new LogoutListener(this->game);
+    CharacterViewScreenListeners::LogoutListener* logout_listener = new CharacterViewScreenListeners::LogoutListener(this->game);
+    CharacterViewScreenListeners::LoginListener* login_listener = new CharacterViewScreenListeners::LoginListener(this->game);
 
 
     GuiFrame* base_frame;
@@ -97,10 +132,10 @@ GuiScreen* ScreenMakerCharacterView::MakeScreen()
 
     ALLEGRO_FONT* font = FontService::Instance()->GetFont("title_button");
 
-    GuiFrame* character_frame = CreateCharacterFrame(font);
+    GuiFrame* character_frame = CreateCharacterFrame(font, login_listener);
     character_frame->SetPosition(Vector2(260, 20));
 
-    GuiFrame* character_frame2 = CreateCharacterFrame(font);
+    GuiFrame* character_frame2 = CreateCharacterFrame(font, login_listener);
     character_frame2->SetPosition(Vector2(260, 20 + 180 + 10));
 
 
@@ -131,6 +166,7 @@ GuiScreen* ScreenMakerCharacterView::MakeScreen()
 
     GuiScreen* screen = new GuiScreen(base_frame);
     screen->RegisterListener(logout_listener);
+    screen->RegisterListener(login_listener);
 
     return screen;
 }

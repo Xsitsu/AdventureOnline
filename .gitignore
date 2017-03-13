@@ -10,3 +10,5 @@ allegro.log
 *.depend
 
 Makefile
+
+resource

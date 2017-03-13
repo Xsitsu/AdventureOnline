@@ -1,5 +1,8 @@
 #include "gamestateplaying.hpp"
 
+#include <string>
+#include <fstream>
+
 #include "allegro5/allegro_image.h"
 
 #include "bitmapservice.hpp"
@@ -12,11 +15,23 @@ GameStatePlaying::GameStatePlaying(Game* game) : GameStateBase(game)
 void GameStatePlaying::Enter()
 {
     this->game->current_map = new Map();
+    this->game->current_map->LoadMap(1);
+
+    this->game->current_character = new Character();
+    this->game->current_character->Warp(this->game->current_map, Vector2(10, 10));
+
+
+    //ALLEGRO_BITMAP* tile_bitmap = al_load_bitmap("resource\image\Bitmap_19.bmp");
+    ALLEGRO_BITMAP* tile_bitmap = al_load_bitmap("C:/Users/Jacob/Documents/GitHub/Adventure Online/Client/bin/Debug/resource/image/tile.bmp");
+
+    al_convert_mask_to_alpha(tile_bitmap, al_map_rgb(0, 0, 0));
+    BitmapService::Instance()->RegisterBitmap("tile_1", tile_bitmap);
 }
 
 void GameStatePlaying::Exit()
 {
     delete this->game->current_map;
+    this->game->current_map = nullptr;
 }
 
 void GameStatePlaying::Tick()
@@ -31,20 +46,37 @@ void GameStatePlaying::Render()
     Map* current_map = this->game->current_map;
 
     // Draw map
-    for (int x = current_pos.x - 4; x < current_pos.x + 4; x++)
+
+    Vector2 step_x = Vector2(64, 32)/2;
+    Vector2 step_y = Vector2(-64, 32)/2;
+
+    Vector2 base_draw = Vector2((640 - 64)/2, (480 - 32)/2);
+
+    for (int x = -8; x < 8; x++)
     {
-        for (int y = current_pos.y - 4; y < current_pos.y + 4; y++)
+        for (int y = -8; y < 8; y++)
         {
-            if (current_map->CoordsAreInBounds(Vector2(x, y)))
+            Vector2 targ_coords = current_pos + Vector2(x, y);
+            if (current_map->CoordsAreInBounds(targ_coords))
             {
-                MapTile& tile = current_map->GetTile(Vector2(x, y));
+                MapTile& tile = current_map->GetTile(targ_coords);
 
                 std::string bitmap_name = "tile_";
-                bitmap_name += tile.GetSpriteId();
-                ALLEGRO_BITMAP* tile_bitmap = BitmapService::Instance()->GetBitmap(bitmap_name);
-                if (tile_bitmap)
+                //bitmap_name += tile.GetSpriteId();
+                bitmap_name += "1";
+
+                try
                 {
-                    al_draw_bitmap(tile_bitmap, 0, 0, 0);
+                    ALLEGRO_BITMAP* tile_bitmap = BitmapService::Instance()->GetBitmap(bitmap_name);
+
+                    Vector2 draw_pos = base_draw + (step_x * x) + (step_y * y);
+
+
+                    al_draw_bitmap(tile_bitmap, draw_pos.x, draw_pos.y, 0);
+                }
+                catch (BitmapNotLoadedException &e)
+                {
+
                 }
             }
         }
@@ -72,7 +104,37 @@ void GameStatePlaying::HandlePacket(PacketBase* packet)
 
 void GameStatePlaying::HandleKeyDown(const ALLEGRO_KEYBOARD_EVENT& keyboard)
 {
+    Vector2 adder;
+    if (keyboard.keycode == ALLEGRO_KEY_UP)
+    {
+        adder = Vector2(0, -1);
+    }
+    else if (keyboard.keycode == ALLEGRO_KEY_DOWN)
+    {
+        adder = Vector2(0, 1);
+    }
+    else if (keyboard.keycode == ALLEGRO_KEY_LEFT)
+    {
+        adder = Vector2(-1, 0);
+    }
+    else if (keyboard.keycode == ALLEGRO_KEY_RIGHT)
+    {
+        adder = Vector2(1, 0);
+    }
+    else
+    {
+        return;
+    }
 
+    Map* cur_map = this->game->current_map;
+    Character* cur_char = this->game->current_character;
+
+    Vector2 targ_pos = cur_char->GetPosition() + adder;
+    if (cur_map->CoordsAreInBounds(targ_pos))
+    {
+        cur_char->Warp(cur_map, targ_pos);
+        std::cout << "Moved to: " << targ_pos.x << "/" << targ_pos.y << std::endl;
+    }
 }
 
 void GameStatePlaying::HandleKeyUp(const ALLEGRO_KEYBOARD_EVENT& keyboard)
@@ -82,18 +144,24 @@ void GameStatePlaying::HandleKeyUp(const ALLEGRO_KEYBOARD_EVENT& keyboard)
 
 void GameStatePlaying::HandleMouseMove(const ALLEGRO_MOUSE_EVENT& mouse)
 {
+    if (true) return;
+
     Vector2 pos(mouse.x, mouse.y);
     this->game->GetCurrentScreen()->HandleMouseMove(pos);
 }
 
 void GameStatePlaying::HandleMouseDown(const ALLEGRO_MOUSE_EVENT& mouse)
 {
+    if (true) return;
+
     Vector2 pos(mouse.x, mouse.y);
     this->game->GetCurrentScreen()->HandleMouseDown(pos);
 }
 
 void GameStatePlaying::HandleMouseUp(const ALLEGRO_MOUSE_EVENT& mouse)
 {
+    if (true) return;
+
     Vector2 pos(mouse.x, mouse.y);
     this->game->GetCurrentScreen()->HandleMouseUp(pos);
 }

@@ -13,11 +13,31 @@ Map::~Map()
     }
 }
 
+void Map::DebugTestLoad()
+{
+    this->size = Vector2(20, 20);
+
+    this->tiles = new MapTile*[this->size.x];
+    for (int x = 0; x < this->size.x; x++)
+    {
+        this->tiles[x] = new MapTile[this->size.y];
+
+        for (int y = 0; y < this->size.y; y++)
+        {
+            MapTile& tile = this->tiles[x][y];
+            tile.SetSpriteId(1);
+            tile.SetMovementPermissions(MapTile::MOVEPERM_NONE);
+        }
+    }
+}
+
 void Map::LoadMap(int map_id)
 {
     if (!this->IsMapLoaded())
     {
         // Do Load
+
+        this->DebugTestLoad();
 
         this->is_loaded = true;
         this->map_id = map_id;

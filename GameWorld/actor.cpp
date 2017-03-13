@@ -18,7 +18,10 @@ void Actor::Warp(Map* map, Vector2 coords)
 {
     if (this->current_map != map)
     {
-        this->ExitMap(this->current_map);
+        if (this->current_map)
+        {
+            this->ExitMap(this->current_map);
+        }
         this->EnterMap(map);
     }
 

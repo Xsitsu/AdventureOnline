@@ -23,6 +23,8 @@ protected:
     std::list<Actor*> actors;
 
 
+    void DebugTestLoad();
+
 public:
     Map();
     ~Map();
