@@ -8,20 +8,21 @@
 #include "actor.hpp"
 #include "maptile.hpp"
 
+#include "GameUtil/vector2.hpp"
+
 class DLL_EXPORT Map
 {
 protected:
     MapTile** tiles;
 
-    unsigned short size_x;
-    unsigned short size_y;
+    Vector2 size;
 
     std::list<Actor*> actors;
 
 
 public:
-    bool CoordsAreInBounds(unsigned short x, unsigned short y) const;
-    MapTile& GetTile(unsigned short x, unsigned short y);
+    bool CoordsAreInBounds(Vector2 coords) const;
+    MapTile& GetTile(Vector2 coords);
 
     void HandleActorEnter(Actor* actor);
     void HandleActorLeave(Actor* actor);

@@ -1,19 +1,19 @@
 #include "map.hpp"
 
-bool Map::CoordsAreInBounds(unsigned short x, unsigned short y) const
+bool Map::CoordsAreInBounds(Vector2 coords) const
 {
-    return (x >= 0 && y >= 0 && x < this->size_x && y < this->size_y);
+    return (coords.x >= 0 && coords.y >= 0 && coords.x < this->size.x && coords.y < this->size.y);
 }
 
-MapTile& Map::GetTile(unsigned short x, unsigned short y)
+MapTile& Map::GetTile(Vector2 coords)
 {
-    if (!this->CoordsAreInBounds(x, y))
+    if (!this->CoordsAreInBounds(coords))
     {
         // ToDo: Replace with valid exception.
         throw "break";
     }
 
-    return this->tiles[x][y];
+    return this->tiles[coords.x][coords.y];
 }
 
 void Map::HandleActorEnter(Actor* actor)
