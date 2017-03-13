@@ -25,6 +25,8 @@ void GameStateCharacterView::Exit()
 
 void GameStateCharacterView::HandlePacket(PacketBase * packet)
 {
+    PacketCharacter* character = static_cast<PacketCharacter*>(packet);
+    std::cout << "PacketCharacter Recieved:\t" << character->GetCharacters().GetName() << std::endl;
     this->game->PopScreen();
     this->game->PopScreen();
     this->game->PopScreen();

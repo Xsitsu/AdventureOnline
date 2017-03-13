@@ -17,6 +17,7 @@
 					<Add option="-Wall" />
 					<Add option="-g" />
 					<Add option="-DBUILD_DLL" />
+					<Add directory="../GameUtil" />
 				</Compiler>
 				<Linker>
 					<Add library="user32" />

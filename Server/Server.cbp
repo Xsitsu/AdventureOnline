@@ -15,6 +15,9 @@
 					<Add option="-g" />
 					<Add directory="include" />
 					<Add directory="../Server" />
+					<Add directory="../GameUtil" />
+					<Add directory="../GameWorld" />
+					<Add directory="../GameNetwork" />
 				</Compiler>
 				<Linker>
 					<Add library="../GameNetwork/bin/Debug/libGameNetwork.a" />

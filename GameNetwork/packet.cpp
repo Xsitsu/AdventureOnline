@@ -479,19 +479,53 @@ PacketCharacter::PacketCharacter(): PacketBase(PacketBase::PACKET_CHARACTER) {}
 
 unsigned int PacketCharacter::Encode(char* buffer)
 {
+    PacketReader reader;
     PacketBase::Encode(buffer);
-    uint8_t maxhp;
-    uint8_t currenthp;
-    uint8_t strength;
-    uint8_t endurance;
-    uint8_t direction;
-    uint8_t position_x;
-    uint8_t position_y;
+
     uint8_t name_length = character.GetName().size();
     const char * name = character.GetName().c_str();
 
+    reader.WriteByte(buffer,buffer_pos, character.GetMaxHealth());
+    reader.WriteByte(buffer,buffer_pos, character.GetHealth());
+    reader.WriteByte(buffer,buffer_pos, character.GetStrength());
+    reader.WriteByte(buffer,buffer_pos, character.GetEndurance());
+    reader.WriteByte(buffer,buffer_pos, character.GetDirection());
+    reader.WriteByte(buffer,buffer_pos, static_cast<uint8_t>(character.GetDirection()));
+    reader.WriteByte(buffer,buffer_pos, character.GetPosition().x);
+    reader.WriteByte(buffer,buffer_pos, character.GetPosition().y);
+    reader.WriteByte(buffer,buffer_pos, name_length);
+    for(int i =0; i < name_length; i++)
+    {
+        reader.WriteByte(buffer, buffer_pos, name[i]);
+    }
+
+    return buffer_pos;
 }
 void PacketCharacter::Decode(char* buffer)
 {
+    Vector2 position;
+    char * name;
+    uint8_t name_length;
+
+    PacketReader reader;
     PacketBase::Decode(buffer);
+    character.SetMaxHealth( reader.ReadByte(buffer, buffer_pos) );
+    character.SetHealth( reader.ReadByte(buffer, buffer_pos) );
+    character.SetStrength( reader.ReadByte(buffer, buffer_pos) );
+    character.SetEndurance( reader.ReadByte(buffer, buffer_pos) );
+    character.SetDirection( static_cast<Actor::DIRECTION>(reader.ReadByte(buffer, buffer_pos)) );
+    position.x = reader.ReadByte(buffer, buffer_pos);
+    position.y = reader.ReadByte(buffer, buffer_pos);
+    character.Move(position);
+    name_length = reader.ReadByte(buffer, buffer_pos);
+    name = new char[name_length+1];
+
+    for(int i; i < name_length; i++)
+    {
+        name[i] = reader.ReadByte(buffer, buffer_pos);
+    }
+    name[name_length] = 0;
+
+    character.SetName(name);
+    delete[] name;
 }

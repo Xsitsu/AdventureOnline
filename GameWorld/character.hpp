@@ -11,6 +11,10 @@ protected:
     std::string name;
 
 public:
+    Character();
+    ~Character();
+    Character(const Character&);
+
     virtual bool IsNPC() const { return false; }
     virtual bool IsPlayer() const { return true; }
 

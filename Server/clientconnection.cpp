@@ -1,6 +1,8 @@
 #include "clientconnection.hpp"
 
 #include <iostream>
+#include <vector>
+using std::vector;
 
 ClientConnection::ClientConnection(Server* server, Address address, unsigned int connection_id) :
     server(server), client_address(address), connection_id(connection_id), packet_sequence(0), account(NULL)
@@ -128,7 +130,18 @@ void ClientConnection::ProcessPacket(PacketBase* packet)
     }
     else if(packet->GetType() == PacketBase::PACKET_DATA_REQUEST)
     {
-        this->SendPacket(packet);
+        Database * database = this->server->GetDatabaseConnection();
+        PacketCharacter * returnCharacter = new PacketCharacter();
+        Character PC;
+        vector<int> characters = database->ReadePlayerCharacters(account->GetEmail());
+        vector<int>::iterator it = characters.begin();
+        while(it < characters.end())
+        {
+            returnCharacter->SetCharacters(database->ReadCharacterInfo( *it++) );
+            this->SendPacket(returnCharacter);
+            returnCharacter = new PacketCharacter();
+        }
+
     }
 }
 
