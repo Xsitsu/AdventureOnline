@@ -11,7 +11,7 @@
 
 class GameStateBase;
 
-#include "GameShared/packet.hpp"
+#include "GameNetwork/packet.hpp"
 #include "client.hpp"
 #include "gamestate.hpp"
 
@@ -30,6 +30,8 @@ friend class GameStateTitle;
 friend class GameStateQuit;
 friend class GameStateCharacterView;
 friend class GameStateAccountCreation;
+friend class GameStateLoginAwaitResponse;
+friend class GameStateAccountCreationAwaitResponse;
 
 protected: // Singleton stuff
     static Game* instance;
@@ -70,7 +72,6 @@ protected:
     std::list<GameEventBase*> game_event_queue;
 
 
-    GuiScreen* GetCurrentScreen();
     void DrawScreens();
 
 
@@ -84,6 +85,7 @@ public:
     void ChangeState(GameStateBase* state);
     void PushScreen(GuiScreen* screen);
     void PopScreen();
+    GuiScreen* GetCurrentScreen();
 
     bool IsClientConnected() { return this->client->IsConnected(); }
     void SendPacket(PacketBase* packet) { this->client->SendPacket(packet); }

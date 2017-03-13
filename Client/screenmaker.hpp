@@ -20,6 +20,13 @@ public:
 };
 
 
+class ScreenMakerEmpty : public AbstractScreenMaker
+{
+public:
+    ScreenMakerEmpty(Game* game) : AbstractScreenMaker(game) {}
+    virtual GuiScreen* MakeScreen();
+};
+
 class ScreenMakerTitle : public AbstractScreenMaker
 {
 public:
@@ -33,6 +40,13 @@ class ScreenMakerAccountCreation : public AbstractScreenMaker
 public:
     ScreenMakerAccountCreation(Game* game) : AbstractScreenMaker(game) {}
     virtual GuiScreen* MakeScreen();
+};
+
+class ScreenMakerAccountCreationResponseWait : public AbstractScreenMaker
+{
+public :
+    ScreenMakerAccountCreationResponseWait(Game * game) : AbstractScreenMaker(game) {}
+    virtual GuiScreen * MakeScreen();
 };
 
 

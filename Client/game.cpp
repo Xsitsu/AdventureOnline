@@ -152,6 +152,7 @@ void Game::Run()
                         }
                         else
                         {
+                            std::cout << "Received packet code: " << packet->GetType() << std::endl;
                             this->state->HandlePacket(packet);
                         }
                     }
@@ -250,7 +251,7 @@ void Game::Cleanup()
 void Game::PushScreen(GuiScreen* screen)
 {
     this->screen_stack.push_back(screen);
-    GuiSelectionService::Instance()->HandleCurrentScreenChanged();
+    GuiSelectionService::Instance()->HandleScreenPush();
 }
 
 void Game::PopScreen()
@@ -261,7 +262,7 @@ void Game::PopScreen()
     this->screen_stack.pop_back();
     delete screen;
 
-    GuiSelectionService::Instance()->HandleCurrentScreenChanged();
+    GuiSelectionService::Instance()->HandleScreenPop();
 }
 
 void Game::DrawScreens()

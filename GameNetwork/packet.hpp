@@ -25,7 +25,9 @@ public:
         PACKET_PING,
         PACKET_PONG,
         PACKET_REGISTRATION_REQUEST,
-        PACKET_REGISTRATION_RESPONSE
+        PACKET_REGISTRATION_RESPONSE,
+        PACKET_LOGIN_REQUEST,
+        PACKET_LOGIN_RESPONSE
     };
 
 protected:
@@ -171,20 +173,89 @@ public:
 class DLL_EXPORT PacketRegistrationRequest: public PacketBase
 {
 protected:
-    uint8_t email_length;
-    uint8_t password_length;
     std::string p_email;
     std::string p_password;
+    uint8_t email_length;
+    uint8_t password_length;
+
 
 
 public:
     PacketRegistrationRequest();
-    //PacketRegistrationRequest(std::string email, std::string password ){ p_User[0] = email; p_User[1] = password; }
 
     std::string GetEmail();
     std::string GetPassword();
     void SetEmail( string email );
     void SetPassword( string password );
+
+    virtual unsigned int Encode(char* buffer);
+    virtual void Decode(char* buffer);
+};
+
+
+class DLL_EXPORT PacketRegistrationResponse : public PacketBase
+{
+
+
+public:
+    enum Response
+    {
+        RESPONSE_ACCOUNT_CREATED,
+        RESPONSE_ACCOUNT_ALREADY_EXISTS,
+        RESPONSE_ERROR
+    };
+    PacketRegistrationResponse();
+
+    Response GetResponse();
+    void SetResponse(Response);
+
+    virtual unsigned int Encode(char* buffer);
+    virtual void Decode(char* buffer);
+
+
+
+protected:
+    Response returnCode;
+};
+
+class DLL_EXPORT PacketLoginRequest : public PacketBase
+{
+protected:
+    uint8_t email_length;
+    uint8_t password_length;
+    std::string email;
+    std::string password;
+
+public:
+    PacketLoginRequest();
+
+    std::string GetEmail() { return this->email; }
+    std::string GetPassword() { return this->password; }
+    void SetEmail(std::string email);
+    void SetPassword(std::string password);
+
+    virtual unsigned int Encode(char* buffer);
+    virtual void Decode(char* buffer);
+};
+
+
+class DLL_EXPORT PacketLoginResponse : public PacketBase
+{
+public:
+    enum LoginResponse
+    {
+        LOGINRESPONSE_SUCCESS,
+        LOGINRESPONSE_FAIL,
+        LOGINRESPONSE_ERROR
+    };
+protected:
+    LoginResponse response;
+
+public:
+    PacketLoginResponse();
+
+    void SetResponse(LoginResponse response) { this->response = response; }
+    LoginResponse GetResponse() { return this->response; }
 
     virtual unsigned int Encode(char* buffer);
     virtual void Decode(char* buffer);

@@ -17,7 +17,9 @@
 				</Compiler>
 				<Linker>
 					<Add library="../allegro/lib/liballegro-5.0.10-monolith-md-debug.a" />
-					<Add library="../GameShared/bin/Debug/libGameShared.a" />
+					<Add library="../GameNetwork/bin/Debug/libGameNetwork.a" />
+					<Add library="../GameWorld/bin/Debug/libGameWorld.a" />
+					<Add library="../GameUtil/bin/Debug/libGameUtil.a" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -31,7 +33,9 @@
 				<Linker>
 					<Add option="-s" />
 					<Add library="../allegro/lib/liballegro-5.0.10-monolith-md.a" />
-					<Add library="../GameShared/bin/Release/libGameShared.a" />
+					<Add library="../GameNetwork/bin/Release/libGameNetwork.a" />
+					<Add library="../GameWorld/bin/Release/libGameWorld.a" />
+					<Add library="../GameUtil/bin/Release/libGameUtil.a" />
 				</Linker>
 			</Target>
 		</Build>
@@ -53,10 +57,14 @@
 		<Unit filename="gamestate.hpp" />
 		<Unit filename="gamestateaccountcreation.cpp" />
 		<Unit filename="gamestateaccountcreation.hpp" />
+		<Unit filename="gamestateaccountcreationawaitresponse.cpp" />
+		<Unit filename="gamestateaccountcreationawaitresponse.hpp" />
 		<Unit filename="gamestatecharacterview.cpp" />
 		<Unit filename="gamestatecharacterview.hpp" />
 		<Unit filename="gamestateinit.cpp" />
 		<Unit filename="gamestateinit.hpp" />
+		<Unit filename="gamestateloginawaitresponse.cpp" />
+		<Unit filename="gamestateloginawaitresponse.hpp" />
 		<Unit filename="gamestatequit.cpp" />
 		<Unit filename="gamestatequit.hpp" />
 		<Unit filename="gamestateserverconnect.cpp" />
@@ -81,7 +89,9 @@
 		<Unit filename="observer.hpp" />
 		<Unit filename="screenmaker.hpp" />
 		<Unit filename="screenmakeraccountcreation.cpp" />
+		<Unit filename="screenmakeraccountcreationresponsewait.cpp" />
 		<Unit filename="screenmakercharacterview.cpp" />
+		<Unit filename="screenmakerempty.cpp" />
 		<Unit filename="screenmakerlogin.cpp" />
 		<Unit filename="screenmakertitle.cpp" />
 		<Extensions>

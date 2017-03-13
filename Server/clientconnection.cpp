@@ -53,6 +53,7 @@ void ClientConnection::ProcessPacket(PacketBase* packet)
     else if ( packet->GetType() == PacketBase::PACKET_REGISTRATION_REQUEST)
     {
         PacketRegistrationRequest* registration_info = static_cast<PacketRegistrationRequest*>(packet);
+        PacketRegistrationResponse * registration_response = new PacketRegistrationResponse();
 
         Database* database = this->server->GetDatabaseConnection();
         Account* account = database->ReadAccount(registration_info->GetEmail());
@@ -60,22 +61,70 @@ void ClientConnection::ProcessPacket(PacketBase* packet)
         {
             // notify client that account already exists
             std::cout << "Account with email already exists: " << registration_info->GetEmail() << std::endl;
+            registration_response->SetResponse(PacketRegistrationResponse::RESPONSE_ACCOUNT_ALREADY_EXISTS);
         }
         else
         {
+
             try
             {
                 database->CreateAccount(registration_info->GetEmail(), registration_info->GetPassword());
 
                 // notify client that account was successfully created
                 std::cout << "Account with email was created: " << registration_info->GetEmail() << std::endl;
+                registration_response->SetResponse(PacketRegistrationResponse::RESPONSE_ACCOUNT_CREATED);
             }
             catch (DatabaseCreateException &ex)
             {
                 // notify client that account creation failed
                 std::cout << "Account creation with email failed: " << registration_info->GetEmail() << std::endl;
+                registration_response->SetResponse(PacketRegistrationResponse::RESPONSE_ERROR);
+
             }
         }
+        this->SendPacket(registration_response);
+        std::cout << "Sent response package with code: " << registration_response->GetResponse() << std::endl;
+    }
+    else if (packet->GetType() == PacketBase::PACKET_LOGIN_REQUEST)
+    {
+        PacketLoginRequest* login_request = static_cast<PacketLoginRequest*>(packet);
+        Database* database = this->server->GetDatabaseConnection();
+        Account* account = nullptr;
+
+        bool did_login = false;
+        bool was_error = false;
+
+        try
+        {
+            account = database->ReadAccount(login_request->GetEmail());
+            if (account)
+            {
+                did_login = (account->GetHash() == login_request->GetPassword());
+            }
+        }
+        catch (DatabaseReadException &ex)
+        {
+            was_error = true;
+        }
+
+        PacketLoginResponse* response = new PacketLoginResponse();
+        if (did_login)
+        {
+            response->SetResponse(PacketLoginResponse::LOGINRESPONSE_SUCCESS);
+            this->account = account;
+
+            std::cout << "Client[" << this->connection_id  << "] logged in as account: " << account->GetEmail() << std::endl;
+        }
+        else if (was_error)
+        {
+            response->SetResponse(PacketLoginResponse::LOGINRESPONSE_ERROR);
+        }
+        else
+        {
+            response->SetResponse(PacketLoginResponse::LOGINRESPONSE_FAIL);
+        }
+
+        this->SendPacket(response);
     }
 }
 

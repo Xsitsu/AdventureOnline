@@ -4,13 +4,13 @@
 #include <ctime>
 #include <list>
 
-#include "GameShared/socket.hpp"
-#include "GameShared/packet.hpp"
-#include "GameShared/packetacklist.hpp"
+#include "GameNetwork/socket.hpp"
+#include "GameNetwork/packet.hpp"
+#include "GameNetwork/packetacklist.hpp"
 
 class Client
 {
-    const int CONNECTION_TIMEOUT = 5;
+    const int CONNECTION_TIMEOUT = 240;
 
 protected:
     bool is_connected;

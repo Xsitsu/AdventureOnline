@@ -1,15 +1,21 @@
 #include "gamestateaccountcreation.hpp"
+#include "screenmaker.hpp"
+#include "gamestatetitle.hpp"
 
 GameStateAccountCreation::GameStateAccountCreation(Game* game) : GameStateBase(game)
 {
 
 }
 
+
 GameStateAccountCreation::~GameStateAccountCreation()
 {
 
 }
+void GameStateAccountCreation::HandlePacket(PacketBase* packet)
+{
 
+}
 void GameStateAccountCreation::Enter()
 {
 

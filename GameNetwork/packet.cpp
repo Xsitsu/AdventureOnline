@@ -90,6 +90,15 @@ PacketBase* PacketReader::ReadPacket(char* buffer, int bytes_read)
     case PacketBase::PACKET_REGISTRATION_REQUEST:
         packet = new PacketRegistrationRequest();
         break;
+    case PacketBase::PACKET_REGISTRATION_RESPONSE:
+        packet = new PacketRegistrationResponse();
+        break;
+    case PacketBase::PACKET_LOGIN_REQUEST:
+        packet = new PacketLoginRequest();
+        break;
+    case PacketBase::PACKET_LOGIN_RESPONSE:
+        packet = new PacketLoginResponse();
+        break;
     default:
         //std::cout << "bad type: " << (unsigned int) type << std::endl;s
         break;
@@ -291,6 +300,9 @@ void PacketRegistrationRequest::Decode(char* buffer)
 
     this->SetEmail(email);
     this->SetPassword(pass);
+
+    delete[] email;
+    delete[] pass;
 }
 
 string PacketRegistrationRequest::GetEmail()
@@ -316,3 +328,124 @@ void PacketRegistrationRequest::SetPassword( string password )
 }
 
 PacketRegistrationRequest::PacketRegistrationRequest(): PacketBase(PacketBase::PACKET_REGISTRATION_REQUEST), p_email(""), p_password(""), email_length(0), password_length(0){}
+
+PacketRegistrationResponse::PacketRegistrationResponse(): PacketBase(PacketBase::PACKET_REGISTRATION_RESPONSE) {}
+
+PacketRegistrationResponse::Response PacketRegistrationResponse::GetResponse() { return returnCode; }
+void PacketRegistrationResponse::SetResponse(PacketRegistrationResponse::Response val) { returnCode = val; }
+
+unsigned int PacketRegistrationResponse::Encode(char* buffer)
+{
+    PacketReader reader;
+    PacketBase::Encode(buffer);
+    reader.WriteByte(buffer, buffer_pos, static_cast<uint8_t>(returnCode));
+    return buffer_pos;
+}
+
+void PacketRegistrationResponse::Decode(char* buffer)
+{
+    PacketReader reader;
+    PacketBase::Decode(buffer);
+    returnCode = static_cast<Response>(reader.ReadByte(buffer, buffer_pos));
+}
+
+
+
+PacketLoginRequest::PacketLoginRequest() : PacketBase(PacketBase::PACKET_LOGIN_REQUEST)
+{
+
+}
+
+void PacketLoginRequest::SetEmail(std::string email)
+{
+    this->email = email;
+    this->email_length = email.size();
+}
+
+void PacketLoginRequest::SetPassword(std::string password)
+{
+    this->password = password;
+    this->password_length = password.size();
+}
+
+unsigned int PacketLoginRequest::Encode(char* buffer)
+{
+    PacketBase::Encode(buffer);
+
+    PacketReader reader;
+
+    const char* email = this->email.c_str();
+    const char* password = this->password.c_str();
+
+    reader.WriteByte(buffer, this->buffer_pos, this->email_length);
+    reader.WriteByte(buffer, this->buffer_pos, this->password_length);
+
+    for (uint8_t c = 0; c < this->email_length ; c++)
+    {
+        reader.WriteByte(buffer, this->buffer_pos, email[c]);
+    }
+
+    for (uint8_t c = 0; c < this->password_length ; c++)
+    {
+        reader.WriteByte(buffer, this->buffer_pos, password[c]);
+    }
+
+    return this->buffer_pos;
+}
+
+void PacketLoginRequest::Decode(char* buffer)
+{
+    PacketBase::Decode(buffer);
+
+    PacketReader reader;
+
+    uint8_t email_length = reader.ReadByte(buffer, buffer_pos);
+    uint8_t password_length = reader.ReadByte(buffer, buffer_pos);
+
+    char* email = new char[email_length+1];
+    char* pass = new char [password_length+1];
+
+    for(int i = 0; i < email_length; i++)
+    {
+        email[i] = static_cast<char>(reader.ReadByte(buffer, this->buffer_pos));
+    }
+    email[email_length] = 0;
+
+    for(int i = 0; i < password_length; i++)
+    {
+        pass[i] = static_cast<char>(reader.ReadByte(buffer, this->buffer_pos));
+    }
+    pass[password_length] = 0;
+
+    this->SetEmail(email);
+    this->SetPassword(pass);
+
+    delete[] email;
+    delete[] pass;
+}
+
+
+
+
+PacketLoginResponse::PacketLoginResponse() : PacketBase(PacketBase::PACKET_LOGIN_RESPONSE), response(PacketLoginResponse::LOGINRESPONSE_FAIL)
+{
+
+}
+
+unsigned int PacketLoginResponse::Encode(char* buffer)
+{
+    PacketBase::Encode(buffer);
+
+    PacketReader reader;
+    reader.WriteByte(buffer, this->buffer_pos, static_cast<uint8_t>(this->response));
+
+    return this->buffer_pos;
+}
+
+void PacketLoginResponse::Decode(char* buffer)
+{
+    PacketBase::Decode(buffer);
+
+    PacketReader reader;
+    this->response = static_cast<PacketLoginResponse::LoginResponse>(reader.ReadByte(buffer, this->buffer_pos));
+}

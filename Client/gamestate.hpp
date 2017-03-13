@@ -7,7 +7,7 @@
 
 class Game;
 
-#include "GameShared/packet.hpp"
+#include "GameNetwork/packet.hpp"
 
 #include "game.hpp"
 
@@ -15,7 +15,7 @@ class Game;
 #include "guitextbutton.hpp"
 #include "guitextbox.hpp"
 #include "guiscreen.hpp"
-#include "GameShared/vector2.hpp"
+#include "GameUtil/vector2.hpp"
 
 #include "color3.hpp"
 

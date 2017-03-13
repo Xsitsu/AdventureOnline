@@ -5,6 +5,7 @@
 #include <sql.h>
 #include <sqlext.h>
 
+
 #include <exception>
 
 #include "account.hpp"
@@ -92,7 +93,7 @@ public:
 
 };
 
-class DataDoesNotExistException : public DatabaseException
+class DatabaseDataDoesNotExistException : public DatabaseException
 {
 protected:
 

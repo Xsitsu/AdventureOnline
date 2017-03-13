@@ -4,7 +4,7 @@
 #include <string>
 #include <list>
 
-#include "character.hpp"
+#include "GameWorld/character.hpp"
 
 class Account
 {
