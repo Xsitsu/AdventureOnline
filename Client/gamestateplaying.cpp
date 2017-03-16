@@ -52,9 +52,11 @@ void GameStatePlaying::Render()
 
     Vector2 base_draw = Vector2((640 - 64)/2, (480 - 32)/2);
 
-    for (int x = -8; x < 8; x++)
+    int range = 14;
+
+    for (int x = -range; x < range; x++)
     {
-        for (int y = -8; y < 8; y++)
+        for (int y = -range; y < range; y++)
         {
             Vector2 targ_coords = current_pos + Vector2(x, y);
             if (current_map->CoordsAreInBounds(targ_coords))
