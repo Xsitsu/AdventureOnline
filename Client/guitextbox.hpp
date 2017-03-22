@@ -20,6 +20,8 @@ protected:
 
     unsigned short cursor_position;
     bool is_selected;
+    int text_width;
+    int cursor_text_width;
 
     Observer<TextBoxSelectionArgs*> onSelect;
     Observer<TextBoxSelectionArgs*> onDeselect;
@@ -29,6 +31,9 @@ protected:
     void DoDeselect();
     void DoCharacterType(char c);
 
+    virtual void UpdateTextWidth();
+    virtual void UpdateCursorTextWidth();
+
 public:
     GuiTextBox();
     GuiTextBox(Vector2 size);
@@ -36,6 +41,7 @@ public:
     virtual ~GuiTextBox();
 
     virtual void SetText(std::string text);
+    virtual void SetTextFont(ALLEGRO_FONT* font);
 
     void RegisterOnSelect(ListenerBase<TextBoxSelectionArgs*>* listener);
     void RegisterOnDeselect(ListenerBase<TextBoxSelectionArgs*>* listener);
@@ -47,6 +53,7 @@ public:
     void AddTextCharacter(char c);
     void DoBackspace();
     void AddCursorPosition(int pos);
+    void SetCursorPosition(int pos);
 
 };
 

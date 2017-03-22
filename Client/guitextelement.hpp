@@ -35,16 +35,16 @@ public:
     virtual void SetText(std::string text);
 
     Color3 GetTextColor() const;
-    void SetTextColor(Color3 color);
+    virtual void SetTextColor(Color3 color);
 
     unsigned char GetTextAlpha() const;
-    void SetTextAlpha(unsigned char trans);
+    virtual void SetTextAlpha(unsigned char trans);
 
     TextAlign GetTextAlign() const;
-    void SetTextAlign(TextAlign align);
+    virtual void SetTextAlign(TextAlign align);
 
     ALLEGRO_FONT* GetTextFont() const;
-    void SetTextFont(ALLEGRO_FONT* font);
+    virtual void SetTextFont(ALLEGRO_FONT* font);
 };
 
 #endif // GUITEXTELEMENT_HPP_INCLUDE
