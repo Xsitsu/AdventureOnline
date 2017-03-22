@@ -84,7 +84,7 @@ void Database::CreateAccount(std::string email, std::string password)
     strcpy( email_str, email.c_str() );
     strcpy( salt_str, password.c_str() );           //needs to be replaced with salt string
     //strcpy( hash_str, email.c_str() );              //needs to be replaced with hash string
-    strcat( hash_str, password.c_str() );
+    strcpy( hash_str, password.c_str() );
 
     SQLRETURN localRetcode;
 
