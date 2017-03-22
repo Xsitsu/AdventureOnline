@@ -98,18 +98,18 @@ GuiScreen* ScreenMakerLogin::MakeScreen()
     Vector2 textbox_size = Vector2(base_size.x / 2, text_font->height + 4);
     int y_pos = 52;
 
-    GuiTextButton* email_label = new GuiTextButton(label_size, Vector2(0, y_pos));
+    GuiTextLabel* email_label = new GuiTextLabel(label_size, Vector2(0, y_pos));
     email_label->SetTextFont(text_font);
     email_label->SetText("Email:");
     email_label->SetTextColor(Color3(255, 255, 255));
-    email_label->SetTextAlign(GuiTextButton::ALIGN_RIGHT);
+    email_label->SetTextAlign(GuiTextLabel::ALIGN_RIGHT);
     email_label->SetBackgroundAlpha(0);
 
-    GuiTextButton* password_label = new GuiTextButton(label_size, Vector2(0, y_pos + label_size.y + 4));
+    GuiTextLabel* password_label = new GuiTextLabel(label_size, Vector2(0, y_pos + label_size.y + 4));
     password_label->SetTextFont(text_font);
     password_label->SetText("Password:");
     password_label->SetTextColor(Color3(255, 255, 255));
-    password_label->SetTextAlign(GuiTextButton::ALIGN_RIGHT);
+    password_label->SetTextAlign(GuiTextLabel::ALIGN_RIGHT);
     password_label->SetBackgroundAlpha(0);
 
     GuiTextBox* email_textbox = new GuiTextBox(textbox_size, email_label->GetPosition() + Vector2(label_size.x + 8, 0));

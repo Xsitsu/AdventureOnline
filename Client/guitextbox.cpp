@@ -1,15 +1,14 @@
 #include "guitextbox.hpp"
 
-GuiTextBox::GuiTextBox() : GuiFrame(), text_color(Color3()), text_alpha(255), text_draw_color(al_map_rgb(0, 0, 0)),
-cursor_position(0), is_selected(false), text_align(ALIGN_LEFT), text_draw_font(NULL)
+GuiTextBox::GuiTextBox() : GuiFrame(), GuiTextElement(), cursor_position(0), is_selected(false)
 {}
 
-GuiTextBox::GuiTextBox(Vector2 size) : GuiFrame(size), text_color(Color3()), text_alpha(255), text_draw_color(al_map_rgb(0, 0, 0)),
-cursor_position(0), is_selected(false), text_align(ALIGN_LEFT), text_draw_font(NULL)
+GuiTextBox::GuiTextBox(Vector2 size) : GuiFrame(size), GuiTextElement(), cursor_position(0),
+is_selected(false)
 {}
 
-GuiTextBox::GuiTextBox(Vector2 size, Vector2 position) : GuiFrame(size, position), text_color(Color3()), text_alpha(255), text_draw_color(al_map_rgb(0, 0, 0)),
-cursor_position(0), is_selected(false), text_align(ALIGN_LEFT), text_draw_font(NULL)
+GuiTextBox::GuiTextBox(Vector2 size, Vector2 position) : GuiFrame(size, position), GuiTextElement(),
+cursor_position(0), is_selected(false)
 {}
 
 GuiTextBox::~GuiTextBox()
@@ -17,63 +16,10 @@ GuiTextBox::~GuiTextBox()
 
 }
 
-std::string GuiTextBox::GetText() const
-{
-    return this->text;
-}
-
 void GuiTextBox::SetText(std::string text)
 {
     this->text = text;
     this->AddCursorPosition(0); // reset cursor bounds
-}
-
-Color3 GuiTextBox::GetTextColor() const
-{
-    return this->text_color;
-}
-
-void GuiTextBox::SetTextColor(Color3 color)
-{
-    this->text_color = color;
-    this->UpdateTextDrawColor();
-}
-
-unsigned char GuiTextBox::GetTextAlpha() const
-{
-    return this->text_alpha;
-}
-
-void GuiTextBox::SetTextAlpha(unsigned char trans)
-{
-    this->text_alpha = trans;
-    this->UpdateTextDrawColor();
-}
-
-GuiTextBox::TEXTALIGN GuiTextBox::GetTextAlign() const
-{
-    return this->text_align;
-}
-
-void GuiTextBox::SetTextAlign(GuiTextBox::TEXTALIGN align)
-{
-    this->text_align = align;
-}
-
-ALLEGRO_FONT* GuiTextBox::GetTextFont() const
-{
-    return this->text_draw_font;
-}
-
-void GuiTextBox::SetTextFont(ALLEGRO_FONT* font)
-{
-    this->text_draw_font = font;
-}
-
-void GuiTextBox::UpdateTextDrawColor()
-{
-    Color3* color = &this->text_color;
-    this->text_draw_color = al_map_rgba(color->r, color->g, color->b, this->text_alpha);
 }
 
 void GuiTextBox::DoDraw() const

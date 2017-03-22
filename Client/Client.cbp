@@ -87,6 +87,10 @@
 		<Unit filename="guitextbox.hpp" />
 		<Unit filename="guitextbutton.cpp" />
 		<Unit filename="guitextbutton.hpp" />
+		<Unit filename="guitextelement.cpp" />
+		<Unit filename="guitextelement.hpp" />
+		<Unit filename="guitextlabel.cpp" />
+		<Unit filename="guitextlabel.hpp" />
 		<Unit filename="main.cpp" />
 		<Unit filename="observer.hpp" />
 		<Unit filename="screenmaker.hpp" />
