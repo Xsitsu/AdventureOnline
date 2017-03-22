@@ -178,7 +178,16 @@ GuiTextButton* CreateTitleButton(int offset, std::string button_text, ALLEGRO_FO
 GuiScreen* ScreenMakerTitle::MakeScreen()
 {
     ALLEGRO_FONT* button_font = FontService::Instance()->GetFont("title_button");
-    ALLEGRO_BITMAP* background_image = BitmapService::Instance()->GetBitmap("title_background");
+    ALLEGRO_BITMAP* background_image = nullptr;
+
+    try
+    {
+        background_image = BitmapService::Instance()->GetBitmap("title_background");
+    }
+    catch (BitmapNotLoadedException &e)
+    {
+
+    }
 
     TitleButtonEnterListener* mouse_enter_listener = new TitleButtonEnterListener();
     TitleButtonLeaveListener* mouse_leave_listener = new TitleButtonLeaveListener();
