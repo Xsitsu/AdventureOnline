@@ -3,12 +3,13 @@
 #include "gamestatequit.hpp"
 
 #include <allegro5/allegro_native_dialog.h>
+#include <allegro5/allegro_image.h>
 
 #include <chrono>
 
 Game* Game::instance = NULL;
 
-Game::Game() : display(NULL), event_queue(NULL), timer(NULL), state(NULL), client(NULL)
+Game::Game() : display(NULL), event_queue(NULL), timer(NULL), state(NULL), client(NULL), current_character(nullptr), current_map(nullptr)
 {
 
 }
@@ -47,6 +48,7 @@ void Game::Init()
     al_install_keyboard();
     al_install_mouse();
     al_init_primitives_addon();
+    al_init_image_addon();
     al_init_font_addon();
     al_init_ttf_addon();
     event_queue = al_create_event_queue();
@@ -152,7 +154,6 @@ void Game::Run()
                         }
                         else
                         {
-                            std::cout << "Received packet code: " << packet->GetType() << std::endl;
                             this->state->HandlePacket(packet);
                         }
                     }

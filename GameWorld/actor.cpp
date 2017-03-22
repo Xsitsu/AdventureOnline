@@ -18,7 +18,10 @@ void Actor::Warp(Map* map, Vector2 coords)
 {
     if (this->current_map != map)
     {
-        this->ExitMap(this->current_map);
+        if (this->current_map)
+        {
+            this->ExitMap(this->current_map);
+        }
         this->EnterMap(map);
     }
 
@@ -28,4 +31,14 @@ void Actor::Warp(Map* map, Vector2 coords)
 void Actor::Move(Vector2 coords)
 {
     this->map_position = coords;
+}
+
+Vector2 Actor::GetPosition() const
+{
+    return this->map_position;
+}
+
+Actor::DIRECTION Actor::GetDirection() const
+{
+    return this->direction;
 }

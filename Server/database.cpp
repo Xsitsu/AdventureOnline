@@ -79,12 +79,12 @@ void Database::CreateAccount(std::string email, std::string password)
 
     int caemailLen = email.size();
     int casaltLen = password.size();
-    int cahashLen = password.size() + email.size();
+    int cahashLen = password.size();// + email.size();
 
     strcpy( email_str, email.c_str() );
     strcpy( salt_str, password.c_str() );           //needs to be replaced with salt string
-    strcpy( hash_str, email.c_str() );              //needs to be replaced with hash string
-    strcat( hash_str, password.c_str() );
+    //strcpy( hash_str, email.c_str() );              //needs to be replaced with hash string
+    strcpy( hash_str, password.c_str() );
 
     SQLRETURN localRetcode;
 
