@@ -4,7 +4,8 @@
 #include "gamestatecharacterview.hpp"
 #include "gamestatequit.hpp"
 
-
+#include "fontservice.hpp"
+#include "bitmapservice.hpp"
 
 class TitleButtonEnterListener : public ListenerBase<GuiButtonArgs*>
 {
@@ -177,6 +178,7 @@ GuiTextButton* CreateTitleButton(int offset, std::string button_text, ALLEGRO_FO
 GuiScreen* ScreenMakerTitle::MakeScreen()
 {
     ALLEGRO_FONT* button_font = FontService::Instance()->GetFont("title_button");
+    ALLEGRO_BITMAP* background_image = BitmapService::Instance()->GetBitmap("title_background");
 
     TitleButtonEnterListener* mouse_enter_listener = new TitleButtonEnterListener();
     TitleButtonLeaveListener* mouse_leave_listener = new TitleButtonLeaveListener();
@@ -188,6 +190,13 @@ GuiScreen* ScreenMakerTitle::MakeScreen()
     GuiFrame* base_frame;
     base_frame = new GuiFrame(Vector2(640, 480), Vector2(0, 0));
     base_frame->SetBackgroundColor(Color3(255, 255, 255));
+
+    GuiImageLabel* bg_label;
+    bg_label = new GuiImageLabel(base_frame->GetSize(), base_frame->GetPosition());
+    bg_label->SetImage(background_image);
+    bg_label->SetBackgroundAlpha(200);
+    bg_label->SetBackgroundColor(Color3(0, 0, 0));
+    base_frame->AddChild(bg_label);
 
     GuiTextButton* button1 = CreateTitleButton(0, "Create Account", button_font);
     button1->RegisterOnMouseEnter(mouse_enter_listener);

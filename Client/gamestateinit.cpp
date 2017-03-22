@@ -3,6 +3,9 @@
 #include "screenmaker.hpp"
 #include "gamestatetitle.hpp"
 
+#include "fontservice.hpp"
+#include "bitmapservice.hpp"
+
 GameStateInit::GameStateInit(Game* game) : GameStateBase(game)
 {}
 
@@ -22,6 +25,10 @@ void GameStateInit::Tick()
 
     ALLEGRO_FONT* button_font = al_load_font("C:/Windows/Fonts/arial.ttf", 22, 0);
     FontService::Instance()->RegisterFont("title_button", button_font);
+
+    ALLEGRO_BITMAP* title_bg = al_load_bitmap("resource/image/title_background.png");
+    BitmapService::Instance()->RegisterBitmap("title_background", title_bg);
+
 
     ScreenMakerTitle maker(this->game);
     GuiScreen* screen = maker.MakeScreen();
