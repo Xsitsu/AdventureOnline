@@ -79,6 +79,8 @@
 		<Unit filename="guibutton.hpp" />
 		<Unit filename="guiframe.cpp" />
 		<Unit filename="guiframe.hpp" />
+		<Unit filename="guipasswordtextbox.cpp" />
+		<Unit filename="guipasswordtextbox.hpp" />
 		<Unit filename="guiscreen.cpp" />
 		<Unit filename="guiscreen.hpp" />
 		<Unit filename="guiselectionservice.cpp" />

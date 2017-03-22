@@ -117,7 +117,7 @@ GuiScreen* ScreenMakerLogin::MakeScreen()
     email_textbox->SetTextColor(Color3(255, 255, 255));
     email_textbox->SetBackgroundColor(Color3(40, 40, 40));
 
-    GuiTextBox* password_textbox = new GuiTextBox(textbox_size, password_label->GetPosition() + Vector2(label_size.x + 8, 0));
+    GuiPasswordTextBox* password_textbox = new GuiPasswordTextBox(textbox_size, password_label->GetPosition() + Vector2(label_size.x + 8, 0));
     password_textbox->SetTextFont(text_font);
     password_textbox->SetTextColor(Color3(255, 255, 255));
     password_textbox->SetBackgroundColor(Color3(40, 40, 40));
