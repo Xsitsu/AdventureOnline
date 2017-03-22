@@ -7,6 +7,8 @@
 #include "guitextbox.hpp"
 #include "guitextlabel.hpp"
 #include "guipasswordtextbox.hpp"
+#include "guiimagelabel.hpp"
+#include "guiimagebutton.hpp"
 
 #include "game.hpp"
 #include "observer.hpp"

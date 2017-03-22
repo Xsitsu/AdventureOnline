@@ -22,9 +22,12 @@ void GameStatePlaying::Enter()
 
 
     ALLEGRO_BITMAP* tile_bitmap = al_load_bitmap("resource/image/tile.bmp");
-    //ALLEGRO_BITMAP* tile_bitmap = al_load_bitmap("C:/Users/Jacob/Documents/GitHub/Adventure Online/Client/bin/Debug/resource/image/tile.bmp");
 
-    al_convert_mask_to_alpha(tile_bitmap, al_map_rgb(0, 0, 0));
+    if (tile_bitmap)
+    {
+        al_convert_mask_to_alpha(tile_bitmap, al_map_rgb(0, 0, 0));
+    }
+
     BitmapService::Instance()->RegisterBitmap("tile_1", tile_bitmap);
 }
 
@@ -72,7 +75,6 @@ void GameStatePlaying::Render()
                     ALLEGRO_BITMAP* tile_bitmap = BitmapService::Instance()->GetBitmap(bitmap_name);
 
                     Vector2 draw_pos = base_draw + (step_x * x) + (step_y * y);
-
 
                     al_draw_bitmap(tile_bitmap, draw_pos.x, draw_pos.y, 0);
                 }
