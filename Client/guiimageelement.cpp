@@ -1,6 +1,6 @@
 #include "guiimageelement.hpp"
 
-GuiImageElement::GuiImageElement() : image(nullptr), image_tint(Color3(255, 255, 255))
+GuiImageElement::GuiImageElement() : image(nullptr), image_tint(Color3(255, 255, 255)), image_alpha(255)
 {
     this->UpdateTintDrawColor();
 }
@@ -31,9 +31,19 @@ Color3 GuiImageElement::GetImageTint() const
     return this->image_tint;
 }
 
+void GuiImageElement::SetImageAlpha(unsigned char alpha)
+{
+    this->image_alpha = alpha;
+    this->UpdateTintDrawColor();
+}
+
+unsigned char GuiImageElement::GetImageAlpha() const
+{
+    return this->image_alpha;
+}
+
 void GuiImageElement::UpdateTintDrawColor()
 {
-    // ToDo: Maybe eventually look into seeing what happens when alpha is changed for a tinted bitmap.
     Color3* color = &this->image_tint;
-    this->tint_draw_color = al_map_rgba(color->r, color->g, color->b, 255);
+    this->tint_draw_color = al_map_rgba(color->r, color->g, color->b, this->image_alpha);
 }
