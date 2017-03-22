@@ -79,6 +79,8 @@
 		<Unit filename="guibutton.hpp" />
 		<Unit filename="guiframe.cpp" />
 		<Unit filename="guiframe.hpp" />
+		<Unit filename="guiimagebutton.cpp" />
+		<Unit filename="guiimagebutton.hpp" />
 		<Unit filename="guiimageelement.cpp" />
 		<Unit filename="guiimageelement.hpp" />
 		<Unit filename="guiimagelabel.cpp" />
