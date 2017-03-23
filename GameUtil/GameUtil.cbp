@@ -52,9 +52,10 @@
 		<Unit filename="filebase.hpp" />
 		<Unit filename="main.cpp" />
 		<Unit filename="main.h" />
+		<Unit filename="resource.cpp" />
+		<Unit filename="resource.hpp" />
 		<Unit filename="resourcefile.cpp" />
 		<Unit filename="resourcefile.hpp" />
-		<Unit filename="resourcelist.hpp" />
 		<Unit filename="vector2.cpp" />
 		<Unit filename="vector2.hpp" />
 		<Extensions>

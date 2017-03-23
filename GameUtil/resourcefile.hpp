@@ -3,21 +3,23 @@
 
 #include "main.h"
 
+#include <list>
+
 #include "filebase.hpp"
-#include "resourcelist.hpp"
+#include "resource.hpp"
 
 class DLL_EXPORT ResourceFile : public FileBase
 {
 protected:
-    ResourceList* DoReadV1();
-    void DoWriteV1(ResourceList* rlist);
+    std::list<Resource*> DoReadV1();
+    void DoWriteV1(std::list<Resource*> rlist);
 
 public:
     ResourceFile();
     ResourceFile(std::string filename);
     ~ResourceFile();
 
-    ResourceList* Read();
-    void Write(ResourceList* rlist);
+    std::list<Resource*> Read();
+    void Write(std::list<Resource*> rlist);
 };
 #endif // RESOURCEFILE_HPP_INCLUDE
