@@ -106,6 +106,7 @@ std::list<Resource*> ResourceFile::DoReadV1()
             }
         }
 
+        this->filestream.peek();
     }
 
     return rlist;
