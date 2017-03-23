@@ -51,6 +51,8 @@ std::list<Resource*> ResourceFile::DoReadV1()
 {
     std::list<Resource*> rlist;
 
+    this->filestream.peek(); // Check for EOF
+
     char buffer[4];
     while (!this->filestream.eof())
     {
@@ -60,8 +62,18 @@ std::list<Resource*> ResourceFile::DoReadV1()
         this->filestream.read(buffer, 4);
         width = (buffer[0] << 24) | (buffer[1] << 16) | (buffer[2] << 8) | (buffer[3] << 0);
 
+        if (this->filestream.fail())
+        {
+            throw FileException::FileCorrupted();
+        }
+
         this->filestream.read(buffer, 4);
         height = (buffer[0] << 24) | (buffer[1] << 16) | (buffer[2] << 8) | (buffer[3] << 0);
+
+        if (this->filestream.fail())
+        {
+            throw FileException::FileCorrupted();
+        }
 
         Resource* resource = new Resource(width, height);
         Pixel pixel;
@@ -70,6 +82,18 @@ std::list<Resource*> ResourceFile::DoReadV1()
             for (uint32_t h; h < height; h++)
             {
                 this->filestream.read(buffer, 4);
+
+                if (this->filestream.fail())
+                {
+                    delete resource;
+                    while (!rlist.empty())
+                    {
+                        resource = rlist.front();
+                        rlist.pop_front();
+                        delete resource;
+                    }
+                    throw FileException::FileCorrupted();
+                }
 
                 pixel.r = buffer[0];
                 pixel.g = buffer[1];
