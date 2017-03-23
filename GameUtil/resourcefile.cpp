@@ -7,7 +7,6 @@ ResourceFile::ResourceFile() : FileBase()
 
 ResourceFile::ResourceFile(std::string filename) : FileBase()
 {
-    filename += ".aorf";
     this->Open(filename);
 }
 
@@ -141,39 +140,4 @@ void ResourceFile::DoWriteV1(std::list<Resource*> rlist)
         }
 
     }
-
-/*
-    char buffer[4];
-    while (!this->filestream.eof())
-    {
-        uint32_t width = 0;
-        uint32_t height = 0;
-
-        this->filestream.read(buffer, 4);
-        width = (buffer[0] << 24) | (buffer[1] << 16) | (buffer[2] << 8) | (buffer[3] << 0);
-
-        this->filestream.read(buffer, 4);
-        height = (buffer[0] << 24) | (buffer[1] << 16) | (buffer[2] << 8) | (buffer[3] << 0);
-
-        Resource* resource = new Resource(width, height);
-        Pixel pixel;
-        for (uint32_t w; w < width; w++)
-        {
-            for (uint32_t h; h < height; h++)
-            {
-                this->filestream.read(buffer, 4);
-
-                pixel.r = buffer[0];
-                pixel.g = buffer[1];
-                pixel.b = buffer[2];
-                pixel.a = buffer[3];
-
-                resource->SetPixel(w, h, pixel);
-
-                rlist.push_back(resource);
-            }
-        }
-
-    }
-*/
 }

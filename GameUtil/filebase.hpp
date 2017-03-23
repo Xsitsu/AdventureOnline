@@ -7,12 +7,14 @@
 
 #include "main.h"
 
-class FileBase
+class DLL_EXPORT FileBase
 {
 protected:
     std::fstream filestream;
 
     void CheckHeader(char* signature, int* version);
+
+    virtual std::string GetExtension() = 0;
 
 public:
     FileBase();
@@ -21,6 +23,7 @@ public:
 
     void Open(std::string filename);
     void Close();
+    void Create(std::string filename);
     bool IsOpen();
 };
 

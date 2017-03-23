@@ -14,6 +14,8 @@ protected:
     std::list<Resource*> DoReadV1();
     void DoWriteV1(std::list<Resource*> rlist);
 
+    virtual std::string GetExtension() { return ".aorf"; }
+
 public:
     ResourceFile();
     ResourceFile(std::string filename);

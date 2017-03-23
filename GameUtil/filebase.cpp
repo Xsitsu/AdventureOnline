@@ -22,7 +22,7 @@ void FileBase::Open(std::string filename)
 {
     if (!this->IsOpen())
     {
-        this->filestream.open(filename, std::fstream::in | std::fstream::out | std::fstream::binary);
+        this->filestream.open(filename + this->GetExtension(), std::fstream::in | std::fstream::out | std::fstream::binary);
 
         if (!this->IsOpen())
         {
@@ -36,6 +36,19 @@ void FileBase::Close()
     if (this->IsOpen())
     {
         this->filestream.close();
+    }
+}
+
+void FileBase::Create(std::string filename)
+{
+    if (!this->IsOpen())
+    {
+        this->filestream.open(filename + this->GetExtension(), std::fstream::in | std::fstream::out | std::fstream::trunc | std::fstream::binary);
+
+        if (!this->IsOpen())
+        {
+            throw FileException::OpenFailed();
+        }
     }
 }
 
