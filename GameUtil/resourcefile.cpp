@@ -79,9 +79,9 @@ std::list<Resource*> ResourceFile::DoReadV1()
 
         Resource* resource = new Resource(width, height);
         Pixel pixel;
-        for (uint32_t w; w < width; w++)
+        for (uint32_t w = 0; w < width; w++)
         {
-            for (uint32_t h; h < height; h++)
+            for (uint32_t h = 0; h < height; h++)
             {
                 this->filestream.read(buffer, 4);
 
