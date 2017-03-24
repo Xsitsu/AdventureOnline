@@ -7,7 +7,7 @@
 
 #include "GameUtil/resourcefile.hpp"
 
-std::list<Resource*> GetResourceList(std::string path, int num)
+std::list<Resource*> GetResourceList(std::string path, std::string extension, int num)
 {
     std::list<Resource*> rlist;
 
@@ -20,7 +20,7 @@ std::list<Resource*> GetResourceList(std::string path, int num)
 
         if (i < 100) ss << "0";
         if (i < 10) ss << "0";
-        ss << i << ".bmp";
+        ss << i << extension;
 
         std::cout << "Trying to open file: '" << ss.str() << "'" << std::endl;
         bitmap = al_load_bitmap(ss.str().c_str());
@@ -60,6 +60,24 @@ std::list<Resource*> GetResourceList(std::string path, int num)
     return rlist;
 }
 
+void CreateResourceFile(int id, std::string path, std::string extension, int num)
+{
+    std::cout << std::endl << std::endl;
+
+    std::stringstream ss;
+    ss << "resource";
+    if (id < 10) ss << 0;
+    ss << id;
+
+    ResourceFile rfile;
+    std::list<Resource*> rlist;
+
+    rlist = GetResourceList(path, extension, num);
+    rfile.Create(ss.str());
+    rfile.Write(rlist);
+    rfile.Close();
+}
+
 int main(int argc, char** argv)
 {
     if (!al_init()) return -1;
@@ -68,20 +86,11 @@ int main(int argc, char** argv)
     ResourceFile rfile;
     std::list<Resource*> rlist;
 
+    std::string basepath = "C:/Users/Jacob/Documents/GitHub/AO-Resource/image/";
 
-    rlist = GetResourceList("C:/Users/Jacob/Documents/GitHub/AO-Resource/image/tile/", 15);
-
-    rfile.Create("tile");
-    rfile.Write(rlist);
-    rfile.Close();
-
-
-    rfile.Open("tile");
-    rlist = rfile.Read();
-    rfile.Close();
-
-    std::cout << std::endl << std::endl;
-    std::cout << "Program completed successfully!" << std::endl;
+    CreateResourceFile(0, basepath + "background/", ".png", 1);
+    CreateResourceFile(1, basepath + "tile/", ".bmp", 13);
+    CreateResourceFile(2, basepath + "character/", ".png", 3);
 
     return 0;
 }

@@ -37,21 +37,60 @@ void GameStateInit::Tick()
     ALLEGRO_FONT* button_font = al_load_font("C:/Windows/Fonts/arial.ttf", 22, 0);
     FontService::Instance()->RegisterFont("title_button", button_font);
 
-    ALLEGRO_BITMAP* title_bg = al_load_bitmap("resource/image/title_background.png");
-    BitmapService::Instance()->RegisterBitmap("title_background", title_bg);
-
     ALLEGRO_BITMAP* base_bitmap = al_get_target_bitmap();
 
     try
     {
         std::list<Resource*> rlist;
-
         ResourceFile rfile;
-        rfile.Open("tile");
+        int c;
+
+
+        rfile.Open("resource00");
         rlist = rfile.Read();
         rfile.Close();
 
-        int c = 0;
+        c = 0;
+        while (!rlist.empty())
+        {
+            Resource* resource = rlist.front();
+            rlist.pop_front();
+
+            uint32_t width = resource->GetWidth();
+            uint32_t height = resource->GetHeight();
+
+            ALLEGRO_BITMAP* bitmap = al_create_bitmap(width, height);
+            al_lock_bitmap(bitmap, ALLEGRO_PIXEL_FORMAT_ANY, ALLEGRO_LOCK_WRITEONLY);
+
+            al_set_target_bitmap(bitmap);
+
+            for (uint32_t w = 0; w < width; w++)
+            {
+                for (uint32_t h = 0; h < height; h++)
+                {
+                    Pixel pixel = resource->GetPixel(w, h);
+                    al_put_pixel(w,  h, al_map_rgba(pixel.r, pixel.g, pixel.b, pixel.a));
+                }
+            }
+
+            al_unlock_bitmap(bitmap);
+            delete resource;
+
+            std::stringstream ss;
+            ss << "background_" << c;
+
+            BitmapService::Instance()->RegisterBitmap(ss.str(), bitmap);
+
+            c++;
+        }
+
+
+
+        rfile.Open("resource01");
+        rlist = rfile.Read();
+        rfile.Close();
+
+        c = 0;
         while (!rlist.empty())
         {
             Resource* resource = rlist.front();
@@ -85,6 +124,51 @@ void GameStateInit::Tick()
 
             c++;
         }
+
+
+
+        rfile.Open("resource02");
+        rlist = rfile.Read();
+        rfile.Close();
+
+        c = 0;
+        while (!rlist.empty())
+        {
+            Resource* resource = rlist.front();
+            rlist.pop_front();
+
+            uint32_t width = resource->GetWidth();
+            uint32_t height = resource->GetHeight();
+
+            ALLEGRO_BITMAP* bitmap = al_create_bitmap(width, height);
+            al_lock_bitmap(bitmap, ALLEGRO_PIXEL_FORMAT_ANY, ALLEGRO_LOCK_WRITEONLY);
+
+            al_set_target_bitmap(bitmap);
+
+            for (uint32_t w = 0; w < width; w++)
+            {
+                for (uint32_t h = 0; h < height; h++)
+                {
+                    Pixel pixel = resource->GetPixel(w, h);
+                    al_put_pixel(w,  h, al_map_rgba(pixel.r, pixel.g, pixel.b, pixel.a));
+                }
+            }
+
+            al_unlock_bitmap(bitmap);
+            delete resource;
+
+            std::stringstream ss;
+            ss << "character_" << c;
+
+            al_convert_mask_to_alpha(bitmap, al_map_rgb(0, 0, 0));
+            BitmapService::Instance()->RegisterBitmap(ss.str(), bitmap);
+
+            c++;
+        }
+
+
+
+
     }
     catch (FileException::FileException& e)
     {
