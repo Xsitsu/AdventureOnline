@@ -46,10 +46,17 @@
 		<ExtraCommands>
 			<Add after='cmd /c copy &quot;$(PROJECT_DIR)$(TARGET_OUTPUT_FILE)&quot; &quot;$(PROJECT_DIR)..\Client\bin\$(TARGET_NAME)&quot;' />
 			<Add after='cmd /c copy &quot;$(PROJECT_DIR)$(TARGET_OUTPUT_FILE)&quot; &quot;$(PROJECT_DIR)..\Server\bin\$(TARGET_NAME)&quot;' />
+			<Add after='cmd /c copy &quot;$(PROJECT_DIR)$(TARGET_OUTPUT_FILE)&quot; &quot;$(PROJECT_DIR)..\FileMaker\bin\$(TARGET_NAME)&quot;' />
 			<Add after='cmd /c copy &quot;$(PROJECT_DIR)$(TARGET_OUTPUT_FILE)&quot; &quot;$(PROJECT_DIR)..\GameWorld\bin\$(TARGET_NAME)&quot;' />
 		</ExtraCommands>
+		<Unit filename="filebase.cpp" />
+		<Unit filename="filebase.hpp" />
 		<Unit filename="main.cpp" />
 		<Unit filename="main.h" />
+		<Unit filename="resource.cpp" />
+		<Unit filename="resource.hpp" />
+		<Unit filename="resourcefile.cpp" />
+		<Unit filename="resourcefile.hpp" />
 		<Unit filename="vector2.cpp" />
 		<Unit filename="vector2.hpp" />
 		<Extensions>
