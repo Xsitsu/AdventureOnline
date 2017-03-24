@@ -21,7 +21,7 @@ public:
     virtual bool IsPlayer() const { return true; }
 
     void SetGender(Gender gender);
-    Gender GetGender(gender) const;
+    Gender GetGender() const;
 
     void SetSkin(Skin skin);
     Skin GetSkin() const;
