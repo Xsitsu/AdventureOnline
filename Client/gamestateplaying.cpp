@@ -8,6 +8,8 @@
 
 #include "bitmapservice.hpp"
 
+#include "actordrawer.hpp"
+
 GameStatePlaying::GameStatePlaying(Game* game) : GameStateBase(game)
 {
 
@@ -41,8 +43,8 @@ void GameStatePlaying::Render()
 
     // Draw map
 
-    Vector2 step_x = Vector2(64, 32)/2;
-    Vector2 step_y = Vector2(-64, 32)/2;
+    Vector2 tile_step_x = Vector2(64, 32)/2;
+    Vector2 tile_step_y = Vector2(-64, 32)/2;
 
     Vector2 base_draw = Vector2((640 - 64)/2, (480 - 32)/2);
 
@@ -67,7 +69,7 @@ void GameStatePlaying::Render()
                 {
                     ALLEGRO_BITMAP* tile_bitmap = BitmapService::Instance()->GetBitmap(bitmap_name);
 
-                    Vector2 draw_pos = base_draw + (step_x * x) + (step_y * y);
+                    Vector2 draw_pos = base_draw + (tile_step_x * x) + (tile_step_y * y);
 
                     al_draw_bitmap(tile_bitmap, draw_pos.x, draw_pos.y, 0);
                 }
@@ -80,7 +82,12 @@ void GameStatePlaying::Render()
     }
 
     // Draw actors
+    ActorDrawer actordrawer;
+
     Actor* self_actor = this->game->current_character;
+    Character* mychar = this->game->current_character;
+
+    Vector2 middle = Vector2(640/2, 480/2);
 
     std::list<Actor*> actor_list = this->game->current_map->GetActorList();
     for (std::list<Actor*>::iterator iter = actor_list.begin(); iter != actor_list.end(); ++iter)
@@ -88,44 +95,24 @@ void GameStatePlaying::Render()
         Actor* actor = *iter;
         if (actor != self_actor)
         {
-
+            DrawSpecs specs = actordrawer.GetDrawSpecs(actor);
+            Vector2 pos_offset = mychar->GetPosition() - actor->GetPosition();
+            Vector2 tile_mid = middle + (tile_step_x * pos_offset.x) + (tile_step_y * pos_offset.y);
+            Vector2 draw_pos = tile_mid - Vector2(specs.sprite_size.x/2, specs.sprite_size.y);
+            al_draw_tinted_bitmap_region(specs.bitmap, specs.tint,
+                                         specs.sprite_start.x, specs.sprite_start.y,
+                                         specs.sprite_size.x, specs.sprite_size.y,
+                                         draw_pos.x, draw_pos.y, specs.draw_flags);
         }
     }
 
     // Draw own character
-    Character* mychar = this->game->current_character;
-    Actor::Direction dir = mychar->GetDirection();
-    Character::Gender gender = mychar->GetGender();
-    Character::Skin skin = mychar->GetSkin();
-
-    int draw_flags = 0;
-    int dir_flag = 0;
-
-    if (dir == Actor::DIR_RIGHT || dir == Actor::DIR_UP)
-    {
-        draw_flags = ALLEGRO_FLIP_HORIZONTAL;
-    }
-
-    if (dir == Actor::DIR_LEFT || dir == Actor::DIR_UP)
-    {
-        dir_flag = 1;
-    }
-
-    int sprite_width = 18;
-    int sprite_height = 58;
-
-    int draw_x = (sprite_width * 2 * (int)gender) + (sprite_width * dir_flag);
-    int draw_y = (sprite_height * (int)skin);
-
-    int dp_x = 640/2 - sprite_width/2;
-    int dp_y = 480/2 - sprite_height/2;
-
-
-    ALLEGRO_BITMAP* char_bitmap = BitmapService::Instance()->GetBitmap("character_0");
-    al_draw_tinted_bitmap_region(char_bitmap, al_map_rgb(255, 255, 255),
-                                 draw_x, draw_y, sprite_width, sprite_height,
-                                 dp_x, dp_y, draw_flags);
-
+    DrawSpecs specs = actordrawer.GetDrawSpecs(mychar);
+    Vector2 draw_pos = middle - Vector2(specs.sprite_size.x/2, specs.sprite_size.y);
+    al_draw_tinted_bitmap_region(specs.bitmap, specs.tint,
+                                 specs.sprite_start.x, specs.sprite_start.y,
+                                 specs.sprite_size.x, specs.sprite_size.y,
+                                 draw_pos.x, draw_pos.y, specs.draw_flags);
 
     // Screen drawing
     this->game->DrawScreens();
