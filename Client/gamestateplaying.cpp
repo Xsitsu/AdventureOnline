@@ -2,6 +2,7 @@
 
 #include <string>
 #include <fstream>
+#include <sstream>
 
 #include "allegro5/allegro_image.h"
 
@@ -19,16 +20,6 @@ void GameStatePlaying::Enter()
 
     this->game->current_character = new Character();
     this->game->current_character->Warp(this->game->current_map, Vector2(10, 10));
-
-
-    ALLEGRO_BITMAP* tile_bitmap = al_load_bitmap("resource/image/tile.bmp");
-
-    if (tile_bitmap)
-    {
-        al_convert_mask_to_alpha(tile_bitmap, al_map_rgb(0, 0, 0));
-    }
-
-    BitmapService::Instance()->RegisterBitmap("tile_1", tile_bitmap);
 }
 
 void GameStatePlaying::Exit()
@@ -66,9 +57,11 @@ void GameStatePlaying::Render()
             {
                 MapTile& tile = current_map->GetTile(targ_coords);
 
-                std::string bitmap_name = "tile_";
-                //bitmap_name += tile.GetSpriteId();
-                bitmap_name += "1";
+                std::stringstream ss;
+                ss << "tile_";
+                ss << tile.GetSpriteId();
+
+                std::string bitmap_name = ss.str();
 
                 try
                 {

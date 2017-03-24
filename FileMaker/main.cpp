@@ -38,11 +38,12 @@ std::list<Resource*> GetResourceList(std::string path, int num)
             {
                 for (uint32_t h = 0; h < height; h++)
                 {
+                    // RGBA for these are returned as floats from 0~1
                     ALLEGRO_COLOR p = al_get_pixel(bitmap, w, h);
-                    pixel.r = p.r;
-                    pixel.g = p.g;
-                    pixel.b = p.b;
-                    pixel.a = p.a;
+                    pixel.r = 255 * p.r;
+                    pixel.g = 255 * p.g;
+                    pixel.b = 255 * p.b;
+                    pixel.a = 255 * p.a;
 
                     resource->SetPixel(w, h, pixel);
                 }
