@@ -49,6 +49,8 @@
 		</Compiler>
 		<Unit filename="account.cpp" />
 		<Unit filename="account.hpp" />
+		<Unit filename="accountservice.cpp" />
+		<Unit filename="accountservice.hpp" />
 		<Unit filename="clientconnection.cpp" />
 		<Unit filename="clientconnection.hpp" />
 		<Unit filename="clientstate.hpp" />

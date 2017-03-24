@@ -255,3 +255,8 @@ Database* Server::GetDatabaseConnection() const
 {
     return this->database;
 }
+
+AccountService& Server::GetAccountService()
+{
+    return this->accountservice;
+}

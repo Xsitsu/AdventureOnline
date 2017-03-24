@@ -68,6 +68,7 @@ bool ClientStateNoLogin::ProcessPacket(PacketBase* packet)
         Database* database = this->client->server->GetDatabaseConnection();
         Account* account = nullptr;
 
+        bool can_login = false;
         bool did_login = false;
         bool was_error = false;
 
@@ -76,7 +77,12 @@ bool ClientStateNoLogin::ProcessPacket(PacketBase* packet)
             account = database->ReadAccount(login_request->GetEmail());
             if (account)
             {
-                did_login = (account->GetHash() == login_request->GetPassword());
+                can_login = (account->GetHash() == login_request->GetPassword());
+                if (can_login)
+                {
+                    AccountService& service = this->client->server->GetAccountService();
+                    did_login = !service.IsAccountRegistered(account->GetAccountId());
+                }
             }
         }
         catch (DatabaseReadException &ex)
@@ -90,7 +96,16 @@ bool ClientStateNoLogin::ProcessPacket(PacketBase* packet)
             response->SetResponse(PacketLoginResponse::LOGINRESPONSE_SUCCESS);
             this->client->account = account;
 
+            AccountService& service = this->client->server->GetAccountService();
+            service.RegisterAccount(account->GetAccountId(), account);
+
             std::cout << "Client[" << this->client->connection_id  << "] logged in as account: " << account->GetEmail() << std::endl;
+        }
+        else if (can_login)
+        {
+            response->SetResponse(PacketLoginResponse::LOGINRESPONSE_ALREADY_LOGGED_IN);
+            std::cout << "Client[" << this->client->connection_id  << "] tried to log in as account [" << account->GetEmail() << "]"
+            << " but another account is already logged in!" << std::endl;
         }
         else if (was_error)
         {

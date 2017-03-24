@@ -44,6 +44,12 @@ void GameStateLoginAwaitResponse::HandlePacket(PacketBase* packet)
             this->game->PopScreen();
             this->game->ChangeState(new GameStateTitle(this->game));
         }
+        else if (res == PacketLoginResponse::LOGINRESPONSE_ALREADY_LOGGED_IN)
+        {
+            std::cout << "Login failed because another user is already logged in." << std::endl;
+            this->game->PopScreen();
+            this->game->ChangeState(new GameStateTitle(this->game));
+        }
     }
 }
 

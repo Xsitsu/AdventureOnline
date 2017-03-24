@@ -247,6 +247,7 @@ public:
     {
         LOGINRESPONSE_SUCCESS,
         LOGINRESPONSE_FAIL,
+        LOGINRESPONSE_ALREADY_LOGGED_IN,
         LOGINRESPONSE_ERROR
     };
 protected:
