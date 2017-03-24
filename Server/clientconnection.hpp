@@ -11,11 +11,20 @@
 #include "server.hpp"
 #include "account.hpp"
 
+#include "clientstate.hpp"
+
+class ClientStateBase;
+
 class Server;
 
 class ClientConnection
 {
     const int CONNECTION_TIMEOUT = 5;
+
+    friend class ClientStateBase;
+    friend class ClientStateInit;
+    friend class ClientStateNoLogin;
+    friend class ClientStateLoggedIn;
 
 protected:
     unsigned int connection_id;
@@ -31,6 +40,8 @@ protected:
 
     Account* account;
 
+    ClientStateBase* state;
+
 public:
     ClientConnection(Server* server, Address address, unsigned int connection_id);
 
@@ -42,5 +53,8 @@ public:
     void TickPacketAcks();
     bool CheckForTimeout();
     void UpdateLastCommunicationTime();
+
+    void ChangeState(ClientStateBase* state);
+
 };
 #endif // CLIENTCONNECTION_HPP_INCLUDE

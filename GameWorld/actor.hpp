@@ -11,7 +11,7 @@ class DLL_EXPORT Actor
 {
 public:
     // This allows you to compute backwards direction by doing (current_direction + 2)%4
-    enum Direction { DIR_UP, DIR_LEFT, DIR_DOWN, DIR_RIGHT };
+    enum Direction { DIR_UP = 0, DIR_LEFT, DIR_DOWN, DIR_RIGHT };
 
 protected:
     Map* current_map;
@@ -19,10 +19,15 @@ protected:
 
     Direction direction;
 
+    bool has_nowall;
+
     unsigned short health;
     unsigned short max_health;
 
 public:
+    Actor();
+    virtual ~Actor();
+
     virtual bool IsNPC() const = 0;
     virtual bool IsPlayer() const = 0;
 
@@ -32,7 +37,12 @@ public:
     void Move(Vector2 coords);
 
     Vector2 GetPosition() const;
+
     Direction GetDirection() const;
+    void SetDirection(Direction direction);
+
+    bool GetHasNowall() const;
+    void SetHasNowall(bool val);
 
 };
 #endif // ACTOR_HPP_INCLUDE

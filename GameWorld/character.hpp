@@ -8,8 +8,8 @@
 class DLL_EXPORT Character : public Actor
 {
 public:
-    enum Gender {GENDER_FEMALE, GENDER_MALE};
-    enum Skin {SKIN_WHITE, SKIN_BROWN, SKIN_GREEN};
+    enum Gender { GENDER_FEMALE = 0, GENDER_MALE };
+    enum Skin { SKIN_WHITE = 0, SKIN_BROWN, SKIN_GREEN };
 
 protected:
     std::string name;
@@ -17,6 +17,9 @@ protected:
     Skin skin;
 
 public:
+    Character();
+    ~Character();
+
     virtual bool IsNPC() const { return false; }
     virtual bool IsPlayer() const { return true; }
 

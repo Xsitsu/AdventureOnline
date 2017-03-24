@@ -42,7 +42,7 @@ protected: // Singleton stuff
 
     Game();
     Game(const Game& copy) {}
-    Game& operator=(const Game& rhs) {}
+    Game& operator=(const Game& rhs) { return *this; }
     virtual ~Game();
 
 public:

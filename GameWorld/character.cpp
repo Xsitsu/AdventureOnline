@@ -1,5 +1,15 @@
 #include "character.hpp"
 
+Character::Character() : name("N/A"), gender(Character::GENDER_FEMALE), skin(Character::SKIN_WHITE)
+{
+
+}
+
+Character::~Character()
+{
+
+}
+
 void Character::SetGender(Character::Gender gender)
 {
     this->gender = gender;

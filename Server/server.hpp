@@ -10,6 +10,7 @@
 #include "world.hpp"
 
 #include "database.hpp"
+#include "accountservice.hpp"
 
 class ClientConnection;
 
@@ -29,6 +30,8 @@ protected:
     World* world;
     Database* database;
 
+    AccountService accountservice;
+
     unsigned int FindOpenConnectionId();
 
 public:
@@ -47,5 +50,7 @@ public:
 
     void TickPacketAcks();
     void TickClientTimeout();
+
+    AccountService& GetAccountService();
 };
 #endif // SERVER_HPP_INCLUDE
