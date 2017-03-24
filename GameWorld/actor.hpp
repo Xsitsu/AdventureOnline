@@ -19,6 +19,8 @@ protected:
 
     Direction direction;
 
+    bool has_nowall;
+
     unsigned short health;
     unsigned short max_health;
 
@@ -35,9 +37,12 @@ public:
     void Move(Vector2 coords);
 
     Vector2 GetPosition() const;
-    Direction GetDirection() const;
 
+    Direction GetDirection() const;
     void SetDirection(Direction direction);
+
+    bool GetHasNowall() const;
+    void SetHasNowall(bool val);
 
 };
 #endif // ACTOR_HPP_INCLUDE

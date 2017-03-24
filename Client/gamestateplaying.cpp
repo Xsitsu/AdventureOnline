@@ -148,6 +148,11 @@ void GameStatePlaying::HandleKeyDown(const ALLEGRO_KEYBOARD_EVENT& keyboard)
         adder = Vector2(1, 0);
         dir = Actor::DIR_RIGHT;
     }
+    else if (keyboard.keycode == ALLEGRO_KEY_SPACE)
+    {
+        this->game->current_character->SetHasNowall(!this->game->current_character->GetHasNowall());
+        return;
+    }
     else
     {
         return;
@@ -159,10 +164,15 @@ void GameStatePlaying::HandleKeyDown(const ALLEGRO_KEYBOARD_EVENT& keyboard)
     cur_char->SetDirection(dir);
 
     Vector2 targ_pos = cur_char->GetPosition() + adder;
-    if (cur_map->CoordsAreInBounds(targ_pos))
+
+    try
     {
-        cur_char->Warp(cur_map, targ_pos);
-        std::cout << "Moved to: " << targ_pos.x << "/" << targ_pos.y << std::endl;
+        cur_char->Move(targ_pos);
+        //std::cout << "Moved to: " << targ_pos.x << "/" << targ_pos.y << std::endl;
+    }
+    catch (...)
+    {
+        //std::cout << "Could not move to: " << targ_pos.x << "/" << targ_pos.y << std::endl;
     }
 }
 
