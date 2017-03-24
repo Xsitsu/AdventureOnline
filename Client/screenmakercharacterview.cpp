@@ -14,6 +14,9 @@ namespace CharacterViewScreenListeners
 
         virtual void HandleEvent()
         {
+            PacketLogout* packet = new PacketLogout();
+            this->game->SendPacket(packet);
+
             this->game->PopScreen();
 
             ScreenMakerTitle maker(this->game);

@@ -26,7 +26,7 @@ unsigned int Server::FindOpenConnectionId()
 
     while (this->clients[id] != NULL)
     {
-        std::cout << "Scanning: " << id << "/" << max << std::endl;
+        //std::cout << "Scanning: " << id << "/" << max << std::endl;
 
         id++;
         if (id >= max)
@@ -36,7 +36,7 @@ unsigned int Server::FindOpenConnectionId()
 
         if (id == start)
         {
-            std::cout << "No open connections!" << std::endl;
+            //std::cout << "No open connections!" << std::endl;
             throw "fail";
         }
     }
@@ -73,8 +73,8 @@ void Server::Tick()
         ClientConnection* client = NULL;
         if (packet->GetType() == PacketBase::PACKET_INIT)
         {
-            std::cout << "PacketInit" << std::endl;
-            unsigned short listen_port = ((PacketInit*)packet)->GetListenPort();
+            //std::cout << "PacketInit" << std::endl;
+            unsigned short listen_port = static_cast<PacketInit*>(packet)->GetListenPort();
             Address clientAddress(sender.GetAddress(), listen_port);
 
             unsigned int con_id = 0;
@@ -98,7 +98,7 @@ void Server::Tick()
         }
         else if (packet->GetType() == PacketBase::PACKET_DISCONNECT)
         {
-            std::cout << "PacketDisconnect" << std::endl;
+            //std::cout << "PacketDisconnect" << std::endl;
             unsigned long int con_id = packet->GetConnectionId();
             client = this->clients[con_id];
 

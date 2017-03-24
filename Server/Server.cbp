@@ -51,6 +51,11 @@
 		<Unit filename="account.hpp" />
 		<Unit filename="clientconnection.cpp" />
 		<Unit filename="clientconnection.hpp" />
+		<Unit filename="clientstate.hpp" />
+		<Unit filename="clientstatebase.cpp" />
+		<Unit filename="clientstateinit.cpp" />
+		<Unit filename="clientstateloggedin.cpp" />
+		<Unit filename="clientstatenologin.cpp" />
 		<Unit filename="database.cpp" />
 		<Unit filename="database.hpp" />
 		<Unit filename="main.cpp" />

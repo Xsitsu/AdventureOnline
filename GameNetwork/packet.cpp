@@ -14,17 +14,17 @@ const unsigned int PacketBase::PACKET_PREFIX = data;
 
 PacketBase::PacketBase() : type(PacketBase::PACKET_UNKNOWN)
 {
-    //this->buffer_pos = 0;
+
 }
 
 PacketBase::PacketBase(PacketBase::PacketType type) : type(type), needs_ack(true)
 {
-    //this->buffer_pos = 0;
+
 }
 
 PacketBase::PacketBase(PacketBase::PacketType type, bool needs_ack) : type(type), needs_ack(needs_ack)
 {
-    //this->buffer_pos = 0;
+
 }
 
 unsigned int PacketBase::Encode(char* buffer)
@@ -98,6 +98,9 @@ PacketBase* PacketReader::ReadPacket(char* buffer, int bytes_read)
         break;
     case PacketBase::PACKET_LOGIN_RESPONSE:
         packet = new PacketLoginResponse();
+        break;
+    case PacketBase::PACKET_LOGOUT:
+        packet = new PacketLogout();
         break;
     default:
         //std::cout << "bad type: " << (unsigned int) type << std::endl;s
@@ -449,3 +452,6 @@ void PacketLoginResponse::Decode(char* buffer)
     PacketReader reader;
     this->response = static_cast<PacketLoginResponse::LoginResponse>(reader.ReadByte(buffer, this->buffer_pos));
 }
+
+PacketLogout::PacketLogout() : PacketBase(PacketBase::PACKET_LOGOUT)
+{}

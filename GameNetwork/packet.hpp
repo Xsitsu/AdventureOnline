@@ -27,7 +27,8 @@ public:
         PACKET_REGISTRATION_REQUEST,
         PACKET_REGISTRATION_RESPONSE,
         PACKET_LOGIN_REQUEST,
-        PACKET_LOGIN_RESPONSE
+        PACKET_LOGIN_RESPONSE,
+        PACKET_LOGOUT
     };
 
 protected:
@@ -260,4 +261,14 @@ public:
     virtual unsigned int Encode(char* buffer);
     virtual void Decode(char* buffer);
 };
+
+
+class DLL_EXPORT PacketLogout : public PacketBase
+{
+protected:
+
+public:
+    PacketLogout();
+};
+
 #endif // PACKET_HPP_INCLUDE
