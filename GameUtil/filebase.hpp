@@ -10,6 +10,7 @@
 class DLL_EXPORT FileBase
 {
 protected:
+    std::string filename;
     std::fstream filestream;
 
     void CheckHeader(char* signature, int* version);
@@ -32,9 +33,13 @@ namespace FileException
     class DLL_EXPORT FileException : public std::exception
     {
     protected:
+        std::string filename;
 
     public:
+        FileException(std::string filename) : filename(filename) {}
         virtual ~FileException() {}
+
+        virtual const char* what() const noexcept = 0;
     };
 
     class DLL_EXPORT OpenFailed : public FileException
@@ -42,7 +47,14 @@ namespace FileException
     protected:
 
     public:
-
+        OpenFailed(std::string filename) : FileException(filename) {}
+        virtual const char* what() const noexcept
+        {
+            std::string err = "File could not be opened: ";
+            err += this->filename;
+            err += ".";
+            return err.c_str();
+        }
     };
 
     class DLL_EXPORT FileCorrupted : public FileException
@@ -50,7 +62,14 @@ namespace FileException
     protected:
 
     public:
-
+        FileCorrupted(std::string filename) : FileException(filename) {}
+        virtual const char* what() const noexcept
+        {
+            std::string err = "File is corrupted: ";
+            err += this->filename;
+            err += ".";
+            return err.c_str();
+        }
     };
 }
 #endif // FILEBASE_HPP_INCLUDE

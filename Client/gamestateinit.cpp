@@ -13,6 +13,8 @@
 #include "GameUtil/resourcefile.hpp"
 #include "GameUtil/resource.hpp"
 
+#include "allegro5/allegro_native_dialog.h"
+
 GameStateInit::GameStateInit(Game* game) : GameStateBase(game)
 {}
 
@@ -40,19 +42,11 @@ void GameStateInit::Tick()
 
     try
     {
+        std::list<Resource*> rlist;
+
         ResourceFile rfile;
         rfile.Open("tile");
-
-        std::list<Resource*> rlist;
-        try
-        {
-            rlist = rfile.Read();
-        }
-        catch(FileException::FileCorrupted &e)
-        {
-            std::cout << "File is corrupted!" << std::endl;
-        }
-
+        rlist = rfile.Read();
         rfile.Close();
 
         int c = 0;
@@ -82,8 +76,7 @@ void GameStateInit::Tick()
             delete resource;
 
             std::stringstream ss;
-            ss << "tile_";
-            ss << c;
+            ss << "tile_" << c;
 
             al_convert_mask_to_alpha(bitmap, al_map_rgb(0, 0, 0));
             BitmapService::Instance()->RegisterBitmap(ss.str(), bitmap);
@@ -91,10 +84,18 @@ void GameStateInit::Tick()
             c++;
         }
     }
-    catch (FileException::OpenFailed& e)
+    catch (FileException::FileException& e)
     {
-        std::cout << "Failed to open file!"  << std::endl;
+        //std::cout << "error: " << e.what() << std::endl;
+
+        al_show_native_message_box(nullptr, "Could Not Load Resource File",
+                                  "A resource file is either corrupted or missing from your computer.",
+                                   e.what(), 0, ALLEGRO_MESSAGEBOX_ERROR);
+
+        this->game->ChangeState(new GameStateQuit(this->game));
+        return;
     }
+
 
     al_set_target_bitmap(base_bitmap);
 

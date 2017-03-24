@@ -39,12 +39,12 @@ std::list<Resource*> ResourceFile::Read()
         }
         else
         {
-            throw FileException::FileCorrupted();
+            throw FileException::FileCorrupted(this->filename);
         }
     }
     catch (std::bad_alloc& e)
     {
-        throw FileException::FileCorrupted();
+        throw FileException::FileCorrupted(this->filename);
     }
 
 
@@ -75,7 +75,7 @@ std::list<Resource*> ResourceFile::DoReadV1()
 
         if (this->filestream.fail())
         {
-            throw FileException::FileCorrupted();
+            throw FileException::FileCorrupted(this->filename);
         }
 
         this->filestream.read(buffer, 4);
@@ -83,7 +83,7 @@ std::list<Resource*> ResourceFile::DoReadV1()
 
         if (this->filestream.fail())
         {
-            throw FileException::FileCorrupted();
+            throw FileException::FileCorrupted(this->filename);
         }
 
         Resource* resource = new Resource(width, height);
@@ -103,7 +103,7 @@ std::list<Resource*> ResourceFile::DoReadV1()
                         rlist.pop_front();
                         delete resource;
                     }
-                    throw FileException::FileCorrupted();
+                    throw FileException::FileCorrupted(this->filename);
                 }
 
                 pixel.r = buffer[0];

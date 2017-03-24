@@ -26,8 +26,10 @@ void FileBase::Open(std::string filename)
 
         if (!this->IsOpen())
         {
-            throw FileException::OpenFailed();
+            throw FileException::OpenFailed(filename);
         }
+
+        this->filename = filename;
     }
 }
 
@@ -47,8 +49,10 @@ void FileBase::Create(std::string filename)
 
         if (!this->IsOpen())
         {
-            throw FileException::OpenFailed();
+            throw FileException::OpenFailed(filename);
         }
+
+        this->filename = filename;
     }
 }
 
@@ -65,12 +69,12 @@ void FileBase::CheckHeader(char* signature, int* version)
     if (buffer[0] != signature[0] || buffer[1] != signature[1] ||
         buffer[2] != signature[2] || buffer[3] != signature[3])
     {
-        throw FileException::FileCorrupted();
+        throw FileException::FileCorrupted(this->filename);
     }
 
     if (this->filestream.eof())
     {
-        throw FileException::FileCorrupted();
+        throw FileException::FileCorrupted(this->filename);
     }
 
     this->filestream.read(buffer, 1);
@@ -78,6 +82,6 @@ void FileBase::CheckHeader(char* signature, int* version)
 
     if (this->filestream.eof())
     {
-        throw FileException::FileCorrupted();
+        throw FileException::FileCorrupted(this->filename);
     }
 }
