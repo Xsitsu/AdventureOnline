@@ -112,10 +112,10 @@ std::list<Resource*> ResourceFile::DoReadV1()
                 pixel.a = buffer[3];
 
                 resource->SetPixel(w, h, pixel);
-
-                rlist.push_back(resource);
             }
         }
+
+        rlist.push_back(resource);
 
         this->filestream.peek();
     }
