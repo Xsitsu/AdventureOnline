@@ -2,6 +2,16 @@
 
 #include "map.hpp"
 
+Actor::Actor() : current_map(nullptr), direction(DIR_DOWN), max_health(10), health(10)
+{
+
+}
+
+Actor::~Actor()
+{
+
+}
+
 void Actor::EnterMap(Map* map)
 {
     map->HandleActorEnter(this);
@@ -41,4 +51,9 @@ Vector2 Actor::GetPosition() const
 Actor::Direction Actor::GetDirection() const
 {
     return this->direction;
+}
+
+void Actor::SetDirection(Direction direction)
+{
+    this->direction = direction;
 }

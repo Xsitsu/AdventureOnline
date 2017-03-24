@@ -80,13 +80,51 @@ void GameStatePlaying::Render()
     }
 
     // Draw actors
+    Actor* self_actor = this->game->current_character;
+
     std::list<Actor*> actor_list = this->game->current_map->GetActorList();
     for (std::list<Actor*>::iterator iter = actor_list.begin(); iter != actor_list.end(); ++iter)
     {
         Actor* actor = *iter;
+        if (actor != self_actor)
+        {
+
+        }
     }
 
     // Draw own character
+    Character* mychar = this->game->current_character;
+    Actor::Direction dir = mychar->GetDirection();
+    Character::Gender gender = mychar->GetGender();
+    Character::Skin skin = mychar->GetSkin();
+
+    int draw_flags = 0;
+    int dir_flag = 0;
+
+    if (dir == Actor::DIR_RIGHT || dir == Actor::DIR_UP)
+    {
+        draw_flags = ALLEGRO_FLIP_HORIZONTAL;
+    }
+
+    if (dir == Actor::DIR_LEFT || dir == Actor::DIR_UP)
+    {
+        dir_flag = 1;
+    }
+
+    int sprite_width = 18;
+    int sprite_height = 58;
+
+    int draw_x = (sprite_width * 2 * (int)gender) + (sprite_width * dir_flag);
+    int draw_y = (sprite_height * (int)skin);
+
+    int dp_x = 640/2 - sprite_width/2;
+    int dp_y = 480/2 - sprite_height/2;
+
+
+    ALLEGRO_BITMAP* char_bitmap = BitmapService::Instance()->GetBitmap("character_0");
+    al_draw_tinted_bitmap_region(char_bitmap, al_map_rgb(255, 255, 255),
+                                 draw_x, draw_y, sprite_width, sprite_height,
+                                 dp_x, dp_y, draw_flags);
 
 
     // Screen drawing
@@ -102,21 +140,26 @@ void GameStatePlaying::HandlePacket(PacketBase* packet)
 void GameStatePlaying::HandleKeyDown(const ALLEGRO_KEYBOARD_EVENT& keyboard)
 {
     Vector2 adder;
+    Actor::Direction dir;
     if (keyboard.keycode == ALLEGRO_KEY_UP)
     {
         adder = Vector2(0, -1);
+        dir = Actor::DIR_UP;
     }
     else if (keyboard.keycode == ALLEGRO_KEY_DOWN)
     {
         adder = Vector2(0, 1);
+        dir = Actor::DIR_DOWN;
     }
     else if (keyboard.keycode == ALLEGRO_KEY_LEFT)
     {
         adder = Vector2(-1, 0);
+        dir = Actor::DIR_LEFT;
     }
     else if (keyboard.keycode == ALLEGRO_KEY_RIGHT)
     {
         adder = Vector2(1, 0);
+        dir = Actor::DIR_RIGHT;
     }
     else
     {
@@ -125,6 +168,8 @@ void GameStatePlaying::HandleKeyDown(const ALLEGRO_KEYBOARD_EVENT& keyboard)
 
     Map* cur_map = this->game->current_map;
     Character* cur_char = this->game->current_character;
+
+    cur_char->SetDirection(dir);
 
     Vector2 targ_pos = cur_char->GetPosition() + adder;
     if (cur_map->CoordsAreInBounds(targ_pos))
