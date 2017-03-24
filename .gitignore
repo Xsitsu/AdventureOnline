@@ -12,3 +12,5 @@ allegro.log
 Makefile
 
 resource
+
+*.aorf
