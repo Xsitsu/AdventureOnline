@@ -31,14 +31,23 @@ std::list<Resource*> ResourceFile::Read()
 
     this->CheckHeader(signature, &version);
 
-    if (version == 1)
+    try
     {
-        return this->DoReadV1();
+        if (version == 1)
+        {
+            return this->DoReadV1();
+        }
+        else
+        {
+            throw FileException::FileCorrupted();
+        }
     }
-    else
+    catch (std::bad_alloc& e)
     {
         throw FileException::FileCorrupted();
     }
+
+
 }
 
 void ResourceFile::Write(std::list<Resource*> rlist)
