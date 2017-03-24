@@ -38,7 +38,7 @@ Vector2 Actor::GetPosition() const
     return this->map_position;
 }
 
-Actor::DIRECTION Actor::GetDirection() const
+Actor::Direction Actor::GetDirection() const
 {
     return this->direction;
 }

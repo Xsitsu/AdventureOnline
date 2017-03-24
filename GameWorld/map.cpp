@@ -65,9 +65,14 @@ void Map::UnloadMap()
     }
 }
 
-bool Map::IsMapLoaded()
+bool Map::IsMapLoaded() const
 {
     return this->is_loaded;
+}
+
+Vector2 Map::GetSize() const
+{
+    return this->size;
 }
 
 bool Map::CoordsAreInBounds(Vector2 coords) const

@@ -31,7 +31,9 @@ public:
 
     void LoadMap(int map_id);
     void UnloadMap();
-    bool IsMapLoaded();
+    bool IsMapLoaded() const;
+
+    Vector2 GetSize() const;
 
     bool CoordsAreInBounds(Vector2 coords) const;
     MapTile& GetTile(Vector2 coords);
