@@ -12,7 +12,6 @@ GameStateServerConnect::GameStateServerConnect(Game* game) : GameStateBase(game)
 
 void GameStateServerConnect::Enter()
 {
-    this->game->display = al_create_display(120, 240);
     this->game->client->SendConnectRequest();
 }
 
@@ -33,7 +32,7 @@ void GameStateServerConnect::Tick()
         }
         else
         {
-            al_show_native_message_box(this->game->display, "Connection Refused", "Could Not Connect To Server",
+            al_show_native_message_box(nullptr, "Connection Refused", "Could Not Connect To Server",
                                    "The server refused the connection. Please try again at a later time.",
                                    0, ALLEGRO_MESSAGEBOX_ERROR);
 
