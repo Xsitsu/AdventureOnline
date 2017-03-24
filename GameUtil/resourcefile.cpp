@@ -71,7 +71,7 @@ std::list<Resource*> ResourceFile::DoReadV1()
         uint32_t height = 0;
 
         this->filestream.read(buffer, 4);
-        width = (buffer[0] << 24) | (buffer[1] << 16) | (buffer[2] << 8) | (buffer[3] << 0);
+        width = ((uint8_t)buffer[0] << 24) | ((uint8_t)buffer[1] << 16) | ((uint8_t)buffer[2] << 8) | ((uint8_t)buffer[3] << 0);
 
         if (this->filestream.fail())
         {
@@ -79,7 +79,7 @@ std::list<Resource*> ResourceFile::DoReadV1()
         }
 
         this->filestream.read(buffer, 4);
-        height = (buffer[0] << 24) | (buffer[1] << 16) | (buffer[2] << 8) | (buffer[3] << 0);
+        height = ((uint8_t)buffer[0] << 24) | ((uint8_t)buffer[1] << 16) | ((uint8_t)buffer[2] << 8) | ((uint8_t)buffer[3] << 0);
 
         if (this->filestream.fail())
         {

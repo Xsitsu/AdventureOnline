@@ -182,7 +182,7 @@ GuiScreen* ScreenMakerTitle::MakeScreen()
 
     try
     {
-        background_image = BitmapService::Instance()->GetBitmap("title_background");
+        background_image = BitmapService::Instance()->GetBitmap("background_0");
     }
     catch (BitmapNotLoadedException &e)
     {

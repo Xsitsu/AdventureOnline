@@ -88,8 +88,8 @@ int main(int argc, char** argv)
 
     std::string basepath = "C:/Users/Jacob/Documents/GitHub/AO-Resource/image/";
 
-    CreateResourceFile(0, basepath + "background/", ".png", 15);
-    CreateResourceFile(1, basepath + "tile/", ".bmp", 15);
+    CreateResourceFile(0, basepath + "background/", ".png", 1);
+    CreateResourceFile(1, basepath + "tile/", ".bmp", 13);
     CreateResourceFile(2, basepath + "character/", ".png", 3);
 
     return 0;
