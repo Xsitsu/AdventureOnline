@@ -80,10 +80,9 @@ std::list<PacketBase*> PacketAckList::TickPacketAcks()
     {
         std::time_t cur_time = std::time(NULL);
 
-        ack_iter first = this->packet_ack_list.begin();
-
+        ack_iter first;
         unsigned int resend_packet_count = 0;
-        for(first; first!=this->packet_ack_list.end(); ++first)
+        for(first = this->packet_ack_list.begin(); first!=this->packet_ack_list.end(); ++first)
         {
             std::time_t diff = cur_time - (*first).send_time;
             if (diff > 1)

@@ -15,7 +15,7 @@ protected: // Singleton stuff
 
     BitmapService() {}
     BitmapService(const BitmapService& copy) {}
-    BitmapService& operator=(const BitmapService& rhs) {}
+    BitmapService& operator=(const BitmapService& rhs) { return *this; }
     virtual ~BitmapService() {}
 
 public:

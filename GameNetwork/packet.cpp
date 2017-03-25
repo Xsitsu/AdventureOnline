@@ -17,12 +17,12 @@ PacketBase::PacketBase() : type(PacketBase::PACKET_UNKNOWN)
 
 }
 
-PacketBase::PacketBase(PacketBase::PacketType type) : type(type), needs_ack(true)
+PacketBase::PacketBase(PacketBase::PacketType type) : needs_ack(true), type(type)
 {
 
 }
 
-PacketBase::PacketBase(PacketBase::PacketType type, bool needs_ack) : type(type), needs_ack(needs_ack)
+PacketBase::PacketBase(PacketBase::PacketType type, bool needs_ack) : needs_ack(needs_ack), type(type)
 {
 
 }
@@ -218,7 +218,8 @@ void PacketInit::Decode(char* buffer)
     this->listen_port = reader.ReadShort(buffer, this->buffer_pos);
 }
 
-PacketInitResponse::PacketInitResponse() : PacketBase(PacketBase::PACKET_INIT_RESPONSE), assigned_connection_id(0), connection_accepted(true)
+PacketInitResponse::PacketInitResponse() : PacketBase(PacketBase::PACKET_INIT_RESPONSE),
+connection_accepted(true), assigned_connection_id(0)
 {}
 
 unsigned int PacketInitResponse::Encode(char* buffer)

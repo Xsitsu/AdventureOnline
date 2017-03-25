@@ -9,7 +9,8 @@
 
 Game* Game::instance = NULL;
 
-Game::Game() : display(NULL), event_queue(NULL), timer(NULL), state(NULL), client(NULL), current_character(nullptr), current_map(nullptr)
+Game::Game() : display(NULL), event_queue(NULL), timer(NULL), state(NULL),
+client(NULL), current_map(nullptr), current_character(nullptr)
 {
 
 }
@@ -117,8 +118,8 @@ void Game::Run()
 				frame_counter = 0;
 
                 ping = 0;
-                std::list<int>::iterator iter = ping_calcs.begin();
-                for (iter; iter != ping_calcs.end(); ++iter)
+                std::list<int>::iterator iter;
+                for (iter = ping_calcs.begin(); iter != ping_calcs.end(); ++iter)
                 {
                     ping += *iter;
                 }
@@ -268,8 +269,8 @@ void Game::PopScreen()
 
 void Game::DrawScreens()
 {
-    screen_iter iter = this->screen_stack.begin();
-    for (iter; iter != this->screen_stack.end(); ++iter)
+    screen_iter iter;
+    for (iter = this->screen_stack.begin(); iter != this->screen_stack.end(); ++iter)
     {
         GuiScreen* screen = *iter;
         screen->Draw();

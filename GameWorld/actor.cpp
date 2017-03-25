@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-Actor::Actor() : current_map(nullptr), direction(DIR_DOWN), max_health(10), health(10), has_nowall(false)
+Actor::Actor() : current_map(nullptr), direction(DIR_DOWN), has_nowall(false), health(10), max_health(10)
 {
 
 }

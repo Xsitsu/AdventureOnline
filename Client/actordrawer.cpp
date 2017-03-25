@@ -55,10 +55,6 @@ DrawSpecs ActorDrawer::DoDrawSpecsCharacter(Character* character)
     int draw_x = (sprite_width * 2 * (int)gender) + (sprite_width * dir_flag);
     int draw_y = (sprite_height * (int)skin);
 
-    int dp_x = 640/2 - sprite_width/2;
-    int dp_y = 480/2 - sprite_height/2;
-
-
     DrawSpecs specs;
 
     specs.draw_flags = draw_flags;

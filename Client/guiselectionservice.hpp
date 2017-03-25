@@ -27,7 +27,7 @@ protected: // Singleton stuff
 
     GuiSelectionService();
     GuiSelectionService(const GuiSelectionService& copy) {}
-    GuiSelectionService& operator=(const GuiSelectionService& rhs) {}
+    GuiSelectionService& operator=(const GuiSelectionService& rhs) { return *this; }
     virtual ~GuiSelectionService() {}
 
 public:
@@ -55,7 +55,7 @@ protected: // Class stuff
     void InitKeyList();
     void SetKey(int index, char lower, char upper);
 
-    bool CheckModifier(unsigned int modifiers, int modifier);
+    bool CheckModifier(unsigned int modifiers, unsigned int modifier);
     char AllegroKeycodeToAscii(int keycode, unsigned int modifiers);
 
 public:

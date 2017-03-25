@@ -43,8 +43,8 @@ public:
 
     void Disconnect(ListenerBase<T>* listener)
     {
-        listener_iter iter = this->listeners.begin();
-        for (iter; iter != this->listeners.end(); ++iter)
+        listener_iter iter;
+        for (iter = this->listeners.begin(); iter != this->listeners.end(); ++iter)
         {
             if (*iter == listener)
             {
@@ -56,8 +56,8 @@ public:
 
     void Fire(T args) const
     {
-        const_listener_iter iter = this->listeners.begin();
-        for (iter; iter != this->listeners.end(); ++iter)
+        const_listener_iter iter;
+        for (iter = this->listeners.begin(); iter != this->listeners.end(); ++iter)
         {
             (*iter)->Notify(args);
         }

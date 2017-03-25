@@ -158,7 +158,6 @@ Account* Database::ReadAccount(std::string email)
         throw DatabaseReadException();
     }
     SQLFreeHandle(SQL_HANDLE_STMT, h_Statement);
-    delete email_str;
 }
 
 void Database::UpdateAccount(Account* account)
