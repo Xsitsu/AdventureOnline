@@ -35,6 +35,21 @@ bool ClientStateLoggedIn::ProcessPacket(PacketBase* packet)
 
         return true;
     }
+        else if(packet->GetType() == PacketBase::PACKET_DATA_REQUEST)
+    {
+//        Database * database = this->server->GetDatabaseConnection();
+//        PacketCharacter * returnCharacter = new PacketCharacter();
+//        vector<int> characters = database->ReadePlayerCharacters(account->GetEmail());
+//        vector<int>::iterator it = characters.begin();
+//        while(it < characters.end())
+//        {
+//           returnCharacter->SetCharacters(database->ReadCharacterInfo( *it++) );
+//           this->SendPacket(returnCharacter);
+//           returnCharacter = new PacketCharacter();
+//        }
+
+        return true;
+    }
 
 
     return false;

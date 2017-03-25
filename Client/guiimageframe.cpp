@@ -1,4 +1,4 @@
-#include "guiimageframe.h"
+#include "guiimageframe.hpp"
 
 GuiImageFrame::GuiImageFrame(ALLEGRO_BITMAP * image): b_image(image), GuiFrame()
 {

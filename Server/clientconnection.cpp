@@ -43,21 +43,6 @@ void ClientConnection::ProcessPacket(PacketBase* packet)
     {
         std::cout << "Dropping packet [id:" << packet->GetType() << "] [sequence:" << packet->GetSequence() << "]" << std::endl;
     }
-    else if(packet->GetType() == PacketBase::PACKET_DATA_REQUEST)
-    {
-        Database * database = this->server->GetDatabaseConnection();
-        PacketCharacter * returnCharacter = new PacketCharacter();
-        Character PC;
-        vector<int> characters = database->ReadePlayerCharacters(account->GetEmail());
-        vector<int>::iterator it = characters.begin();
-        while(it < characters.end())
-        {
-            returnCharacter->SetCharacters(database->ReadCharacterInfo( *it++) );
-            this->SendPacket(returnCharacter);
-            returnCharacter = new PacketCharacter();
-        }
-
-    }
 }
 
 void ClientConnection::TickPacketAcks()

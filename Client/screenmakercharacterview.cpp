@@ -84,22 +84,23 @@ namespace CharacterViewScreenListeners
             this->game->RegisterEventToQueue(new LoginEvent(this->game));
         }
     };
+    class RefreshListener : public ListenerBase<GuiButtonArgs*>
+    {
+    protected:
+        Game * game;
+
+    public:
+        RefreshListener(Game * game): game(game) {}
+
+        virtual void Notify(GuiButtonArgs*& args) const
+        {
+            this->game->RegisterEventToQueue(new RefreshEvent(this->game));
+        }
+    };
 }
 
 
-class RefreshListener : public ListenerBase<GuiButtonArgs*>
-{
-protected:
-    Game * game;
 
-public:
-    RefreshListener(Game * game): game(game) {}
-
-    virtual void Notify(GuiButtonArgs*& args) const
-    {
-        this->game->RegisterEventToQueue(new RefreshEvent(this->game));
-    }
-};
 
 
 

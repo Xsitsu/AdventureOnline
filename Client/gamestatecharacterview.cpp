@@ -25,15 +25,15 @@ void GameStateCharacterView::Exit()
 
 void GameStateCharacterView::HandlePacket(PacketBase * packet)
 {
-    PacketCharacter* character = static_cast<PacketCharacter*>(packet);
-    std::cout << "PacketCharacter Recieved:\t" << character->GetCharacters().GetName() << std::endl;
-    this->game->PopScreen();
-    this->game->PopScreen();
-    this->game->PopScreen();
-    ScreenMakerCharacterView maker(this->game);
-    GuiScreen* screen = maker.MakeScreen();
-
-    this->game->PushScreen(screen);
+//    PacketCharacter* character = static_cast<PacketCharacter*>(packet);
+//    std::cout << "PacketCharacter Recieved:\t" << character->GetCharacters().GetName() << std::endl;
+//    this->game->PopScreen();
+//    this->game->PopScreen();
+//    this->game->PopScreen();
+//    ScreenMakerCharacterView maker(this->game);
+//    GuiScreen* screen = maker.MakeScreen();
+//
+//    this->game->PushScreen(screen);
 }
 void GameStateCharacterView::Tick()
 {
