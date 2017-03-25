@@ -2,8 +2,8 @@
 
 #include <iostream>
 
-Server::Server(unsigned short port, unsigned int max_connections) : port(port), connection_id_counter(0),
-max_connections(max_connections), last_timeout_check(std::time(NULL)), world(NULL), database(NULL)
+Server::Server(unsigned short port, unsigned int max_connections) : connection_id_counter(0),
+last_timeout_check(std::time(NULL)), port(port), max_connections(max_connections), world(NULL), database(NULL)
 {
     clients = new ClientConnection*[this->max_connections];
     for (unsigned int i = 0; i < this->max_connections; i++)

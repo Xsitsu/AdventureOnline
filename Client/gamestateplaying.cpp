@@ -158,13 +158,9 @@ void GameStatePlaying::HandleKeyDown(const ALLEGRO_KEYBOARD_EVENT& keyboard)
         return;
     }
 
-    Map* cur_map = this->game->current_map;
     Character* cur_char = this->game->current_character;
-
     cur_char->SetDirection(dir);
-
     Vector2 targ_pos = cur_char->GetPosition() + adder;
-
     try
     {
         cur_char->Move(targ_pos);

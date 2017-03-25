@@ -1,12 +1,12 @@
 #include "guibase.hpp"
 
-GuiBase::GuiBase() : size(Vector2()), position(Vector2()), absolute_position(Vector2()), visible(true), parent(NULL), parent_screen(nullptr)
+GuiBase::GuiBase() : absolute_position(Vector2()), parent_screen(nullptr), size(Vector2()), position(Vector2()), parent(nullptr), visible(true)
 {}
 
-GuiBase::GuiBase(Vector2 size) : size(size), position(Vector2()), absolute_position(Vector2()), visible(true), parent(NULL), parent_screen(nullptr)
+GuiBase::GuiBase(Vector2 size) : absolute_position(Vector2()), parent_screen(nullptr), size(size), position(Vector2()), parent(nullptr), visible(true)
 {}
 
-GuiBase::GuiBase(Vector2 size, Vector2 position) : size(size), position(position), absolute_position(position), visible(true), parent(NULL), parent_screen(nullptr)
+GuiBase::GuiBase(Vector2 size, Vector2 position) : absolute_position(position), parent_screen(nullptr), size(size), position(position),  parent(nullptr), visible(true)
 {}
 
 GuiBase::~GuiBase()
@@ -102,8 +102,8 @@ void GuiBase::UpdateAbsolutePosition()
 
     if (!this->children.empty())
     {
-        gui_child_iter iter = this->children.begin();
-        for (iter; iter != this->children.end(); ++iter)
+        gui_child_iter iter;
+        for (iter = this->children.begin(); iter != this->children.end(); ++iter)
         {
             GuiBase* gui = *iter;
             gui->UpdateAbsolutePosition();
@@ -121,10 +121,8 @@ void GuiBase::DrawChildren() const
 {
     if (!this->children.empty())
     {
-        cgui_child_iter iter = this->children.begin();
-        cgui_child_iter last = this->children.end();
-
-        for (iter; iter != last; ++iter)
+        cgui_child_iter iter;
+        for (iter = this->children.begin(); iter != this->children.end(); ++iter)
         {
             (*iter)->Draw();
         }
@@ -163,9 +161,10 @@ bool GuiBase::PointIsInBounds(const Vector2& position) const
 bool GuiBase::HasAncestor(GuiBase* ancestor) const
 {
     GuiBase* parent = this->parent;
-    while (parent != NULL)
+    while (parent != nullptr)
     {
         if (parent == ancestor) return true;
         parent = parent->GetParent();
     }
+    return false;
 }

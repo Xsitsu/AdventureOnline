@@ -62,7 +62,7 @@ void GuiPasswordTextBox::DoDraw() const
 void GuiPasswordTextBox::UpdateTextWidth()
 {
     this->draw_text = "";
-    for (int i = 0; i < this->text.size(); i++)
+    for (unsigned int i = 0; i < this->text.size(); i++)
     {
         this->draw_text += "*";
     }

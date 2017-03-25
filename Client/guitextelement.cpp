@@ -1,7 +1,7 @@
 #include "guitextelement.hpp"
 
-GuiTextElement::GuiTextElement() : text_color(Color3()), text_alpha(255),
-text_draw_color(al_map_rgb(0, 0, 0)), text_draw_font(nullptr), text_align(ALIGN_LEFT)
+GuiTextElement::GuiTextElement() : text_align(ALIGN_LEFT), text_color(Color3()),
+text_alpha(255), text_draw_color(al_map_rgb(0, 0, 0)), text_draw_font(nullptr)
 {}
 
 GuiTextElement::~GuiTextElement()

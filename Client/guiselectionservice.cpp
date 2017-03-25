@@ -83,7 +83,7 @@ void GuiSelectionService::SetCurrentMouseHover(GuiBase* hover)
     this->current_mouse_hover = hover;
 }
 
-bool GuiSelectionService::CheckModifier(unsigned int modifiers, int modifier)
+bool GuiSelectionService::CheckModifier(unsigned int modifiers, unsigned int modifier)
 {
     return ((modifiers & modifier) == modifier);
 }
@@ -94,7 +94,7 @@ char GuiSelectionService::AllegroKeycodeToAscii(int keycode, unsigned int modifi
     bool caps_lock_mod = (this->CheckModifier(modifiers, ALLEGRO_KEYMOD_CAPSLOCK));
 
     char* case_set;
-    if (shift_mod)
+    if (shift_mod || caps_lock_mod)
     {
         case_set = this->uppercase_keys;
     }

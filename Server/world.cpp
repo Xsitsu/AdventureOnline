@@ -3,7 +3,7 @@
 World::World(unsigned int number_maps): number_maps(number_maps)
 {
     this->maps = new Map*[number_maps];
-    for (int i = 0; i < number_maps; i++)
+    for (unsigned int i = 0; i < number_maps; i++)
     {
         this->maps[i] = nullptr;
     }
