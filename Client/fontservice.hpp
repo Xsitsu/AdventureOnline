@@ -16,7 +16,7 @@ protected: // Singleton stuff
 
     FontService() {}
     FontService(const FontService& copy) {}
-    FontService& operator=(const FontService& rhs) {}
+    FontService& operator=(const FontService& rhs) { return *this; }
     virtual ~FontService() {}
 
 public:

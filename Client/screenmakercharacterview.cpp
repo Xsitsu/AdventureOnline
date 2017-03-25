@@ -3,51 +3,89 @@
 
 #include "gamestatecharacterview.hpp"
 #include "gamestatetitle.hpp"
+#include "gamestateplaying.hpp"
+
 #include <string>
 
-
-class LogoutEvent : public GameEventBase
+namespace CharacterViewScreenListeners
 {
-public:
-    LogoutEvent(Game* game) : GameEventBase(game) {}
-
-    virtual void HandleEvent()
+    class LogoutEvent : public GameEventBase
     {
-        this->game->PopScreen();
+    public:
+        LogoutEvent(Game* game) : GameEventBase(game) {}
 
-        ScreenMakerTitle maker(this->game);
-        GuiScreen* screen = maker.MakeScreen();
-        this->game->PushScreen(screen);
-        this->game->ChangeState(new GameStateTitle(this->game));
-    }
-};
+        virtual void HandleEvent()
+        {
+            PacketLogout* packet = new PacketLogout();
+            this->game->SendPacket(packet);
 
-class LogoutListener : public ListenerBase<GuiButtonArgs*>
-{
-protected:
-    Game* game;
+            this->game->PopScreen();
 
-public:
-    LogoutListener(Game* game) : game(game) {}
+            ScreenMakerTitle maker(this->game);
+            GuiScreen* screen = maker.MakeScreen();
+            this->game->PushScreen(screen);
+            this->game->ChangeState(new GameStateTitle(this->game));
+        }
+    };
 
-    virtual void Notify(GuiButtonArgs*& args) const
+    class LogoutListener : public ListenerBase<GuiButtonArgs*>
     {
-        this->game->RegisterEventToQueue(new LogoutEvent(this->game));
-    }
-};
+    protected:
+        Game* game;
 
-class RefreshEvent : public GameEventBase
-{
-public:
-    RefreshEvent(Game * game): GameEventBase(game){}
+    public:
+        LogoutListener(Game* game) : game(game) {}
 
-    virtual void HandleEvent()
+        virtual void Notify(GuiButtonArgs*& args) const
+        {
+            this->game->RegisterEventToQueue(new LogoutEvent(this->game));
+        }
+    };
+
+    class LoginEvent : public GameEventBase
     {
-        PacketDataRequest * datarequest = new PacketDataRequest();
-        datarequest->SetRequest(PacketDataRequest::USER_CHARACTERS_DATA);
-        game->SendPacket(datarequest);
-    }
-};
+    public:
+        LoginEvent(Game* game) : GameEventBase(game) {}
+
+        virtual void HandleEvent()
+        {
+            this->game->PopScreen();
+
+            //ScreenMakerPlaying maker(this->game);
+            //GuiScreen* screen = maker.MakeScreen();
+            //this->game->PushScreen(screen);
+            this->game->ChangeState(new GameStatePlaying(this->game));
+        }
+    };
+
+    class RefreshEvent : public GameEventBase
+    {
+    public:
+        RefreshEvent(Game * game): GameEventBase(game){}
+
+        virtual void HandleEvent()
+        {
+            PacketDataRequest * datarequest = new PacketDataRequest();
+            datarequest->SetRequest(PacketDataRequest::USER_CHARACTERS_DATA);
+            game->SendPacket(datarequest);
+        }
+    };
+
+    class LoginListener : public ListenerBase<GuiButtonArgs*>
+    {
+    protected:
+        Game* game;
+
+    public:
+        LoginListener(Game* game) : game(game) {}
+
+        virtual void Notify(GuiButtonArgs*& args) const
+        {
+            this->game->RegisterEventToQueue(new LoginEvent(this->game));
+        }
+    };
+}
+
 
 class RefreshListener : public ListenerBase<GuiButtonArgs*>
 {
@@ -65,7 +103,8 @@ public:
 
 
 
-GuiFrame* CreateCharacterFrame(ALLEGRO_FONT* font, ALLEGRO_BITMAP * icon)
+
+GuiFrame* CreateCharacterFrame(ALLEGRO_FONT* font, CharacterViewScreenListeners::LoginListener* login_listener, ALLEGRO_BITMAP * icon)
 {
     GuiFrame* base = new GuiFrame(Vector2(345, 180), Vector2(0, 0));
     base->SetBackgroundColor(Color3(124, 57, 21));
@@ -108,6 +147,7 @@ GuiFrame* CreateCharacterFrame(ALLEGRO_FONT* font, ALLEGRO_BITMAP * icon)
     login_button->SetTextColor(color_white);
     login_button->SetTextFont(font);
     login_button->SetTextAlign(GuiTextButton::ALIGN_CENTER);
+    login_button->RegisterOnClick(login_listener);
 
     GuiTextButton* delete_button = new GuiTextButton(button_size, start + Vector2(button_size.x + 10, 0));
     delete_button->SetText("Delete");
@@ -133,11 +173,10 @@ GuiFrame* CreateCharacterFrame(ALLEGRO_FONT* font, ALLEGRO_BITMAP * icon)
 
 GuiScreen* ScreenMakerCharacterView::MakeScreen()
 {
-    LogoutListener * logout_listener = new LogoutListener(this->game);
-    RefreshListener * refresh_listener = new RefreshListener(this->game);
+    CharacterViewScreenListeners::LogoutListener* logout_listener = new CharacterViewScreenListeners::LogoutListener(this->game);
+    CharacterViewScreenListeners::LoginListener* login_listener = new CharacterViewScreenListeners::LoginListener(this->game);
+    CharacterViewScreenListeners::RefreshListener * refresh_listener = new CharacterViewScreenListeners::RefreshListener(this->game);
     ALLEGRO_BITMAP * icon, * icon2;
-    //bool error_check;
-
     al_init_image_addon();
     //std::cout << "Error check code:"  << error_check << std::endl;
     icon = al_load_bitmap("B:/AdventureOnline/AdventureOnline/Client/Images/Asdfstuff-asdf-movie-30876901-200-200.jpg");
@@ -150,10 +189,10 @@ GuiScreen* ScreenMakerCharacterView::MakeScreen()
 
     ALLEGRO_FONT* font = FontService::Instance()->GetFont("title_button");
 
-    GuiFrame* character_frame = CreateCharacterFrame(font, icon);
+    GuiFrame* character_frame = CreateCharacterFrame(font, login_listener, icon);
     character_frame->SetPosition(Vector2(260, 20));
 
-    GuiFrame* character_frame2 = CreateCharacterFrame(font, icon2);
+    GuiFrame* character_frame2 = CreateCharacterFrame(font, login_listener, icon2);
     character_frame2->SetPosition(Vector2(260, 20 + 180 + 10));
 
 
@@ -191,6 +230,8 @@ GuiScreen* ScreenMakerCharacterView::MakeScreen()
     GuiScreen* screen = new GuiScreen(base_frame);
     screen->RegisterListener(logout_listener);
     screen->RegisterListener(refresh_listener);
+    screen->RegisterListener(login_listener);
+
 
     return screen;
 }

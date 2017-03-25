@@ -16,13 +16,17 @@ public:
     };
 
 protected:
-    unsigned int sprite_id;
+    int sprite_id;
     MovementPermissions move_permissions;
 
 public:
     bool TileIsWalkable(Actor* actor) const;
 
-    unsigned int GetSpriteId() const;
+
+    void SetSpriteId(int sprite_id);
+    int GetSpriteId() const;
+
+    void SetMovementPermissions(MovementPermissions permissions);
     MovementPermissions GetMovementPermissions() const;
 };
 #endif // MAPTILE_HPP_INCLUDE

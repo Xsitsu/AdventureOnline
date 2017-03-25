@@ -20,6 +20,9 @@ class GameStateBase;
 #include "fontservice.hpp"
 #include "guiselectionservice.hpp"
 
+#include "GameWorld/character.hpp"
+#include "GameWorld/map.hpp"
+
 class GameEventBase;
 
 class Game
@@ -32,13 +35,14 @@ friend class GameStateCharacterView;
 friend class GameStateAccountCreation;
 friend class GameStateLoginAwaitResponse;
 friend class GameStateAccountCreationAwaitResponse;
+friend class GameStatePlaying;
 
 protected: // Singleton stuff
     static Game* instance;
 
     Game();
     Game(const Game& copy) {}
-    Game& operator=(const Game& rhs) {}
+    Game& operator=(const Game& rhs) { return *this; }
     virtual ~Game();
 
 public:
@@ -70,6 +74,10 @@ protected:
     typedef std::list<GuiScreen*>::iterator screen_iter;
 
     std::list<GameEventBase*> game_event_queue;
+
+    Map* current_map;
+    Character* current_character;
+
 
 
     void DrawScreens();

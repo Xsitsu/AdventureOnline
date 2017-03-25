@@ -2,8 +2,9 @@
 
 #include <iostream>
 
-Client::Client(Address address) : is_connected(false), server_address(address),
-connection_id(0), packet_sequence(0), last_communication(0)
+Client::Client(Address address) : is_connected(false), connection_id(0),
+packet_sequence(0), server_address(address), last_communication(0)
+
 {}
 
 bool Client::Init(unsigned short listen_port)

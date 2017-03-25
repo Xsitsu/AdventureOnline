@@ -10,3 +10,7 @@ allegro.log
 *.depend
 
 Makefile
+
+resource
+
+*.aorf

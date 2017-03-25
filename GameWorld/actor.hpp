@@ -11,13 +11,15 @@ class DLL_EXPORT Actor
 {
 public:
     // This allows you to compute backwards direction by doing (current_direction + 2)%4
-    enum DIRECTION { DIR_UP, DIR_LEFT, DIR_DOWN, DIR_RIGHT };
+    enum Direction { DIR_UP = 0, DIR_LEFT, DIR_DOWN, DIR_RIGHT };
 
 protected:
     Map* current_map;
     Vector2 map_position;
 
-    DIRECTION direction;
+    Direction direction;
+
+    bool has_nowall;
 
     unsigned short health;
     unsigned short max_health;
@@ -25,6 +27,9 @@ protected:
     unsigned short endurance;
 
 public:
+    Actor();
+    virtual ~Actor();
+
     virtual bool IsNPC() const = 0;
     virtual bool IsPlayer() const = 0;
 
@@ -37,13 +42,21 @@ public:
     void SetHealth( unsigned short val) { health = val; }
     void SetStrength( unsigned short val ) { strength = val; }
     void SetEndurance( unsigned short val ) { endurance = val; }
-    void SetDirection( DIRECTION val ) { direction = val; }
 
     unsigned short GetMaxHealth() { return max_health; }
     unsigned short GetHealth() { return health; }
     unsigned short GetStrength() { return strength; }
     unsigned short GetEndurance() { return endurance; }
-    DIRECTION GetDirection() { return direction; }
+    Direction GetDirection() { return direction; }
     Vector2 GetPosition() { return map_position; }
+
+    Vector2 GetPosition() const;
+
+    Direction GetDirection() const;
+    void SetDirection(Direction direction);
+
+    bool GetHasNowall() const;
+    void SetHasNowall(bool val);
+
 };
 #endif // ACTOR_HPP_INCLUDE

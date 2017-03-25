@@ -6,7 +6,7 @@
 #if PLATFORM == PLATFORM_WINDOWS
 
 #include <winsock2.h>
-#pragma comment(lib,"WS2_32")
+//#pragma comment(lib,"WS2_32")
 
 #elif PLATFORM == PLATFORM_MAC || PLATFORM == PLATFORM_UNIX
 

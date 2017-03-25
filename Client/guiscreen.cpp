@@ -32,8 +32,8 @@ void GuiScreen::ParseChild(GuiBase* child)
     }
 
     std::list<GuiBase*> children = child->GetChildren();
-    gui_child_iter iter = children.begin();
-    for (iter; iter != children.end(); ++iter)
+    gui_child_iter iter;
+    for (iter = children.begin(); iter != children.end(); ++iter)
     {
         this->ParseChild(*iter);
     }
@@ -139,7 +139,7 @@ bool GuiScreen::HandleMouseUp(const Vector2& pos)
 
             did_mouse_up = true;
         }
-        else if (GuiTextBox* text_box = dynamic_cast<GuiTextBox*>(gui))
+        else if (dynamic_cast<GuiTextBox*>(gui))
         {
             //text_box->Select();
             was_sunk = true;
@@ -169,7 +169,7 @@ bool GuiScreen::HandleMouseMove(const Vector2& pos)
                 button->DoMouseLeave();
                 was_sunk = true;
             }
-            else if (GuiTextBox* text_box = dynamic_cast<GuiTextBox*>(cur_hover))
+            else if (dynamic_cast<GuiTextBox*>(cur_hover))
             {
                 //text_box->Select();
                 was_sunk = true;
@@ -185,7 +185,7 @@ bool GuiScreen::HandleMouseMove(const Vector2& pos)
                 button->DoMouseEnter();
                 was_sunk = true;
             }
-            else if (GuiTextBox* text_box = dynamic_cast<GuiTextBox*>(gui))
+            else if (dynamic_cast<GuiTextBox*>(gui))
             {
                 //text_box->Select();
                 was_sunk = true;

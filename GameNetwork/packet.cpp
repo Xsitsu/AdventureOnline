@@ -14,17 +14,17 @@ const unsigned int PacketBase::PACKET_PREFIX = data;
 
 PacketBase::PacketBase() : type(PacketBase::PACKET_UNKNOWN)
 {
-    //this->buffer_pos = 0;
+
 }
 
-PacketBase::PacketBase(PacketBase::PacketType type) : type(type), needs_ack(true)
+PacketBase::PacketBase(PacketBase::PacketType type) : needs_ack(true), type(type)
 {
-    //this->buffer_pos = 0;
+
 }
 
-PacketBase::PacketBase(PacketBase::PacketType type, bool needs_ack) : type(type), needs_ack(needs_ack)
+PacketBase::PacketBase(PacketBase::PacketType type, bool needs_ack) : needs_ack(needs_ack), type(type)
 {
-    //this->buffer_pos = 0;
+
 }
 
 unsigned int PacketBase::Encode(char* buffer)
@@ -102,8 +102,11 @@ PacketBase* PacketReader::ReadPacket(char* buffer, int bytes_read)
     case PacketBase::PACKET_DATA_REQUEST:
         packet = new PacketDataRequest();
         break;
-    case PacketBase::PACKET_CHARACTER:
-        packet = new PacketCharacter();
+//    case PacketBase::PACKET_CHARACTER:
+//        packet = new PacketCharacter();
+//        break;
+    case PacketBase::PACKET_LOGOUT:
+        packet = new PacketLogout();
         break;
     default:
         //std::cout << "bad type: " << (unsigned int) type << std::endl;s
@@ -221,7 +224,8 @@ void PacketInit::Decode(char* buffer)
     this->listen_port = reader.ReadShort(buffer, this->buffer_pos);
 }
 
-PacketInitResponse::PacketInitResponse() : PacketBase(PacketBase::PACKET_INIT_RESPONSE), assigned_connection_id(0), connection_accepted(true)
+PacketInitResponse::PacketInitResponse() : PacketBase(PacketBase::PACKET_INIT_RESPONSE),
+connection_accepted(true), assigned_connection_id(0)
 {}
 
 unsigned int PacketInitResponse::Encode(char* buffer)
@@ -466,6 +470,7 @@ unsigned int PacketDataRequest::Encode(char* buffer)
 
     return this->buffer_pos;
 }
+
 void PacketDataRequest::Decode(char* buffer)
 {
     this->buffer_pos = 0;
@@ -475,57 +480,60 @@ void PacketDataRequest::Decode(char* buffer)
 }
 PacketDataRequest::PacketDataRequest(): PacketBase(PacketBase::PACKET_DATA_REQUEST) {}
 
-PacketCharacter::PacketCharacter(): PacketBase(PacketBase::PACKET_CHARACTER) {}
+//PacketCharacter::PacketCharacter(): PacketBase(PacketBase::PACKET_CHARACTER) {}
+//
+//unsigned int PacketCharacter::Encode(char* buffer)
+//{
+//    PacketReader reader;
+//    PacketBase::Encode(buffer);
+//
+//    uint8_t name_length = character.GetName().size();
+//    const char * name = character.GetName().c_str();
+//
+//    reader.WriteByte(buffer,buffer_pos, character.GetMaxHealth());
+//    reader.WriteByte(buffer,buffer_pos, character.GetHealth());
+//    reader.WriteByte(buffer,buffer_pos, character.GetStrength());
+//    reader.WriteByte(buffer,buffer_pos, character.GetEndurance());
+//    reader.WriteByte(buffer,buffer_pos, character.GetDirection());
+//    reader.WriteByte(buffer,buffer_pos, static_cast<uint8_t>(character.GetDirection()));
+//    reader.WriteByte(buffer,buffer_pos, character.GetPosition().x);
+//    reader.WriteByte(buffer,buffer_pos, character.GetPosition().y);
+//    reader.WriteByte(buffer,buffer_pos, name_length);
+//    for(int i =0; i < name_length; i++)
+//    {
+//        reader.WriteByte(buffer, buffer_pos, name[i]);
+//    }
+//
+//    return buffer_pos;
+//}
+//void PacketCharacter::Decode(char* buffer)
+//{
+//    Vector2 position;
+//    char * name;
+//    uint8_t name_length;
+//
+//    PacketReader reader;
+//    PacketBase::Decode(buffer);
+//    character.SetMaxHealth( reader.ReadByte(buffer, buffer_pos) );
+//    character.SetHealth( reader.ReadByte(buffer, buffer_pos) );
+//    character.SetStrength( reader.ReadByte(buffer, buffer_pos) );
+//    character.SetEndurance( reader.ReadByte(buffer, buffer_pos) );
+//    character.SetDirection( static_cast<Actor::Direction>(reader.ReadByte(buffer, buffer_pos)) );
+//    position.x = reader.ReadByte(buffer, buffer_pos);
+//    position.y = reader.ReadByte(buffer, buffer_pos);
+//    character.Move(position);
+//    name_length = reader.ReadByte(buffer, buffer_pos);
+//    name = new char[name_length+1];
+//
+//    for(int i; i < name_length; i++)
+//    {
+//        name[i] = reader.ReadByte(buffer, buffer_pos);
+//    }
+//    name[name_length] = 0;
+//
+//    character.SetName(name);
+//    delete[] name;
+//}
 
-unsigned int PacketCharacter::Encode(char* buffer)
-{
-    PacketReader reader;
-    PacketBase::Encode(buffer);
-
-    uint8_t name_length = character.GetName().size();
-    const char * name = character.GetName().c_str();
-
-    reader.WriteByte(buffer,buffer_pos, character.GetMaxHealth());
-    reader.WriteByte(buffer,buffer_pos, character.GetHealth());
-    reader.WriteByte(buffer,buffer_pos, character.GetStrength());
-    reader.WriteByte(buffer,buffer_pos, character.GetEndurance());
-    reader.WriteByte(buffer,buffer_pos, character.GetDirection());
-    reader.WriteByte(buffer,buffer_pos, static_cast<uint8_t>(character.GetDirection()));
-    reader.WriteByte(buffer,buffer_pos, character.GetPosition().x);
-    reader.WriteByte(buffer,buffer_pos, character.GetPosition().y);
-    reader.WriteByte(buffer,buffer_pos, name_length);
-    for(int i =0; i < name_length; i++)
-    {
-        reader.WriteByte(buffer, buffer_pos, name[i]);
-    }
-
-    return buffer_pos;
-}
-void PacketCharacter::Decode(char* buffer)
-{
-    Vector2 position;
-    char * name;
-    uint8_t name_length;
-
-    PacketReader reader;
-    PacketBase::Decode(buffer);
-    character.SetMaxHealth( reader.ReadByte(buffer, buffer_pos) );
-    character.SetHealth( reader.ReadByte(buffer, buffer_pos) );
-    character.SetStrength( reader.ReadByte(buffer, buffer_pos) );
-    character.SetEndurance( reader.ReadByte(buffer, buffer_pos) );
-    character.SetDirection( static_cast<Actor::DIRECTION>(reader.ReadByte(buffer, buffer_pos)) );
-    position.x = reader.ReadByte(buffer, buffer_pos);
-    position.y = reader.ReadByte(buffer, buffer_pos);
-    character.Move(position);
-    name_length = reader.ReadByte(buffer, buffer_pos);
-    name = new char[name_length+1];
-
-    for(int i; i < name_length; i++)
-    {
-        name[i] = reader.ReadByte(buffer, buffer_pos);
-    }
-    name[name_length] = 0;
-
-    character.SetName(name);
-    delete[] name;
-}
+PacketLogout::PacketLogout() : PacketBase(PacketBase::PACKET_LOGOUT)
+{}

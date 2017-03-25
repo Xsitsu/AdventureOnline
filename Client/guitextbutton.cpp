@@ -1,78 +1,17 @@
 #include "guitextbutton.hpp"
 
-GuiTextButton::GuiTextButton() : GuiButton(), text_color(Color3()), text_alpha(255),
-text_draw_color(al_map_rgb(0, 0, 0)), text_draw_font(NULL), text_align(ALIGN_LEFT)
+GuiTextButton::GuiTextButton() : GuiButton(), GuiTextElement()
 {}
 
-GuiTextButton::GuiTextButton(Vector2 size) : GuiButton(size), text_color(Color3()), text_alpha(255),
-text_draw_color(al_map_rgb(0, 0, 0)), text_draw_font(NULL), text_align(ALIGN_LEFT)
+GuiTextButton::GuiTextButton(Vector2 size) : GuiButton(size), GuiTextElement()
 {}
 
-GuiTextButton::GuiTextButton(Vector2 size, Vector2 position) : GuiButton(size, position), text_color(Color3()),
-text_alpha(255), text_draw_color(al_map_rgb(0, 0, 0)), text_draw_font(NULL), text_align(ALIGN_LEFT)
+GuiTextButton::GuiTextButton(Vector2 size, Vector2 position) : GuiButton(size, position), GuiTextElement()
 {}
 
 GuiTextButton::~GuiTextButton()
 {
 
-}
-
-std::string GuiTextButton::GetText() const
-{
-    return this->text;
-}
-
-void GuiTextButton::SetText(std::string text)
-{
-    this->text = text;
-}
-
-Color3 GuiTextButton::GetTextColor() const
-{
-    return this->text_color;
-}
-
-void GuiTextButton::SetTextColor(Color3 color)
-{
-    this->text_color = color;
-    this->UpdateTextDrawColor();
-}
-
-unsigned char GuiTextButton::GetTextAlpha() const
-{
-    return this->text_alpha;
-}
-
-void GuiTextButton::SetTextAlpha(unsigned char trans)
-{
-    this->text_alpha = trans;
-    this->UpdateTextDrawColor();
-}
-
-GuiTextButton::TEXTALIGN GuiTextButton::GetTextAlign() const
-{
-    return this->text_align;
-}
-
-void GuiTextButton::SetTextAlign(GuiTextButton::TEXTALIGN align)
-{
-    this->text_align = align;
-}
-
-ALLEGRO_FONT* GuiTextButton::GetTextFont() const
-{
-    return this->text_draw_font;
-}
-
-void GuiTextButton::SetTextFont(ALLEGRO_FONT* font)
-{
-    this->text_draw_font = font;
-}
-
-void GuiTextButton::UpdateTextDrawColor()
-{
-    Color3* color = &this->text_color;
-    this->text_draw_color = al_map_rgba(color->r, color->g, color->b, this->text_alpha);
 }
 
 void GuiTextButton::DoDraw() const

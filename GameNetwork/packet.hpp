@@ -31,7 +31,8 @@ public:
         PACKET_LOGIN_REQUEST,
         PACKET_LOGIN_RESPONSE,
         PACKET_DATA_REQUEST,
-        PACKET_CHARACTER
+//        PACKET_CHARACTER,
+        PACKET_LOGOUT
     };
 
 protected:
@@ -250,6 +251,7 @@ public:
     {
         LOGINRESPONSE_SUCCESS,
         LOGINRESPONSE_FAIL,
+        LOGINRESPONSE_ALREADY_LOGGED_IN,
         LOGINRESPONSE_ERROR
     };
 protected:
@@ -264,6 +266,7 @@ public:
     virtual unsigned int Encode(char* buffer);
     virtual void Decode(char* buffer);
 };
+
 
 class DLL_EXPORT PacketDataRequest : public PacketBase
 {
@@ -290,17 +293,26 @@ protected:
     DataType request;
 };
 
-class DLL_EXPORT PacketCharacter : public PacketBase
+//class DLL_EXPORT PacketCharacter : public PacketBase
+//{
+//public:
+//    PacketCharacter();
+//
+//    virtual unsigned int Encode(char* buffer);
+//    virtual void Decode(char* buffer);
+//
+//    Character GetCharacters() { return character; }
+//    void SetCharacters(Character val) { character = val; }
+//protected:
+//    Character character;
+//};
+
+class DLL_EXPORT PacketLogout : public PacketBase
 {
-public:
-    PacketCharacter();
-
-    virtual unsigned int Encode(char* buffer);
-    virtual void Decode(char* buffer);
-
-    Character GetCharacters() { return character; }
-    void SetCharacters(Character val) { character = val; }
 protected:
-    Character character;
+
+public:
+    PacketLogout();
 };
+
 #endif // PACKET_HPP_INCLUDE
