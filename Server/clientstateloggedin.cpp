@@ -26,10 +26,7 @@ bool ClientStateLoggedIn::ProcessPacket(PacketBase* packet)
 
     if (packet->GetType() == PacketBase::PACKET_LOGOUT)
     {
-        this->client->server->GetAccountService().UnregisterAccount(this->client->account->GetAccountId());
-
-        delete this->client->account;
-        this->client->account = nullptr;
+        this->client->DoAccountLogout();
 
         this->client->ChangeState(new ClientStateNoLogin(this->client));
 
