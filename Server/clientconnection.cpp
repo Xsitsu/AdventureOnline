@@ -1,8 +1,6 @@
 #include "clientconnection.hpp"
 
 #include <iostream>
-#include <vector>
-using std::vector;
 
 ClientConnection::ClientConnection(Server* server, Address address, unsigned int connection_id) :
 connection_id(connection_id), packet_sequence(0), client_address(address), server(server), account(NULL),
