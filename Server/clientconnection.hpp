@@ -42,8 +42,11 @@ protected:
 
     ClientStateBase* state;
 
+    void DoAccountLogout();
+
 public:
     ClientConnection(Server* server, Address address, unsigned int connection_id);
+    ~ClientConnection();
 
     void SendPacket(PacketBase* packet);
     void ProcessPacket(PacketBase* packet);

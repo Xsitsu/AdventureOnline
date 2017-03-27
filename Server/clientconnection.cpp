@@ -9,6 +9,24 @@ state(nullptr)
     this->ChangeState(new ClientStateInit(this));
 }
 
+ClientConnection::~ClientConnection()
+{
+    if (this->account)
+    {
+        this->DoAccountLogout();
+    }
+}
+
+void ClientConnection::DoAccountLogout()
+{
+    if (this->account)
+    {
+        this->server->GetAccountService().UnregisterAccount(this->account->GetAccountId());
+        delete this->account;
+        this->account = nullptr;
+    }
+}
+
 void ClientConnection::SendPacket(PacketBase* packet)
 {
     packet->SetSequence(this->packet_sequence++);
