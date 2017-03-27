@@ -92,34 +92,45 @@ GuiFrame* CreateCharacterFrame(ALLEGRO_FONT* font, CharacterViewScreenListeners:
     Color3 color_white = Color3(255, 255, 255);
 
     GuiTextLabel* character_name = new GuiTextLabel(Vector2(220, font->height), Vector2(115, 10));
-    character_name->SetText(player_character->GetName());
+    character_name->SetText(player_character?player_character->GetName():"Character Name");
     character_name->SetTextColor(color_white);
     character_name->SetBackgroundAlpha(255);
     character_name->SetTextFont(font);
     character_name->SetTextAlign(GuiTextLabel::ALIGN_CENTER);
 
     GuiTextLabel * character_strength = new GuiTextLabel(Vector2(220, font->height), Vector2(115, 10 + font->height));
-    snprintf(converter, 4, "%d", player_character->GetStrength());
+
     strcpy(statString, "Strength:    ");
-    strcat(statString, converter);
+    if(player_character)
+    {
+        snprintf(converter, 4, "%d", player_character->GetStrength());
+        strcat(statString, converter);
+    }
     character_strength->SetText(statString);
     character_strength->SetTextColor(color_white);
     character_strength->SetBackgroundAlpha(255);
     character_strength->SetTextFont(font);
 
     GuiTextLabel * character_stamina = new GuiTextLabel(Vector2(220, font->height), Vector2(115, 10 + 2 * font->height));
-    snprintf(converter, 4, "%d", player_character->GetEndurance());
     strcpy(statString, "Stamina:    ");
-    strcat(statString, converter);
+    if(player_character)
+    {
+        snprintf(converter, 4, "%d", player_character->GetEndurance());
+        strcat(statString, converter);
+    }
     character_stamina->SetText(statString);
     character_stamina->SetTextColor(color_white);
     character_stamina->SetBackgroundAlpha(255);
     character_stamina->SetTextFont(font);
 
     GuiTextLabel * character_hitpoints = new GuiTextLabel(Vector2(220, font->height), Vector2(115, 10 + 3 * font->height));
-    snprintf(converter, 4, "%d", player_character->GetHealth());
+
     strcpy(statString, "Hitpoints:    ");
-    strcat(statString, converter);
+    if(player_character)
+    {
+        snprintf(converter, 4, "%d", player_character->GetHealth());
+        strcat(statString, converter);
+    }
     character_hitpoints->SetText(statString);
     character_hitpoints->SetTextColor(color_white);
     character_hitpoints->SetBackgroundAlpha(255);
@@ -170,14 +181,12 @@ GuiScreen* ScreenMakerCharacterView::MakeScreen()
 
     ALLEGRO_FONT* font = FontService::Instance()->GetFont("title_button");
 
-    if(!game->GetCharacterList().empty())
+    for (unsigned int i = 0; i < 2; i++)
     {
-        for (unsigned int i = 0; i < game->GetCharacterList().size(); i++)
-        {
-            character_frames.push_back(CreateCharacterFrame(font, login_listener, game->GetCharacterList()[i]));
-            character_frames[i]->SetPosition(Vector2(260, 20 +190*i));
-        }
+        character_frames.push_back(CreateCharacterFrame(font, login_listener, game->GetCharacterList().empty()?nullptr:game->GetCharacterList()[i]));
+        character_frames[i]->SetPosition(Vector2(260, 20 +190*i));
     }
+
 
     Vector2 button_size = Vector2(160, 48);
 

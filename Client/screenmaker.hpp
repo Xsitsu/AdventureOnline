@@ -6,7 +6,6 @@
 #include "guitextbutton.hpp"
 #include "guitextbox.hpp"
 
-#include "guiimageframe.hpp"
 
 #include "guitextlabel.hpp"
 #include "guipasswordtextbox.hpp"
