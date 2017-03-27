@@ -88,8 +88,6 @@
 		<Unit filename="guiimagebutton.hpp" />
 		<Unit filename="guiimageelement.cpp" />
 		<Unit filename="guiimageelement.hpp" />
-		<Unit filename="guiimageframe.cpp" />
-		<Unit filename="guiimageframe.hpp" />
 		<Unit filename="guiimagelabel.cpp" />
 		<Unit filename="guiimagelabel.hpp" />
 		<Unit filename="guipasswordtextbox.cpp" />
