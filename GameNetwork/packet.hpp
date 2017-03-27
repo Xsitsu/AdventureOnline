@@ -294,6 +294,18 @@ public:
     Character::Gender GetGender() { return static_cast<Character::Gender>(gender); }
     Character::Skin GetSkin() { return static_cast<Character::Skin>(skin); }
 
+    void SetMap( uint8_t val ) { mapID = val; }
+    void SetPosX( uint8_t val ) { pos_x = val; }
+    void SetPosY( uint8_t val ) { pos_y = val; }
+    void SetDirection( Actor::Direction val ) { direction = static_cast<uint8_t>(val); }
+    void SetHealth( uint8_t val ) { health = val; }
+    void SetMaxHealth( uint8_t val ) { maxHealth = val; }
+    void SetStrength( uint8_t val ) { strength = val; }
+    void SetEndurance( uint8_t val ) { endurance = val; }
+    void SetName( std::string val ) { name = val; }
+    void SetGender( Character::Gender val ) { gender = static_cast<uint8_t>(val); }
+    void SetSkin( Character::Skin val ) { skin = static_cast<uint8_t>(val); }
+
 
 //    Character GetCharacters() { return character; }
 //    void SetCharacters(Character val) { character = val; }
