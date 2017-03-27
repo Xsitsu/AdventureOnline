@@ -30,7 +30,7 @@ public:
         PACKET_REGISTRATION_RESPONSE,
         PACKET_LOGIN_REQUEST,
         PACKET_LOGIN_RESPONSE,
-        PACKET_CHARACTERS_REQUEST,
+        PACKET_CHARACTERS_LIST_REQUEST,
         PACKET_CHARACTER,
         PACKET_LOGOUT
     };
@@ -268,10 +268,10 @@ public:
 };
 
 
-class DLL_EXPORT PacketCharactersRequest : public PacketBase
+class DLL_EXPORT PacketCharacterListRequest : public PacketBase
 {
 public:
-    PacketCharactersRequest();
+    PacketCharacterListRequest();
 };
 
 class DLL_EXPORT PacketCharacter : public PacketBase

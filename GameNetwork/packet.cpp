@@ -99,8 +99,8 @@ PacketBase* PacketReader::ReadPacket(char* buffer, int bytes_read)
     case PacketBase::PACKET_LOGIN_RESPONSE:
         packet = new PacketLoginResponse();
         break;
-    case PacketBase::PACKET_CHARACTERS_REQUEST:
-        packet = new PacketCharactersRequest();
+    case PacketBase::PACKET_CHARACTERS_LIST_REQUEST:
+        packet = new PacketCharacterListRequest();
         break;
     case PacketBase::PACKET_CHARACTER:
         packet = new PacketCharacter();
@@ -460,7 +460,7 @@ void PacketLoginResponse::Decode(char* buffer)
     this->response = static_cast<PacketLoginResponse::LoginResponse>(reader.ReadByte(buffer, this->buffer_pos));
 }
 
-//unsigned int PacketCharactersRequest::Encode(char* buffer)
+//unsigned int PacketCharacterListRequest::Encode(char* buffer)
 //{
 //    this->buffer_pos = 0;
 //    PacketBase::Encode(buffer);
@@ -468,11 +468,11 @@ void PacketLoginResponse::Decode(char* buffer)
 //    return this->buffer_pos;
 //}
 //
-//void PacketCharactersRequest::Decode(char* buffer)
+//void PacketCharacterListRequest::Decode(char* buffer)
 //{
 //    PacketBase::Decode(buffer);
 //}
-PacketCharactersRequest::PacketCharactersRequest(): PacketBase(PacketBase::PACKET_CHARACTERS_REQUEST) {}
+PacketCharacterListRequest::PacketCharacterListRequest(): PacketBase(PacketBase::PACKET_CHARACTERS_LIST_REQUEST) {}
 
 PacketCharacter::PacketCharacter(Character * info ): PacketBase(PacketBase::PACKET_CHARACTER)
 {

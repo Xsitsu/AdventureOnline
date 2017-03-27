@@ -36,7 +36,7 @@ bool ClientStateLoggedIn::ProcessPacket(PacketBase* packet)
 
         return true;
     }
-    else if(packet->GetType() == PacketBase::PACKET_CHARACTERS_REQUEST)
+    else if(packet->GetType() == PacketBase::PACKET_CHARACTERS_LIST_REQUEST)
     {
         Database * database = this->client->server->GetDatabaseConnection();
         Character * playerCharacter = nullptr;

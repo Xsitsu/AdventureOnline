@@ -25,8 +25,8 @@ void GameStateLoginAwaitResponse::HandlePacket(PacketBase* packet)
             this->game->PopScreen();
             this->game->PopScreen();
             this->game->PopScreen();
-            
-            PacketCharactersRequest * datarequest = new PacketCharactersRequest();
+
+            PacketCharacterListRequest * datarequest = new PacketCharacterListRequest();
             this->game->SendPacket(datarequest);
 
             ScreenMakerCharacterView maker(this->game);
