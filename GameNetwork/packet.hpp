@@ -307,9 +307,6 @@ public:
     void SetGender( Character::Gender val ) { gender = static_cast<uint8_t>(val); }
     void SetSkin( Character::Skin val ) { skin = static_cast<uint8_t>(val); }
 
-
-//    Character GetCharacters() { return character; }
-//    void SetCharacters(Character val) { character = val; }
 protected:
     uint8_t mapID;
     uint8_t pos_x;
