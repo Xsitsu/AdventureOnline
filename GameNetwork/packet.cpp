@@ -552,5 +552,21 @@ void PacketCharacter::Decode(char* buffer)
     delete[] decode_name;
 }
 
+Character* PacketCharacter::GetCharacter()
+{
+    Character * newborn = new Character();
+    newborn->SetName(name);
+    newborn->SetGender(static_cast<Character::Gender>(gender));
+    newborn->SetSkin(static_cast<Character::Skin>(skin));
+    newborn->Warp(nullptr, Vector2(pos_x, pos_y));
+    newborn->SetDirection(static_cast<Actor::Direction>(direction));
+    newborn->SetHealth(health);
+    newborn->SetMaxHealth(maxHealth);
+    newborn->SetStrength(strength);
+    newborn->SetEndurance(endurance);
+
+    return newborn;
+}
+
 PacketLogout::PacketLogout() : PacketBase(PacketBase::PACKET_LOGOUT)
 {}

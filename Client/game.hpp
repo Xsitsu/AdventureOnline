@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <stack>
+#include <vector>
 
 #include "allegro5/allegro.h"
 #include "allegro5/allegro_primitives.h"
@@ -77,6 +78,7 @@ protected:
 
     Map* current_map;
     Character* current_character;
+    std::vector<Character*> character_list;
 
 
 

@@ -282,6 +282,7 @@ public:
     virtual unsigned int Encode(char* buffer);
     virtual void Decode(char* buffer);
 
+    Character* GetCharacter();
     uint8_t GetMap() {return mapID;}
     uint8_t GetPosX() { return pos_x; }
     uint8_t GetPosY() { return pos_y; }

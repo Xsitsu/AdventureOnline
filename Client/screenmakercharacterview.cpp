@@ -105,13 +105,11 @@ namespace CharacterViewScreenListeners
 
 
 
-GuiFrame* CreateCharacterFrame(ALLEGRO_FONT* font, CharacterViewScreenListeners::LoginListener* login_listener, ALLEGRO_BITMAP * icon)
+GuiFrame* CreateCharacterFrame(ALLEGRO_FONT* font, CharacterViewScreenListeners::LoginListener* login_listener)
 {
     GuiFrame* base = new GuiFrame(Vector2(345, 180), Vector2(0, 0));
     base->SetBackgroundColor(Color3(124, 57, 21));
 
-    GuiFrame* character_image_frame = new GuiImageFrame(Vector2(120 - 20, 180 - 20), Vector2(10, 10), icon);
-    character_image_frame->SetBackgroundColor(Color3(0, 0, 0));
 
     Color3 color_white = Color3(255, 255, 255);
 
@@ -141,7 +139,7 @@ GuiFrame* CreateCharacterFrame(ALLEGRO_FONT* font, CharacterViewScreenListeners:
     character_hitpoints->SetTextFont(font);
 
     Vector2 button_size = Vector2(105, font->height);
-    Vector2 start = character_image_frame->GetPosition() + Vector2(105, character_image_frame->GetSize().y - button_size.y);
+    Vector2 start = base->GetPosition() + Vector2(105, base->GetSize().y - button_size.y);
 
     GuiTextButton* login_button = new GuiTextButton(button_size, start);
     login_button->SetText("Login");
@@ -156,7 +154,6 @@ GuiFrame* CreateCharacterFrame(ALLEGRO_FONT* font, CharacterViewScreenListeners:
     delete_button->SetTextFont(font);
     delete_button->SetTextAlign(GuiTextButton::ALIGN_CENTER);
 
-    base->AddChild(character_image_frame);
     base->AddChild(character_name);
     base->AddChild(login_button);
     base->AddChild(delete_button);
@@ -177,11 +174,7 @@ GuiScreen* ScreenMakerCharacterView::MakeScreen()
     CharacterViewScreenListeners::LogoutListener* logout_listener = new CharacterViewScreenListeners::LogoutListener(this->game);
     CharacterViewScreenListeners::LoginListener* login_listener = new CharacterViewScreenListeners::LoginListener(this->game);
 //    CharacterViewScreenListeners::RefreshListener * refresh_listener = new CharacterViewScreenListeners::RefreshListener(this->game);
-    ALLEGRO_BITMAP * icon, * icon2;
     al_init_image_addon();
-    //std::cout << "Error check code:"  << error_check << std::endl;
-    icon = al_load_bitmap("B:/AdventureOnline/AdventureOnline/Client/Images/Asdfstuff-asdf-movie-30876901-200-200.jpg");
-    icon2 = al_load_bitmap("B:/AdventureOnline/AdventureOnline/Client/Images/Asdfstuff-asdf-movie-30876901-200-200.jpg");
 
     GuiFrame* base_frame;
     base_frame = new GuiFrame(Vector2(640, 480), Vector2(0, 0));
@@ -190,10 +183,10 @@ GuiScreen* ScreenMakerCharacterView::MakeScreen()
 
     ALLEGRO_FONT* font = FontService::Instance()->GetFont("title_button");
 
-    GuiFrame* character_frame = CreateCharacterFrame(font, login_listener, icon);
+    GuiFrame* character_frame = CreateCharacterFrame(font, login_listener);
     character_frame->SetPosition(Vector2(260, 20));
 
-    GuiFrame* character_frame2 = CreateCharacterFrame(font, login_listener, icon2);
+    GuiFrame* character_frame2 = CreateCharacterFrame(font, login_listener);
     character_frame2->SetPosition(Vector2(260, 20 + 180 + 10));
 
 

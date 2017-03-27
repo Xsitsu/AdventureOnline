@@ -25,7 +25,15 @@ void GameStateCharacterView::Exit()
 
 void GameStateCharacterView::HandlePacket(PacketBase * packet)
 {
-//    PacketCharacter* character = static_cast<PacketCharacter*>(packet);
+    PacketCharacter* returnCharacter = static_cast<PacketCharacter*>(packet);
+    Character * PC = returnCharacter->GetCharacter();
+    game->character_list.push_back(PC);
+
+    for(unsigned int i = 0; i < game->character_list.size(); i++)
+    {
+        std::cout << game->character_list[i]->GetName() << std::endl;
+    }
+
 //    std::cout << "PacketCharacter Recieved:\t" << character->GetCharacters().GetName() << std::endl;
 //    this->game->PopScreen();
 //    this->game->PopScreen();
