@@ -38,7 +38,7 @@
 				<Linker>
 					<Add option="-s" />
 					<Add library="user32" />
-					<Add library="../GameUtil/bin/Releease/libGameUtil.a" />
+					<Add library="../GameUtil/bin/Release/libGameUtil.a" />
 				</Linker>
 			</Target>
 		</Build>
