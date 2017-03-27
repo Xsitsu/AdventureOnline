@@ -99,7 +99,7 @@ PacketBase* PacketReader::ReadPacket(char* buffer, int bytes_read)
     case PacketBase::PACKET_LOGIN_RESPONSE:
         packet = new PacketLoginResponse();
         break;
-    case PacketBase::PACKET_CHARACTERS_LIST_REQUEST:
+    case PacketBase::PACKET_CHARACTER_LIST_REQUEST:
         packet = new PacketCharacterListRequest();
         break;
     case PacketBase::PACKET_CHARACTER:
@@ -472,7 +472,7 @@ void PacketLoginResponse::Decode(char* buffer)
 //{
 //    PacketBase::Decode(buffer);
 //}
-PacketCharacterListRequest::PacketCharacterListRequest(): PacketBase(PacketBase::PACKET_CHARACTERS_LIST_REQUEST) {}
+PacketCharacterListRequest::PacketCharacterListRequest(): PacketBase(PacketBase::PACKET_CHARACTER_LIST_REQUEST) {}
 
 PacketCharacter::PacketCharacter(Character * info ): PacketBase(PacketBase::PACKET_CHARACTER)
 {
