@@ -25,8 +25,10 @@ void GameStateLoginAwaitResponse::HandlePacket(PacketBase* packet)
             this->game->PopScreen();
             this->game->PopScreen();
             this->game->PopScreen();
-//            PacketDataRequest * datarequest = new PacketDataRequest();
+            PacketCharactersRequest * datarequest = new PacketCharactersRequest();
 //            datarequest->SetRequest(PacketDataRequest::USER_CHARACTERS_DATA);
+
+            this->game->SendPacket(datarequest);
 
             ScreenMakerCharacterView maker(this->game);
             GuiScreen* screen = maker.MakeScreen();

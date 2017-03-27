@@ -3,7 +3,7 @@
 
 #include "main.h"
 
-#include "vector2.hpp"
+#include "GameUtil/vector2.hpp"
 
 class Map;
 
@@ -47,8 +47,6 @@ public:
     unsigned short GetHealth() { return health; }
     unsigned short GetStrength() { return strength; }
     unsigned short GetEndurance() { return endurance; }
-    Direction GetDirection() { return direction; }
-    Vector2 GetPosition() { return map_position; }
 
     Vector2 GetPosition() const;
 

@@ -1,4 +1,5 @@
 #include "clientstate.hpp"
+#include "GameWorld/character.hpp"
 
 ClientStateLoggedIn::ClientStateLoggedIn(ClientConnection* client) : ClientStateBase(client)
 {
@@ -35,18 +36,20 @@ bool ClientStateLoggedIn::ProcessPacket(PacketBase* packet)
 
         return true;
     }
-        else if(packet->GetType() == PacketBase::PACKET_DATA_REQUEST)
+    else if(packet->GetType() == PacketBase::PACKET_CHARACTERS_REQUEST)
     {
-//        Database * database = this->server->GetDatabaseConnection();
-//        PacketCharacter * returnCharacter = new PacketCharacter();
-//        vector<int> characters = database->ReadePlayerCharacters(account->GetEmail());
-//        vector<int>::iterator it = characters.begin();
-//        while(it < characters.end())
-//        {
-//           returnCharacter->SetCharacters(database->ReadCharacterInfo( *it++) );
-//           this->SendPacket(returnCharacter);
-//           returnCharacter = new PacketCharacter();
-//        }
+        Database * database = this->client->server->GetDatabaseConnection();
+        Character * playerCharacter = nullptr;
+        PacketCharacter * returnCharacter = nullptr;
+        vector<int> characters = database->ReadPlayerCharacters(client->account->GetEmail());
+        vector<int>::iterator it = characters.begin();
+        while(it < characters.end())
+        {
+           playerCharacter = database->ReadCharacterInfo( *it++);
+           returnCharacter = new PacketCharacter(playerCharacter);
+           client->SendPacket(returnCharacter);
+           delete playerCharacter;
+        }
 
         return true;
     }

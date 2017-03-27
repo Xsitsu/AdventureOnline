@@ -17,7 +17,6 @@
 					<Add option="-Wall" />
 					<Add option="-g" />
 					<Add option="-DBUILD_DLL" />
-					<Add directory="../GameUtil" />
 				</Compiler>
 				<Linker>
 					<Add library="user32" />
@@ -39,7 +38,7 @@
 				<Linker>
 					<Add option="-s" />
 					<Add library="user32" />
-					<Add library="../GameUtil/bin/Release/libGameUtil.a" />
+					<Add library="../GameUtil/bin/Releease/libGameUtil.a" />
 				</Linker>
 			</Target>
 		</Build>

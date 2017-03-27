@@ -58,18 +58,18 @@ namespace CharacterViewScreenListeners
         }
     };
 
-    class RefreshEvent : public GameEventBase
-    {
-    public:
-        RefreshEvent(Game * game): GameEventBase(game){}
-
-        virtual void HandleEvent()
-        {
-            PacketDataRequest * datarequest = new PacketDataRequest();
-            datarequest->SetRequest(PacketDataRequest::USER_CHARACTERS_DATA);
-            game->SendPacket(datarequest);
-        }
-    };
+//    class RefreshEvent : public GameEventBase
+//    {
+//    public:
+//        RefreshEvent(Game * game): GameEventBase(game){}
+//
+//        virtual void HandleEvent()
+//        {
+//            PacketDataRequest * datarequest = new PacketDataRequest();
+//            datarequest->SetRequest(PacketDataRequest::USER_CHARACTERS_DATA);
+//            game->SendPacket(datarequest);
+//        }
+//    };
 
     class LoginListener : public ListenerBase<GuiButtonArgs*>
     {
@@ -84,19 +84,19 @@ namespace CharacterViewScreenListeners
             this->game->RegisterEventToQueue(new LoginEvent(this->game));
         }
     };
-    class RefreshListener : public ListenerBase<GuiButtonArgs*>
-    {
-    protected:
-        Game * game;
-
-    public:
-        RefreshListener(Game * game): game(game) {}
-
-        virtual void Notify(GuiButtonArgs*& args) const
-        {
-            this->game->RegisterEventToQueue(new RefreshEvent(this->game));
-        }
-    };
+//    class RefreshListener : public ListenerBase<GuiButtonArgs*>
+//    {
+//    protected:
+//        Game * game;
+//
+//    public:
+//        RefreshListener(Game * game): game(game) {}
+//
+//        virtual void Notify(GuiButtonArgs*& args) const
+//        {
+//            this->game->RegisterEventToQueue(new RefreshEvent(this->game));
+//        }
+//    };
 }
 
 
@@ -176,7 +176,7 @@ GuiScreen* ScreenMakerCharacterView::MakeScreen()
 {
     CharacterViewScreenListeners::LogoutListener* logout_listener = new CharacterViewScreenListeners::LogoutListener(this->game);
     CharacterViewScreenListeners::LoginListener* login_listener = new CharacterViewScreenListeners::LoginListener(this->game);
-    CharacterViewScreenListeners::RefreshListener * refresh_listener = new CharacterViewScreenListeners::RefreshListener(this->game);
+//    CharacterViewScreenListeners::RefreshListener * refresh_listener = new CharacterViewScreenListeners::RefreshListener(this->game);
     ALLEGRO_BITMAP * icon, * icon2;
     al_init_image_addon();
     //std::cout << "Error check code:"  << error_check << std::endl;
@@ -213,24 +213,24 @@ GuiScreen* ScreenMakerCharacterView::MakeScreen()
     logout_button->SetTextAlign(GuiTextButton::ALIGN_CENTER);
     logout_button->RegisterOnClick(logout_listener);
 
-    GuiTextButton* refresh_button = new GuiTextButton(button_size, Vector2(60 + button_size.x + button_size.x, 480 - 48 - 20));
-    refresh_button->SetTextFont(font);
-    refresh_button->SetTextColor(Color3(255, 255, 255));
-    refresh_button->SetText("Refresh");
-    refresh_button->SetTextAlign(GuiTextButton::ALIGN_CENTER);
-    refresh_button->RegisterOnClick(refresh_listener);
+//    GuiTextButton* refresh_button = new GuiTextButton(button_size, Vector2(60 + button_size.x + button_size.x, 480 - 48 - 20));
+//    refresh_button->SetTextFont(font);
+//    refresh_button->SetTextColor(Color3(255, 255, 255));
+//    refresh_button->SetText("Refresh");
+//    refresh_button->SetTextAlign(GuiTextButton::ALIGN_CENTER);
+//    refresh_button->RegisterOnClick(refresh_listener);
 
 
 
     base_frame->AddChild(character_frame);
     base_frame->AddChild(character_frame2);
-    base_frame->AddChild(refresh_button);
+//    base_frame->AddChild(refresh_button);
     base_frame->AddChild(create_char_button);
     base_frame->AddChild(logout_button);
 
     GuiScreen* screen = new GuiScreen(base_frame);
     screen->RegisterListener(logout_listener);
-    screen->RegisterListener(refresh_listener);
+//    screen->RegisterListener(refresh_listener);
     screen->RegisterListener(login_listener);
 
 

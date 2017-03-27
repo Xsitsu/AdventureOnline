@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-#include "character.hpp"
+#include "GameWorld/character.hpp"
 #include "socket.hpp"
 
 using std::string;
@@ -30,8 +30,8 @@ public:
         PACKET_REGISTRATION_RESPONSE,
         PACKET_LOGIN_REQUEST,
         PACKET_LOGIN_RESPONSE,
-        PACKET_DATA_REQUEST,
-//        PACKET_CHARACTER,
+        PACKET_CHARACTERS_REQUEST,
+        PACKET_CHARACTER,
         PACKET_LOGOUT
     };
 
@@ -268,44 +268,49 @@ public:
 };
 
 
-class DLL_EXPORT PacketDataRequest : public PacketBase
+class DLL_EXPORT PacketCharactersRequest : public PacketBase
 {
-
-
 public:
-    enum DataType
-    {
-        USER_DATA,
-        USER_CHARACTERS_DATA,
-        CHARACTER_DATA
-    };
-    PacketDataRequest();
+    PacketCharactersRequest();
+};
 
-    DataType GetRequest() { return request; }
-    void SetRequest(DataType val) { request = val; }
+class DLL_EXPORT PacketCharacter : public PacketBase
+{
+public:
+    PacketCharacter(Character * info = nullptr);
 
     virtual unsigned int Encode(char* buffer);
     virtual void Decode(char* buffer);
 
+    uint8_t GetMap() {return mapID;}
+    uint8_t GetPosX() { return pos_x; }
+    uint8_t GetPosY() { return pos_y; }
+    Actor::Direction GetDirection() { return static_cast<Actor::Direction>(direction); }
+    uint8_t GetHealth() { return health; }
+    uint8_t GetMaxHealth() { return maxHealth; }
+    uint8_t GetStrength() { return strength; }
+    uint8_t GetEndurance() { return endurance; }
+    std::string GetName() { return name; }
+    Character::Gender GetGender() { return static_cast<Character::Gender>(gender); }
+    Character::Skin GetSkin() { return static_cast<Character::Skin>(skin); }
 
 
-protected:
-    DataType request;
-};
-
-//class DLL_EXPORT PacketCharacter : public PacketBase
-//{
-//public:
-//    PacketCharacter();
-//
-//    virtual unsigned int Encode(char* buffer);
-//    virtual void Decode(char* buffer);
-//
 //    Character GetCharacters() { return character; }
 //    void SetCharacters(Character val) { character = val; }
-//protected:
-//    Character character;
-//};
+protected:
+    uint8_t mapID;
+    uint8_t pos_x;
+    uint8_t pos_y;
+    uint8_t direction;
+    uint8_t health;
+    uint8_t maxHealth;
+    uint8_t strength;
+    uint8_t endurance;
+
+    std::string name;
+    uint8_t gender;
+    uint8_t skin;
+};
 
 class DLL_EXPORT PacketLogout : public PacketBase
 {

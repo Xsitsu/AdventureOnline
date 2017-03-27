@@ -99,12 +99,12 @@ PacketBase* PacketReader::ReadPacket(char* buffer, int bytes_read)
     case PacketBase::PACKET_LOGIN_RESPONSE:
         packet = new PacketLoginResponse();
         break;
-    case PacketBase::PACKET_DATA_REQUEST:
-        packet = new PacketDataRequest();
+    case PacketBase::PACKET_CHARACTERS_REQUEST:
+        packet = new PacketCharactersRequest();
         break;
-//    case PacketBase::PACKET_CHARACTER:
-//        packet = new PacketCharacter();
-//        break;
+    case PacketBase::PACKET_CHARACTER:
+        packet = new PacketCharacter();
+        break;
     case PacketBase::PACKET_LOGOUT:
         packet = new PacketLogout();
         break;
@@ -460,80 +460,97 @@ void PacketLoginResponse::Decode(char* buffer)
     this->response = static_cast<PacketLoginResponse::LoginResponse>(reader.ReadByte(buffer, this->buffer_pos));
 }
 
-unsigned int PacketDataRequest::Encode(char* buffer)
-{
-    this->buffer_pos = 0;
-    PacketBase::Encode(buffer);
-
-    PacketReader reader;
-    reader.WriteByte(buffer, this->buffer_pos, static_cast<uint8_t>(this->request));
-
-    return this->buffer_pos;
-}
-
-void PacketDataRequest::Decode(char* buffer)
-{
-    this->buffer_pos = 0;
-    PacketBase::Decode(buffer);
-    PacketReader reader;
-    this->request = static_cast<PacketDataRequest::DataType>(reader.ReadByte(buffer, this->buffer_pos));
-}
-PacketDataRequest::PacketDataRequest(): PacketBase(PacketBase::PACKET_DATA_REQUEST) {}
-
-//PacketCharacter::PacketCharacter(): PacketBase(PacketBase::PACKET_CHARACTER) {}
-//
-//unsigned int PacketCharacter::Encode(char* buffer)
+//unsigned int PacketCharactersRequest::Encode(char* buffer)
 //{
-//    PacketReader reader;
+//    this->buffer_pos = 0;
 //    PacketBase::Encode(buffer);
 //
-//    uint8_t name_length = character.GetName().size();
-//    const char * name = character.GetName().c_str();
-//
-//    reader.WriteByte(buffer,buffer_pos, character.GetMaxHealth());
-//    reader.WriteByte(buffer,buffer_pos, character.GetHealth());
-//    reader.WriteByte(buffer,buffer_pos, character.GetStrength());
-//    reader.WriteByte(buffer,buffer_pos, character.GetEndurance());
-//    reader.WriteByte(buffer,buffer_pos, character.GetDirection());
-//    reader.WriteByte(buffer,buffer_pos, static_cast<uint8_t>(character.GetDirection()));
-//    reader.WriteByte(buffer,buffer_pos, character.GetPosition().x);
-//    reader.WriteByte(buffer,buffer_pos, character.GetPosition().y);
-//    reader.WriteByte(buffer,buffer_pos, name_length);
-//    for(int i =0; i < name_length; i++)
-//    {
-//        reader.WriteByte(buffer, buffer_pos, name[i]);
-//    }
-//
-//    return buffer_pos;
+//    return this->buffer_pos;
 //}
-//void PacketCharacter::Decode(char* buffer)
+//
+//void PacketCharactersRequest::Decode(char* buffer)
 //{
-//    Vector2 position;
-//    char * name;
-//    uint8_t name_length;
-//
-//    PacketReader reader;
 //    PacketBase::Decode(buffer);
-//    character.SetMaxHealth( reader.ReadByte(buffer, buffer_pos) );
-//    character.SetHealth( reader.ReadByte(buffer, buffer_pos) );
-//    character.SetStrength( reader.ReadByte(buffer, buffer_pos) );
-//    character.SetEndurance( reader.ReadByte(buffer, buffer_pos) );
-//    character.SetDirection( static_cast<Actor::Direction>(reader.ReadByte(buffer, buffer_pos)) );
-//    position.x = reader.ReadByte(buffer, buffer_pos);
-//    position.y = reader.ReadByte(buffer, buffer_pos);
-//    character.Move(position);
-//    name_length = reader.ReadByte(buffer, buffer_pos);
-//    name = new char[name_length+1];
-//
-//    for(int i; i < name_length; i++)
-//    {
-//        name[i] = reader.ReadByte(buffer, buffer_pos);
-//    }
-//    name[name_length] = 0;
-//
-//    character.SetName(name);
-//    delete[] name;
 //}
+PacketCharactersRequest::PacketCharactersRequest(): PacketBase(PacketBase::PACKET_CHARACTERS_REQUEST) {}
+
+PacketCharacter::PacketCharacter(Character * info ): PacketBase(PacketBase::PACKET_CHARACTER)
+{
+    if (info)
+    {
+        name = info->GetName();
+        pos_x = info->GetPosition().x;
+        pos_y = info->GetPosition().y;
+        direction = static_cast<short int>(info->GetDirection());
+        health = info->GetHealth();
+        maxHealth = info->GetMaxHealth();
+        strength = info->GetStrength();
+        endurance = info->GetEndurance();
+
+        gender = static_cast<short int>(info->GetGender());
+        skin = static_cast<short int>(info->GetSkin());
+    }
+}
+
+unsigned int PacketCharacter::Encode(char* buffer)
+{
+    PacketReader reader;
+    PacketBase::Encode(buffer);
+
+    uint8_t name_length = name.size();
+    const char * encode_name = name.c_str();
+
+    reader.WriteByte(buffer,buffer_pos, mapID);
+    reader.WriteByte(buffer,buffer_pos, pos_x);
+    reader.WriteByte(buffer,buffer_pos, pos_y);
+    reader.WriteByte(buffer,buffer_pos, direction);
+    reader.WriteByte(buffer,buffer_pos, health);
+    reader.WriteByte(buffer,buffer_pos, maxHealth);
+    reader.WriteByte(buffer,buffer_pos, strength);
+    reader.WriteByte(buffer,buffer_pos, endurance);
+    reader.WriteByte(buffer,buffer_pos, skin);
+    reader.WriteByte(buffer,buffer_pos, gender);
+    reader.WriteByte(buffer,buffer_pos, name_length);
+    for(int i =0; i < name_length; i++)
+    {
+        reader.WriteByte(buffer, buffer_pos, encode_name[i]);
+    }
+
+    return buffer_pos;
+}
+
+void PacketCharacter::Decode(char* buffer)
+{
+    PacketReader reader;
+    PacketBase::Decode(buffer);
+
+    Vector2 position;
+    char * decode_name;
+    uint8_t name_length;
+
+
+    mapID = reader.ReadByte(buffer, buffer_pos) ;
+    pos_x = reader.ReadByte(buffer, buffer_pos) ;
+    pos_y = reader.ReadByte(buffer, buffer_pos) ;
+    direction = reader.ReadByte(buffer, buffer_pos) ;
+    health = reader.ReadByte(buffer, buffer_pos) ;
+    maxHealth = reader.ReadByte(buffer, buffer_pos) ;
+    strength = reader.ReadByte(buffer, buffer_pos) ;
+    endurance = reader.ReadByte(buffer, buffer_pos) ;
+    skin = reader.ReadByte(buffer, buffer_pos) ;
+    gender = reader.ReadByte(buffer, buffer_pos) ;
+    name_length = reader.ReadByte(buffer, buffer_pos);
+    decode_name = new char[name_length+1];
+
+    for(int i =0; i < name_length; i++)
+    {
+        decode_name[i] = reader.ReadByte(buffer, buffer_pos);
+    }
+    decode_name[name_length] = 0;
+
+    name = decode_name;
+    delete[] decode_name;
+}
 
 PacketLogout::PacketLogout() : PacketBase(PacketBase::PACKET_LOGOUT)
 {}

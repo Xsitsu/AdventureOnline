@@ -1,11 +1,11 @@
 #include "guiimageframe.hpp"
 
-GuiImageFrame::GuiImageFrame(ALLEGRO_BITMAP * image): b_image(image), GuiFrame()
+GuiImageFrame::GuiImageFrame(ALLEGRO_BITMAP * image): GuiFrame(),b_image(image)
 {
 
 }
-GuiImageFrame::GuiImageFrame(Vector2 size, ALLEGRO_BITMAP * image): b_image(image), GuiFrame(size){}
-GuiImageFrame::GuiImageFrame(Vector2 size, Vector2 position, ALLEGRO_BITMAP * image ): b_image(image), GuiFrame(size, position){}
+GuiImageFrame::GuiImageFrame(Vector2 size, ALLEGRO_BITMAP * image): GuiFrame(size), b_image(image){}
+GuiImageFrame::GuiImageFrame(Vector2 size, Vector2 position, ALLEGRO_BITMAP * image ):GuiFrame(size, position), b_image(image){}
 
 GuiImageFrame::~GuiImageFrame()
 {

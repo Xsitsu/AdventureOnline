@@ -2,7 +2,8 @@
 #define GAMESTATECHARACTERVIEW_HPP_INCLUDE
 
 #include "gamestate.hpp"
-
+#include "vector"
+#include "GameWorld/character.hpp"
 class GameStateCharacterView : public GameStateBase
 {
 public:
@@ -22,6 +23,9 @@ public:
     virtual void HandlePacket(PacketBase * packet);
 
     virtual std::string GetStateName() { return "CharacterView"; }
+
+protected:
+
 };
 
 #endif // GAMESTATECHARACTERVIEW_HPP_INCLUDE

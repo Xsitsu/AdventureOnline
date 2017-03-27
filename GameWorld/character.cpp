@@ -1,13 +1,8 @@
 #include "character.hpp"
 
-Character::Character() : Actor(), name("N/A"), gender(Character::GENDER_FEMALE), skin(Character::SKIN_WHITE)
+Character::Character() : name("N/A"), gender(Character::GENDER_FEMALE), skin(Character::SKIN_WHITE)
 {
-    direction = Direction::DIR_UP;
-    current_map = nullptr;
-    health = 0;
-    max_health = 0;
-    strength = 0;
-    endurance = 0;
+
 }
 
 Character::Character(const Character& val)

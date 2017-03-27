@@ -207,7 +207,7 @@ void Database::DeleteAccount(Account* account)
     // ToDo
 }
 
-vector<int> Database::ReadePlayerCharacters (std::string email)
+vector<int> Database::ReadPlayerCharacters (std::string email)
 {
     char SQL_Code[1000] = "{CALL ReadUserCharacters(?) }";
     SQLLEN cBind = SQL_NTS;
@@ -218,8 +218,8 @@ vector<int> Database::ReadePlayerCharacters (std::string email)
     vector<int> characters;
 
     SQLRETURN localRetcode;
-    SQLINTEGER sqlInt;
-    SDWORD sqlThing;
+//    SQLINTEGER sqlInt;
+//    SDWORD sqlThing;
 
     localRetcode = SQLAllocHandle(SQL_HANDLE_STMT, h_DBC, &h_Statement);
 
@@ -248,10 +248,10 @@ vector<int> Database::ReadePlayerCharacters (std::string email)
 
 }
 
-Character Database::ReadCharacterInfo( int ID)
+Character * Database::ReadCharacterInfo( int ID)
 {
     char SQL_Code[100] = "{CALL ReadCharacterInfo(?) }";
-    Character PC;
+    Character * PC = new Character();
     int stats[7];
     char name[255];
     SQLLEN cBind = SQL_NTS;
@@ -268,19 +268,19 @@ Character Database::ReadCharacterInfo( int ID)
     SQLGetData(h_Statement, 4, SQL_C_LONG, &stats[0], 1, &sqlInt );
     SQLGetData(h_Statement, 5, SQL_C_LONG, &stats[1], 1, &sqlInt );
 
-    PC.SetName(name);
-    PC.Move(Vector2(stats[0], stats[1]));
+    PC->SetName(name);
+    PC->Warp(nullptr, Vector2(stats[0], stats[1]));
 
     SQLFetch(h_Statement);
     SQLGetData(h_Statement, 4, SQL_C_LONG, &stats[2], 1, &sqlInt );
-    PC.SetStrength(stats[2]);
+    PC->SetStrength(stats[2]);
 
     SQLFetch(h_Statement);
     SQLGetData(h_Statement, 4, SQL_C_LONG, &stats[3], 1, &sqlInt );
-    PC.SetEndurance(stats[3]);
+    PC->SetEndurance(stats[3]);
 
-    PC.SetMaxHealth( 100);
-    PC.SetHealth(100);
+    PC->SetMaxHealth( 100);
+    PC->SetHealth(100);
     SQLFreeHandle(SQL_HANDLE_STMT, h_Statement);
 
     return PC;

@@ -35,8 +35,8 @@ public:
     void UpdateAccount(Account* account);
     void DeleteAccount(Account* account);
 
-    vector<int> ReadePlayerCharacters (std::string email);
-    Character ReadCharacterInfo(int);
+    vector<int> ReadPlayerCharacters (std::string email);
+    Character * ReadCharacterInfo(int);
 };
 
 

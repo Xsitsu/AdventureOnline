@@ -14,8 +14,6 @@
 				<Compiler>
 					<Add option="-g" />
 					<Add option="-D_DEBUG" />
-					<Add directory="../GameWorld" />
-					<Add directory="../GameUtil" />
 				</Compiler>
 				<Linker>
 					<Add library="../allegro/lib/liballegro-5.0.10-monolith-md-debug.a" />
@@ -50,12 +48,6 @@
 			<Add directory=".." />
 			<Add directory="../allegro/include" />
 		</Compiler>
-		<Unit filename="Images/Asdfstuff-asdf-movie-30876901-200-200.jpg">
-			<Option compile="1" />
-		</Unit>
-		<Unit filename="Images/Asdfstuff-asdf-movie-30876901-200-200.png">
-			<Option compile="1" />
-		</Unit>
 		<Unit filename="actordrawer.cpp" />
 		<Unit filename="actordrawer.hpp" />
 		<Unit filename="bitmapservice.cpp" />
@@ -92,12 +84,12 @@
 		<Unit filename="guibutton.hpp" />
 		<Unit filename="guiframe.cpp" />
 		<Unit filename="guiframe.hpp" />
-		<Unit filename="guiimageframe.cpp" />
-		<Unit filename="guiimageframe.h" />
 		<Unit filename="guiimagebutton.cpp" />
 		<Unit filename="guiimagebutton.hpp" />
 		<Unit filename="guiimageelement.cpp" />
 		<Unit filename="guiimageelement.hpp" />
+		<Unit filename="guiimageframe.cpp" />
+		<Unit filename="guiimageframe.hpp" />
 		<Unit filename="guiimagelabel.cpp" />
 		<Unit filename="guiimagelabel.hpp" />
 		<Unit filename="guipasswordtextbox.cpp" />
