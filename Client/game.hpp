@@ -92,7 +92,7 @@ public:
 
     void RegisterEventToQueue(GameEventBase* event);
 
-    const std::vector<Character*>& GetCharacterList() { return character_list; }
+    std::vector<Character*>& GetCharacterList() { return character_list; }
 
     void ChangeState(GameStateBase* state);
     void PushScreen(GuiScreen* screen);

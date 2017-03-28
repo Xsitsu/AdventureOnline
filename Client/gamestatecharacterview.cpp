@@ -15,7 +15,8 @@ GameStateCharacterView::~GameStateCharacterView()
 
 void GameStateCharacterView::Enter()
 {
-
+    PacketCharacterListRequest * datarequest = new PacketCharacterListRequest();
+    this->game->SendPacket(datarequest);
 }
 
 void GameStateCharacterView::Exit()
@@ -25,22 +26,17 @@ void GameStateCharacterView::Exit()
 
 void GameStateCharacterView::HandlePacket(PacketBase * packet)
 {
-    PacketCharacter* returnCharacter = static_cast<PacketCharacter*>(packet);
-    Character * PC = returnCharacter->GetCharacter();
-    game->character_list.push_back(PC);
-    game->PopScreen();
+    if(packet->GetType() == PacketBase::PACKET_CHARACTER)
+    {
+        PacketCharacter* returnCharacter = static_cast<PacketCharacter*>(packet);
+        Character * PC = returnCharacter->GetCharacter();
+        game->character_list.push_back(PC);
+        game->PopScreen();
 
-    ScreenMakerCharacterView maker(game);
-    game->PushScreen(maker.MakeScreen());
+        ScreenMakerCharacterView maker(game);
+        game->PushScreen(maker.MakeScreen());
+    }
 
-//    std::cout << "PacketCharacter Recieved:\t" << character->GetCharacters().GetName() << std::endl;
-//    this->game->PopScreen();
-//    this->game->PopScreen();
-//    this->game->PopScreen();
-//    ScreenMakerCharacterView maker(this->game);
-//    GuiScreen* screen = maker.MakeScreen();
-//
-//    this->game->PushScreen(screen);
 }
 void GameStateCharacterView::Tick()
 {
@@ -54,7 +50,7 @@ void GameStateCharacterView::Render()
     this->game->DrawScreens();
     if(!game->character_list.empty())
     {
-        for(unsigned int i = 0; i < game->character_list.size(); i++)
+        for(unsigned int i = 0; i < game->character_list.size() && i < 2; i++)
         {
             DrawSpecs specs = actorDrawer.GetDrawSpecs(game->character_list[i]);
             al_draw_tinted_bitmap_region(specs.bitmap, specs.tint,
