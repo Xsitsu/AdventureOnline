@@ -172,6 +172,7 @@ GuiScreen* ScreenMakerCharacterView::MakeScreen()
     CharacterViewScreenListeners::LogoutListener* logout_listener = new CharacterViewScreenListeners::LogoutListener(this->game);
     CharacterViewScreenListeners::LoginListener* login_listener = new CharacterViewScreenListeners::LoginListener(this->game);
     std::vector<GuiFrame*> character_frames;
+    Character * temp = nullptr;
 
 
     GuiFrame* base_frame;
@@ -183,7 +184,13 @@ GuiScreen* ScreenMakerCharacterView::MakeScreen()
 
     for (unsigned int i = 0; i < 2; i++)
     {
-        character_frames.push_back(CreateCharacterFrame(font, login_listener, game->GetCharacterList().empty()?nullptr:game->GetCharacterList()[i]));
+        if(!game->GetCharacterList().empty())
+        {
+            temp = ( i < game->GetCharacterList().size())?game->GetCharacterList()[i]:nullptr;
+            //std::cout << temp->GetName() << std::endl;
+        }
+
+        character_frames.push_back(CreateCharacterFrame(font, login_listener, temp));
         character_frames[i]->SetPosition(Vector2(260, 20 +190*i));
     }
 
