@@ -49,23 +49,24 @@ void GameStateCharacterView::Render()
 
     if(!game->character_list.empty())
     {
-        ActorDrawer actorDrawer;
-        Vector2 draw_pos(300,50);
+        ActorDrawer actordrawer;
 
-        for(unsigned int i = 0; i < game->character_list.size() && i < 2; i++)
+        int num_chars = this->game->character_list.size();
+        if (num_chars > 0)
         {
-            std::list<DrawSpecs> spec_list = actorDrawer.GetDrawSpecs(game->character_list[i]);
-            while (!spec_list.empty())
-            {
-                DrawSpecs specs = spec_list.front();
-                al_draw_tinted_bitmap_region(specs.bitmap, specs.tint,
-                                            specs.sprite_start.x, specs.sprite_start.y,
-                                            specs.sprite_size.x, specs.sprite_size.y,
-                                            draw_pos.x + specs.draw_offset.x, draw_pos.y + specs.draw_offset.y + 190*i, specs.draw_flags);
+            GuiFrame* character_frame = static_cast<GuiFrame*>(this->game->GetCurrentScreen()->GetGuiById("character_frame_1"));
+            GuiFrame* draw_frame = static_cast<GuiFrame*>(character_frame->GetGuiById("character_draw_area"));
+            Vector2 draw_middle = draw_frame->GetAbsolutePosition() + draw_frame->GetSize()/2;
 
-                spec_list.pop_front();
-            }
+            actordrawer.DrawActor(this->game->character_list[0], draw_middle);
+        }
+        if (num_chars > 1)
+        {
+            GuiFrame* character_frame = static_cast<GuiFrame*>(this->game->GetCurrentScreen()->GetGuiById("character_frame_2"));
+            GuiFrame* draw_frame = static_cast<GuiFrame*>(character_frame->GetGuiById("character_draw_area"));
+            Vector2 draw_middle = draw_frame->GetAbsolutePosition() + draw_frame->GetSize()/2;
 
+            actordrawer.DrawActor(this->game->character_list[1], draw_middle);
         }
     }
 }

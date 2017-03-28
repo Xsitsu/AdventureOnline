@@ -25,14 +25,15 @@ struct DrawSpecs
 class ActorDrawer
 {
 protected:
-    std::list<DrawSpecs> DoDrawSpecsNPC(Actor* actor);
-    std::list<DrawSpecs> DoDrawSpecsCharacter(Character* character);
+    void DoDrawNPC(Actor* npc, Vector2 draw_middle, bool on_tile) const;
+    void DoDrawCharacter(Character* character, Vector2 draw_middle, bool on_tile) const;
 
 public:
     ActorDrawer();
     ~ActorDrawer();
 
-    std::list<DrawSpecs> GetDrawSpecs(Actor* actor);
+    void DrawActor(Actor* actor, Vector2 draw_middle) const;
+    void DrawActorOnTile(Actor* actor, Vector2 tile_middle) const;
 
 };
 #endif // ACTORDRAWER_HPP_INCLUDE
