@@ -14,7 +14,7 @@ GuiPasswordTextBox::~GuiPasswordTextBox()
 
 void GuiPasswordTextBox::DoDraw() const
 {
-    GuiFrame::DoDraw();
+    GuiObject::DoDraw();
 
     Vector2 abs_pos = this->GetAbsolutePosition();
     ALLEGRO_FONT* font = this->text_draw_font;

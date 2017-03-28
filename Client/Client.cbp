@@ -90,6 +90,10 @@
 		<Unit filename="guiimageelement.hpp" />
 		<Unit filename="guiimagelabel.cpp" />
 		<Unit filename="guiimagelabel.hpp" />
+		<Unit filename="guilabel.cpp" />
+		<Unit filename="guilabel.hpp" />
+		<Unit filename="guiobject.cpp" />
+		<Unit filename="guiobject.hpp" />
 		<Unit filename="guipasswordtextbox.cpp" />
 		<Unit filename="guipasswordtextbox.hpp" />
 		<Unit filename="guiscreen.cpp" />

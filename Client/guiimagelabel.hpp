@@ -1,12 +1,12 @@
 #ifndef GUIIMAGELABEL_HPP_INCLUDE
 #define GUIIMAGELABEL_HPP_INCLUDE
 
-#include "guiframe.hpp"
+#include "guilabel.hpp"
 #include "guiimageelement.hpp"
 
 #include <allegro5/allegro_image.h>
 
-class GuiImageLabel : public GuiFrame, public GuiImageElement
+class GuiImageLabel : public GuiLabel, public GuiImageElement
 {
 protected:
     virtual void DoDraw() const;

@@ -1,10 +1,10 @@
 #ifndef GUITEXTLABEL_HPP_INCLUDE
 #define GUITEXTLABEL_HPP_INCLUDE
 
-#include "guiframe.hpp"
+#include "guilabel.hpp"
 #include "guitextelement.hpp"
 
-class GuiTextLabel : public GuiFrame, public GuiTextElement
+class GuiTextLabel : public GuiLabel, public GuiTextElement
 {
 protected:
     virtual void DoDraw() const;

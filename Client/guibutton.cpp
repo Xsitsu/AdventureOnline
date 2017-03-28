@@ -2,14 +2,29 @@
 
 #include <iostream>
 
-GuiButton::GuiButton() : GuiFrame()
+GuiButton::GuiButton() : GuiObject()
 {}
 
-GuiButton::GuiButton(Vector2 size) : GuiFrame(size)
+GuiButton::GuiButton(Vector2 size) : GuiObject(size)
 {}
 
-GuiButton::GuiButton(Vector2 size, Vector2 position) : GuiFrame(size, position)
+GuiButton::GuiButton(Vector2 size, Vector2 position) : GuiObject(size, position)
 {}
+
+GuiButton::GuiButton(const GuiButton& rhs) : GuiObject(rhs)
+{
+
+}
+
+GuiButton& GuiButton::operator=(const GuiButton& rhs)
+{
+    if (this != &rhs)
+    {
+        GuiObject::operator=(rhs);
+    }
+
+    return *this;
+}
 
 GuiButton::~GuiButton()
 {

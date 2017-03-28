@@ -4,21 +4,13 @@
 #include "allegro5/allegro.h"
 #include "allegro5/allegro_primitives.h"
 
-#include "guibase.hpp"
+#include "guiobject.hpp"
 
 #include "color3.hpp"
 
-class GuiFrame : public GuiBase
+class GuiFrame : public GuiObject
 {
 protected:
-    bool is_filled;
-    Color3 background_color;
-    unsigned char background_alpha;
-
-    ALLEGRO_COLOR bg_draw_color;
-
-    void UpdateBackgroundDrawColor();
-
     virtual void DoDraw() const;
 
 public:
@@ -26,16 +18,6 @@ public:
     GuiFrame(Vector2 size);
     GuiFrame(Vector2 size, Vector2 position);
     virtual ~GuiFrame();
-
-    bool GetIsFilled() const;
-    void SetIsFilled(bool val);
-
-    Color3 GetBackgroundColor() const;
-    void SetBackgroundColor(Color3 color);
-
-    unsigned char GetBackgroundAlpha() const;
-    void SetBackgroundAlpha(unsigned char alpha);
-
 };
 
 #endif // GUIFRAME_HPP_INCLUDE
