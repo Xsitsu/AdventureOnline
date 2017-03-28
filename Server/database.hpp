@@ -4,7 +4,8 @@
 #include <windows.h>
 #include <sql.h>
 #include <sqlext.h>
-
+#include <vector>
+using std::vector;
 
 #include <exception>
 
@@ -33,6 +34,9 @@ public:
     Account* ReadAccount(std::string email);
     void UpdateAccount(Account* account);
     void DeleteAccount(Account* account);
+
+    vector<int> ReadPlayerCharacters (std::string email);
+    Character * ReadCharacterInfo(int);
 };
 
 

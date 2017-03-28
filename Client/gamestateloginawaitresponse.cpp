@@ -31,6 +31,7 @@ void GameStateLoginAwaitResponse::HandlePacket(PacketBase* packet)
 
             this->game->PushScreen(screen);
             this->game->ChangeState(new GameStateCharacterView(this->game));
+
         }
         else if (res == PacketLoginResponse::LOGINRESPONSE_FAIL)
         {

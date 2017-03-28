@@ -5,6 +5,10 @@
 #include "gamestatetitle.hpp"
 #include "gamestateplaying.hpp"
 
+
+#include <string>
+#include <cstdio>
+
 namespace CharacterViewScreenListeners
 {
     class LogoutEvent : public GameEventBase
@@ -18,6 +22,13 @@ namespace CharacterViewScreenListeners
             this->game->SendPacket(packet);
 
             this->game->PopScreen();
+
+            while(!game->GetCharacterList().empty())
+            {
+                Character * temp = game->GetCharacterList().back();
+                game->GetCharacterList().pop_back();
+                delete temp;
+            }
 
             ScreenMakerTitle maker(this->game);
             GuiScreen* screen = maker.MakeScreen();
@@ -39,7 +50,6 @@ namespace CharacterViewScreenListeners
             this->game->RegisterEventToQueue(new LogoutEvent(this->game));
         }
     };
-
 
     class LoginEvent : public GameEventBase
     {
@@ -75,32 +85,72 @@ namespace CharacterViewScreenListeners
 
 
 
-GuiFrame* CreateCharacterFrame(ALLEGRO_FONT* font, CharacterViewScreenListeners::LoginListener* login_listener)
+
+
+
+GuiFrame* CreateCharacterFrame(ALLEGRO_FONT* font, CharacterViewScreenListeners::LoginListener* login_listener, Character * player_character)
 {
+    char statString[100];
+    char converter[4];
+
     GuiFrame* base = new GuiFrame(Vector2(345, 180), Vector2(0, 0));
     base->SetBackgroundColor(Color3(124, 57, 21));
 
-    GuiFrame* character_image_frame = new GuiFrame(Vector2(120 - 20, 180 - 20), Vector2(10, 10));
-    character_image_frame->SetBackgroundColor(Color3(0, 0, 0));
-
     Color3 color_white = Color3(255, 255, 255);
 
-    GuiTextButton* character_name = new GuiTextButton(Vector2(220, font->height), Vector2(115, 10));
-    character_name->SetText("Character");
+    GuiTextLabel* character_name = new GuiTextLabel(Vector2(220, font->height), Vector2(115, 10));
+    character_name->SetText(player_character?player_character->GetName():"Character Name");
     character_name->SetTextColor(color_white);
     character_name->SetBackgroundAlpha(255);
     character_name->SetTextFont(font);
-    character_name->SetTextAlign(GuiTextButton::ALIGN_CENTER);
+    character_name->SetTextAlign(GuiTextLabel::ALIGN_CENTER);
+
+    GuiTextLabel * character_strength = new GuiTextLabel(Vector2(220, font->height), Vector2(115, 10 + font->height));
+
+    strcpy(statString, "Strength:    ");
+    if(player_character)
+    {
+        snprintf(converter, 4, "%d", player_character->GetStrength());
+        strcat(statString, converter);
+    }
+    character_strength->SetText(statString);
+    character_strength->SetTextColor(color_white);
+    character_strength->SetBackgroundAlpha(255);
+    character_strength->SetTextFont(font);
+
+    GuiTextLabel * character_stamina = new GuiTextLabel(Vector2(220, font->height), Vector2(115, 10 + 2 * font->height));
+    strcpy(statString, "Stamina:    ");
+    if(player_character)
+    {
+        snprintf(converter, 4, "%d", player_character->GetEndurance());
+        strcat(statString, converter);
+    }
+    character_stamina->SetText(statString);
+    character_stamina->SetTextColor(color_white);
+    character_stamina->SetBackgroundAlpha(255);
+    character_stamina->SetTextFont(font);
+
+    GuiTextLabel * character_hitpoints = new GuiTextLabel(Vector2(220, font->height), Vector2(115, 10 + 3 * font->height));
+
+    strcpy(statString, "Hitpoints:    ");
+    if(player_character)
+    {
+        snprintf(converter, 4, "%d", player_character->GetHealth());
+        strcat(statString, converter);
+    }
+    character_hitpoints->SetText(statString);
+    character_hitpoints->SetTextColor(color_white);
+    character_hitpoints->SetBackgroundAlpha(255);
+    character_hitpoints->SetTextFont(font);
 
     Vector2 button_size = Vector2(105, font->height);
-    Vector2 start = character_image_frame->GetPosition() + Vector2(105, character_image_frame->GetSize().y - button_size.y);
+    Vector2 start = base->GetPosition() + Vector2(105, base->GetSize().y - button_size.y);
 
     GuiTextButton* login_button = new GuiTextButton(button_size, start);
     login_button->SetText("Login");
     login_button->SetTextColor(color_white);
     login_button->SetTextFont(font);
     login_button->SetTextAlign(GuiTextButton::ALIGN_CENTER);
-
     login_button->RegisterOnClick(login_listener);
 
     GuiTextButton* delete_button = new GuiTextButton(button_size, start + Vector2(button_size.x + 10, 0));
@@ -109,10 +159,12 @@ GuiFrame* CreateCharacterFrame(ALLEGRO_FONT* font, CharacterViewScreenListeners:
     delete_button->SetTextFont(font);
     delete_button->SetTextAlign(GuiTextButton::ALIGN_CENTER);
 
-    base->AddChild(character_image_frame);
     base->AddChild(character_name);
     base->AddChild(login_button);
     base->AddChild(delete_button);
+    base->AddChild(character_hitpoints);
+    base->AddChild(character_stamina);
+    base->AddChild(character_strength);
 
     return base;
 }
@@ -126,6 +178,8 @@ GuiScreen* ScreenMakerCharacterView::MakeScreen()
 {
     CharacterViewScreenListeners::LogoutListener* logout_listener = new CharacterViewScreenListeners::LogoutListener(this->game);
     CharacterViewScreenListeners::LoginListener* login_listener = new CharacterViewScreenListeners::LoginListener(this->game);
+    std::vector<GuiFrame*> character_frames;
+    Character * temp = nullptr;
 
 
     GuiFrame* base_frame;
@@ -135,12 +189,17 @@ GuiScreen* ScreenMakerCharacterView::MakeScreen()
 
     ALLEGRO_FONT* font = FontService::Instance()->GetFont("title_button");
 
-    GuiFrame* character_frame = CreateCharacterFrame(font, login_listener);
-    character_frame->SetPosition(Vector2(260, 20));
+    for (unsigned int i = 0; i < 2; i++)
+    {
+        if(!game->GetCharacterList().empty())
+        {
+            temp = ( i < game->GetCharacterList().size())?game->GetCharacterList()[i]:nullptr;
+            //std::cout << temp->GetName() << std::endl;
+        }
 
-    GuiFrame* character_frame2 = CreateCharacterFrame(font, login_listener);
-    character_frame2->SetPosition(Vector2(260, 20 + 180 + 10));
-
+        character_frames.push_back(CreateCharacterFrame(font, login_listener, temp));
+        character_frames[i]->SetPosition(Vector2(260, 20 +190*i));
+    }
 
 
     Vector2 button_size = Vector2(160, 48);
@@ -159,10 +218,10 @@ GuiScreen* ScreenMakerCharacterView::MakeScreen()
     logout_button->RegisterOnClick(logout_listener);
 
 
+    if(!character_frames.empty())
+        for(unsigned int i =0; i < character_frames.size(); i++)
+            base_frame->AddChild(character_frames[i]);
 
-
-    base_frame->AddChild(character_frame);
-    base_frame->AddChild(character_frame2);
 
     base_frame->AddChild(create_char_button);
     base_frame->AddChild(logout_button);
@@ -170,6 +229,7 @@ GuiScreen* ScreenMakerCharacterView::MakeScreen()
     GuiScreen* screen = new GuiScreen(base_frame);
     screen->RegisterListener(logout_listener);
     screen->RegisterListener(login_listener);
+
 
     return screen;
 }

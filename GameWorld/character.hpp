@@ -19,9 +19,13 @@ protected:
 public:
     Character();
     ~Character();
+    Character(const Character&);
 
     virtual bool IsNPC() const { return false; }
     virtual bool IsPlayer() const { return true; }
+
+    std::string GetName() { return name; }
+    void SetName(std::string val) { name = val; }
 
     void SetGender(Gender gender);
     Gender GetGender() const;

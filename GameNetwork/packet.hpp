@@ -5,7 +5,9 @@
 
 #include <stdint.h>
 #include <string>
+#include <vector>
 
+#include "GameWorld/character.hpp"
 #include "socket.hpp"
 
 using std::string;
@@ -28,6 +30,8 @@ public:
         PACKET_REGISTRATION_RESPONSE,
         PACKET_LOGIN_REQUEST,
         PACKET_LOGIN_RESPONSE,
+        PACKET_CHARACTER_LIST_REQUEST,
+        PACKET_CHARACTER,
         PACKET_LOGOUT
     };
 
@@ -263,6 +267,60 @@ public:
     virtual void Decode(char* buffer);
 };
 
+
+class DLL_EXPORT PacketCharacterListRequest : public PacketBase
+{
+public:
+    PacketCharacterListRequest();
+};
+
+class DLL_EXPORT PacketCharacter : public PacketBase
+{
+public:
+    PacketCharacter(Character * info = nullptr);
+
+    virtual unsigned int Encode(char* buffer);
+    virtual void Decode(char* buffer);
+
+    Character* GetCharacter();
+    uint8_t GetMap() {return mapID;}
+    uint8_t GetPosX() { return pos_x; }
+    uint8_t GetPosY() { return pos_y; }
+    Actor::Direction GetDirection() { return static_cast<Actor::Direction>(direction); }
+    uint8_t GetHealth() { return health; }
+    uint8_t GetMaxHealth() { return maxHealth; }
+    uint8_t GetStrength() { return strength; }
+    uint8_t GetEndurance() { return endurance; }
+    std::string GetName() { return name; }
+    Character::Gender GetGender() { return static_cast<Character::Gender>(gender); }
+    Character::Skin GetSkin() { return static_cast<Character::Skin>(skin); }
+
+    void SetMap( uint8_t val ) { mapID = val; }
+    void SetPosX( uint8_t val ) { pos_x = val; }
+    void SetPosY( uint8_t val ) { pos_y = val; }
+    void SetDirection( Actor::Direction val ) { direction = static_cast<uint8_t>(val); }
+    void SetHealth( uint8_t val ) { health = val; }
+    void SetMaxHealth( uint8_t val ) { maxHealth = val; }
+    void SetStrength( uint8_t val ) { strength = val; }
+    void SetEndurance( uint8_t val ) { endurance = val; }
+    void SetName( std::string val ) { name = val; }
+    void SetGender( Character::Gender val ) { gender = static_cast<uint8_t>(val); }
+    void SetSkin( Character::Skin val ) { skin = static_cast<uint8_t>(val); }
+
+protected:
+    uint8_t mapID;
+    uint8_t pos_x;
+    uint8_t pos_y;
+    uint8_t direction;
+    uint8_t health;
+    uint8_t maxHealth;
+    uint8_t strength;
+    uint8_t endurance;
+
+    std::string name;
+    uint8_t gender;
+    uint8_t skin;
+};
 
 class DLL_EXPORT PacketLogout : public PacketBase
 {

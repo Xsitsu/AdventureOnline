@@ -23,6 +23,8 @@
 				<Linker>
 					<Add library="user32" />
 					<Add library="ws2_32" />
+					<Add library="../GameWorld/bin/Debug/libGameWorld.a" />
+					<Add library="../GameUtil/bin/Debug/libGameUtil.a" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -42,6 +44,8 @@
 					<Add option="-s" />
 					<Add library="user32" />
 					<Add library="ws2_32" />
+					<Add library="../GameWorld/bin/Release/libGameWorld.a" />
+					<Add library="../GameUtil/bin/Release/libGameUtil.a" />
 				</Linker>
 			</Target>
 		</Build>
@@ -54,6 +58,7 @@
 			<Add option="-DPLATFORM_WINDOWS=1" />
 			<Add option="-DPLATFORM_MAC=2" />
 			<Add option="-DPLATFORM_UNIX=3" />
+			<Add directory="../" />
 		</Compiler>
 		<ExtraCommands>
 			<Add after='cmd /c copy &quot;$(PROJECT_DIR)$(TARGET_OUTPUT_FILE)&quot; &quot;$(PROJECT_DIR)..\Client\bin\$(TARGET_NAME)&quot;' />

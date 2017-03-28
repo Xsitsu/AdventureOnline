@@ -23,6 +23,8 @@ protected:
 
     unsigned short health;
     unsigned short max_health;
+    unsigned short strength;
+    unsigned short endurance;
 
 public:
     Actor();
@@ -35,6 +37,16 @@ public:
     void ExitMap(Map* map);
     void Warp(Map* map, Vector2 coords);
     void Move(Vector2 coords);
+
+    void SetMaxHealth( unsigned short val) { max_health = val; }
+    void SetHealth( unsigned short val) { health = val; }
+    void SetStrength( unsigned short val ) { strength = val; }
+    void SetEndurance( unsigned short val ) { endurance = val; }
+
+    unsigned short GetMaxHealth() { return max_health; }
+    unsigned short GetHealth() { return health; }
+    unsigned short GetStrength() { return strength; }
+    unsigned short GetEndurance() { return endurance; }
 
     Vector2 GetPosition() const;
 

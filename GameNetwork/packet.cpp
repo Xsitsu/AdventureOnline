@@ -99,6 +99,12 @@ PacketBase* PacketReader::ReadPacket(char* buffer, int bytes_read)
     case PacketBase::PACKET_LOGIN_RESPONSE:
         packet = new PacketLoginResponse();
         break;
+    case PacketBase::PACKET_CHARACTER_LIST_REQUEST:
+        packet = new PacketCharacterListRequest();
+        break;
+    case PacketBase::PACKET_CHARACTER:
+        packet = new PacketCharacter();
+        break;
     case PacketBase::PACKET_LOGOUT:
         packet = new PacketLogout();
         break;
@@ -452,6 +458,114 @@ void PacketLoginResponse::Decode(char* buffer)
 
     PacketReader reader;
     this->response = static_cast<PacketLoginResponse::LoginResponse>(reader.ReadByte(buffer, this->buffer_pos));
+}
+
+//unsigned int PacketCharacterListRequest::Encode(char* buffer)
+//{
+//    this->buffer_pos = 0;
+//    PacketBase::Encode(buffer);
+//
+//    return this->buffer_pos;
+//}
+//
+//void PacketCharacterListRequest::Decode(char* buffer)
+//{
+//    PacketBase::Decode(buffer);
+//}
+PacketCharacterListRequest::PacketCharacterListRequest(): PacketBase(PacketBase::PACKET_CHARACTER_LIST_REQUEST) {}
+
+PacketCharacter::PacketCharacter(Character * info ): PacketBase(PacketBase::PACKET_CHARACTER)
+{
+    if (info)
+    {
+        name = info->GetName();
+        pos_x = info->GetPosition().x;
+        pos_y = info->GetPosition().y;
+        direction = static_cast<short int>(info->GetDirection());
+        health = info->GetHealth();
+        maxHealth = info->GetMaxHealth();
+        strength = info->GetStrength();
+        endurance = info->GetEndurance();
+
+        gender = static_cast<short int>(info->GetGender());
+        skin = static_cast<short int>(info->GetSkin());
+    }
+}
+
+unsigned int PacketCharacter::Encode(char* buffer)
+{
+    PacketReader reader;
+    PacketBase::Encode(buffer);
+
+    uint8_t name_length = name.size();
+    const char * encode_name = name.c_str();
+
+    reader.WriteByte(buffer,buffer_pos, mapID);
+    reader.WriteByte(buffer,buffer_pos, pos_x);
+    reader.WriteByte(buffer,buffer_pos, pos_y);
+    reader.WriteByte(buffer,buffer_pos, direction);
+    reader.WriteByte(buffer,buffer_pos, health);
+    reader.WriteByte(buffer,buffer_pos, maxHealth);
+    reader.WriteByte(buffer,buffer_pos, strength);
+    reader.WriteByte(buffer,buffer_pos, endurance);
+    reader.WriteByte(buffer,buffer_pos, skin);
+    reader.WriteByte(buffer,buffer_pos, gender);
+    reader.WriteByte(buffer,buffer_pos, name_length);
+    for(int i =0; i < name_length; i++)
+    {
+        reader.WriteByte(buffer, buffer_pos, encode_name[i]);
+    }
+
+    return buffer_pos;
+}
+
+void PacketCharacter::Decode(char* buffer)
+{
+    PacketReader reader;
+    PacketBase::Decode(buffer);
+
+    Vector2 position;
+    char * decode_name;
+    uint8_t name_length;
+
+
+    mapID = reader.ReadByte(buffer, buffer_pos) ;
+    pos_x = reader.ReadByte(buffer, buffer_pos) ;
+    pos_y = reader.ReadByte(buffer, buffer_pos) ;
+    direction = reader.ReadByte(buffer, buffer_pos) ;
+    health = reader.ReadByte(buffer, buffer_pos) ;
+    maxHealth = reader.ReadByte(buffer, buffer_pos) ;
+    strength = reader.ReadByte(buffer, buffer_pos) ;
+    endurance = reader.ReadByte(buffer, buffer_pos) ;
+    skin = reader.ReadByte(buffer, buffer_pos) ;
+    gender = reader.ReadByte(buffer, buffer_pos) ;
+    name_length = reader.ReadByte(buffer, buffer_pos);
+    decode_name = new char[name_length+1];
+
+    for(int i =0; i < name_length; i++)
+    {
+        decode_name[i] = reader.ReadByte(buffer, buffer_pos);
+    }
+    decode_name[name_length] = 0;
+
+    name = decode_name;
+    delete[] decode_name;
+}
+
+Character* PacketCharacter::GetCharacter()
+{
+    Character * newborn = new Character();
+    newborn->SetName(name);
+    newborn->SetGender(static_cast<Character::Gender>(gender));
+    newborn->SetSkin(static_cast<Character::Skin>(skin));
+    newborn->Warp(nullptr, Vector2(pos_x, pos_y));
+    newborn->SetDirection(static_cast<Actor::Direction>(direction));
+    newborn->SetHealth(health);
+    newborn->SetMaxHealth(maxHealth);
+    newborn->SetStrength(strength);
+    newborn->SetEndurance(endurance);
+
+    return newborn;
 }
 
 PacketLogout::PacketLogout() : PacketBase(PacketBase::PACKET_LOGOUT)
