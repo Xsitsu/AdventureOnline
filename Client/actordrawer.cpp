@@ -10,7 +10,7 @@ ActorDrawer::~ActorDrawer()
 
 }
 
-DrawSpecs ActorDrawer::GetDrawSpecs(Actor* actor)
+std::list<DrawSpecs> ActorDrawer::GetDrawSpecs(Actor* actor)
 {
     if (actor->IsPlayer())
     {
@@ -28,8 +28,10 @@ DrawSpecs ActorDrawer::GetDrawSpecs(Actor* actor)
     }
 }
 
-DrawSpecs ActorDrawer::DoDrawSpecsCharacter(Character* character)
+std::list<DrawSpecs> ActorDrawer::DoDrawSpecsCharacter(Character* character)
 {
+    std::list<DrawSpecs> spec_list;
+
     Character* mychar = character;
 
     Actor::Direction dir = mychar->GetDirection();
@@ -49,28 +51,32 @@ DrawSpecs ActorDrawer::DoDrawSpecsCharacter(Character* character)
         dir_flag = 1;
     }
 
+
+    // Base character sprite
     int sprite_width = 18;
     int sprite_height = 58;
-
     int draw_x = (sprite_width * 2 * (int)gender) + (sprite_width * dir_flag);
     int draw_y = (sprite_height * (int)skin);
 
     DrawSpecs specs;
-
     specs.draw_flags = draw_flags;
     specs.sprite_start = Vector2(draw_x, draw_y);
     specs.sprite_size = Vector2(sprite_width, sprite_height);
     specs.tint = al_map_rgba(255, 255, 255, 255);
     specs.bitmap = BitmapService::Instance()->GetBitmap("character_0");
 
-    return specs;
+    spec_list.push_back(specs);
+
+
+
+    return spec_list;
 }
 
-DrawSpecs ActorDrawer::DoDrawSpecsNPC(Actor* actor)
+std::list<DrawSpecs> ActorDrawer::DoDrawSpecsNPC(Actor* actor)
 {
-    DrawSpecs specs;
+    std::list<DrawSpecs> spec_list;
 
     // ToDo: Fill in eventually when NPC class is created.
 
-    return specs;
+    return spec_list;
 }

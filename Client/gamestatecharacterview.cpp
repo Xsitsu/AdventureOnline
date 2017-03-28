@@ -45,18 +45,27 @@ void GameStateCharacterView::Tick()
 
 void GameStateCharacterView::Render()
 {
-    ActorDrawer actorDrawer;
-    Vector2 draw_pos(300,50);
     this->game->DrawScreens();
+
     if(!game->character_list.empty())
     {
+        ActorDrawer actorDrawer;
+        Vector2 draw_pos(300,50);
+
         for(unsigned int i = 0; i < game->character_list.size() && i < 2; i++)
         {
-            DrawSpecs specs = actorDrawer.GetDrawSpecs(game->character_list[i]);
-            al_draw_tinted_bitmap_region(specs.bitmap, specs.tint,
-                                         specs.sprite_start.x, specs.sprite_start.y,
-                                         specs.sprite_size.x, specs.sprite_size.y,
-                                         draw_pos.x, draw_pos.y+190*i, specs.draw_flags);
+            std::list<DrawSpecs> spec_list = actorDrawer.GetDrawSpecs(game->character_list[i]);
+            while (!spec_list.empty())
+            {
+                DrawSpecs specs = spec_list.front();
+                al_draw_tinted_bitmap_region(specs.bitmap, specs.tint,
+                                            specs.sprite_start.x, specs.sprite_start.y,
+                                            specs.sprite_size.x, specs.sprite_size.y,
+                                            draw_pos.x + specs.draw_offset.x, draw_pos.y + specs.draw_offset.y + 190*i, specs.draw_flags);
+
+                spec_list.pop_front();
+            }
+
         }
     }
 }
