@@ -92,8 +92,6 @@ public:
 
     void RegisterEventToQueue(GameEventBase* event);
 
-    std::vector<Character*>& GetCharacterList() { return character_list; }
-
     void ChangeState(GameStateBase* state);
     void PushScreen(GuiScreen* screen);
     void PopScreen();
@@ -103,6 +101,8 @@ public:
     void SendPacket(PacketBase* packet) { this->client->SendPacket(packet); }
 
     void LoginAsCharacter(Character* character);
+    std::vector<Character*> GetCharacterList() const;
+    void ClearCharacterList();
 };
 
 class GameEventBase

@@ -52,9 +52,9 @@ bool ClientStateLoggedIn::ProcessPacket(PacketBase* packet)
 
         return true;
     }
-    else if (packet->GetType() == PacketBase::PACKET_CHARACTER_REQUEST)
+    else if (packet->GetType() == PacketBase::PACKET_CHARACTER_DATA_REQUEST)
     {
-        PacketCharacterRequest* request = static_cast<PacketCharacterRequest*>(packet);
+        PacketCharacterDataRequest* request = static_cast<PacketCharacterDataRequest*>(packet);
 
         std::list<Character*> character_list = this->client->account->GetCharacterList();
         std::list<Character*>::iterator iter;
@@ -64,21 +64,33 @@ bool ClientStateLoggedIn::ProcessPacket(PacketBase* packet)
 
             if (character->GetCharacterId() == request->GetCharacterId())
             {
-                PacketCharacter* packet = new PacketCharacter();
+                if (request->GetRequestAppearance())
+                {
+                    PacketCharacterAppearance* packet = new PacketCharacterAppearance();
+                    packet->SetCharacterId(character->GetCharacterId());
+                    packet->SetName(character->GetName());
+                    packet->SetGender(static_cast<uint8_t>(character->GetGender()));
+                    packet->SetSkin(static_cast<uint8_t>(character->GetSkin()));
 
-                packet->SetMap(0);
-                packet->SetPosX(0);
-                packet->SetPosY(0);
-                packet->SetDirection(0);
-                packet->SetHealth(character->GetHealth());
-                packet->SetMaxHealth(character->GetMaxHealth());
-                packet->SetStrength(character->GetStrength());
-                packet->SetEndurance(character->GetEndurance());
-                packet->SetName(character->GetName());
-                packet->SetGender(static_cast<uint8_t>(character->GetGender()));
-                packet->SetSkin(static_cast<uint8_t>(character->GetSkin()));
+                    if (request->GetCharacterId() == 1)
+                    {
+                        packet->SetGender(Character::GENDER_MALE);
+                    }
+                    else if (request->GetCharacterId() == 2)
+                    {
+                        packet->SetSkin(Character::SKIN_GREEN);
+                    }
 
-                this->client->SendPacket(packet);
+                    this->client->SendPacket(packet);
+                }
+                if (request->GetRequestPosition())
+                {
+                    // Maybe eventually.
+                }
+                if (request->GetRequestStats())
+                {
+                    // Maybe eventually.
+                }
             }
         }
         return true;

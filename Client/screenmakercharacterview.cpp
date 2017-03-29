@@ -23,12 +23,7 @@ namespace CharacterViewScreenListeners
 
             this->game->PopScreen();
 
-            while(!game->GetCharacterList().empty())
-            {
-                Character * temp = game->GetCharacterList().back();
-                game->GetCharacterList().pop_back();
-                delete temp;
-            }
+            this->game->ClearCharacterList();
 
             ScreenMakerTitle maker(this->game);
             GuiScreen* screen = maker.MakeScreen();
