@@ -251,11 +251,11 @@ vector<int> Database::ReadPlayerCharacters (std::string email)
 Character * Database::ReadCharacterInfo( int ID)
 {
     char SQL_Code[100] = "{CALL ReadCharacterInfo(?) }";
-    Character * PC = new Character();
+    Character * player_character = new Character();
     int stats[7];
     char name[255];
     SQLLEN cBind = SQL_NTS;
-    SQLINTEGER sqlInt;
+    SQLINTEGER sqlInt[7];
     SDWORD sqlThing;
     stats[6] = ID;
 
@@ -265,23 +265,26 @@ Character * Database::ReadCharacterInfo( int ID)
 
     SQLFetch(h_Statement);
     SQLGetData(h_Statement, 2, SQL_C_CHAR, &name, 255, &sqlThing );
-    SQLGetData(h_Statement, 4, SQL_C_LONG, &stats[0], 1, &sqlInt );
-    SQLGetData(h_Statement, 5, SQL_C_LONG, &stats[1], 1, &sqlInt );
+    SQLGetData(h_Statement, 4, SQL_C_LONG, &stats[0], 1, &sqlInt[0] );
+    SQLGetData(h_Statement, 5, SQL_C_LONG, &stats[1], 1, &sqlInt[1] );
 
-    PC->SetName(name);
-    PC->Warp(nullptr, Vector2(stats[0], stats[1]));
+    player_character->SetName(name);
+    player_character->Warp(nullptr, Vector2(stats[0], stats[1]));
 
-    SQLFetch(h_Statement);
-    SQLGetData(h_Statement, 4, SQL_C_LONG, &stats[2], 1, &sqlInt );
-    PC->SetStrength(stats[2]);
+    if(SQLMoreResults(h_Statement) != SQL_NO_DATA)
+    {
+        SQLFetch(h_Statement);
+        SQLGetData(h_Statement, 3, SQL_C_SHORT, &stats[2], 1, &sqlInt[2] );
+        player_character->SetStrength(stats[2]);
 
-    SQLFetch(h_Statement);
-    SQLGetData(h_Statement, 4, SQL_C_LONG, &stats[3], 1, &sqlInt );
-    PC->SetEndurance(stats[3]);
+        SQLFetch(h_Statement);
+        SQLGetData(h_Statement, 3, SQL_C_SHORT, &stats[3], 1, &sqlInt[3] );
+        player_character->SetEndurance(stats[3]);
 
-    PC->SetMaxHealth( 100);
-    PC->SetHealth(100);
+    }
     SQLFreeHandle(SQL_HANDLE_STMT, h_Statement);
 
-    return PC;
+    player_character->SetMaxHealth( 100);
+    player_character->SetHealth(100);
+    return player_character;
 }
