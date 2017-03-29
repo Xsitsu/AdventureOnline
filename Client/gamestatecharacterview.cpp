@@ -26,11 +26,33 @@ void GameStateCharacterView::Exit()
 
 void GameStateCharacterView::HandlePacket(PacketBase * packet)
 {
-    if(packet->GetType() == PacketBase::PACKET_CHARACTER)
+    if (packet->GetType() == PacketBase::PACKET_CHARACTER_LIST)
     {
-        PacketCharacter* returnCharacter = static_cast<PacketCharacter*>(packet);
-        Character * PC = returnCharacter->GetCharacter();
-        game->character_list.push_back(PC);
+        PacketCharacterList* charlist_packet = static_cast<PacketCharacterList*>(packet);
+
+        std::list<uint32_t> character_id_list = charlist_packet->GetCharacterList();
+        std::list<uint32_t>::iterator iter;
+        for (iter = character_id_list.begin(); iter != character_id_list.end(); ++iter)
+        {
+            PacketCharacterRequest* packet = new PacketCharacterRequest();
+            packet->SetCharacterId(*iter);
+
+            this->game->SendPacket(packet);
+        }
+    }
+    else if(packet->GetType() == PacketBase::PACKET_CHARACTER)
+    {
+        PacketCharacter* return_character = static_cast<PacketCharacter*>(packet);
+        Character* character = new Character();
+
+        character->SetName(return_character->GetName());
+        character->SetGender(static_cast<Character::Gender>(return_character->GetGender()));
+        character->SetSkin(static_cast<Character::Skin>(return_character->GetSkin()));
+
+        // ToDo: The rest eventually when they actually start to matter.
+        // The actual data sent at this stage may change.
+
+        game->character_list.push_back(character);
     }
 
 }

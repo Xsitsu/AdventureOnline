@@ -12,6 +12,8 @@ public:
     enum Skin { SKIN_WHITE = 0, SKIN_BROWN, SKIN_GREEN };
 
 protected:
+    unsigned int character_id;
+
     std::string name;
     Gender gender;
     Skin skin;
@@ -23,6 +25,9 @@ public:
 
     virtual bool IsNPC() const { return false; }
     virtual bool IsPlayer() const { return true; }
+
+    unsigned int GetCharacterId() const { return this->character_id; }
+    void SetCharacterId(unsigned int id) { this->character_id = id; }
 
     std::string GetName() { return name; }
     void SetName(std::string val) { name = val; }

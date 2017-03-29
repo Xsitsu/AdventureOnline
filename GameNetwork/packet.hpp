@@ -5,12 +5,9 @@
 
 #include <stdint.h>
 #include <string>
-#include <vector>
+#include <list>
 
-#include "GameWorld/character.hpp"
 #include "socket.hpp"
-
-using std::string;
 
 class DLL_EXPORT PacketBase
 {
@@ -31,6 +28,8 @@ public:
         PACKET_LOGIN_REQUEST,
         PACKET_LOGIN_RESPONSE,
         PACKET_CHARACTER_LIST_REQUEST,
+        PACKET_CHARACTER_LIST,
+        PACKET_CHARACTER_REQUEST,
         PACKET_CHARACTER,
         PACKET_LOGOUT
     };
@@ -190,8 +189,8 @@ public:
 
     std::string GetEmail();
     std::string GetPassword();
-    void SetEmail( string email );
-    void SetPassword( string password );
+    void SetEmail(std::string email);
+    void SetPassword(std::string password);
 
     virtual unsigned int Encode(char* buffer);
     virtual void Decode(char* buffer);
@@ -274,38 +273,67 @@ public:
     PacketCharacterListRequest();
 };
 
-class DLL_EXPORT PacketCharacter : public PacketBase
+class DLL_EXPORT PacketCharacterList : public PacketBase
 {
+protected:
+    std::list<uint32_t> character_ids;
+
 public:
-    PacketCharacter(Character * info = nullptr);
+    PacketCharacterList();
 
     virtual unsigned int Encode(char* buffer);
     virtual void Decode(char* buffer);
 
-    Character* GetCharacter();
+    std::list<uint32_t> GetCharacterList() const;
+    void SetCharacterList(std::list<uint32_t> character_ids);
+};
+
+class DLL_EXPORT PacketCharacterRequest : public PacketBase
+{
+protected:
+    uint32_t character_id;
+
+public:
+    PacketCharacterRequest();
+
+    virtual unsigned int Encode(char* buffer);
+    virtual void Decode(char* buffer);
+
+    uint32_t GetCharacterId() const;
+    void SetCharacterId(uint32_t character_id);
+};
+
+class DLL_EXPORT PacketCharacter : public PacketBase
+{
+public:
+    PacketCharacter();
+
+    virtual unsigned int Encode(char* buffer);
+    virtual void Decode(char* buffer);
+
     uint8_t GetMap() {return mapID;}
     uint8_t GetPosX() { return pos_x; }
     uint8_t GetPosY() { return pos_y; }
-    Actor::Direction GetDirection() { return static_cast<Actor::Direction>(direction); }
+    uint8_t GetDirection() { return  direction; }
     uint8_t GetHealth() { return health; }
     uint8_t GetMaxHealth() { return maxHealth; }
     uint8_t GetStrength() { return strength; }
     uint8_t GetEndurance() { return endurance; }
     std::string GetName() { return name; }
-    Character::Gender GetGender() { return static_cast<Character::Gender>(gender); }
-    Character::Skin GetSkin() { return static_cast<Character::Skin>(skin); }
+    uint8_t GetGender() { return gender; }
+    uint8_t GetSkin() { return skin; }
 
     void SetMap( uint8_t val ) { mapID = val; }
     void SetPosX( uint8_t val ) { pos_x = val; }
     void SetPosY( uint8_t val ) { pos_y = val; }
-    void SetDirection( Actor::Direction val ) { direction = static_cast<uint8_t>(val); }
+    void SetDirection( uint8_t val ) { direction = val; }
     void SetHealth( uint8_t val ) { health = val; }
     void SetMaxHealth( uint8_t val ) { maxHealth = val; }
     void SetStrength( uint8_t val ) { strength = val; }
     void SetEndurance( uint8_t val ) { endurance = val; }
     void SetName( std::string val ) { name = val; }
-    void SetGender( Character::Gender val ) { gender = static_cast<uint8_t>(val); }
-    void SetSkin( Character::Skin val ) { skin = static_cast<uint8_t>(val); }
+    void SetGender( uint8_t val ) { gender = val; }
+    void SetSkin( uint8_t val ) { skin = val; }
 
 protected:
     uint8_t mapID;
@@ -320,6 +348,7 @@ protected:
     std::string name;
     uint8_t gender;
     uint8_t skin;
+
 };
 
 class DLL_EXPORT PacketLogout : public PacketBase
