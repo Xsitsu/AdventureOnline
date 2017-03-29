@@ -40,6 +40,7 @@ void ClientConnection::FetchCharacterList()
         for (iter = char_id_list.begin(); iter != char_id_list.end(); ++iter)
         {
             Character* character = database->ReadCharacterInfo(*iter);
+            character->SetCharacterId(*iter);
             this->account->AddCharacterToList(character);
         }
     }
