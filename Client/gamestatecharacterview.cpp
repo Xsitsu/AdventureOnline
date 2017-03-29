@@ -31,10 +31,6 @@ void GameStateCharacterView::HandlePacket(PacketBase * packet)
         PacketCharacter* returnCharacter = static_cast<PacketCharacter*>(packet);
         Character * PC = returnCharacter->GetCharacter();
         game->character_list.push_back(PC);
-        game->PopScreen();
-
-        ScreenMakerCharacterView maker(game);
-        game->PushScreen(maker.MakeScreen());
     }
 
 }
