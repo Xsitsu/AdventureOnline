@@ -27,6 +27,24 @@ void ClientConnection::DoAccountLogout()
     }
 }
 
+void ClientConnection::FetchCharacterList()
+{
+    if (this->account)
+    {
+        this->account->ClearCharacterList();
+
+        Database* database = this->server->GetDatabaseConnection();
+        std::vector<int> char_id_list = database->ReadPlayerCharacters(this->account->GetEmail());
+
+        std::vector<int>::iterator iter;
+        for (iter = char_id_list.begin(); iter != char_id_list.end(); ++iter)
+        {
+            Character* character = database->ReadCharacterInfo(*iter);
+            this->account->AddCharacterToList(character);
+        }
+    }
+}
+
 void ClientConnection::SendPacket(PacketBase* packet)
 {
     packet->SetSequence(this->packet_sequence++);

@@ -43,6 +43,7 @@ protected:
     ClientStateBase* state;
 
     void DoAccountLogout();
+    void FetchCharacterList();
 
 public:
     ClientConnection(Server* server, Address address, unsigned int connection_id);

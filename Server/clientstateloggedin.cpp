@@ -35,19 +35,13 @@ bool ClientStateLoggedIn::ProcessPacket(PacketBase* packet)
     }
     else if(packet->GetType() == PacketBase::PACKET_CHARACTER_LIST_REQUEST)
     {
-        Database * database = this->client->server->GetDatabaseConnection();
-        Character * playerCharacter = nullptr;
-        PacketCharacter * returnCharacter = nullptr;
-        vector<int> characters = database->ReadPlayerCharacters(client->account->GetEmail());
-        vector<int>::iterator it = characters.begin();
-        while(it < characters.end())
+        std::list<Character*> character_list = this->client->account->GetCharacterList();
+        std::list<Character*>::iterator iter;
+        for (iter = character_list.begin(); iter != character_list.end(); ++iter)
         {
-           playerCharacter = database->ReadCharacterInfo( *it++);
-           returnCharacter = new PacketCharacter(playerCharacter);
-           client->SendPacket(returnCharacter);
-           delete playerCharacter;
+            PacketCharacter* packet = new PacketCharacter(*iter);
+            this->client->SendPacket(packet);
         }
-
         return true;
     }
 

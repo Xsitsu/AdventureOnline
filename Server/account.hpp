@@ -26,12 +26,14 @@ public:
     std::string GetSalt() const { return this->salt; }
     std::string GetHash() const { return this->_hash; }
 
-    int GetNumberCharacters() const { return this->character_list.size(); }
-    Character* GetPlayingCharacters() const { return this->playing_character; }
-    std::list<Character*> GetCharacterList() const { return this->character_list; }
+    int GetNumberCharacters() const;
+    Character* GetPlayingCharacters() const;
+    std::list<Character*> GetCharacterList() const;
 
+    bool CharacterIsInList(Character* character) const;
     void AddCharacterToList(Character* character);
     void RemoveCharacterFromList(Character* character);
+    void ClearCharacterList();
 };
 
 #endif // ACCOUNT_HPP_INCLUDE
