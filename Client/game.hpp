@@ -102,6 +102,7 @@ public:
     bool IsClientConnected() { return this->client->IsConnected(); }
     void SendPacket(PacketBase* packet) { this->client->SendPacket(packet); }
 
+    void LoginAsCharacter(Character* character);
 };
 
 class GameEventBase

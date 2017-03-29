@@ -71,13 +71,28 @@ namespace CharacterViewScreenListeners
     {
     protected:
         Game* game;
+        unsigned int slot_num;
 
     public:
         LoginListener(Game* game) : game(game) {}
+        void SetSlotNumber(unsigned int slot_num) { this->slot_num = slot_num; }
 
         virtual void Notify(GuiButtonArgs*& args) const
         {
-            this->game->RegisterEventToQueue(new LoginEvent(this->game));
+            unsigned int base = 0;
+            unsigned int slot = base + this->slot_num;
+
+            std::vector<Character*> character_list = this->game->GetCharacterList();
+            if (character_list.size() > slot)
+            {
+                Character* character = character_list[slot];
+                if (character)
+                {
+                    this->game->LoginAsCharacter(character);
+                    this->game->RegisterEventToQueue(new LoginEvent(this->game));
+                }
+            }
+
         }
     };
 }
@@ -165,7 +180,11 @@ GuiScreen* ScreenMakerCharacterView::MakeScreen()
     ALLEGRO_FONT* font = FontService::Instance()->GetFont("title_button");
 
     CharacterViewScreenListeners::LogoutListener* logout_listener = new CharacterViewScreenListeners::LogoutListener(this->game);
-    CharacterViewScreenListeners::LoginListener* login_listener = new CharacterViewScreenListeners::LoginListener(this->game);
+    CharacterViewScreenListeners::LoginListener* login_listener_1 = new CharacterViewScreenListeners::LoginListener(this->game);
+    CharacterViewScreenListeners::LoginListener* login_listener_2 = new CharacterViewScreenListeners::LoginListener(this->game);
+
+    login_listener_1->SetSlotNumber(0);
+    login_listener_2->SetSlotNumber(1);
 
     GuiFrame* base_frame;
     base_frame = new GuiFrame(Vector2(640, 480), Vector2(0, 0));
@@ -193,8 +212,8 @@ GuiScreen* ScreenMakerCharacterView::MakeScreen()
     character_frame_1->SetPosition(Vector2(260, 20 + 190*0));
     character_frame_2->SetPosition(Vector2(260, 20 + 190*1));
 
-    static_cast<GuiButton*>(character_frame_1->GetGuiById("login_button"))->RegisterOnClick(login_listener);
-    static_cast<GuiButton*>(character_frame_2->GetGuiById("login_button"))->RegisterOnClick(login_listener);
+    static_cast<GuiButton*>(character_frame_1->GetGuiById("login_button"))->RegisterOnClick(login_listener_1);
+    static_cast<GuiButton*>(character_frame_2->GetGuiById("login_button"))->RegisterOnClick(login_listener_2);
 
 
 
@@ -205,7 +224,8 @@ GuiScreen* ScreenMakerCharacterView::MakeScreen()
 
     GuiScreen* screen = new GuiScreen(base_frame);
     screen->RegisterListener(logout_listener);
-    screen->RegisterListener(login_listener);
+    screen->RegisterListener(login_listener_1);
+    screen->RegisterListener(login_listener_2);
 
     screen->SetGuiId("character_frame_1", character_frame_1);
     screen->SetGuiId("character_frame_2", character_frame_2);

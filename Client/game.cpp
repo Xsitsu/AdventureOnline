@@ -287,3 +287,12 @@ void Game::RegisterEventToQueue(GameEventBase* event)
 {
     this->game_event_queue.push_back(event);
 }
+
+void Game::LoginAsCharacter(Character* character)
+{
+    PacketCharacterLogin* packet = new PacketCharacterLogin();
+    packet->SetCharacterId(character->GetCharacterId());
+    this->SendPacket(packet);
+
+    this->current_character = character;
+}

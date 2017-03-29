@@ -31,6 +31,7 @@ public:
         PACKET_CHARACTER_LIST,
         PACKET_CHARACTER_REQUEST,
         PACKET_CHARACTER,
+        PACKET_CHARACTER_LOGIN,
         PACKET_LOGOUT
     };
 
@@ -349,6 +350,21 @@ protected:
     uint8_t gender;
     uint8_t skin;
 
+};
+
+class DLL_EXPORT PacketCharacterLogin : public PacketBase
+{
+protected:
+    uint32_t character_id;
+
+public:
+    PacketCharacterLogin();
+
+    virtual unsigned int Encode(char* buffer);
+    virtual void Decode(char* buffer);
+
+    uint32_t GetCharacterId() const;
+    void SetCharacterId(uint32_t character_id);
 };
 
 class DLL_EXPORT PacketLogout : public PacketBase

@@ -83,7 +83,24 @@ bool ClientStateLoggedIn::ProcessPacket(PacketBase* packet)
         }
         return true;
     }
+    else if (packet->GetType() == PacketBase::PACKET_CHARACTER_LOGIN)
+    {
+        PacketCharacterLogin* login_packet = static_cast<PacketCharacterLogin*>(packet);
+        unsigned int character_id = login_packet->GetCharacterId();
 
+        std::list<Character*> character_list = this->client->account->GetCharacterList();
+        std::list<Character*>::iterator iter;
+        for (iter = character_list.begin(); iter != character_list.end(); ++iter)
+        {
+            Character* character = *iter;
+            if (character->GetCharacterId() == character_id)
+            {
+                this->client->account->SetPlayingCharacter(character);
+            }
+        }
+
+        return true;
+    }
 
     return false;
 }

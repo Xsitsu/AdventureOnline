@@ -76,6 +76,7 @@ void ClientConnection::ProcessPacket(PacketBase* packet)
     else
     {
         std::cout << "Dropping packet [id:" << packet->GetType() << "] [sequence:" << packet->GetSequence() << "]" << std::endl;
+        std::cout << "In State: " << this->state->GetName() << std::endl;
     }
 }
 

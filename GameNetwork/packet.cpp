@@ -111,6 +111,9 @@ PacketBase* PacketReader::ReadPacket(char* buffer, int bytes_read)
     case PacketBase::PACKET_CHARACTER:
         packet = new PacketCharacter();
         break;
+    case PacketBase::PACKET_CHARACTER_LOGIN:
+        packet = new PacketCharacterLogin();
+        break;
     case PacketBase::PACKET_LOGOUT:
         packet = new PacketLogout();
         break;
@@ -602,6 +605,37 @@ void PacketCharacter::Decode(char* buffer)
     {
         name = name + static_cast<char>(reader.ReadByte(buffer, buffer_pos));
     }
+}
+
+PacketCharacterLogin::PacketCharacterLogin(): PacketBase(PacketBase::PACKET_CHARACTER_LOGIN)
+{}
+
+unsigned int PacketCharacterLogin::Encode(char* buffer)
+{
+    PacketBase::Encode(buffer);
+
+    PacketReader reader;
+    reader.WriteInt(buffer, this->buffer_pos, this->character_id);
+
+    return this->buffer_pos;
+}
+
+void PacketCharacterLogin::Decode(char* buffer)
+{
+    PacketBase::Decode(buffer);
+
+    PacketReader reader;
+    this->character_id = reader.ReadInt(buffer, this->buffer_pos);
+}
+
+uint32_t PacketCharacterLogin::GetCharacterId() const
+{
+    return this->character_id;
+}
+
+void PacketCharacterLogin::SetCharacterId(uint32_t character_id)
+{
+    this->character_id = character_id;
 }
 
 PacketLogout::PacketLogout() : PacketBase(PacketBase::PACKET_LOGOUT)

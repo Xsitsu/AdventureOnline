@@ -11,7 +11,7 @@ int Account::GetNumberCharacters() const
     return this->character_list.size();
 }
 
-Character* Account::GetPlayingCharacters() const
+Character* Account::GetPlayingCharacter() const
 {
     return this->playing_character;
 }
@@ -19,6 +19,11 @@ Character* Account::GetPlayingCharacters() const
 std::list<Character*> Account::GetCharacterList() const
 {
     return this->character_list;
+}
+
+void Account::SetPlayingCharacter(Character* character)
+{
+    this->playing_character = character;
 }
 
 bool Account::CharacterIsInList(Character* character) const
