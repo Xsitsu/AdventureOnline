@@ -10,15 +10,15 @@ ActorDrawer::~ActorDrawer()
 
 }
 
-DrawSpecs ActorDrawer::GetDrawSpecs(Actor* actor)
+void ActorDrawer::DrawActor(Actor* actor, Vector2 draw_middle) const
 {
     if (actor->IsPlayer())
     {
-        return this->DoDrawSpecsCharacter(static_cast<Character*>(actor));
+        this->DoDrawCharacter(static_cast<Character*>(actor), draw_middle, false);
     }
     else if(actor->IsNPC())
     {
-        return this->DoDrawSpecsNPC(static_cast<Actor*>(actor));
+        this->DoDrawNPC(static_cast<Actor*>(actor), draw_middle, false);
     }
     else
     {
@@ -28,13 +28,31 @@ DrawSpecs ActorDrawer::GetDrawSpecs(Actor* actor)
     }
 }
 
-DrawSpecs ActorDrawer::DoDrawSpecsCharacter(Character* character)
+void ActorDrawer::DrawActorOnTile(Actor* actor, Vector2 tile_middle) const
 {
-    Character* mychar = character;
+    if (actor->IsPlayer())
+    {
+        this->DoDrawCharacter(static_cast<Character*>(actor), tile_middle, true);
+    }
+    else if(actor->IsNPC())
+    {
+        this->DoDrawNPC(static_cast<Actor*>(actor), tile_middle, true);
+    }
+    else
+    {
+        // ToDo: Replace with better exception.
+        // This code should never run though really.
+        throw "BREAK";
+    }
+}
 
-    Actor::Direction dir = mychar->GetDirection();
-    Character::Gender gender = mychar->GetGender();
-    Character::Skin skin = mychar->GetSkin();
+
+
+void ActorDrawer::DoDrawCharacter(Character* character, Vector2 draw_middle, bool on_tile) const
+{
+    Actor::Direction dir = character->GetDirection();
+    Character::Gender gender = character->GetGender();
+    Character::Skin skin = character->GetSkin();
 
     int draw_flags = 0;
     int dir_flag = 0;
@@ -49,28 +67,33 @@ DrawSpecs ActorDrawer::DoDrawSpecsCharacter(Character* character)
         dir_flag = 1;
     }
 
+
+    // Base character sprite
     int sprite_width = 18;
     int sprite_height = 58;
-
     int draw_x = (sprite_width * 2 * (int)gender) + (sprite_width * dir_flag);
     int draw_y = (sprite_height * (int)skin);
 
-    DrawSpecs specs;
+    Vector2 draw_base;
+    if (!on_tile)
+    {
+        draw_base = draw_middle - Vector2(sprite_width, sprite_height) / 2;
+    }
+    else
+    {
+        draw_base = draw_middle - Vector2(sprite_width / 2, sprite_height);
+    }
 
-    specs.draw_flags = draw_flags;
-    specs.sprite_start = Vector2(draw_x, draw_y);
-    specs.sprite_size = Vector2(sprite_width, sprite_height);
-    specs.tint = al_map_rgba(255, 255, 255, 255);
-    specs.bitmap = BitmapService::Instance()->GetBitmap("character_0");
+    ALLEGRO_BITMAP* character_bitmap = BitmapService::Instance()->GetBitmap("character_0");
 
-    return specs;
+    al_draw_tinted_bitmap_region(character_bitmap, al_map_rgba(255, 255, 255, 255),
+                                draw_x, draw_y, sprite_width, sprite_height,
+                                draw_base.x, draw_base.y, draw_flags);
+
 }
 
-DrawSpecs ActorDrawer::DoDrawSpecsNPC(Actor* actor)
+
+void ActorDrawer::DoDrawNPC(Actor* npc, Vector2 draw_middle, bool on_tile) const
 {
-    DrawSpecs specs;
 
-    // ToDo: Fill in eventually when NPC class is created.
-
-    return specs;
 }

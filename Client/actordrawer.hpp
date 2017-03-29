@@ -1,6 +1,8 @@
 #ifndef ACTORDRAWER_HPP_INCLUDE
 #define ACTORDRAWER_HPP_INCLUDE
 
+#include <list>
+
 #include "GameWorld/actor.hpp"
 #include "GameWorld/character.hpp"
 
@@ -16,20 +18,22 @@ struct DrawSpecs
     ALLEGRO_COLOR tint;
     Vector2 sprite_start;
     Vector2 sprite_size;
+    Vector2 draw_offset;
     int draw_flags;
 };
 
 class ActorDrawer
 {
 protected:
-    DrawSpecs DoDrawSpecsNPC(Actor* actor);
-    DrawSpecs DoDrawSpecsCharacter(Character* character);
+    void DoDrawNPC(Actor* npc, Vector2 draw_middle, bool on_tile) const;
+    void DoDrawCharacter(Character* character, Vector2 draw_middle, bool on_tile) const;
 
 public:
     ActorDrawer();
     ~ActorDrawer();
 
-    DrawSpecs GetDrawSpecs(Actor* actor);
+    void DrawActor(Actor* actor, Vector2 draw_middle) const;
+    void DrawActorOnTile(Actor* actor, Vector2 tile_middle) const;
 
 };
 #endif // ACTORDRAWER_HPP_INCLUDE

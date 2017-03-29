@@ -1,12 +1,12 @@
 #include "guitextlabel.hpp"
 
-GuiTextLabel::GuiTextLabel() : GuiFrame(), GuiTextElement()
+GuiTextLabel::GuiTextLabel() : GuiLabel(), GuiTextElement()
 {}
 
-GuiTextLabel::GuiTextLabel(Vector2 size) : GuiFrame(size), GuiTextElement()
+GuiTextLabel::GuiTextLabel(Vector2 size) : GuiLabel(size), GuiTextElement()
 {}
 
-GuiTextLabel::GuiTextLabel(Vector2 size, Vector2 position) : GuiFrame(size, position), GuiTextElement()
+GuiTextLabel::GuiTextLabel(Vector2 size, Vector2 position) : GuiLabel(size, position), GuiTextElement()
 {}
 
 GuiTextLabel::~GuiTextLabel()
@@ -14,7 +14,7 @@ GuiTextLabel::~GuiTextLabel()
 
 void GuiTextLabel::DoDraw() const
 {
-    GuiFrame::DoDraw();
+    GuiLabel::DoDraw();
 
     Vector2 abs_pos = this->GetAbsolutePosition();
     ALLEGRO_FONT* font = this->text_draw_font;

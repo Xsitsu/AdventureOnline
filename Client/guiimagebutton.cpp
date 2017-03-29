@@ -14,7 +14,7 @@ GuiImageButton::~GuiImageButton()
 
 void GuiImageButton::DoDraw() const
 {
-    GuiFrame::DoDraw();
+    GuiButton::DoDraw();
 
     if (this->image)
     {

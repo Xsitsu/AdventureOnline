@@ -95,24 +95,14 @@ void GameStatePlaying::Render()
         Actor* actor = *iter;
         if (actor != self_actor)
         {
-            DrawSpecs specs = actordrawer.GetDrawSpecs(actor);
             Vector2 pos_offset = mychar->GetPosition() - actor->GetPosition();
             Vector2 tile_mid = middle + (tile_step_x * pos_offset.x) + (tile_step_y * pos_offset.y);
-            Vector2 draw_pos = tile_mid - Vector2(specs.sprite_size.x/2, specs.sprite_size.y);
-            al_draw_tinted_bitmap_region(specs.bitmap, specs.tint,
-                                         specs.sprite_start.x, specs.sprite_start.y,
-                                         specs.sprite_size.x, specs.sprite_size.y,
-                                         draw_pos.x, draw_pos.y, specs.draw_flags);
+            actordrawer.DrawActorOnTile(actor, tile_mid);
         }
     }
 
     // Draw own character
-    DrawSpecs specs = actordrawer.GetDrawSpecs(mychar);
-    Vector2 draw_pos = middle - Vector2(specs.sprite_size.x/2, specs.sprite_size.y);
-    al_draw_tinted_bitmap_region(specs.bitmap, specs.tint,
-                                 specs.sprite_start.x, specs.sprite_start.y,
-                                 specs.sprite_size.x, specs.sprite_size.y,
-                                 draw_pos.x, draw_pos.y, specs.draw_flags);
+    actordrawer.DrawActorOnTile(mychar, middle);
 
     // Screen drawing
     this->game->DrawScreens();

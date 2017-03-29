@@ -1,13 +1,13 @@
 #ifndef GUIBUTTON_HPP_INCLUDE
 #define GUIBUTTON_HPP_INCLUDE
 
-#include "guiframe.hpp"
+#include "guiobject.hpp"
 
 #include "observer.hpp"
 
 struct GuiButtonArgs;
 
-class GuiButton : public GuiFrame
+class GuiButton : public GuiObject
 {
 protected:
     Observer<GuiButtonArgs*> onClick;
@@ -16,10 +16,13 @@ protected:
     Observer<GuiButtonArgs*> onMouseEnter;
     Observer<GuiButtonArgs*> onMouseLeave;
 
-public:
     GuiButton();
     GuiButton(Vector2 size);
     GuiButton(Vector2 size, Vector2 position);
+    GuiButton(const GuiButton& rhs);
+    GuiButton& operator=(const GuiButton& rhs);
+
+public:
     virtual ~GuiButton();
 
     virtual void DoClick();

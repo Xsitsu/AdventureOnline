@@ -1,14 +1,14 @@
 #include "guitextbox.hpp"
 
-GuiTextBox::GuiTextBox() : GuiFrame(), GuiTextElement(), cursor_position(0), is_selected(false),
+GuiTextBox::GuiTextBox() : GuiObject(), GuiTextElement(), cursor_position(0), is_selected(false),
 text_width(0), cursor_text_width(0)
 {}
 
-GuiTextBox::GuiTextBox(Vector2 size) : GuiFrame(size), GuiTextElement(), cursor_position(0),
+GuiTextBox::GuiTextBox(Vector2 size) : GuiObject(size), GuiTextElement(), cursor_position(0),
 is_selected(false), text_width(0), cursor_text_width(0)
 {}
 
-GuiTextBox::GuiTextBox(Vector2 size, Vector2 position) : GuiFrame(size, position), GuiTextElement(),
+GuiTextBox::GuiTextBox(Vector2 size, Vector2 position) : GuiObject(size, position), GuiTextElement(),
 cursor_position(0), is_selected(false), text_width(0), cursor_text_width(0)
 {}
 
@@ -32,7 +32,7 @@ void GuiTextBox::SetTextFont(ALLEGRO_FONT* font)
 
 void GuiTextBox::DoDraw() const
 {
-    GuiFrame::DoDraw();
+    GuiObject::DoDraw();
 
     Vector2 abs_pos = this->GetAbsolutePosition();
     ALLEGRO_FONT* font = this->text_draw_font;

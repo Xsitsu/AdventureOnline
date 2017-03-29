@@ -1,12 +1,12 @@
 #include "guiimagelabel.hpp"
 
-GuiImageLabel::GuiImageLabel() : GuiFrame(), GuiImageElement()
+GuiImageLabel::GuiImageLabel() : GuiLabel(), GuiImageElement()
 {}
 
-GuiImageLabel::GuiImageLabel(Vector2 size) : GuiFrame(size), GuiImageElement()
+GuiImageLabel::GuiImageLabel(Vector2 size) : GuiLabel(size), GuiImageElement()
 {}
 
-GuiImageLabel::GuiImageLabel(Vector2 size, Vector2 position) : GuiFrame(size, position), GuiImageElement()
+GuiImageLabel::GuiImageLabel(Vector2 size, Vector2 position) : GuiLabel(size, position), GuiImageElement()
 {}
 
 GuiImageLabel::~GuiImageLabel()
@@ -14,7 +14,7 @@ GuiImageLabel::~GuiImageLabel()
 
 void GuiImageLabel::DoDraw() const
 {
-    GuiFrame::DoDraw();
+    GuiLabel::DoDraw();
 
     if (this->image)
     {

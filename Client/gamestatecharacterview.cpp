@@ -31,10 +31,6 @@ void GameStateCharacterView::HandlePacket(PacketBase * packet)
         PacketCharacter* returnCharacter = static_cast<PacketCharacter*>(packet);
         Character * PC = returnCharacter->GetCharacter();
         game->character_list.push_back(PC);
-        game->PopScreen();
-
-        ScreenMakerCharacterView maker(game);
-        game->PushScreen(maker.MakeScreen());
     }
 
 }
@@ -45,18 +41,28 @@ void GameStateCharacterView::Tick()
 
 void GameStateCharacterView::Render()
 {
-    ActorDrawer actorDrawer;
-    Vector2 draw_pos(300,50);
     this->game->DrawScreens();
+
     if(!game->character_list.empty())
     {
-        for(unsigned int i = 0; i < game->character_list.size() && i < 2; i++)
+        ActorDrawer actordrawer;
+
+        int num_chars = this->game->character_list.size();
+        if (num_chars > 0)
         {
-            DrawSpecs specs = actorDrawer.GetDrawSpecs(game->character_list[i]);
-            al_draw_tinted_bitmap_region(specs.bitmap, specs.tint,
-                                         specs.sprite_start.x, specs.sprite_start.y,
-                                         specs.sprite_size.x, specs.sprite_size.y,
-                                         draw_pos.x, draw_pos.y+190*i, specs.draw_flags);
+            GuiFrame* character_frame = static_cast<GuiFrame*>(this->game->GetCurrentScreen()->GetGuiById("character_frame_1"));
+            GuiFrame* draw_frame = static_cast<GuiFrame*>(character_frame->GetGuiById("character_draw_area"));
+            Vector2 draw_middle = draw_frame->GetAbsolutePosition() + draw_frame->GetSize()/2;
+
+            actordrawer.DrawActor(this->game->character_list[0], draw_middle);
+        }
+        if (num_chars > 1)
+        {
+            GuiFrame* character_frame = static_cast<GuiFrame*>(this->game->GetCurrentScreen()->GetGuiById("character_frame_2"));
+            GuiFrame* draw_frame = static_cast<GuiFrame*>(character_frame->GetGuiById("character_draw_area"));
+            Vector2 draw_middle = draw_frame->GetAbsolutePosition() + draw_frame->GetSize()/2;
+
+            actordrawer.DrawActor(this->game->character_list[1], draw_middle);
         }
     }
 }

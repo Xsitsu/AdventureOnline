@@ -1,7 +1,7 @@
 #ifndef GUITEXTBOX_HPP_INCLUDE
 #define GUITEXTBOX_HPP_INCLUDE
 
-#include "guiframe.hpp"
+#include "guiobject.hpp"
 #include "guitextelement.hpp"
 
 #include "observer.hpp"
@@ -11,7 +11,7 @@
 struct TextBoxSelectionArgs;
 struct TextBoxTypingArgs;
 
-class GuiTextBox : public GuiFrame, public GuiTextElement
+class GuiTextBox : public GuiObject, public GuiTextElement
 {
     friend class GuiSelectionService;
 
