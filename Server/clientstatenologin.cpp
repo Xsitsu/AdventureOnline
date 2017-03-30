@@ -121,6 +121,7 @@ bool ClientStateNoLogin::ProcessPacket(PacketBase* packet)
 
         if (did_login)
         {
+            this->client->FetchCharacterList();
             this->client->ChangeState(new ClientStateLoggedIn(this->client));
         }
 

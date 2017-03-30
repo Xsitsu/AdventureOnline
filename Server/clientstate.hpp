@@ -20,6 +20,8 @@ public:
     virtual void Enter() = 0;
     virtual void Exit() = 0;
     virtual bool ProcessPacket(PacketBase* packet);
+
+    virtual std::string GetName() const = 0;
 };
 
 
@@ -35,6 +37,8 @@ public:
     void Enter();
     void Exit();
     bool ProcessPacket(PacketBase* packet);
+
+    std::string GetName() const { return "Init"; }
 };
 
 
@@ -49,6 +53,8 @@ public:
     void Enter();
     void Exit();
     bool ProcessPacket(PacketBase* packet);
+
+    std::string GetName() const { return "NoLogin"; }
 };
 
 class ClientStateLoggedIn : public ClientStateBase
@@ -62,6 +68,8 @@ public:
     void Enter();
     void Exit();
     bool ProcessPacket(PacketBase* packet);
+
+    std::string GetName() const { return "LoggedIn"; }
 };
 
 #endif // CLIENTSTATE_HPP_INCLUDE

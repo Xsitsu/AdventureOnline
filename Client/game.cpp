@@ -287,3 +287,26 @@ void Game::RegisterEventToQueue(GameEventBase* event)
 {
     this->game_event_queue.push_back(event);
 }
+
+void Game::LoginAsCharacter(Character* character)
+{
+    PacketCharacterLogin* packet = new PacketCharacterLogin();
+    packet->SetCharacterId(character->GetCharacterId());
+    this->SendPacket(packet);
+
+    this->current_character = character;
+}
+
+std::vector<Character*> Game::GetCharacterList() const
+{
+    return this->character_list;
+}
+
+void Game::ClearCharacterList()
+{
+    while (!this->character_list.empty())
+    {
+        delete this->character_list.back();
+        this->character_list.pop_back();
+    }
+}

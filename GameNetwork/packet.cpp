@@ -102,8 +102,17 @@ PacketBase* PacketReader::ReadPacket(char* buffer, int bytes_read)
     case PacketBase::PACKET_CHARACTER_LIST_REQUEST:
         packet = new PacketCharacterListRequest();
         break;
-    case PacketBase::PACKET_CHARACTER:
-        packet = new PacketCharacter();
+    case PacketBase::PACKET_CHARACTER_LIST:
+        packet = new PacketCharacterList();
+        break;
+    case PacketBase::PACKET_CHARACTER_DATA_REQUEST:
+        packet = new PacketCharacterDataRequest();
+        break;
+    case PacketBase::PACKET_CHARACTER_LOGIN:
+        packet = new PacketCharacterLogin();
+        break;
+    case PacketBase::PACKET_CHARACTER_APPEARANCE:
+        packet = new PacketCharacterAppearance();
         break;
     case PacketBase::PACKET_LOGOUT:
         packet = new PacketLogout();
@@ -315,23 +324,23 @@ void PacketRegistrationRequest::Decode(char* buffer)
     delete[] pass;
 }
 
-string PacketRegistrationRequest::GetEmail()
+std::string PacketRegistrationRequest::GetEmail()
 {
     return p_email;
 }
 
-string PacketRegistrationRequest::GetPassword()
+std::string PacketRegistrationRequest::GetPassword()
 {
     return p_password;
 }
 
-void PacketRegistrationRequest::SetEmail( string email )
+void PacketRegistrationRequest::SetEmail(std::string email)
 {
     p_email = email;
     email_length = p_email.size();
 }
 
-void PacketRegistrationRequest::SetPassword( string password )
+void PacketRegistrationRequest::SetPassword(std::string password)
 {
     p_password = password;
     password_length = p_password.size();
@@ -460,112 +469,254 @@ void PacketLoginResponse::Decode(char* buffer)
     this->response = static_cast<PacketLoginResponse::LoginResponse>(reader.ReadByte(buffer, this->buffer_pos));
 }
 
-//unsigned int PacketCharacterListRequest::Encode(char* buffer)
-//{
-//    this->buffer_pos = 0;
-//    PacketBase::Encode(buffer);
-//
-//    return this->buffer_pos;
-//}
-//
-//void PacketCharacterListRequest::Decode(char* buffer)
-//{
-//    PacketBase::Decode(buffer);
-//}
-PacketCharacterListRequest::PacketCharacterListRequest(): PacketBase(PacketBase::PACKET_CHARACTER_LIST_REQUEST) {}
+PacketCharacterListRequest::PacketCharacterListRequest(): PacketBase(PacketBase::PACKET_CHARACTER_LIST_REQUEST)
+{}
 
-PacketCharacter::PacketCharacter(Character * info ): PacketBase(PacketBase::PACKET_CHARACTER)
+PacketCharacterList::PacketCharacterList(): PacketBase(PacketBase::PACKET_CHARACTER_LIST)
+{}
+
+unsigned int PacketCharacterList::Encode(char* buffer)
 {
-    if (info)
-    {
-        name = info->GetName();
-        pos_x = info->GetPosition().x;
-        pos_y = info->GetPosition().y;
-        direction = static_cast<short int>(info->GetDirection());
-        health = info->GetHealth();
-        maxHealth = info->GetMaxHealth();
-        strength = info->GetStrength();
-        endurance = info->GetEndurance();
-
-        gender = static_cast<short int>(info->GetGender());
-        skin = static_cast<short int>(info->GetSkin());
-    }
-}
-
-unsigned int PacketCharacter::Encode(char* buffer)
-{
-    PacketReader reader;
     PacketBase::Encode(buffer);
 
-    uint8_t name_length = name.size();
-    const char * encode_name = name.c_str();
+    uint8_t list_size = this->character_ids.size();
 
-    reader.WriteByte(buffer,buffer_pos, mapID);
-    reader.WriteByte(buffer,buffer_pos, pos_x);
-    reader.WriteByte(buffer,buffer_pos, pos_y);
-    reader.WriteByte(buffer,buffer_pos, direction);
-    reader.WriteByte(buffer,buffer_pos, health);
-    reader.WriteByte(buffer,buffer_pos, maxHealth);
-    reader.WriteByte(buffer,buffer_pos, strength);
-    reader.WriteByte(buffer,buffer_pos, endurance);
-    reader.WriteByte(buffer,buffer_pos, skin);
-    reader.WriteByte(buffer,buffer_pos, gender);
-    reader.WriteByte(buffer,buffer_pos, name_length);
-    for(int i =0; i < name_length; i++)
+    PacketReader reader;
+    reader.WriteByte(buffer, this->buffer_pos, list_size);
+
+    std::list<uint32_t>::iterator iter;
+    for (iter = this->character_ids.begin(); iter != this->character_ids.end(); ++iter)
     {
-        reader.WriteByte(buffer, buffer_pos, encode_name[i]);
+        uint32_t character_id = *iter;
+        reader.WriteInt(buffer,  this->buffer_pos, character_id);
     }
 
-    return buffer_pos;
+    return this->buffer_pos;
 }
 
-void PacketCharacter::Decode(char* buffer)
+void PacketCharacterList::Decode(char* buffer)
 {
-    PacketReader reader;
     PacketBase::Decode(buffer);
 
-    Vector2 position;
-    char * decode_name;
-    uint8_t name_length;
+    PacketReader reader;
+    uint8_t list_size = reader.ReadByte(buffer, this->buffer_pos);
 
-
-    mapID = reader.ReadByte(buffer, buffer_pos) ;
-    pos_x = reader.ReadByte(buffer, buffer_pos) ;
-    pos_y = reader.ReadByte(buffer, buffer_pos) ;
-    direction = reader.ReadByte(buffer, buffer_pos) ;
-    health = reader.ReadByte(buffer, buffer_pos) ;
-    maxHealth = reader.ReadByte(buffer, buffer_pos) ;
-    strength = reader.ReadByte(buffer, buffer_pos) ;
-    endurance = reader.ReadByte(buffer, buffer_pos) ;
-    skin = reader.ReadByte(buffer, buffer_pos) ;
-    gender = reader.ReadByte(buffer, buffer_pos) ;
-    name_length = reader.ReadByte(buffer, buffer_pos);
-    decode_name = new char[name_length+1];
-
-    for(int i =0; i < name_length; i++)
+    for (uint8_t i = 0; i < list_size; i++)
     {
-        decode_name[i] = reader.ReadByte(buffer, buffer_pos);
+        uint32_t character_id = reader.ReadInt(buffer, this->buffer_pos);
+        this->character_ids.push_back(character_id);
     }
-    decode_name[name_length] = 0;
-
-    name = decode_name;
-    delete[] decode_name;
 }
 
-Character* PacketCharacter::GetCharacter()
+std::list<uint32_t> PacketCharacterList::GetCharacterList() const
 {
-    Character * newborn = new Character();
-    newborn->SetName(name);
-    newborn->SetGender(static_cast<Character::Gender>(gender));
-    newborn->SetSkin(static_cast<Character::Skin>(skin));
-    newborn->Warp(nullptr, Vector2(pos_x, pos_y));
-    newborn->SetDirection(static_cast<Actor::Direction>(direction));
-    newborn->SetHealth(health);
-    newborn->SetMaxHealth(maxHealth);
-    newborn->SetStrength(strength);
-    newborn->SetEndurance(endurance);
+    return this->character_ids;
+}
 
-    return newborn;
+void PacketCharacterList::SetCharacterList(std::list<uint32_t> character_ids)
+{
+    this->character_ids = character_ids;
+}
+
+
+PacketCharacterDataRequest::PacketCharacterDataRequest(): PacketBase(PacketBase::PACKET_CHARACTER_DATA_REQUEST),
+request_appearance(false), request_position(false), request_stats(false)
+{}
+
+unsigned int PacketCharacterDataRequest::Encode(char* buffer)
+{
+    PacketBase::Encode(buffer);
+
+    uint8_t bitfield = 0;
+    if (this->request_appearance)
+    {
+        bitfield = bitfield | this->BIT_APPEARANCE;
+    }
+    if (this->request_position)
+    {
+        bitfield = bitfield | this->BIT_POSITION;
+    }
+    if (this->request_stats)
+    {
+        bitfield = bitfield | this->BIT_STATS;
+    }
+
+    PacketReader reader;
+    reader.WriteInt(buffer, this->buffer_pos, this->character_id);
+    reader.WriteByte(buffer, this->buffer_pos, bitfield);
+
+    return this->buffer_pos;
+}
+
+void PacketCharacterDataRequest::Decode(char* buffer)
+{
+    PacketBase::Decode(buffer);
+
+    PacketReader reader;
+    this->character_id = reader.ReadInt(buffer, this->buffer_pos);
+    uint8_t bitfield = reader.ReadByte(buffer, this->buffer_pos);
+
+    this->request_appearance = ((bitfield & this->BIT_APPEARANCE) == this->BIT_APPEARANCE);
+    this->request_position = ((bitfield & this->BIT_POSITION) == this->BIT_POSITION);
+    this->request_stats = ((bitfield & this->BIT_STATS) == this->BIT_STATS);
+}
+
+uint32_t PacketCharacterDataRequest::GetCharacterId() const
+{
+    return this->character_id;
+}
+
+void PacketCharacterDataRequest::SetCharacterId(uint32_t character_id)
+{
+    this->character_id = character_id;
+}
+
+bool PacketCharacterDataRequest::GetRequestAppearance() const
+{
+    return this->request_appearance;
+}
+
+bool PacketCharacterDataRequest::GetRequestPosition() const
+{
+    return this->request_position;
+}
+
+bool PacketCharacterDataRequest::GetRequestStats() const
+{
+    return this->request_stats;
+}
+
+void PacketCharacterDataRequest::SetRequestAppearance(bool val)
+{
+    this->request_appearance = val;
+}
+
+void PacketCharacterDataRequest::SetRequestPosition(bool val)
+{
+    this->request_position = val;
+}
+
+void PacketCharacterDataRequest::SetRequestStats(bool val)
+{
+    this->request_stats = val;
+}
+
+PacketCharacterLogin::PacketCharacterLogin(): PacketBase(PacketBase::PACKET_CHARACTER_LOGIN)
+{}
+
+unsigned int PacketCharacterLogin::Encode(char* buffer)
+{
+    PacketBase::Encode(buffer);
+
+    PacketReader reader;
+    reader.WriteInt(buffer, this->buffer_pos, this->character_id);
+
+    return this->buffer_pos;
+}
+
+void PacketCharacterLogin::Decode(char* buffer)
+{
+    PacketBase::Decode(buffer);
+
+    PacketReader reader;
+    this->character_id = reader.ReadInt(buffer, this->buffer_pos);
+}
+
+uint32_t PacketCharacterLogin::GetCharacterId() const
+{
+    return this->character_id;
+}
+
+void PacketCharacterLogin::SetCharacterId(uint32_t character_id)
+{
+    this->character_id = character_id;
+}
+
+
+PacketCharacterAppearance::PacketCharacterAppearance() : PacketBase(PacketBase::PACKET_CHARACTER_APPEARANCE)
+{}
+
+unsigned int PacketCharacterAppearance::Encode(char* buffer)
+{
+    PacketBase::Encode(buffer);
+
+    PacketReader reader;
+
+    reader.WriteInt(buffer, this->buffer_pos, this->character_id);
+    reader.WriteByte(buffer, this->buffer_pos, this->gender);
+    reader.WriteByte(buffer, this->buffer_pos, this->skin);
+
+    uint8_t name_length = this->name.length();
+    reader.WriteByte(buffer, this->buffer_pos, name_length);
+
+    const char* cstr = this->name.c_str();
+
+    for (uint8_t i = 0; i < name_length; i++)
+    {
+        uint8_t byte = cstr[i];
+        reader.WriteByte(buffer, this->buffer_pos, byte);
+    }
+
+    return this->buffer_pos;
+}
+
+void PacketCharacterAppearance::Decode(char* buffer)
+{
+    PacketBase::Decode(buffer);
+
+    PacketReader reader;
+
+    this->character_id = reader.ReadInt(buffer, this->buffer_pos);
+    this->gender = reader.ReadByte(buffer, this->buffer_pos);
+    this->skin = reader.ReadByte(buffer, this->buffer_pos);
+
+    uint8_t name_length = reader.ReadByte(buffer, this->buffer_pos);
+
+    for (uint8_t i = 0; i < name_length; i++)
+    {
+        char c = reader.ReadByte(buffer, this->buffer_pos);
+        this->name += c;
+    }
+}
+
+uint32_t PacketCharacterAppearance::GetCharacterId() const
+{
+    return this->character_id;
+}
+
+std::string PacketCharacterAppearance::GetName() const
+{
+    return this->name;
+}
+
+uint8_t PacketCharacterAppearance::GetGender() const
+{
+    return this->gender;
+}
+
+uint8_t PacketCharacterAppearance::GetSkin() const
+{
+    return this->skin;
+}
+
+void PacketCharacterAppearance::SetCharacterId(uint32_t character_id)
+{
+    this->character_id = character_id;
+}
+
+void PacketCharacterAppearance::SetName(std::string name)
+{
+    this->name = name;
+}
+
+void PacketCharacterAppearance::SetGender(uint8_t gender)
+{
+    this->gender = gender;
+}
+
+void PacketCharacterAppearance::SetSkin(uint8_t skin)
+{
+    this->skin = skin;
 }
 
 PacketLogout::PacketLogout() : PacketBase(PacketBase::PACKET_LOGOUT)
