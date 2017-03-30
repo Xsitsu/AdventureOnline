@@ -71,7 +71,7 @@ void Map::SaveMap()
         ss << map_id;
 
         MapFile file;
-        file.Open(ss.str());
+        file.Create(ss.str());
         file.Write(this);
         file.Close();
     }
@@ -81,6 +81,7 @@ void Map::LoadMap(int map_id)
 {
     if (!this->IsMapLoaded())
     {
+
         std::stringstream ss;
         if (map_id < 1000) ss << "0";
         if (map_id < 100) ss << "0";
@@ -91,6 +92,7 @@ void Map::LoadMap(int map_id)
         file.Open(ss.str());
         file.Read(this);
         file.Close();
+
 
         //this->DebugTestLoad();
 
