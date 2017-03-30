@@ -1,6 +1,8 @@
 #include "map.hpp"
 
-Map::Map() : map_id(0), is_loaded(false)
+#include <sstream>
+
+Map::Map() : map_id(0), is_loaded(false), tiles(nullptr)
 {
 
 }
@@ -11,6 +13,11 @@ Map::~Map()
     {
         this->UnloadMap();
     }
+}
+
+unsigned int Map::GetMapId() const
+{
+    return this->map_id;
 }
 
 void Map::DebugTestLoad()
@@ -53,13 +60,39 @@ void Map::DebugTestLoad()
     this->GetTile(Vector2(10, 8)).SetSpriteId(11);
 }
 
+void Map::SaveMap()
+{
+    if (this->IsMapLoaded())
+    {
+        std::stringstream ss;
+        if (map_id < 1000) ss << "0";
+        if (map_id < 100) ss << "0";
+        if (map_id < 10) ss << "0";
+        ss << map_id;
+
+        MapFile file;
+        file.Open(ss.str());
+        file.Write(this);
+        file.Close();
+    }
+}
+
 void Map::LoadMap(int map_id)
 {
     if (!this->IsMapLoaded())
     {
-        // Do Load
+        std::stringstream ss;
+        if (map_id < 1000) ss << "0";
+        if (map_id < 100) ss << "0";
+        if (map_id < 10) ss << "0";
+        ss << map_id;
 
-        this->DebugTestLoad();
+        MapFile file;
+        file.Open(ss.str());
+        file.Read(this);
+        file.Close();
+
+        //this->DebugTestLoad();
 
         this->is_loaded = true;
         this->map_id = map_id;
