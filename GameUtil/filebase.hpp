@@ -10,12 +10,22 @@
 class DLL_EXPORT FileBase
 {
 protected:
+    char readbuffer[4];
+
     std::string filename;
     std::fstream filestream;
 
     void CheckHeader(char* signature, int* version);
 
     virtual std::string GetExtension() = 0;
+
+    uint8_t TryRead8();
+    uint16_t TryRead16();
+    uint32_t TryRead32();
+
+    void DoWrite8(uint8_t data);
+    void DoWrite16(uint16_t data);
+    void DoWrite32(uint32_t data);
 
 public:
     FileBase();
