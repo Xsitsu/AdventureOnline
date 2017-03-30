@@ -77,10 +77,13 @@ std::list<Resource*> ResourceFile::DoReadV1()
             {
                 try
                 {
-                    pixel.r = static_cast<char>(this->TryRead8());
-                    pixel.g = static_cast<char>(this->TryRead8());
-                    pixel.b = static_cast<char>(this->TryRead8());
-                    pixel.a = static_cast<char>(this->TryRead8());
+                    // This speeds up the loading significantly.
+                    // Each TryRead() call has to check the fail bit which can be slow.
+                    uint32_t data = this->TryRead32();
+                    pixel.r = (data >> 24) & 255;
+                    pixel.g = (data >> 16) & 255;
+                    pixel.b = (data >> 8) & 255;
+                    pixel.a = (data >> 0) & 255;
                 }
                 catch(FileException::FileCorrupted& e)
                 {
