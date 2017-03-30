@@ -20,7 +20,6 @@ void GameStatePlaying::Enter()
     this->game->current_map = new Map();
     this->game->current_map->LoadMap(1);
 
-    this->game->current_character = new Character();
     this->game->current_character->Warp(this->game->current_map, Vector2(10, 10));
 }
 

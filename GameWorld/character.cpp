@@ -1,6 +1,6 @@
 #include "character.hpp"
 
-Character::Character() : name("N/A"), gender(Character::GENDER_FEMALE), skin(Character::SKIN_WHITE)
+Character::Character() : character_id(0), name("N/A"), gender(Character::GENDER_FEMALE), skin(Character::SKIN_WHITE)
 {
 
 }

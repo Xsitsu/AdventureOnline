@@ -29,6 +29,28 @@ void Map::DebugTestLoad()
             tile.SetMovementPermissions(MapTile::MOVEPERM_NONE);
         }
     }
+
+    this->GetTile(Vector2(9, 9)).SetSpriteId(10);
+    this->GetTile(Vector2(9, 10)).SetSpriteId(10);
+    this->GetTile(Vector2(10, 9)).SetSpriteId(10);
+    this->GetTile(Vector2(10, 10)).SetSpriteId(10);
+
+    this->GetTile(Vector2(11, 11)).SetSpriteId(8);
+    this->GetTile(Vector2(8, 8)).SetSpriteId(7);
+    this->GetTile(Vector2(8, 11)).SetSpriteId(6);
+    this->GetTile(Vector2(11, 8)).SetSpriteId(9);
+
+    this->GetTile(Vector2(11, 9)).SetSpriteId(5);
+    this->GetTile(Vector2(11, 10)).SetSpriteId(5);
+
+    this->GetTile(Vector2(8, 9)).SetSpriteId(4);
+    this->GetTile(Vector2(8, 10)).SetSpriteId(4);
+
+    this->GetTile(Vector2(9, 11)).SetSpriteId(12);
+    this->GetTile(Vector2(10, 11)).SetSpriteId(12);
+
+    this->GetTile(Vector2(9, 8)).SetSpriteId(11);
+    this->GetTile(Vector2(10, 8)).SetSpriteId(11);
 }
 
 void Map::LoadMap(int map_id)

@@ -35,22 +35,84 @@ bool ClientStateLoggedIn::ProcessPacket(PacketBase* packet)
     }
     else if(packet->GetType() == PacketBase::PACKET_CHARACTER_LIST_REQUEST)
     {
-        Database * database = this->client->server->GetDatabaseConnection();
-        Character * playerCharacter = nullptr;
-        PacketCharacter * returnCharacter = nullptr;
-        vector<int> characters = database->ReadPlayerCharacters(client->account->GetEmail());
-        vector<int>::iterator it = characters.begin();
-        while(it < characters.end())
+        std::list<Character*> character_list = this->client->account->GetCharacterList();
+        std::list<uint32_t> character_ids;
+        std::list<Character*>::iterator iter;
+        for (iter = character_list.begin(); iter != character_list.end(); ++iter)
         {
-           playerCharacter = database->ReadCharacterInfo( *it++);
-           returnCharacter = new PacketCharacter(playerCharacter);
-           client->SendPacket(returnCharacter);
-           delete playerCharacter;
+            Character* character = *iter;
+            uint32_t id = character->GetCharacterId();
+            character_ids.push_back(id);
+        }
+
+        PacketCharacterList* packet = new PacketCharacterList();
+        packet->SetCharacterList(character_ids);
+
+        this->client->SendPacket(packet);
+
+        return true;
+    }
+    else if (packet->GetType() == PacketBase::PACKET_CHARACTER_DATA_REQUEST)
+    {
+        PacketCharacterDataRequest* request = static_cast<PacketCharacterDataRequest*>(packet);
+
+        std::list<Character*> character_list = this->client->account->GetCharacterList();
+        std::list<Character*>::iterator iter;
+        for (iter = character_list.begin(); iter != character_list.end(); ++iter)
+        {
+            Character* character = *iter;
+
+            if (character->GetCharacterId() == request->GetCharacterId())
+            {
+                if (request->GetRequestAppearance())
+                {
+                    PacketCharacterAppearance* packet = new PacketCharacterAppearance();
+                    packet->SetCharacterId(character->GetCharacterId());
+                    packet->SetName(character->GetName());
+                    packet->SetGender(static_cast<uint8_t>(character->GetGender()));
+                    packet->SetSkin(static_cast<uint8_t>(character->GetSkin()));
+
+                    if (request->GetCharacterId() == 1)
+                    {
+                        packet->SetGender(Character::GENDER_MALE);
+                    }
+                    else if (request->GetCharacterId() == 2)
+                    {
+                        packet->SetSkin(Character::SKIN_GREEN);
+                    }
+
+                    this->client->SendPacket(packet);
+                }
+                if (request->GetRequestPosition())
+                {
+                    // Maybe eventually.
+                }
+                if (request->GetRequestStats())
+                {
+                    // Maybe eventually.
+                }
+            }
+        }
+        return true;
+    }
+    else if (packet->GetType() == PacketBase::PACKET_CHARACTER_LOGIN)
+    {
+        PacketCharacterLogin* login_packet = static_cast<PacketCharacterLogin*>(packet);
+        unsigned int character_id = login_packet->GetCharacterId();
+
+        std::list<Character*> character_list = this->client->account->GetCharacterList();
+        std::list<Character*>::iterator iter;
+        for (iter = character_list.begin(); iter != character_list.end(); ++iter)
+        {
+            Character* character = *iter;
+            if (character->GetCharacterId() == character_id)
+            {
+                this->client->account->SetPlayingCharacter(character);
+            }
         }
 
         return true;
     }
-
 
     return false;
 }
