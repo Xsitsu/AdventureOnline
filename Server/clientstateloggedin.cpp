@@ -72,15 +72,6 @@ bool ClientStateLoggedIn::ProcessPacket(PacketBase* packet)
                     packet->SetGender(static_cast<uint8_t>(character->GetGender()));
                     packet->SetSkin(static_cast<uint8_t>(character->GetSkin()));
 
-                    if (request->GetCharacterId() == 1)
-                    {
-                        packet->SetGender(Character::GENDER_MALE);
-                    }
-                    else if (request->GetCharacterId() == 2)
-                    {
-                        packet->SetSkin(Character::SKIN_GREEN);
-                    }
-
                     this->client->SendPacket(packet);
                 }
                 if (request->GetRequestPosition())

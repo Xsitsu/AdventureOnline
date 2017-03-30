@@ -268,8 +268,10 @@ Character * Database::ReadCharacterInfo( int ID)
     SQLGetData(h_Statement, 4, SQL_C_LONG, &stats[0], 1, &sqlInt[0] );
     SQLGetData(h_Statement, 5, SQL_C_LONG, &stats[1], 1, &sqlInt[1] );
 
+
     player_character->SetName(name);
     player_character->Warp(nullptr, Vector2(stats[0], stats[1]));
+
 
     if(SQLMoreResults(h_Statement) != SQL_NO_DATA)
     {
@@ -281,10 +283,23 @@ Character * Database::ReadCharacterInfo( int ID)
         SQLGetData(h_Statement, 3, SQL_C_SHORT, &stats[3], 1, &sqlInt[3] );
         player_character->SetEndurance(stats[3]);
 
+        SQLFetch(h_Statement);
+        SQLGetData(h_Statement, 3, SQL_C_SHORT, &stats[4], 1, &sqlInt[3] );
+        player_character->SetGender(static_cast<Character::Gender>(stats[4]));
+
+        SQLFetch(h_Statement);
+        SQLGetData(h_Statement, 3, SQL_C_SHORT, &stats[5], 1, &sqlInt[3] );
+        player_character->SetSkin(static_cast<Character::Skin>(stats[5]));
+
+        SQLFetch(h_Statement);
+        SQLGetData(h_Statement, 3, SQL_C_SHORT, &stats[6], 1, &sqlInt[3] );
+        player_character->SetMaxHealth(stats[6]);
+
+        SQLFetch(h_Statement);
+        SQLGetData(h_Statement, 3, SQL_C_SHORT, &stats[7], 1, &sqlInt[3] );
+        player_character->SetHealth(stats[7]);
     }
     SQLFreeHandle(SQL_HANDLE_STMT, h_Statement);
 
-    player_character->SetMaxHealth( 100);
-    player_character->SetHealth(100);
     return player_character;
 }
