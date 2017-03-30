@@ -10,10 +10,16 @@
 
 #include "GameUtil/vector2.hpp"
 
+class MapFile;
+
+#include "mapfile.hpp"
+
 class DLL_EXPORT Map
 {
+    friend class MapFile;
+
 protected:
-    int map_id;
+    unsigned int map_id;
     bool is_loaded;
 
     MapTile** tiles;
@@ -29,6 +35,9 @@ public:
     Map();
     ~Map();
 
+    unsigned int GetMapId() const;
+
+    void SaveMap();
     void LoadMap(int map_id);
     void UnloadMap();
     bool IsMapLoaded() const;
