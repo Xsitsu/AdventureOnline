@@ -4,7 +4,7 @@
 
 ClientConnection::ClientConnection(Server* server, Address address, unsigned int connection_id) :
 connection_id(connection_id), packet_sequence(0), client_address(address), server(server), account(NULL),
-state(nullptr)
+playing_character(nullptr), state(nullptr)
 {
     this->ChangeState(new ClientStateInit(this));
 }

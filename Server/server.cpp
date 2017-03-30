@@ -59,6 +59,8 @@ bool Server::Init()
     this->socket.Open(this->port, true);
     if (!this->socket.IsOpen()) return false;
 
+    this->world = new World(1);
+
     return true;
 }
 
@@ -66,7 +68,7 @@ void Server::Tick()
 {
     Address sender;
     PacketBase* packet = this->ReceivePacket(sender);
-    if (packet)
+    while (packet)
     {
         //std::cout << "Got a packet. [" << packet->GetSequence() << "]" << std::endl;
 
@@ -134,6 +136,7 @@ void Server::Tick()
         }
 
         delete packet;
+        packet = this->ReceivePacket(sender);
     }
 
     this->TickPacketAcks();
@@ -259,4 +262,9 @@ Database* Server::GetDatabaseConnection() const
 AccountService& Server::GetAccountService()
 {
     return this->accountservice;
+}
+
+World* Server::GetWorld()
+{
+    return this->world;
 }

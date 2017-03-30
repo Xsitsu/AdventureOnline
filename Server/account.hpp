@@ -16,8 +16,6 @@ protected:
 
     std::list<Character*> character_list;
 
-    Character* playing_character;
-
 public:
     Account(unsigned int id, std::string email, std::string salt, std::string _hash);
 
@@ -27,10 +25,7 @@ public:
     std::string GetHash() const { return this->_hash; }
 
     int GetNumberCharacters() const;
-    Character* GetPlayingCharacter() const;
     std::list<Character*> GetCharacterList() const;
-
-    void SetPlayingCharacter(Character* character);
 
     bool CharacterIsInList(Character* character) const;
     void AddCharacterToList(Character* character);

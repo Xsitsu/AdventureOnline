@@ -61,6 +61,7 @@
 		<Unit filename="clientstateinit.cpp" />
 		<Unit filename="clientstateloggedin.cpp" />
 		<Unit filename="clientstatenologin.cpp" />
+		<Unit filename="clientstateplaying.cpp" />
 		<Unit filename="database.cpp" />
 		<Unit filename="database.hpp" />
 		<Unit filename="main.cpp" />

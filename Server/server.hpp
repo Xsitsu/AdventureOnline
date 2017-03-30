@@ -52,5 +52,7 @@ public:
     void TickClientTimeout();
 
     AccountService& GetAccountService();
+
+    World* GetWorld();
 };
 #endif // SERVER_HPP_INCLUDE

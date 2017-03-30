@@ -25,6 +25,7 @@ class ClientConnection
     friend class ClientStateInit;
     friend class ClientStateNoLogin;
     friend class ClientStateLoggedIn;
+    friend class ClientStatePlaying;
 
 protected:
     unsigned int connection_id;
@@ -39,6 +40,7 @@ protected:
     Server* server;
 
     Account* account;
+    Character* playing_character;
 
     ClientStateBase* state;
 
