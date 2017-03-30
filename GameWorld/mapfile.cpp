@@ -66,6 +66,8 @@ void MapFile::DoReadV1(Map* map)
         throw FileException::FileCorrupted(this->filename);
     }
 
+    map->size = Vector2(width, height);
+
     map->tiles = new MapTile*[width];
     for (uint16_t x = 0; x < width; x++)
     {

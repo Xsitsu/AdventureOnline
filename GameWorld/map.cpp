@@ -81,6 +81,7 @@ void Map::LoadMap(int map_id)
 {
     if (!this->IsMapLoaded())
     {
+        this->map_id = map_id;
 
         std::stringstream ss;
         if (map_id < 1000) ss << "0";
@@ -97,7 +98,6 @@ void Map::LoadMap(int map_id)
         //this->DebugTestLoad();
 
         this->is_loaded = true;
-        this->map_id = map_id;
     }
 }
 
