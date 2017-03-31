@@ -151,14 +151,44 @@ MapTile& Map::GetTile(Vector2 coords)
 void Map::HandleActorEnter(Actor* actor)
 {
     this->actors.push_back(actor);
+
+    if (actor->IsPlayer())
+    {
+        this->characters.push_back(static_cast<Character*>(actor));
+    }
+    else if (actor->IsNPC())
+    {
+        // ToDo: Change static cast type when npcs class implemented.
+        this->npcs.push_back(static_cast<Actor*>(actor));
+    }
 }
 
 void Map::HandleActorLeave(Actor* actor)
 {
     this->actors.remove(actor);
+
+    if (actor->IsPlayer())
+    {
+        this->characters.remove(static_cast<Character*>(actor));
+    }
+    else if (actor->IsNPC())
+    {
+        // ToDo: Change static cast type when npcs class implemented.
+        this->npcs.remove(static_cast<Actor*>(actor));
+    }
 }
 
 std::list<Actor*> Map::GetActorList() const
 {
     return this->actors;
+}
+
+std::list<Character*> Map::GetCharacterList() const
+{
+    return this->characters;
+}
+
+std::list<Actor*> Map::GetNPCList() const
+{
+    return this->npcs;
 }

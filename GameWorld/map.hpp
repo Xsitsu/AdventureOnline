@@ -6,6 +6,7 @@
 #include <list>
 
 #include "actor.hpp"
+#include "character.hpp"
 #include "maptile.hpp"
 
 #include "GameUtil/vector2.hpp"
@@ -27,7 +28,8 @@ protected:
     Vector2 size;
 
     std::list<Actor*> actors;
-
+    std::list<Character*> characters;
+    std::list<Actor*> npcs;
 
     void DebugTestLoad();
 
@@ -51,5 +53,7 @@ public:
     void HandleActorLeave(Actor* actor);
 
     std::list<Actor*> GetActorList() const;
+    std::list<Character*> GetCharacterList() const;
+    std::list<Actor*> GetNPCList() const;
 };
 #endif // MAP_HPP_INCLUDE
