@@ -206,10 +206,22 @@ void GameStatePlaying::HandleKeyDown(const ALLEGRO_KEYBOARD_EVENT& keyboard)
 
     Character* cur_char = this->game->current_character;
     cur_char->SetDirection(dir);
-    Vector2 targ_pos = cur_char->GetPosition() + adder;
+    Vector2 cur_pos = cur_char->GetPosition();
+    Vector2 targ_pos = cur_pos + adder;
     try
     {
         cur_char->Move(targ_pos);
+
+        PacketCharacterWalk* packet = new PacketCharacterWalk();
+        packet->SetCharacterId(cur_char->GetCharacterId());
+        packet->SetFromX(cur_pos.x);
+        packet->SetFromY(cur_pos.y);
+        packet->SetToX(targ_pos.x);
+        packet->SetToY(targ_pos.y);
+        packet->SetDirection(dir);
+
+        this->game->SendPacket(packet);
+
         //std::cout << "Moved to: " << targ_pos.x << "/" << targ_pos.y << std::endl;
     }
     catch (...)

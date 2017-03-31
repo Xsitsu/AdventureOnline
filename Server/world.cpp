@@ -33,11 +33,15 @@ Map* World::GetMap(unsigned int id)
 
 void World::LoadMap(unsigned int id)
 {
-    this->maps[id] = new Map();
+    Map* map = new Map();
+    map->LoadMap(id);
+    this->maps[id] = map;
 }
 
 void World::UnloadMap(unsigned int id)
 {
-    delete this->maps[id];
+    Map* map = this->maps[id];
+    map->UnloadMap();
+    delete map;
     this->maps[id] = nullptr;
 }

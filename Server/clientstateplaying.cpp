@@ -28,7 +28,7 @@ void ClientStatePlaying::Enter()
 
     PacketCharacterPosition* packet = new PacketCharacterPosition();
     packet->SetCharacterId(character->GetCharacterId());
-    packet->SetMapId(map_id);
+    packet->SetMapId(map->GetMapId());
     packet->SetPositionX(map_pos.x);
     packet->SetPositionY(map_pos.y);
     packet->SetDirection(static_cast<uint8_t>(character->GetDirection()));
@@ -85,6 +85,37 @@ bool ClientStatePlaying::ProcessPacket(PacketBase* packet)
                 }
             }
         }
+        return true;
+    }
+    else if (packet->GetType() == PacketBase::PACKET_CHARACTER_WALK)
+    {
+        PacketCharacterWalk* walk = static_cast<PacketCharacterWalk*>(packet);
+
+        Character* character = this->client->playing_character;
+        if (walk->GetCharacterId() == character->GetCharacterId())
+        {
+            //Vector2 from_pos = Vector2(walk->GetFromX(), walk->GetFromY());
+            Vector2 to_pos = Vector2(walk->GetToX(), walk->GetToY());
+            Actor::Direction dir = static_cast<Actor::Direction>(walk->GetDirection());
+
+            try
+            {
+                character->SetDirection(dir);
+                character->Move(to_pos);
+            }
+            catch(...)
+            {
+                PacketCharacterPosition* packet = new PacketCharacterPosition();
+                packet->SetCharacterId(character->GetCharacterId());
+                packet->SetMapId(character->GetMap()->GetMapId());
+                packet->SetPositionX(character->GetPosition().x);
+                packet->SetPositionY(character->GetPosition().y);
+                packet->SetDirection(static_cast<uint8_t>(character->GetDirection()));
+
+                this->client->SendPacket(packet);
+            }
+        }
+
         return true;
     }
 

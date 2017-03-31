@@ -120,6 +120,9 @@ PacketBase* PacketReader::ReadPacket(char* buffer, int bytes_read)
     case PacketBase::PACKET_CHARACTER_POSITION:
         packet = new PacketCharacterPosition();
         break;
+    case PacketBase::PACKET_CHARACTER_WALK:
+        packet = new PacketCharacterWalk();
+        break;
     default:
         //std::cout << "bad type: " << (unsigned int) type << std::endl;s
         break;
@@ -805,3 +808,35 @@ void PacketCharacterPosition::SetDirection(uint8_t direction)
 {
     this->direction = direction;
 }
+
+PacketCharacterWalk::PacketCharacterWalk() : PacketBase(PacketBase::PACKET_CHARACTER_WALK)
+{}
+
+unsigned int PacketCharacterWalk::Encode(char* buffer)
+{
+    PacketBase::Encode(buffer);
+
+    PacketReader reader;
+    reader.WriteInt(buffer, this->buffer_pos, this->character_id);
+    reader.WriteShort(buffer, this->buffer_pos, this->from_x);
+    reader.WriteShort(buffer, this->buffer_pos, this->from_y);
+    reader.WriteShort(buffer, this->buffer_pos, this->to_x);
+    reader.WriteShort(buffer, this->buffer_pos, this->to_y);
+    reader.WriteByte(buffer, this->buffer_pos, this->direction);
+
+    return this->buffer_pos;
+}
+
+void PacketCharacterWalk::Decode(char* buffer)
+{
+    PacketBase::Decode(buffer);
+
+    PacketReader reader;
+    this->character_id = reader.ReadInt(buffer, this->buffer_pos);
+    this->from_x = reader.ReadShort(buffer, this->buffer_pos);
+    this->from_y = reader.ReadShort(buffer, this->buffer_pos);
+    this->to_x = reader.ReadShort(buffer, this->buffer_pos);
+    this->to_y = reader.ReadShort(buffer, this->buffer_pos);
+    this->direction = reader.ReadByte(buffer, this->buffer_pos);
+}
+

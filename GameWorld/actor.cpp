@@ -128,3 +128,8 @@ void Actor::SetHasNowall(bool val)
 {
     this->has_nowall = val;
 }
+
+Map* Actor::GetMap() const
+{
+    return this->current_map;
+}

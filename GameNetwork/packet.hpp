@@ -33,7 +33,9 @@ public:
         PACKET_CHARACTER_DATA_REQUEST,
         PACKET_CHARACTER_LOGIN,
         PACKET_CHARACTER_APPEARANCE,
-        PACKET_CHARACTER_POSITION
+        PACKET_CHARACTER_POSITION,
+
+        PACKET_CHARACTER_WALK
     };
 
 protected:
@@ -398,6 +400,40 @@ public:
     void SetPositionX(uint16_t pos_x);
     void SetPositionY(uint16_t pos_y);
     void SetDirection(uint8_t direction);
+};
+
+class DLL_EXPORT PacketCharacterWalk : public PacketBase
+{
+protected:
+    uint32_t character_id;
+
+    uint16_t from_x;
+    uint16_t from_y;
+
+    uint16_t to_x;
+    uint16_t to_y;
+
+    uint8_t direction;
+
+public:
+    PacketCharacterWalk();
+
+    virtual unsigned int Encode(char* buffer);
+    virtual void Decode(char* buffer);
+
+    uint32_t GetCharacterId() const { return this->character_id; }
+    uint16_t GetFromX() const { return this->from_x; }
+    uint16_t GetFromY() const { return this->from_y; }
+    uint16_t GetToX() const { return this->to_x; }
+    uint16_t GetToY() const { return this->to_y; }
+    uint8_t GetDirection() const { return this->direction; }
+
+    void SetCharacterId(uint32_t id) { this->character_id = id; }
+    void SetFromX(uint16_t from_x) { this->from_x = from_x; }
+    void SetFromY(uint16_t from_y) { this->from_y = from_y; }
+    void SetToX(uint16_t to_x) { this->to_x = to_x; }
+    void SetToY(uint16_t to_y) { this->to_y = to_y; }
+    void SetDirection(uint8_t direction) { this->direction = direction; }
 
 };
 
