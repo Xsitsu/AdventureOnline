@@ -25,6 +25,15 @@ void ClientStatePlaying::Enter()
 
     Map* map = world->GetMap(map_id);
     character->Warp(map, map_pos);
+
+    PacketCharacterPosition* packet = new PacketCharacterPosition();
+    packet->SetCharacterId(character->GetCharacterId());
+    packet->SetMapId(map_id);
+    packet->SetPositionX(map_pos.x);
+    packet->SetPositionY(map_pos.y);
+    packet->SetDirection(static_cast<uint8_t>(character->GetDirection()));
+
+    this->client->SendPacket(packet);
 }
 
 void ClientStatePlaying::Exit()

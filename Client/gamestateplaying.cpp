@@ -17,10 +17,7 @@ GameStatePlaying::GameStatePlaying(Game* game) : GameStateBase(game)
 
 void GameStatePlaying::Enter()
 {
-    this->game->current_map = new Map();
-    this->game->current_map->LoadMap(1);
 
-    this->game->current_character->Warp(this->game->current_map, Vector2(10, 10));
 }
 
 void GameStatePlaying::Exit()
@@ -37,11 +34,16 @@ void GameStatePlaying::Tick()
 void GameStatePlaying::Render()
 {
     // Game render logic
-    Vector2 current_pos = this->game->current_character->GetPosition();
     Map* current_map = this->game->current_map;
 
-    // Draw map
+    if (current_map)
+    {
 
+
+
+    Vector2 current_pos = this->game->current_character->GetPosition();
+
+    // Draw map
     Vector2 tile_step_x = Vector2(64, 32)/2;
     Vector2 tile_step_y = Vector2(-64, 32)/2;
 
@@ -103,6 +105,10 @@ void GameStatePlaying::Render()
     // Draw own character
     actordrawer.DrawActorOnTile(mychar, middle);
 
+
+
+    }
+
     // Screen drawing
     this->game->DrawScreens();
 
@@ -110,7 +116,58 @@ void GameStatePlaying::Render()
 
 void GameStatePlaying::HandlePacket(PacketBase* packet)
 {
+    if (packet->GetType() == PacketBase::PACKET_CHARACTER_POSITION)
+    {
+        PacketCharacterPosition* char_pos = static_cast<PacketCharacterPosition*>(packet);
 
+        if (char_pos->GetCharacterId() == this->game->current_character->GetCharacterId())
+        {
+            Character* character = this->game->current_character;
+            Map* cur_map = this->game->current_map;
+
+            unsigned int map_id = char_pos->GetMapId();
+            Vector2 pos = Vector2(char_pos->GetPositionX(), char_pos->GetPositionY());
+            Actor::Direction dir = static_cast<Actor::Direction>(char_pos->GetDirection());
+
+            Map* targ_map = cur_map;
+            bool change_map = (!cur_map) || (targ_map->GetMapId() != map_id);
+            if (change_map)
+            {
+                targ_map = new Map();
+                targ_map->LoadMap(map_id);
+            }
+
+            character->Warp(targ_map, pos);
+            character->SetDirection(dir);
+
+            if (change_map)
+            {
+                if (cur_map)
+                {
+                    cur_map->UnloadMap();
+                    delete cur_map;
+                }
+                this->game->current_map = targ_map;
+            }
+        }
+        else if (this->game->current_map->GetMapId() == char_pos->GetMapId())
+        {
+            std::list<Actor*> actor_list = this->game->current_map->GetActorList();
+            std::list<Actor*>::iterator iter;
+            for (iter = actor_list.begin(); iter != actor_list.end(); ++iter)
+            {
+                Actor* actor = *iter;
+                if (actor->IsPlayer())
+                {
+                    Character* character = static_cast<Character*>(actor);
+                    if (character->GetCharacterId() == char_pos->GetCharacterId())
+                    {
+                        std::cout << "Got position update for character with id: " << char_pos->GetCharacterId() << std::endl;
+                    }
+                }
+            }
+        }
+    }
 }
 
 void GameStatePlaying::HandleKeyDown(const ALLEGRO_KEYBOARD_EVENT& keyboard)

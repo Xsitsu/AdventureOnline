@@ -32,6 +32,7 @@ public:
         PACKET_CHARACTER_DATA_REQUEST,
         PACKET_CHARACTER_LOGIN,
         PACKET_CHARACTER_APPEARANCE,
+        PACKET_CHARACTER_POSITION,
         PACKET_LOGOUT
     };
 
@@ -360,6 +361,36 @@ public:
     void SetName(std::string name);
     void SetGender(uint8_t gender);
     void SetSkin(uint8_t skin);
+
+};
+
+class DLL_EXPORT PacketCharacterPosition : public PacketBase
+{
+protected:
+    uint32_t character_id;
+
+    uint16_t map_id;
+    uint16_t position_x;
+    uint16_t position_y;
+    uint8_t direction;
+
+public:
+    PacketCharacterPosition();
+
+    virtual unsigned int Encode(char* buffer);
+    virtual void Decode(char* buffer);
+
+    uint32_t GetCharacterId() const;
+    uint16_t GetMapId() const;
+    uint16_t GetPositionX() const;
+    uint16_t GetPositionY() const;
+    uint8_t GetDirection() const;
+
+    void SetCharacterId(uint32_t id);
+    void SetMapId(uint16_t id);
+    void SetPositionX(uint16_t pos_x);
+    void SetPositionY(uint16_t pos_y);
+    void SetDirection(uint8_t direction);
 
 };
 
