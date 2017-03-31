@@ -99,6 +99,9 @@ PacketBase* PacketReader::ReadPacket(char* buffer, int bytes_read)
     case PacketBase::PACKET_LOGIN_RESPONSE:
         packet = new PacketLoginResponse();
         break;
+    case PacketBase::PACKET_LOGOUT:
+        packet = new PacketLogout();
+        break;
     case PacketBase::PACKET_CHARACTER_LIST_REQUEST:
         packet = new PacketCharacterListRequest();
         break;
@@ -116,9 +119,6 @@ PacketBase* PacketReader::ReadPacket(char* buffer, int bytes_read)
         break;
     case PacketBase::PACKET_CHARACTER_POSITION:
         packet = new PacketCharacterPosition();
-        break;
-    case PacketBase::PACKET_LOGOUT:
-        packet = new PacketLogout();
         break;
     default:
         //std::cout << "bad type: " << (unsigned int) type << std::endl;s
@@ -472,6 +472,9 @@ void PacketLoginResponse::Decode(char* buffer)
     this->response = static_cast<PacketLoginResponse::LoginResponse>(reader.ReadByte(buffer, this->buffer_pos));
 }
 
+PacketLogout::PacketLogout() : PacketBase(PacketBase::PACKET_LOGOUT)
+{}
+
 PacketCharacterListRequest::PacketCharacterListRequest(): PacketBase(PacketBase::PACKET_CHARACTER_LIST_REQUEST)
 {}
 
@@ -802,6 +805,3 @@ void PacketCharacterPosition::SetDirection(uint8_t direction)
 {
     this->direction = direction;
 }
-
-PacketLogout::PacketLogout() : PacketBase(PacketBase::PACKET_LOGOUT)
-{}

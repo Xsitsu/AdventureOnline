@@ -27,13 +27,13 @@ public:
         PACKET_REGISTRATION_RESPONSE,
         PACKET_LOGIN_REQUEST,
         PACKET_LOGIN_RESPONSE,
+        PACKET_LOGOUT,
         PACKET_CHARACTER_LIST_REQUEST,
         PACKET_CHARACTER_LIST,
         PACKET_CHARACTER_DATA_REQUEST,
         PACKET_CHARACTER_LOGIN,
         PACKET_CHARACTER_APPEARANCE,
-        PACKET_CHARACTER_POSITION,
-        PACKET_LOGOUT
+        PACKET_CHARACTER_POSITION
     };
 
 protected:
@@ -268,6 +268,13 @@ public:
     virtual void Decode(char* buffer);
 };
 
+class DLL_EXPORT PacketLogout : public PacketBase
+{
+protected:
+
+public:
+    PacketLogout();
+};
 
 class DLL_EXPORT PacketCharacterListRequest : public PacketBase
 {
@@ -392,14 +399,6 @@ public:
     void SetPositionY(uint16_t pos_y);
     void SetDirection(uint8_t direction);
 
-};
-
-class DLL_EXPORT PacketLogout : public PacketBase
-{
-protected:
-
-public:
-    PacketLogout();
 };
 
 #endif // PACKET_HPP_INCLUDE
