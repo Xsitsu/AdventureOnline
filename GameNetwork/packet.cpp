@@ -120,6 +120,12 @@ PacketBase* PacketReader::ReadPacket(char* buffer, int bytes_read)
     case PacketBase::PACKET_CHARACTER_POSITION:
         packet = new PacketCharacterPosition();
         break;
+    case PacketBase::PACKET_CHARACTER_MAP_ENTER:
+        packet = new PacketCharacterMapEnter();
+        break;
+    case PacketBase::PACKET_CHARACTER_MAP_LEAVE:
+        packet = new PacketCharacterMapLeave();
+        break;
     case PacketBase::PACKET_CHARACTER_WALK:
         packet = new PacketCharacterWalk();
         break;
@@ -807,6 +813,52 @@ void PacketCharacterPosition::SetPositionY(uint16_t pos_y)
 void PacketCharacterPosition::SetDirection(uint8_t direction)
 {
     this->direction = direction;
+}
+
+PacketCharacterMapEnter::PacketCharacterMapEnter() : PacketBase(PacketBase::PACKET_CHARACTER_MAP_ENTER)
+{}
+
+unsigned int PacketCharacterMapEnter::Encode(char* buffer)
+{
+    PacketBase::Encode(buffer);
+
+    PacketReader reader;
+    reader.WriteInt(buffer, this->buffer_pos, this->character_id);
+    reader.WriteShort(buffer, this->buffer_pos, this->map_id);
+
+    return this->buffer_pos;
+}
+
+void PacketCharacterMapEnter::Decode(char* buffer)
+{
+    PacketBase::Decode(buffer);
+
+    PacketReader reader;
+    this->character_id = reader.ReadInt(buffer, this->buffer_pos);
+    this->map_id = reader.ReadShort(buffer, this->buffer_pos);
+}
+
+PacketCharacterMapLeave::PacketCharacterMapLeave() : PacketBase(PacketBase::PACKET_CHARACTER_MAP_LEAVE)
+{}
+
+unsigned int PacketCharacterMapLeave::Encode(char* buffer)
+{
+    PacketBase::Encode(buffer);
+
+    PacketReader reader;
+    reader.WriteInt(buffer, this->buffer_pos, this->character_id);
+    reader.WriteShort(buffer, this->buffer_pos, this->map_id);
+
+    return this->buffer_pos;
+}
+
+void PacketCharacterMapLeave::Decode(char* buffer)
+{
+    PacketBase::Decode(buffer);
+
+    PacketReader reader;
+    this->character_id = reader.ReadInt(buffer, this->buffer_pos);
+    this->map_id = reader.ReadShort(buffer, this->buffer_pos);
 }
 
 PacketCharacterWalk::PacketCharacterWalk() : PacketBase(PacketBase::PACKET_CHARACTER_WALK)

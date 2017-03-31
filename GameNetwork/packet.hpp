@@ -35,6 +35,9 @@ public:
         PACKET_CHARACTER_APPEARANCE,
         PACKET_CHARACTER_POSITION,
 
+        PACKET_CHARACTER_MAP_ENTER,
+        PACKET_CHARACTER_MAP_LEAVE,
+
         PACKET_CHARACTER_WALK
     };
 
@@ -400,6 +403,44 @@ public:
     void SetPositionX(uint16_t pos_x);
     void SetPositionY(uint16_t pos_y);
     void SetDirection(uint8_t direction);
+};
+
+class DLL_EXPORT PacketCharacterMapEnter : public PacketBase
+{
+protected:
+    uint32_t character_id;
+    uint16_t map_id;
+
+public:
+    PacketCharacterMapEnter();
+
+    virtual unsigned int Encode(char* buffer);
+    virtual void Decode(char* buffer);
+
+    uint32_t GetCharacterId() const { return this->character_id; }
+    uint16_t GetMapId() const { return this->map_id; }
+
+    void SetCharacterId(uint32_t id) { this->character_id = id; }
+    void SetMapId(uint16_t id) { this->map_id = id; }
+};
+
+class DLL_EXPORT PacketCharacterMapLeave : public PacketBase
+{
+protected:
+    uint32_t character_id;
+    uint16_t map_id;
+
+public:
+    PacketCharacterMapLeave();
+
+    virtual unsigned int Encode(char* buffer);
+    virtual void Decode(char* buffer);
+
+    uint32_t GetCharacterId() const { return this->character_id; }
+    uint16_t GetMapId() const { return this->map_id; }
+
+    void SetCharacterId(uint32_t id) { this->character_id = id; }
+    void SetMapId(uint16_t id) { this->map_id = id; }
 };
 
 class DLL_EXPORT PacketCharacterWalk : public PacketBase

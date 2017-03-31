@@ -3,11 +3,14 @@
 
 #include "GameWorld\map.hpp"
 
+class ClientConnection;
+
 class World
 {
 protected:
     unsigned int number_maps;
     Map** maps;
+    std::list<ClientConnection*>* clients_in_maps;
 
 public:
     World(unsigned int number_maps);
@@ -19,5 +22,9 @@ public:
     void LoadMap(unsigned int id);
     void UnloadMap(unsigned int id);
 
+    void RegisterClientInMap(ClientConnection* client, unsigned int map_id);
+    void UnregisterClientInMap(ClientConnection* client, unsigned int map_id);
+
+    std::list<ClientConnection*> GetClientsInMap(unsigned int map_id) const;
 };
 #endif // WORLD_HPP_INCLUDE

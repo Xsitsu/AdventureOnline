@@ -47,6 +47,14 @@ protected:
     void DoAccountLogout();
     void FetchCharacterList();
 
+    void DoCharacterLogout();
+    void DoWarpCharacter(Map* map, Vector2 map_pos);
+
+    void SendCharacterAppearance(Character* character);
+    void SendCharacterPosition(Character* character);
+    void SendCharacterMapEnter(Character* character);
+    void SendCharacterMapLeave(Character* character);
+
 public:
     ClientConnection(Server* server, Address address, unsigned int connection_id);
     ~ClientConnection();
@@ -61,6 +69,8 @@ public:
     void UpdateLastCommunicationTime();
 
     void ChangeState(ClientStateBase* state);
+
+    Character* GetPlayingCharacter();
 
 };
 #endif // CLIENTCONNECTION_HPP_INCLUDE
