@@ -172,62 +172,62 @@ void GameStatePlaying::HandlePacket(PacketBase* packet)
 
 void GameStatePlaying::HandleKeyDown(const ALLEGRO_KEYBOARD_EVENT& keyboard)
 {
-    Vector2 adder;
-    Actor::Direction dir;
-    if (keyboard.keycode == ALLEGRO_KEY_UP)
+    if (keyboard.keycode == ALLEGRO_KEY_UP || keyboard.keycode == ALLEGRO_KEY_DOWN ||
+        keyboard.keycode == ALLEGRO_KEY_LEFT || keyboard.keycode == ALLEGRO_KEY_RIGHT)
     {
-        adder = Vector2(0, -1);
-        dir = Actor::DIR_UP;
-    }
-    else if (keyboard.keycode == ALLEGRO_KEY_DOWN)
-    {
-        adder = Vector2(0, 1);
-        dir = Actor::DIR_DOWN;
-    }
-    else if (keyboard.keycode == ALLEGRO_KEY_LEFT)
-    {
-        adder = Vector2(-1, 0);
-        dir = Actor::DIR_LEFT;
-    }
-    else if (keyboard.keycode == ALLEGRO_KEY_RIGHT)
-    {
-        adder = Vector2(1, 0);
-        dir = Actor::DIR_RIGHT;
+        Vector2 adder;
+        Actor::Direction dir;
+        if (keyboard.keycode == ALLEGRO_KEY_UP)
+        {
+            adder = Vector2(0, -1);
+            dir = Actor::DIR_UP;
+        }
+        else if (keyboard.keycode == ALLEGRO_KEY_DOWN)
+        {
+            adder = Vector2(0, 1);
+            dir = Actor::DIR_DOWN;
+        }
+        else if (keyboard.keycode == ALLEGRO_KEY_LEFT)
+        {
+            adder = Vector2(-1, 0);
+            dir = Actor::DIR_LEFT;
+        }
+        else if (keyboard.keycode == ALLEGRO_KEY_RIGHT)
+        {
+            adder = Vector2(1, 0);
+            dir = Actor::DIR_RIGHT;
+        }
+
+        Character* cur_char = this->game->current_character;
+        cur_char->SetDirection(dir);
+        Vector2 cur_pos = cur_char->GetPosition();
+        Vector2 targ_pos = cur_pos + adder;
+        try
+        {
+            cur_char->Move(targ_pos);
+
+            PacketCharacterWalk* packet = new PacketCharacterWalk();
+            packet->SetCharacterId(cur_char->GetCharacterId());
+            packet->SetFromX(cur_pos.x);
+            packet->SetFromY(cur_pos.y);
+            packet->SetToX(targ_pos.x);
+            packet->SetToY(targ_pos.y);
+            packet->SetDirection(dir);
+
+            this->game->SendPacket(packet);
+        }
+        catch (...)
+        {
+
+        }
     }
     else if (keyboard.keycode == ALLEGRO_KEY_SPACE)
     {
-        this->game->current_character->SetHasNowall(!this->game->current_character->GetHasNowall());
-        return;
-    }
-    else
-    {
-        return;
+        Character* cur_char = this->game->current_character;
+        cur_char->SetHasNowall(!cur_char->GetHasNowall());
     }
 
-    Character* cur_char = this->game->current_character;
-    cur_char->SetDirection(dir);
-    Vector2 cur_pos = cur_char->GetPosition();
-    Vector2 targ_pos = cur_pos + adder;
-    try
-    {
-        cur_char->Move(targ_pos);
 
-        PacketCharacterWalk* packet = new PacketCharacterWalk();
-        packet->SetCharacterId(cur_char->GetCharacterId());
-        packet->SetFromX(cur_pos.x);
-        packet->SetFromY(cur_pos.y);
-        packet->SetToX(targ_pos.x);
-        packet->SetToY(targ_pos.y);
-        packet->SetDirection(dir);
-
-        this->game->SendPacket(packet);
-
-        //std::cout << "Moved to: " << targ_pos.x << "/" << targ_pos.y << std::endl;
-    }
-    catch (...)
-    {
-        //std::cout << "Could not move to: " << targ_pos.x << "/" << targ_pos.y << std::endl;
-    }
 }
 
 void GameStatePlaying::HandleKeyUp(const ALLEGRO_KEYBOARD_EVENT& keyboard)
