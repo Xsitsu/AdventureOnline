@@ -26,6 +26,7 @@ protected:
 
     const unsigned int max_connections;
 
+    std::list<ClientConnection*> clients_list;
     ClientConnection** clients;
     World* world;
     Database* database;
@@ -33,6 +34,9 @@ protected:
     AccountService accountservice;
 
     unsigned int FindOpenConnectionId();
+
+    void ConnectClient(ClientConnection* client);
+    void DisconnectClient(ClientConnection* client);
 
 public:
     Server(unsigned short port, unsigned int max_connections);
@@ -52,5 +56,9 @@ public:
     void TickClientTimeout();
 
     AccountService& GetAccountService();
+
+    World* GetWorld();
+
+    std::list<ClientConnection*> GetClientList() const;
 };
 #endif // SERVER_HPP_INCLUDE

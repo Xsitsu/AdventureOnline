@@ -25,6 +25,7 @@ class ClientConnection
     friend class ClientStateInit;
     friend class ClientStateNoLogin;
     friend class ClientStateLoggedIn;
+    friend class ClientStatePlaying;
 
 protected:
     unsigned int connection_id;
@@ -39,11 +40,20 @@ protected:
     Server* server;
 
     Account* account;
+    Character* playing_character;
 
     ClientStateBase* state;
 
     void DoAccountLogout();
     void FetchCharacterList();
+
+    void DoCharacterLogout();
+    void DoWarpCharacter(Map* map, Vector2 map_pos);
+
+    void SendCharacterAppearance(Character* character);
+    void SendCharacterPosition(Character* character);
+    void SendCharacterMapEnter(Character* character);
+    void SendCharacterMapLeave(Character* character);
 
 public:
     ClientConnection(Server* server, Address address, unsigned int connection_id);
@@ -59,6 +69,8 @@ public:
     void UpdateLastCommunicationTime();
 
     void ChangeState(ClientStateBase* state);
+
+    Character* GetPlayingCharacter();
 
 };
 #endif // CLIENTCONNECTION_HPP_INCLUDE

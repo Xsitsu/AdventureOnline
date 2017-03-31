@@ -98,7 +98,8 @@ bool ClientStateLoggedIn::ProcessPacket(PacketBase* packet)
             Character* character = *iter;
             if (character->GetCharacterId() == character_id)
             {
-                this->client->account->SetPlayingCharacter(character);
+                this->client->playing_character = character;
+                this->client->ChangeState(new ClientStatePlaying(this->client));
             }
         }
 

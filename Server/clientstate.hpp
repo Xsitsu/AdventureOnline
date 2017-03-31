@@ -72,4 +72,19 @@ public:
     std::string GetName() const { return "LoggedIn"; }
 };
 
+class ClientStatePlaying : public ClientStateBase
+{
+protected:
+
+public:
+    ClientStatePlaying(ClientConnection* client);
+    ~ClientStatePlaying();
+
+    void Enter();
+    void Exit();
+    bool ProcessPacket(PacketBase* packet);
+
+    std::string GetName() const { return "Playing"; }
+};
+
 #endif // CLIENTSTATE_HPP_INCLUDE

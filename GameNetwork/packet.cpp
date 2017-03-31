@@ -99,6 +99,9 @@ PacketBase* PacketReader::ReadPacket(char* buffer, int bytes_read)
     case PacketBase::PACKET_LOGIN_RESPONSE:
         packet = new PacketLoginResponse();
         break;
+    case PacketBase::PACKET_LOGOUT:
+        packet = new PacketLogout();
+        break;
     case PacketBase::PACKET_CHARACTER_LIST_REQUEST:
         packet = new PacketCharacterListRequest();
         break;
@@ -114,8 +117,17 @@ PacketBase* PacketReader::ReadPacket(char* buffer, int bytes_read)
     case PacketBase::PACKET_CHARACTER_APPEARANCE:
         packet = new PacketCharacterAppearance();
         break;
-    case PacketBase::PACKET_LOGOUT:
-        packet = new PacketLogout();
+    case PacketBase::PACKET_CHARACTER_POSITION:
+        packet = new PacketCharacterPosition();
+        break;
+    case PacketBase::PACKET_CHARACTER_MAP_ENTER:
+        packet = new PacketCharacterMapEnter();
+        break;
+    case PacketBase::PACKET_CHARACTER_MAP_LEAVE:
+        packet = new PacketCharacterMapLeave();
+        break;
+    case PacketBase::PACKET_CHARACTER_WALK:
+        packet = new PacketCharacterWalk();
         break;
     default:
         //std::cout << "bad type: " << (unsigned int) type << std::endl;s
@@ -469,6 +481,9 @@ void PacketLoginResponse::Decode(char* buffer)
     this->response = static_cast<PacketLoginResponse::LoginResponse>(reader.ReadByte(buffer, this->buffer_pos));
 }
 
+PacketLogout::PacketLogout() : PacketBase(PacketBase::PACKET_LOGOUT)
+{}
+
 PacketCharacterListRequest::PacketCharacterListRequest(): PacketBase(PacketBase::PACKET_CHARACTER_LIST_REQUEST)
 {}
 
@@ -719,5 +734,161 @@ void PacketCharacterAppearance::SetSkin(uint8_t skin)
     this->skin = skin;
 }
 
-PacketLogout::PacketLogout() : PacketBase(PacketBase::PACKET_LOGOUT)
+PacketCharacterPosition::PacketCharacterPosition() : PacketBase(PacketBase::PACKET_CHARACTER_POSITION)
 {}
+
+unsigned int PacketCharacterPosition::Encode(char* buffer)
+{
+    PacketBase::Encode(buffer);
+
+    PacketReader reader;
+
+    reader.WriteInt(buffer, this->buffer_pos, this->character_id);
+    reader.WriteShort(buffer, this->buffer_pos, this->map_id);
+    reader.WriteShort(buffer, this->buffer_pos, this->position_x);
+    reader.WriteShort(buffer, this->buffer_pos, this->position_y);
+    reader.WriteByte(buffer, this->buffer_pos, this->direction);
+
+    return this->buffer_pos;
+}
+
+void PacketCharacterPosition::Decode(char* buffer)
+{
+    PacketBase::Decode(buffer);
+
+    PacketReader reader;
+
+    this->character_id = reader.ReadInt(buffer, this->buffer_pos);
+    this->map_id = reader.ReadShort(buffer, this->buffer_pos);
+    this->position_x = reader.ReadShort(buffer, this->buffer_pos);
+    this->position_y = reader.ReadShort(buffer, this->buffer_pos);
+    this->direction = reader.ReadByte(buffer, this->buffer_pos);
+}
+
+uint32_t PacketCharacterPosition::GetCharacterId() const
+{
+    return this->character_id;
+}
+
+uint16_t PacketCharacterPosition::GetMapId() const
+{
+    return this->map_id;
+}
+
+uint16_t PacketCharacterPosition::GetPositionX() const
+{
+    return this->position_x;
+}
+
+uint16_t PacketCharacterPosition::GetPositionY() const
+{
+    return this->position_y;
+}
+
+uint8_t PacketCharacterPosition::GetDirection() const
+{
+    return this->direction;
+}
+
+void PacketCharacterPosition::SetCharacterId(uint32_t id)
+{
+    this->character_id = id;
+}
+
+void PacketCharacterPosition::SetMapId(uint16_t id)
+{
+    this->map_id = id;
+}
+
+void PacketCharacterPosition::SetPositionX(uint16_t pos_x)
+{
+    this->position_x = pos_x;
+}
+
+void PacketCharacterPosition::SetPositionY(uint16_t pos_y)
+{
+    this->position_y = pos_y;
+}
+
+void PacketCharacterPosition::SetDirection(uint8_t direction)
+{
+    this->direction = direction;
+}
+
+PacketCharacterMapEnter::PacketCharacterMapEnter() : PacketBase(PacketBase::PACKET_CHARACTER_MAP_ENTER)
+{}
+
+unsigned int PacketCharacterMapEnter::Encode(char* buffer)
+{
+    PacketBase::Encode(buffer);
+
+    PacketReader reader;
+    reader.WriteInt(buffer, this->buffer_pos, this->character_id);
+    reader.WriteShort(buffer, this->buffer_pos, this->map_id);
+
+    return this->buffer_pos;
+}
+
+void PacketCharacterMapEnter::Decode(char* buffer)
+{
+    PacketBase::Decode(buffer);
+
+    PacketReader reader;
+    this->character_id = reader.ReadInt(buffer, this->buffer_pos);
+    this->map_id = reader.ReadShort(buffer, this->buffer_pos);
+}
+
+PacketCharacterMapLeave::PacketCharacterMapLeave() : PacketBase(PacketBase::PACKET_CHARACTER_MAP_LEAVE)
+{}
+
+unsigned int PacketCharacterMapLeave::Encode(char* buffer)
+{
+    PacketBase::Encode(buffer);
+
+    PacketReader reader;
+    reader.WriteInt(buffer, this->buffer_pos, this->character_id);
+    reader.WriteShort(buffer, this->buffer_pos, this->map_id);
+
+    return this->buffer_pos;
+}
+
+void PacketCharacterMapLeave::Decode(char* buffer)
+{
+    PacketBase::Decode(buffer);
+
+    PacketReader reader;
+    this->character_id = reader.ReadInt(buffer, this->buffer_pos);
+    this->map_id = reader.ReadShort(buffer, this->buffer_pos);
+}
+
+PacketCharacterWalk::PacketCharacterWalk() : PacketBase(PacketBase::PACKET_CHARACTER_WALK)
+{}
+
+unsigned int PacketCharacterWalk::Encode(char* buffer)
+{
+    PacketBase::Encode(buffer);
+
+    PacketReader reader;
+    reader.WriteInt(buffer, this->buffer_pos, this->character_id);
+    reader.WriteShort(buffer, this->buffer_pos, this->from_x);
+    reader.WriteShort(buffer, this->buffer_pos, this->from_y);
+    reader.WriteShort(buffer, this->buffer_pos, this->to_x);
+    reader.WriteShort(buffer, this->buffer_pos, this->to_y);
+    reader.WriteByte(buffer, this->buffer_pos, this->direction);
+
+    return this->buffer_pos;
+}
+
+void PacketCharacterWalk::Decode(char* buffer)
+{
+    PacketBase::Decode(buffer);
+
+    PacketReader reader;
+    this->character_id = reader.ReadInt(buffer, this->buffer_pos);
+    this->from_x = reader.ReadShort(buffer, this->buffer_pos);
+    this->from_y = reader.ReadShort(buffer, this->buffer_pos);
+    this->to_x = reader.ReadShort(buffer, this->buffer_pos);
+    this->to_y = reader.ReadShort(buffer, this->buffer_pos);
+    this->direction = reader.ReadByte(buffer, this->buffer_pos);
+}
+

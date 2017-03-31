@@ -56,5 +56,7 @@ public:
     bool GetHasNowall() const;
     void SetHasNowall(bool val);
 
+    Map* GetMap() const;
+
 };
 #endif // ACTOR_HPP_INCLUDE

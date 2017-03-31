@@ -59,6 +59,8 @@ bool Server::Init()
     this->socket.Open(this->port, true);
     if (!this->socket.IsOpen()) return false;
 
+    this->world = new World(2);
+
     return true;
 }
 
@@ -66,7 +68,7 @@ void Server::Tick()
 {
     Address sender;
     PacketBase* packet = this->ReceivePacket(sender);
-    if (packet)
+    while (packet)
     {
         //std::cout << "Got a packet. [" << packet->GetSequence() << "]" << std::endl;
 
@@ -92,9 +94,10 @@ void Server::Tick()
                 return;
             }
 
-            std::cout << "New client connected with id: " << con_id << std::endl;
             client = new ClientConnection(this, clientAddress, con_id);
-            this->clients[con_id] = client;
+            this->ConnectClient(client);
+
+            std::cout << "New client connected with id: " << con_id << std::endl;
         }
         else if (packet->GetType() == PacketBase::PACKET_DISCONNECT)
         {
@@ -107,9 +110,7 @@ void Server::Tick()
             client->ProcessPacket(packet);
 
             delete packet;
-            delete client;
-
-            this->clients[con_id] = NULL;
+            this->DisconnectClient(client);
 
             std::cout << "Client disconnected with id: " << con_id << std::endl;
 
@@ -134,6 +135,7 @@ void Server::Tick()
         }
 
         delete packet;
+        packet = this->ReceivePacket(sender);
     }
 
     this->TickPacketAcks();
@@ -215,20 +217,25 @@ void Server::TickPacketAcks()
 
 void Server::TickClientTimeout()
 {
-    for (unsigned int i = 0; i < this->max_connections; i++)
-    {
-        ClientConnection* client = this->clients[i];
-        if (client != NULL)
-        {
-            bool did_timeout = client->CheckForTimeout();
-            if (did_timeout)
-            {
-                delete client;
-                this->clients[i] = NULL;
+    std::list<unsigned int> timeout_list;
 
-                std::cout << "Client timed out with id: " << i << std::endl;
-            }
+    std::list<ClientConnection*>::iterator iter;
+    for (iter = this->clients_list.begin(); iter != this->clients_list.end(); ++iter)
+    {
+        ClientConnection* client = *iter;
+        if (client->CheckForTimeout())
+        {
+            timeout_list.push_back(client->GetConnectionId());
         }
+    }
+
+    std::list<unsigned int>::iterator iter2;
+    for (iter2 = timeout_list.begin(); iter2 != timeout_list.end(); ++iter2)
+    {
+        unsigned int id = *iter2;
+        this->DisconnectClient(this->clients[id]);
+
+        std::cout << "Client timed out with id: " << id << std::endl;
     }
 }
 
@@ -259,4 +266,28 @@ Database* Server::GetDatabaseConnection() const
 AccountService& Server::GetAccountService()
 {
     return this->accountservice;
+}
+
+World* Server::GetWorld()
+{
+    return this->world;
+}
+
+std::list<ClientConnection*> Server::GetClientList() const
+{
+    return this->clients_list;
+}
+
+void Server::ConnectClient(ClientConnection* client)
+{
+    this->clients[client->GetConnectionId()] = client;
+    this->clients_list.push_back(client);
+}
+
+void Server::DisconnectClient(ClientConnection* client)
+{
+    unsigned int con_id = client->GetConnectionId();
+    this->clients_list.remove(client);
+    this->clients[con_id] = nullptr;
+    delete client;
 }

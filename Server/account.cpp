@@ -1,7 +1,7 @@
 #include "account.hpp"
 
 Account::Account(unsigned int id, std::string email, std::string salt, std::string _hash) :
-    account_id(id), email(email), salt(salt), _hash(_hash), playing_character(nullptr)
+    account_id(id), email(email), salt(salt), _hash(_hash)
 {
 
 }
@@ -11,19 +11,9 @@ int Account::GetNumberCharacters() const
     return this->character_list.size();
 }
 
-Character* Account::GetPlayingCharacter() const
-{
-    return this->playing_character;
-}
-
 std::list<Character*> Account::GetCharacterList() const
 {
     return this->character_list;
-}
-
-void Account::SetPlayingCharacter(Character* character)
-{
-    this->playing_character = character;
 }
 
 bool Account::CharacterIsInList(Character* character) const
