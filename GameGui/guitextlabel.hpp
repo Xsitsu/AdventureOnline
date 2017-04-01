@@ -4,7 +4,7 @@
 #include "guilabel.hpp"
 #include "guitextelement.hpp"
 
-class GuiTextLabel : public GuiLabel, public GuiTextElement
+class DLL_EXPORT GuiTextLabel : public GuiLabel, public GuiTextElement
 {
 protected:
     virtual void DoDraw() const;

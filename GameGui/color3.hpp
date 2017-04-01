@@ -1,7 +1,9 @@
 #ifndef COLOR3_HPP_INCLUDE
 #define COLOR3_HPP_INCLUDE
 
-struct Color3
+#include "main.h"
+
+struct DLL_EXPORT Color3
 {
     unsigned char r;
     unsigned char g;

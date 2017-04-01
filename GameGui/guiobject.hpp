@@ -8,7 +8,7 @@
 
 #include "color3.hpp"
 
-class GuiObject : public GuiBase
+class DLL_EXPORT GuiObject : public GuiBase
 {
 protected:
     bool is_filled;

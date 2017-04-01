@@ -11,13 +11,13 @@ class Game;
 
 #include "game.hpp"
 
-#include "guiframe.hpp"
-#include "guitextbutton.hpp"
-#include "guitextbox.hpp"
-#include "guiscreen.hpp"
+#include "GameGui/guiframe.hpp"
+#include "GameGui/guitextbutton.hpp"
+#include "GameGui/guitextbox.hpp"
+#include "GameGui/guiscreen.hpp"
 #include "GameUtil/vector2.hpp"
 
-#include "color3.hpp"
+#include "GameGui/color3.hpp"
 
 #include "allegro5/allegro.h"
 
