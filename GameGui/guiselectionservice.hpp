@@ -12,7 +12,7 @@ class GuiTextBox;
 #include "guitextbox.hpp"
 #include "GameUtil/vector2.hpp"
 
-struct GuiSelectionContext
+struct DLL_EXPORT GuiSelectionContext
 {
     GuiTextBox* selected_text_box;
     GuiBase* current_mouse_hover;
@@ -20,7 +20,7 @@ struct GuiSelectionContext
     GuiButton* current_button_down;
 };
 
-class GuiSelectionService
+class DLL_EXPORT GuiSelectionService
 {
 protected: // Singleton stuff
     static GuiSelectionService* instance;

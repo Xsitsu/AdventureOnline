@@ -16,10 +16,10 @@ class GameStateBase;
 #include "client.hpp"
 #include "gamestate.hpp"
 
-#include "guiscreen.hpp"
+#include "GameGui/guiscreen.hpp"
 
 #include "fontservice.hpp"
-#include "guiselectionservice.hpp"
+#include "GameGui/guiselectionservice.hpp"
 
 #include "GameWorld/character.hpp"
 #include "GameWorld/map.hpp"

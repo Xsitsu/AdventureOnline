@@ -1,11 +1,12 @@
 #ifndef GUIIMAGEELEMENT_HPP_INCLUDE
 #define GUIIMAGEELEMENT_HPP_INCLUDE
 
-#include "bitmapservice.hpp"
+#include <allegro5/allegro.h>
+#include <allegro5/allegro_image.h>
 
 #include "color3.hpp"
 
-class GuiImageElement
+class DLL_EXPORT GuiImageElement
 {
 protected:
     ALLEGRO_BITMAP* image;

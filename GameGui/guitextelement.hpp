@@ -5,12 +5,10 @@
 
 #include "color3.hpp"
 
-#include "allegro5/allegro_font.h"
+#include <allegro5/allegro.h>
+#include <allegro5/allegro_font.h>
 
-#include "fontservice.hpp"
-
-
-class GuiTextElement
+class DLL_EXPORT GuiTextElement
 {
 public:
     enum TextAlign {ALIGN_LEFT, ALIGN_RIGHT, ALIGN_CENTER};
