@@ -67,11 +67,34 @@ void ActorDrawer::DoDrawCharacter(Character* character, Vector2 draw_middle, boo
         dir_flag = 1;
     }
 
+    ALLEGRO_BITMAP* character_bitmap = nullptr;
+    int sprite_width = 0;
+    int sprite_height = 0;
+    int draw_frame = 0;
+    int max_frames = 0;
 
-    // Base character sprite
-    int sprite_width = 18;
-    int sprite_height = 58;
-    int draw_x = (sprite_width * 2 * (int)gender) + (sprite_width * dir_flag);
+    if (character->IsStanding())
+    {
+        character_bitmap = BitmapService::Instance()->GetBitmap("character_0");
+        sprite_width = 18;
+        sprite_height = 58;
+
+        draw_frame = 0;
+        max_frames = 1;
+    }
+    else if (character->IsMoving())
+    {
+        character_bitmap = BitmapService::Instance()->GetBitmap("character_1");
+        sprite_width = 26;
+        sprite_height = 61;
+
+        max_frames = 4;
+        draw_frame = max_frames * character->GetStatePercentDone();
+        if (draw_frame > max_frames)
+            draw_frame = max_frames;
+    }
+
+    int draw_x = (sprite_width *  draw_frame) + (sprite_width * max_frames * dir_flag) + (sprite_width * max_frames * 2 * (int)gender);
     int draw_y = (sprite_height * (int)skin);
 
     Vector2 draw_base;
@@ -83,8 +106,6 @@ void ActorDrawer::DoDrawCharacter(Character* character, Vector2 draw_middle, boo
     {
         draw_base = draw_middle - Vector2(sprite_width / 2, sprite_height);
     }
-
-    ALLEGRO_BITMAP* character_bitmap = BitmapService::Instance()->GetBitmap("character_0");
 
     al_draw_tinted_bitmap_region(character_bitmap, al_map_rgba(255, 255, 255, 255),
                                 draw_x, draw_y, sprite_width, sprite_height,

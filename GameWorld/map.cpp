@@ -192,3 +192,13 @@ std::list<Actor*> Map::GetNPCList() const
 {
     return this->npcs;
 }
+
+void Map::Update()
+{
+    std::list<Actor*>::iterator iter;
+    for (iter = this->actors.begin(); iter != this->actors.end(); ++iter)
+    {
+        Actor* actor = *iter;
+        actor->Update();
+    }
+}

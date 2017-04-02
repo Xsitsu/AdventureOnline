@@ -36,12 +36,18 @@ Vector2 Vector2::operator-(const Vector2& rhs) const
     return Vector2(this->x - rhs.x, this->y - rhs.y);
 }
 
-Vector2 Vector2::operator*(const int num) const
+Vector2 Vector2::operator*(const double num) const
 {
-    return Vector2(this->x * num, this->y * num);
+    return Vector2((double)this->x * num, (double)this->y * num);
 }
 
-Vector2 Vector2::operator/(const int num) const
+Vector2 Vector2::operator/(const double num) const
 {
-    return Vector2(this->x / num, this->y / num);
+    double dx = this->x;
+    double dy = this->y;
+
+    dx = dx / num;
+    dy = dy / num;
+
+    return Vector2(dx, dy);
 }

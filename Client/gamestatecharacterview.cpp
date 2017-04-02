@@ -3,6 +3,8 @@
 #include "actordrawer.hpp"
 #include "gamestatequit.hpp"
 
+#include "GameWorld/actorstate.hpp"
+
 GameStateCharacterView::GameStateCharacterView(Game* game) : GameStateBase(game)
 {
 
@@ -66,7 +68,16 @@ void GameStateCharacterView::HandlePacket(PacketBase * packet)
 }
 void GameStateCharacterView::Tick()
 {
-
+    std::vector<Character*>::iterator iter;
+    for (iter = this->game->character_list.begin(); iter != this->game->character_list.end(); ++iter)
+    {
+        Character* c = *iter;
+        c->Update();
+        if (!c->IsMoving())
+        {
+            c->ChangeState(new ActorStateWalk(c));
+        }
+    }
 }
 
 void GameStateCharacterView::Render()

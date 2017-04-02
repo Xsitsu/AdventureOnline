@@ -54,6 +54,8 @@ protected:
     void SendCharacterPosition(Character* character);
     void SendCharacterMapEnter(Character* character);
     void SendCharacterMapLeave(Character* character);
+    void SendCharacterTurn(Character* character);
+    void SendCharacterWalk(Character* character, Vector2 from_position);
 
 public:
     ClientConnection(Server* server, Address address, unsigned int connection_id);
