@@ -58,6 +58,7 @@
 		<Unit filename="actor.hpp" />
 		<Unit filename="actorstate.hpp" />
 		<Unit filename="actorstatestand.cpp" />
+		<Unit filename="actorstateturn.cpp" />
 		<Unit filename="actorstatewalk.cpp" />
 		<Unit filename="character.cpp" />
 		<Unit filename="character.hpp" />
