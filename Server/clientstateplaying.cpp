@@ -74,6 +74,37 @@ bool ClientStatePlaying::ProcessPacket(PacketBase* packet)
         }
         return true;
     }
+    else if (packet->GetType() == PacketBase::PACKET_CHARACTER_TURN)
+    {
+        PacketCharacterTurn* turn = static_cast<PacketCharacterTurn*>(packet);
+
+        Character* character = this->client->playing_character;
+        Map* cur_map = character->GetMap();
+        if (turn->GetCharacterId() == character->GetCharacterId())
+        {
+            if (character->CanMove())
+            {
+                character->Turn(static_cast<Actor::Direction>(turn->GetDirection()));
+
+                std::list<ClientConnection*> client_list = this->client->server->GetWorld()->GetClientsInMap(cur_map->GetMapId());
+                std::list<ClientConnection*>::iterator iter;
+                for (iter = client_list.begin(); iter != client_list.end(); ++iter)
+                {
+                    ClientConnection* client = *iter;
+                    if (client->GetPlayingCharacter() != character)
+                    {
+                        client->SendCharacterTurn(character);
+                    }
+                }
+            }
+            else
+            {
+                this->client->SendCharacterPosition(character);
+            }
+        }
+
+        return true;
+    }
     else if (packet->GetType() == PacketBase::PACKET_CHARACTER_WALK)
     {
         PacketCharacterWalk* walk = static_cast<PacketCharacterWalk*>(packet);
@@ -88,6 +119,10 @@ bool ClientStatePlaying::ProcessPacket(PacketBase* packet)
 
             try
             {
+                if (!character->CanMove()) throw "BREAK";
+
+                Vector2 old_pos = character->GetPosition();
+
                 character->SetDirection(dir);
                 character->Move(to_pos);
 
@@ -98,7 +133,7 @@ bool ClientStatePlaying::ProcessPacket(PacketBase* packet)
                     ClientConnection* client = *iter;
                     if (client->GetPlayingCharacter() != character)
                     {
-                        client->SendCharacterPosition(character);
+                        client->SendCharacterWalk(character, old_pos);
                     }
                 }
 

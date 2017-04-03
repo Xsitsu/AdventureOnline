@@ -43,6 +43,8 @@ void World::LoadMap(unsigned int id)
     this->maps[id] = map;
 
     std::cout << "Loaded map with id: " << map->GetMapId() << std::endl;
+
+    this->loaded_maps.push_back(map);
 }
 
 void World::UnloadMap(unsigned int id)
@@ -51,6 +53,8 @@ void World::UnloadMap(unsigned int id)
     map->UnloadMap();
     delete map;
     this->maps[id] = nullptr;
+
+    this->loaded_maps.remove(map);
 }
 
 void World::RegisterClientInMap(ClientConnection* client, unsigned int map_id)
@@ -66,4 +70,14 @@ void World::UnregisterClientInMap(ClientConnection* client, unsigned int map_id)
 std::list<ClientConnection*> World::GetClientsInMap(unsigned int map_id) const
 {
     return this->clients_in_maps[map_id];
+}
+
+void World::Update()
+{
+    std::list<Map*>::iterator iter;
+    for (iter = this->loaded_maps.begin(); iter != this->loaded_maps.end(); ++iter)
+    {
+        Map* map = *iter;
+        map->Update();
+    }
 }

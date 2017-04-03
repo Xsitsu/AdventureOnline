@@ -17,7 +17,7 @@ GameStatePlaying::GameStatePlaying(Game* game) : GameStateBase(game)
 
 void GameStatePlaying::Enter()
 {
-
+    this->game->current_character->ChangeState(new ActorStateStand(this->game->current_character));
 }
 
 void GameStatePlaying::Exit()
@@ -28,7 +28,12 @@ void GameStatePlaying::Exit()
 
 void GameStatePlaying::Tick()
 {
+    Map* cur_map = this->game->current_map;
 
+    if (cur_map)
+    {
+        cur_map->Update();
+    }
 }
 
 void GameStatePlaying::Render()
@@ -38,16 +43,25 @@ void GameStatePlaying::Render()
 
     if (current_map)
     {
-        Vector2 current_pos = this->game->current_character->GetPosition();
+        Character* mychar = this->game->current_character;
 
-        // Draw map
+        Vector2 base_draw = Vector2((640 - 64)/2, (480 - 32)/2);
         Vector2 tile_step_x = Vector2(64, 32)/2;
         Vector2 tile_step_y = Vector2(-64, 32)/2;
 
-        Vector2 base_draw = Vector2((640 - 64)/2, (480 - 32)/2);
+        Vector2 draw_offset;
+        if (mychar->IsMoving())
+        {
+            double percent = 1.0 - mychar->GetStatePercentDone();
+            Vector2 dir = mychar->GetDirectionVector();
+            draw_offset = ((tile_step_x * dir.x) + (tile_step_y * dir.y)) * percent;
+        }
 
+
+        Vector2 current_pos = this->game->current_character->GetPosition();
+
+        // Draw map
         int range = 14;
-
         for (int x = -range; x < range; x++)
         {
             for (int y = -range; y < range; y++)
@@ -68,6 +82,7 @@ void GameStatePlaying::Render()
                         ALLEGRO_BITMAP* tile_bitmap = BitmapService::Instance()->GetBitmap(bitmap_name);
 
                         Vector2 draw_pos = base_draw + (tile_step_x * x) + (tile_step_y * y);
+                        draw_pos = draw_pos + draw_offset;
 
                         al_draw_bitmap(tile_bitmap, draw_pos.x, draw_pos.y, 0);
                     }
@@ -83,7 +98,6 @@ void GameStatePlaying::Render()
         ActorDrawer actordrawer;
 
         Actor* self_actor = this->game->current_character;
-        Character* mychar = this->game->current_character;
 
         Vector2 middle = Vector2(640/2, 480/2);
 
@@ -95,7 +109,17 @@ void GameStatePlaying::Render()
             {
                 Vector2 pos_offset = actor->GetPosition() - mychar->GetPosition();
                 Vector2 tile_mid = middle + (tile_step_x * pos_offset.x) + (tile_step_y * pos_offset.y);
-                actordrawer.DrawActorOnTile(actor, tile_mid);
+
+                if (actor->IsMoving())
+                {
+                    double percent = 1.0 - actor->GetStatePercentDone();
+                    Vector2 dir = actor->GetDirectionVector();
+
+                    Vector2 offset = ((tile_step_x * dir.x) + (tile_step_y * dir.y)) * percent;
+                    tile_mid = tile_mid - offset;
+                }
+
+                actordrawer.DrawActorOnTile(actor, tile_mid + draw_offset);
             }
         }
 
@@ -242,6 +266,46 @@ void GameStatePlaying::HandlePacket(PacketBase* packet)
             }
         }
     }
+    else if (packet->GetType() == PacketBase::PACKET_CHARACTER_TURN)
+    {
+        PacketCharacterTurn* turn = static_cast<PacketCharacterTurn*>(packet);
+
+        Map* cur_map = this->game->current_map;
+        if (cur_map)
+        {
+            std::list<Character*> char_list = cur_map->GetCharacterList();
+            std::list<Character*>::iterator iter;
+            for (iter = char_list.begin(); iter != char_list.end(); ++iter)
+            {
+                Character* c = *iter;
+                if (c->GetCharacterId() == turn->GetCharacterId())
+                {
+                    c->Turn(static_cast<Actor::Direction>(turn->GetDirection()));
+                }
+            }
+        }
+    }
+    else if (packet->GetType() == PacketBase::PACKET_CHARACTER_WALK)
+    {
+        PacketCharacterWalk* walk_packet = static_cast<PacketCharacterWalk*>(packet);
+
+        Map* cur_map = this->game->current_map;
+        if (cur_map)
+        {
+            std::list<Character*> char_list = cur_map->GetCharacterList();
+            std::list<Character*>::iterator iter;
+            for (iter = char_list.begin(); iter != char_list.end(); ++iter)
+            {
+                Character* c = *iter;
+                if (c->GetCharacterId() == walk_packet->GetCharacterId())
+                {
+                    c->Warp(cur_map, Vector2(walk_packet->GetFromX(), walk_packet->GetFromY()));
+                    c->SetDirection(static_cast<Actor::Direction>(walk_packet->GetDirection()));
+                    c->Move(Vector2(walk_packet->GetToX(), walk_packet->GetToY()));
+                }
+            }
+        }
+    }
 }
 
 void GameStatePlaying::HandleKeyDown(const ALLEGRO_KEYBOARD_EVENT& keyboard)
@@ -249,6 +313,9 @@ void GameStatePlaying::HandleKeyDown(const ALLEGRO_KEYBOARD_EVENT& keyboard)
     if (keyboard.keycode == ALLEGRO_KEY_UP || keyboard.keycode == ALLEGRO_KEY_DOWN ||
         keyboard.keycode == ALLEGRO_KEY_LEFT || keyboard.keycode == ALLEGRO_KEY_RIGHT)
     {
+        Character* cur_char = this->game->current_character;
+        if (!cur_char->CanMove()) return;
+
         Vector2 adder;
         Actor::Direction dir;
         if (keyboard.keycode == ALLEGRO_KEY_UP)
@@ -272,8 +339,20 @@ void GameStatePlaying::HandleKeyDown(const ALLEGRO_KEYBOARD_EVENT& keyboard)
             dir = Actor::DIR_RIGHT;
         }
 
-        Character* cur_char = this->game->current_character;
-        cur_char->SetDirection(dir);
+
+        if (cur_char->GetDirection() != dir)
+        {
+            cur_char->Turn(dir);
+
+            PacketCharacterTurn* packet = new PacketCharacterTurn();
+            packet->SetCharacterId(cur_char->GetCharacterId());
+            packet->SetDirection(dir);
+
+            this->game->SendPacket(packet);
+
+            return;
+        }
+
         Vector2 cur_pos = cur_char->GetPosition();
         Vector2 targ_pos = cur_pos + adder;
         try

@@ -126,6 +126,9 @@ PacketBase* PacketReader::ReadPacket(char* buffer, int bytes_read)
     case PacketBase::PACKET_CHARACTER_MAP_LEAVE:
         packet = new PacketCharacterMapLeave();
         break;
+    case PacketBase::PACKET_CHARACTER_TURN:
+        packet = new PacketCharacterTurn();
+        break;
     case PacketBase::PACKET_CHARACTER_WALK:
         packet = new PacketCharacterWalk();
         break;
@@ -859,6 +862,29 @@ void PacketCharacterMapLeave::Decode(char* buffer)
     PacketReader reader;
     this->character_id = reader.ReadInt(buffer, this->buffer_pos);
     this->map_id = reader.ReadShort(buffer, this->buffer_pos);
+}
+
+PacketCharacterTurn::PacketCharacterTurn() : PacketBase(PacketBase::PACKET_CHARACTER_TURN)
+{}
+
+unsigned int PacketCharacterTurn::Encode(char* buffer)
+{
+    PacketBase::Encode(buffer);
+
+    PacketReader reader;
+    reader.WriteInt(buffer, this->buffer_pos, this->character_id);
+    reader.WriteByte(buffer, this->buffer_pos, this->direction);
+
+    return this->buffer_pos;
+}
+
+void PacketCharacterTurn::Decode(char* buffer)
+{
+    PacketBase::Decode(buffer);
+
+    PacketReader reader;
+    this->character_id = reader.ReadInt(buffer, this->buffer_pos);
+    this->direction = reader.ReadByte(buffer, this->buffer_pos);
 }
 
 PacketCharacterWalk::PacketCharacterWalk() : PacketBase(PacketBase::PACKET_CHARACTER_WALK)

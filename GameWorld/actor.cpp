@@ -4,9 +4,10 @@
 
 #include <iostream>
 
-Actor::Actor() : current_map(nullptr), map_position(0,0), direction(DIR_DOWN), has_nowall(false), health(10), max_health(10), strength(0), endurance(0)
+Actor::Actor() : current_map(nullptr), map_position(0,0), direction(DIR_DOWN), has_nowall(false),
+state(nullptr),health(10), max_health(10), strength(0), endurance(0)
 {
-
+    this->ChangeState(new ActorStateStand(this));
 }
 
 Actor::~Actor()
@@ -38,6 +39,14 @@ void Actor::Warp(Map* map, Vector2 coords)
     }
 
     this->map_position = coords;
+
+    this->ChangeState(new ActorStateStand(this));
+}
+
+void Actor::Turn(Actor::Direction direction)
+{
+    this->direction = direction;
+    this->ChangeState(new ActorStateTurn(this));
 }
 
 void Actor::Move(Vector2 coords)
@@ -95,6 +104,8 @@ void Actor::Move(Vector2 coords)
         (this->current_map->CoordsAreInBounds(coords) && this->current_map->GetTile(coords).TileIsWalkable(this)))
     {
         this->map_position = coords;
+
+        this->ChangeState(new ActorStateWalk(this));
     }
     else
     {
@@ -107,6 +118,30 @@ void Actor::Move(Vector2 coords)
 Vector2 Actor::GetPosition() const
 {
     return this->map_position;
+}
+
+Vector2 Actor::GetDirectionVector() const
+{
+    if (this->direction == DIR_UP)
+    {
+        return Vector2(0, -1);
+    }
+    else if (this->direction == DIR_DOWN)
+    {
+        return Vector2(0, 1);
+    }
+    else if (this->direction == DIR_LEFT)
+    {
+        return Vector2(-1, 0);
+    }
+    else if (this->direction == DIR_RIGHT)
+    {
+        return Vector2(1, 0);
+    }
+    else
+    {
+        return Vector2(0, 0);
+    }
 }
 
 Actor::Direction Actor::GetDirection() const
@@ -132,4 +167,47 @@ void Actor::SetHasNowall(bool val)
 Map* Actor::GetMap() const
 {
     return this->current_map;
+}
+
+void Actor::ChangeState(ActorStateBase* state)
+{
+    if (this->state)
+    {
+        this->state->Exit();
+        delete this->state;
+    }
+
+    this->state = state;
+
+    this->state->Enter();
+}
+
+void Actor::Update()
+{
+    this->state->Update();
+}
+
+bool Actor::CanMove()
+{
+    return this->state->CanMove();
+}
+
+bool Actor::CanAttack()
+{
+    return this->state->CanAttack();
+}
+
+bool Actor::IsStanding()
+{
+    return this->state->IsStanding();
+}
+
+bool Actor::IsMoving()
+{
+    return this->state->IsMoving();
+}
+
+double Actor::GetStatePercentDone()
+{
+    return this->state->GetPercentDone();
 }

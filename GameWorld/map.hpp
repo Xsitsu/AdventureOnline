@@ -55,5 +55,7 @@ public:
     std::list<Actor*> GetActorList() const;
     std::list<Character*> GetCharacterList() const;
     std::list<Actor*> GetNPCList() const;
+
+    void Update();
 };
 #endif // MAP_HPP_INCLUDE

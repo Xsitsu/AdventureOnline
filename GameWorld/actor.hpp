@@ -5,6 +5,10 @@
 
 #include "GameUtil/vector2.hpp"
 
+class ActorStateBase;
+
+#include "actorstate.hpp"
+
 class Map;
 
 class DLL_EXPORT Actor
@@ -21,6 +25,8 @@ protected:
 
     bool has_nowall;
 
+    ActorStateBase* state;
+
     unsigned short health;
     unsigned short max_health;
     unsigned short strength;
@@ -36,6 +42,7 @@ public:
     void EnterMap(Map* map);
     void ExitMap(Map* map);
     void Warp(Map* map, Vector2 coords);
+    void Turn(Direction direction);
     void Move(Vector2 coords);
 
     void SetMaxHealth( unsigned short val) { max_health = val; }
@@ -50,6 +57,7 @@ public:
 
     Vector2 GetPosition() const;
 
+    Vector2 GetDirectionVector() const;
     Direction GetDirection() const;
     void SetDirection(Direction direction);
 
@@ -57,6 +65,15 @@ public:
     void SetHasNowall(bool val);
 
     Map* GetMap() const;
+
+    void ChangeState(ActorStateBase* state);
+
+    void Update();
+    bool CanMove();
+    bool CanAttack();
+    bool IsStanding();
+    bool IsMoving();
+    double GetStatePercentDone();
 
 };
 #endif // ACTOR_HPP_INCLUDE

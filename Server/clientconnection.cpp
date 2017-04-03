@@ -240,3 +240,24 @@ void ClientConnection::SendCharacterMapLeave(Character* character)
     this->SendPacket(packet);
 }
 
+void ClientConnection::SendCharacterTurn(Character* character)
+{
+    PacketCharacterTurn* packet = new PacketCharacterTurn();
+    packet->SetCharacterId(character->GetCharacterId());
+    packet->SetDirection(character->GetDirection());
+
+    this->SendPacket(packet);
+}
+
+void ClientConnection::SendCharacterWalk(Character* character, Vector2 from_position)
+{
+    PacketCharacterWalk* packet = new PacketCharacterWalk();
+    packet->SetCharacterId(character->GetCharacterId());
+    packet->SetFromX(from_position.x);
+    packet->SetFromY(from_position.y);
+    packet->SetToX(character->GetPosition().x);
+    packet->SetToY(character->GetPosition().y);
+    packet->SetDirection(character->GetDirection());
+
+    this->SendPacket(packet);
+}

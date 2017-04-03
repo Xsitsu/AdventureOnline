@@ -38,6 +38,7 @@ public:
         PACKET_CHARACTER_MAP_ENTER,
         PACKET_CHARACTER_MAP_LEAVE,
 
+        PACKET_CHARACTER_TURN,
         PACKET_CHARACTER_WALK
     };
 
@@ -441,6 +442,26 @@ public:
 
     void SetCharacterId(uint32_t id) { this->character_id = id; }
     void SetMapId(uint16_t id) { this->map_id = id; }
+};
+
+class DLL_EXPORT PacketCharacterTurn : public PacketBase
+{
+protected:
+    uint32_t character_id;
+    uint8_t direction;
+
+public:
+    PacketCharacterTurn();
+
+    virtual unsigned int Encode(char* buffer);
+    virtual void Decode(char* buffer);
+
+    uint32_t GetCharacterId() const { return this->character_id; }
+    uint8_t GetDirection() const { return this->direction; }
+
+    void SetCharacterId(uint32_t id) { this->character_id = id; }
+    void SetDirection(uint8_t direction) { this->direction = direction; }
+
 };
 
 class DLL_EXPORT PacketCharacterWalk : public PacketBase

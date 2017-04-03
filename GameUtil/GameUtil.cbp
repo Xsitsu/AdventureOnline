@@ -62,6 +62,8 @@
 		<Unit filename="resource.hpp" />
 		<Unit filename="resourcefile.cpp" />
 		<Unit filename="resourcefile.hpp" />
+		<Unit filename="timer.cpp" />
+		<Unit filename="timer.hpp" />
 		<Unit filename="vector2.cpp" />
 		<Unit filename="vector2.hpp" />
 		<Extensions>

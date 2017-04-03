@@ -146,6 +146,8 @@ void Server::Tick()
         this->last_timeout_check = time_tick;
         this->TickClientTimeout();
     }
+
+    this->world->Update();
 }
 
 PacketBase* Server::ReceivePacket(Address& sender)

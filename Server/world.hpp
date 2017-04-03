@@ -10,6 +10,7 @@ class World
 protected:
     unsigned int number_maps;
     Map** maps;
+    std::list<Map*> loaded_maps;
     std::list<ClientConnection*>* clients_in_maps;
 
 public:
@@ -26,5 +27,7 @@ public:
     void UnregisterClientInMap(ClientConnection* client, unsigned int map_id);
 
     std::list<ClientConnection*> GetClientsInMap(unsigned int map_id) const;
+
+    void Update();
 };
 #endif // WORLD_HPP_INCLUDE
