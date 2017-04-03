@@ -86,10 +86,12 @@ int main(int argc, char** argv)
     ResourceFile rfile;
     std::list<Resource*> rlist;
 
-    std::string basepath = "B:/AdventureOnline/AO-Resource/image/";
+    std::string basepath;
+    //basepath = "B:/AdventureOnline/AO-Resource/image/";
+    basepath = "C:/Users/Jacob/Documents/GitHub/AO-Resource/image/";
 
     CreateResourceFile(0, basepath + "background/", ".png", 1);
-    CreateResourceFile(1, basepath + "tile/", ".bmp", 13);
+    CreateResourceFile(1, basepath + "tile/", ".png", 13);
     CreateResourceFile(2, basepath + "character/", ".png", 3);
 
     return 0;
