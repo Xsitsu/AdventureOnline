@@ -17,8 +17,8 @@ struct DLL_EXPORT Vector2
     bool operator!=(const Vector2& rhs) const;
     Vector2 operator+(const Vector2& rhs) const;
     Vector2 operator-(const Vector2& rhs) const;
-    Vector2 operator*(const int num) const;
-    Vector2 operator/(const int num) const;
+    Vector2 operator*(const double num) const;
+    Vector2 operator/(const double num) const;
 
 };
 #endif // VECTOR2_HPP_INCLUDE

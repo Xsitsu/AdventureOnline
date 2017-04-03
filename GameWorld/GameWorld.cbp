@@ -43,6 +43,10 @@
 			</Target>
 		</Build>
 		<Compiler>
+			<Add option="-Wnon-virtual-dtor" />
+			<Add option="-Winit-self" />
+			<Add option="-Wredundant-decls" />
+			<Add option="-Wall" />
 			<Add option="-std=c++11" />
 			<Add directory=".." />
 		</Compiler>
@@ -52,12 +56,18 @@
 		</ExtraCommands>
 		<Unit filename="actor.cpp" />
 		<Unit filename="actor.hpp" />
+		<Unit filename="actorstate.hpp" />
+		<Unit filename="actorstatestand.cpp" />
+		<Unit filename="actorstateturn.cpp" />
+		<Unit filename="actorstatewalk.cpp" />
 		<Unit filename="character.cpp" />
 		<Unit filename="character.hpp" />
 		<Unit filename="main.cpp" />
 		<Unit filename="main.h" />
 		<Unit filename="map.cpp" />
 		<Unit filename="map.hpp" />
+		<Unit filename="mapfile.cpp" />
+		<Unit filename="mapfile.hpp" />
 		<Unit filename="maptile.cpp" />
 		<Unit filename="maptile.hpp" />
 		<Extensions>

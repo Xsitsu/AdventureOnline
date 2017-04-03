@@ -5,10 +5,9 @@
 
 #include <stdint.h>
 #include <string>
+#include <list>
 
 #include "socket.hpp"
-
-using std::string;
 
 class DLL_EXPORT PacketBase
 {
@@ -17,7 +16,7 @@ public:
     static const unsigned int PACKET_PREFIX;
     enum PacketType
     {
-        PACKET_UNKNOWN,
+        PACKET_UNKNOWN = 0,
         PACKET_INIT,
         PACKET_INIT_RESPONSE,
         PACKET_DISCONNECT,
@@ -27,7 +26,20 @@ public:
         PACKET_REGISTRATION_REQUEST,
         PACKET_REGISTRATION_RESPONSE,
         PACKET_LOGIN_REQUEST,
-        PACKET_LOGIN_RESPONSE
+        PACKET_LOGIN_RESPONSE,
+        PACKET_LOGOUT,
+        PACKET_CHARACTER_LIST_REQUEST,
+        PACKET_CHARACTER_LIST,
+        PACKET_CHARACTER_DATA_REQUEST,
+        PACKET_CHARACTER_LOGIN,
+        PACKET_CHARACTER_APPEARANCE,
+        PACKET_CHARACTER_POSITION,
+
+        PACKET_CHARACTER_MAP_ENTER,
+        PACKET_CHARACTER_MAP_LEAVE,
+
+        PACKET_CHARACTER_TURN,
+        PACKET_CHARACTER_WALK
     };
 
 protected:
@@ -185,8 +197,8 @@ public:
 
     std::string GetEmail();
     std::string GetPassword();
-    void SetEmail( string email );
-    void SetPassword( string password );
+    void SetEmail(std::string email);
+    void SetPassword(std::string password);
 
     virtual unsigned int Encode(char* buffer);
     virtual void Decode(char* buffer);
@@ -246,6 +258,7 @@ public:
     {
         LOGINRESPONSE_SUCCESS,
         LOGINRESPONSE_FAIL,
+        LOGINRESPONSE_ALREADY_LOGGED_IN,
         LOGINRESPONSE_ERROR
     };
 protected:
@@ -260,4 +273,230 @@ public:
     virtual unsigned int Encode(char* buffer);
     virtual void Decode(char* buffer);
 };
+
+class DLL_EXPORT PacketLogout : public PacketBase
+{
+protected:
+
+public:
+    PacketLogout();
+};
+
+class DLL_EXPORT PacketCharacterListRequest : public PacketBase
+{
+public:
+    PacketCharacterListRequest();
+};
+
+class DLL_EXPORT PacketCharacterList : public PacketBase
+{
+protected:
+    std::list<uint32_t> character_ids;
+
+public:
+    PacketCharacterList();
+
+    virtual unsigned int Encode(char* buffer);
+    virtual void Decode(char* buffer);
+
+    std::list<uint32_t> GetCharacterList() const;
+    void SetCharacterList(std::list<uint32_t> character_ids);
+};
+
+class DLL_EXPORT PacketCharacterDataRequest : public PacketBase
+{
+public:
+    // Used for encoding bools into a single byte
+    static const uint8_t BIT_APPEARANCE = 1;    // 00000001
+    static const uint8_t BIT_POSITION = 2;      // 00000010
+    static const uint8_t BIT_STATS = 4;         // 00000100
+
+protected:
+    uint32_t character_id;
+    bool request_appearance;
+    bool request_position;
+    bool request_stats;
+
+public:
+    PacketCharacterDataRequest();
+
+    virtual unsigned int Encode(char* buffer);
+    virtual void Decode(char* buffer);
+
+    uint32_t GetCharacterId() const;
+    void SetCharacterId(uint32_t character_id);
+
+    bool GetRequestAppearance() const;
+    bool GetRequestPosition() const;
+    bool GetRequestStats() const;
+
+    void SetRequestAppearance(bool val);
+    void SetRequestPosition(bool val);
+    void SetRequestStats(bool val);
+};
+
+class DLL_EXPORT PacketCharacterLogin : public PacketBase
+{
+protected:
+    uint32_t character_id;
+
+public:
+    PacketCharacterLogin();
+
+    virtual unsigned int Encode(char* buffer);
+    virtual void Decode(char* buffer);
+
+    uint32_t GetCharacterId() const;
+    void SetCharacterId(uint32_t character_id);
+};
+
+class DLL_EXPORT PacketCharacterAppearance : public PacketBase
+{
+protected:
+    uint32_t character_id;
+
+    std::string name;
+    uint8_t gender;
+    uint8_t skin;
+
+public:
+    PacketCharacterAppearance();
+
+    virtual unsigned int Encode(char* buffer);
+    virtual void Decode(char* buffer);
+
+    uint32_t GetCharacterId() const;
+    std::string GetName() const;
+    uint8_t GetGender() const;
+    uint8_t GetSkin() const;
+
+    void SetCharacterId(uint32_t character_id);
+    void SetName(std::string name);
+    void SetGender(uint8_t gender);
+    void SetSkin(uint8_t skin);
+
+};
+
+class DLL_EXPORT PacketCharacterPosition : public PacketBase
+{
+protected:
+    uint32_t character_id;
+
+    uint16_t map_id;
+    uint16_t position_x;
+    uint16_t position_y;
+    uint8_t direction;
+
+public:
+    PacketCharacterPosition();
+
+    virtual unsigned int Encode(char* buffer);
+    virtual void Decode(char* buffer);
+
+    uint32_t GetCharacterId() const;
+    uint16_t GetMapId() const;
+    uint16_t GetPositionX() const;
+    uint16_t GetPositionY() const;
+    uint8_t GetDirection() const;
+
+    void SetCharacterId(uint32_t id);
+    void SetMapId(uint16_t id);
+    void SetPositionX(uint16_t pos_x);
+    void SetPositionY(uint16_t pos_y);
+    void SetDirection(uint8_t direction);
+};
+
+class DLL_EXPORT PacketCharacterMapEnter : public PacketBase
+{
+protected:
+    uint32_t character_id;
+    uint16_t map_id;
+
+public:
+    PacketCharacterMapEnter();
+
+    virtual unsigned int Encode(char* buffer);
+    virtual void Decode(char* buffer);
+
+    uint32_t GetCharacterId() const { return this->character_id; }
+    uint16_t GetMapId() const { return this->map_id; }
+
+    void SetCharacterId(uint32_t id) { this->character_id = id; }
+    void SetMapId(uint16_t id) { this->map_id = id; }
+};
+
+class DLL_EXPORT PacketCharacterMapLeave : public PacketBase
+{
+protected:
+    uint32_t character_id;
+    uint16_t map_id;
+
+public:
+    PacketCharacterMapLeave();
+
+    virtual unsigned int Encode(char* buffer);
+    virtual void Decode(char* buffer);
+
+    uint32_t GetCharacterId() const { return this->character_id; }
+    uint16_t GetMapId() const { return this->map_id; }
+
+    void SetCharacterId(uint32_t id) { this->character_id = id; }
+    void SetMapId(uint16_t id) { this->map_id = id; }
+};
+
+class DLL_EXPORT PacketCharacterTurn : public PacketBase
+{
+protected:
+    uint32_t character_id;
+    uint8_t direction;
+
+public:
+    PacketCharacterTurn();
+
+    virtual unsigned int Encode(char* buffer);
+    virtual void Decode(char* buffer);
+
+    uint32_t GetCharacterId() const { return this->character_id; }
+    uint8_t GetDirection() const { return this->direction; }
+
+    void SetCharacterId(uint32_t id) { this->character_id = id; }
+    void SetDirection(uint8_t direction) { this->direction = direction; }
+
+};
+
+class DLL_EXPORT PacketCharacterWalk : public PacketBase
+{
+protected:
+    uint32_t character_id;
+
+    uint16_t from_x;
+    uint16_t from_y;
+
+    uint16_t to_x;
+    uint16_t to_y;
+
+    uint8_t direction;
+
+public:
+    PacketCharacterWalk();
+
+    virtual unsigned int Encode(char* buffer);
+    virtual void Decode(char* buffer);
+
+    uint32_t GetCharacterId() const { return this->character_id; }
+    uint16_t GetFromX() const { return this->from_x; }
+    uint16_t GetFromY() const { return this->from_y; }
+    uint16_t GetToX() const { return this->to_x; }
+    uint16_t GetToY() const { return this->to_y; }
+    uint8_t GetDirection() const { return this->direction; }
+
+    void SetCharacterId(uint32_t id) { this->character_id = id; }
+    void SetFromX(uint16_t from_x) { this->from_x = from_x; }
+    void SetFromY(uint16_t from_y) { this->from_y = from_y; }
+    void SetToX(uint16_t to_x) { this->to_x = to_x; }
+    void SetToY(uint16_t to_y) { this->to_y = to_y; }
+    void SetDirection(uint8_t direction) { this->direction = direction; }
+
+};
+
 #endif // PACKET_HPP_INCLUDE

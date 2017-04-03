@@ -21,9 +21,19 @@ bool MapTile::TileIsWalkable(Actor* actor) const
     return can_walk;
 }
 
+void MapTile::SetSpriteId(unsigned int sprite_id)
+{
+    this->sprite_id = sprite_id;
+}
+
 unsigned int MapTile::GetSpriteId() const
 {
     return this->sprite_id;
+}
+
+void MapTile::SetMovementPermissions(MovementPermissions permissions)
+{
+    this->move_permissions = permissions;
 }
 
 MapTile::MovementPermissions MapTile::GetMovementPermissions() const

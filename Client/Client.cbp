@@ -20,6 +20,7 @@
 					<Add library="../GameNetwork/bin/Debug/libGameNetwork.a" />
 					<Add library="../GameWorld/bin/Debug/libGameWorld.a" />
 					<Add library="../GameUtil/bin/Debug/libGameUtil.a" />
+					<Add library="../GameGui/bin/Debug/libGameGui.a" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -36,20 +37,25 @@
 					<Add library="../GameNetwork/bin/Release/libGameNetwork.a" />
 					<Add library="../GameWorld/bin/Release/libGameWorld.a" />
 					<Add library="../GameUtil/bin/Release/libGameUtil.a" />
+					<Add library="../GameGui/bin/Release/libGameGui.a" />
 				</Linker>
 			</Target>
 		</Build>
 		<Compiler>
+			<Add option="-Wnon-virtual-dtor" />
+			<Add option="-Winit-self" />
+			<Add option="-Wredundant-decls" />
 			<Add option="-Wall" />
 			<Add option="-std=c++11" />
 			<Add directory=".." />
 			<Add directory="../allegro/include" />
 		</Compiler>
+		<Unit filename="actordrawer.cpp" />
+		<Unit filename="actordrawer.hpp" />
 		<Unit filename="bitmapservice.cpp" />
 		<Unit filename="bitmapservice.hpp" />
 		<Unit filename="client.cpp" />
 		<Unit filename="client.hpp" />
-		<Unit filename="color3.hpp" />
 		<Unit filename="fontservice.cpp" />
 		<Unit filename="fontservice.hpp" />
 		<Unit filename="game.cpp" />
@@ -65,26 +71,14 @@
 		<Unit filename="gamestateinit.hpp" />
 		<Unit filename="gamestateloginawaitresponse.cpp" />
 		<Unit filename="gamestateloginawaitresponse.hpp" />
+		<Unit filename="gamestateplaying.cpp" />
+		<Unit filename="gamestateplaying.hpp" />
 		<Unit filename="gamestatequit.cpp" />
 		<Unit filename="gamestatequit.hpp" />
 		<Unit filename="gamestateserverconnect.cpp" />
 		<Unit filename="gamestateserverconnect.hpp" />
 		<Unit filename="gamestatetitle.cpp" />
 		<Unit filename="gamestatetitle.hpp" />
-		<Unit filename="guibase.cpp" />
-		<Unit filename="guibase.hpp" />
-		<Unit filename="guibutton.cpp" />
-		<Unit filename="guibutton.hpp" />
-		<Unit filename="guiframe.cpp" />
-		<Unit filename="guiframe.hpp" />
-		<Unit filename="guiscreen.cpp" />
-		<Unit filename="guiscreen.hpp" />
-		<Unit filename="guiselectionservice.cpp" />
-		<Unit filename="guiselectionservice.hpp" />
-		<Unit filename="guitextbox.cpp" />
-		<Unit filename="guitextbox.hpp" />
-		<Unit filename="guitextbutton.cpp" />
-		<Unit filename="guitextbutton.hpp" />
 		<Unit filename="main.cpp" />
 		<Unit filename="observer.hpp" />
 		<Unit filename="screenmaker.hpp" />

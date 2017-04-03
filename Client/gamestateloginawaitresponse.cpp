@@ -31,6 +31,7 @@ void GameStateLoginAwaitResponse::HandlePacket(PacketBase* packet)
 
             this->game->PushScreen(screen);
             this->game->ChangeState(new GameStateCharacterView(this->game));
+
         }
         else if (res == PacketLoginResponse::LOGINRESPONSE_FAIL)
         {
@@ -41,6 +42,12 @@ void GameStateLoginAwaitResponse::HandlePacket(PacketBase* packet)
         else if (res == PacketLoginResponse::LOGINRESPONSE_ERROR)
         {
             std::cout << "Login failed due to unknown error." << std::endl;
+            this->game->PopScreen();
+            this->game->ChangeState(new GameStateTitle(this->game));
+        }
+        else if (res == PacketLoginResponse::LOGINRESPONSE_ALREADY_LOGGED_IN)
+        {
+            std::cout << "Login failed because another user is already logged in." << std::endl;
             this->game->PopScreen();
             this->game->ChangeState(new GameStateTitle(this->game));
         }

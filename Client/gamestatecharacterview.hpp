@@ -2,7 +2,8 @@
 #define GAMESTATECHARACTERVIEW_HPP_INCLUDE
 
 #include "gamestate.hpp"
-
+#include "vector"
+#include "GameWorld/character.hpp"
 class GameStateCharacterView : public GameStateBase
 {
 public:
@@ -19,8 +20,12 @@ public:
     virtual void HandleMouseMove(const ALLEGRO_MOUSE_EVENT& mouse);
     virtual void HandleMouseDown(const ALLEGRO_MOUSE_EVENT& mouse);
     virtual void HandleMouseUp(const ALLEGRO_MOUSE_EVENT& mouse);
+    virtual void HandlePacket(PacketBase * packet);
 
     virtual std::string GetStateName() { return "CharacterView"; }
+
+protected:
+
 };
 
 #endif // GAMESTATECHARACTERVIEW_HPP_INCLUDE

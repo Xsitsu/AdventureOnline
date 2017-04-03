@@ -79,12 +79,12 @@ void Database::CreateAccount(std::string email, std::string password)
 
     int caemailLen = email.size();
     int casaltLen = password.size();
-    int cahashLen = password.size() + email.size();
+    int cahashLen = password.size();// + email.size();
 
     strcpy( email_str, email.c_str() );
     strcpy( salt_str, password.c_str() );           //needs to be replaced with salt string
-    strcpy( hash_str, email.c_str() );              //needs to be replaced with hash string
-    strcat( hash_str, password.c_str() );
+    //strcpy( hash_str, email.c_str() );              //needs to be replaced with hash string
+    strcpy( hash_str, password.c_str() );
 
     SQLRETURN localRetcode;
 
@@ -146,6 +146,7 @@ Account* Database::ReadAccount(std::string email)
         SQLGetData(h_Statement, 3, SQL_C_CHAR, &data_hash, 510, &sqlThing );
 
         Account* account = new Account(data_ID, email, data_salt, data_hash);
+        SQLFreeHandle(SQL_HANDLE_STMT, h_Statement);
         return account;
     }
     else if (localRetcode == SQL_NO_DATA)
@@ -158,7 +159,6 @@ Account* Database::ReadAccount(std::string email)
         throw DatabaseReadException();
     }
     SQLFreeHandle(SQL_HANDLE_STMT, h_Statement);
-    delete email_str;
 }
 
 void Database::UpdateAccount(Account* account)
@@ -205,4 +205,101 @@ void Database::UpdateAccount(Account* account)
 void Database::DeleteAccount(Account* account)
 {
     // ToDo
+}
+
+vector<int> Database::ReadPlayerCharacters (std::string email)
+{
+    char SQL_Code[1000] = "{CALL ReadUserCharacters(?) }";
+    SQLLEN cBind = SQL_NTS;
+    SQLLEN cBind2 = SQL_NTS;
+    char email_str[255];
+    int emailLen = email.size();
+    strcpy(email_str, email.c_str());
+    vector<int> characters;
+
+    SQLRETURN localRetcode;
+//    SQLINTEGER sqlInt;
+//    SDWORD sqlThing;
+
+    localRetcode = SQLAllocHandle(SQL_HANDLE_STMT, h_DBC, &h_Statement);
+
+    localRetcode = SQLBindParameter(h_Statement, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, emailLen, 0, email_str, emailLen, &cBind);
+
+    localRetcode = SQLExecDirect(h_Statement, (unsigned char *)SQL_Code, SQL_NTS);
+
+    if (localRetcode == SQL_SUCCESS || localRetcode == SQL_SUCCESS_WITH_INFO)
+    {
+        int data_ID;
+        SQLBindCol(h_Statement, 1, SQL_INTEGER, &data_ID, 1, &cBind2);
+
+
+        while(!SQLFetch(h_Statement))
+        {
+            characters.push_back(data_ID);
+        }
+        SQLFreeHandle(SQL_HANDLE_STMT, h_Statement);
+        return characters;
+    }
+    else
+    {
+        SQLFreeHandle(SQL_HANDLE_STMT, h_Statement);
+        throw DatabaseReadException();
+    }
+
+}
+
+Character * Database::ReadCharacterInfo( int ID)
+{
+    char SQL_Code[100] = "{CALL ReadCharacterInfo(?) }";
+    Character * player_character = new Character();
+    int stats[7];
+    char name[255];
+    SQLLEN cBind = SQL_NTS;
+    SQLINTEGER sqlInt[7];
+    SDWORD sqlThing;
+    stats[6] = ID;
+
+    SQLAllocHandle(SQL_HANDLE_STMT, h_DBC, &h_Statement);
+    SQLBindParameter(h_Statement, 1, SQL_PARAM_INPUT, SQL_C_SHORT, SQL_INTEGER, 1, 0, &stats[6], 1, &cBind);
+    SQLExecDirect(h_Statement, (unsigned char *)SQL_Code, SQL_NTS);
+
+    SQLFetch(h_Statement);
+    SQLGetData(h_Statement, 2, SQL_C_CHAR, &name, 255, &sqlThing );
+    SQLGetData(h_Statement, 4, SQL_C_LONG, &stats[0], 1, &sqlInt[0] );
+    SQLGetData(h_Statement, 5, SQL_C_LONG, &stats[1], 1, &sqlInt[1] );
+
+
+    player_character->SetName(name);
+    player_character->Warp(nullptr, Vector2(stats[0], stats[1]));
+
+
+    if(SQLMoreResults(h_Statement) != SQL_NO_DATA)
+    {
+        SQLFetch(h_Statement);
+        SQLGetData(h_Statement, 3, SQL_C_SHORT, &stats[2], 1, &sqlInt[2] );
+        player_character->SetStrength(stats[2]);
+
+        SQLFetch(h_Statement);
+        SQLGetData(h_Statement, 3, SQL_C_SHORT, &stats[3], 1, &sqlInt[3] );
+        player_character->SetEndurance(stats[3]);
+
+        SQLFetch(h_Statement);
+        SQLGetData(h_Statement, 3, SQL_C_SHORT, &stats[4], 1, &sqlInt[3] );
+        player_character->SetGender(static_cast<Character::Gender>(stats[4]));
+
+        SQLFetch(h_Statement);
+        SQLGetData(h_Statement, 3, SQL_C_SHORT, &stats[5], 1, &sqlInt[3] );
+        player_character->SetSkin(static_cast<Character::Skin>(stats[5]));
+
+        SQLFetch(h_Statement);
+        SQLGetData(h_Statement, 3, SQL_C_SHORT, &stats[6], 1, &sqlInt[3] );
+        player_character->SetMaxHealth(stats[6]);
+
+        SQLFetch(h_Statement);
+        SQLGetData(h_Statement, 3, SQL_C_SHORT, &stats[7], 1, &sqlInt[3] );
+        player_character->SetHealth(stats[7]);
+    }
+    SQLFreeHandle(SQL_HANDLE_STMT, h_Statement);
+
+    return player_character;
 }

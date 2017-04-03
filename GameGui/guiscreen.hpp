@@ -11,9 +11,9 @@
 
 #include "observer.hpp"
 
-#include <iostream>
+#include <unordered_map>
 
-class GuiScreen
+class DLL_EXPORT GuiScreen
 {
 protected:
     GuiBase* base;

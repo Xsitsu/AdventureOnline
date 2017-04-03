@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <stack>
+#include <vector>
 
 #include "allegro5/allegro.h"
 #include "allegro5/allegro_primitives.h"
@@ -15,10 +16,13 @@ class GameStateBase;
 #include "client.hpp"
 #include "gamestate.hpp"
 
-#include "guiscreen.hpp"
+#include "GameGui/guiscreen.hpp"
 
 #include "fontservice.hpp"
-#include "guiselectionservice.hpp"
+#include "GameGui/guiselectionservice.hpp"
+
+#include "GameWorld/character.hpp"
+#include "GameWorld/map.hpp"
 
 class GameEventBase;
 
@@ -32,13 +36,14 @@ friend class GameStateCharacterView;
 friend class GameStateAccountCreation;
 friend class GameStateLoginAwaitResponse;
 friend class GameStateAccountCreationAwaitResponse;
+friend class GameStatePlaying;
 
 protected: // Singleton stuff
     static Game* instance;
 
     Game();
     Game(const Game& copy) {}
-    Game& operator=(const Game& rhs) {}
+    Game& operator=(const Game& rhs) { return *this; }
     virtual ~Game();
 
 public:
@@ -71,6 +76,11 @@ protected:
 
     std::list<GameEventBase*> game_event_queue;
 
+    Map* current_map;
+    Character* current_character;
+    std::vector<Character*> character_list;
+
+
 
     void DrawScreens();
 
@@ -90,6 +100,9 @@ public:
     bool IsClientConnected() { return this->client->IsConnected(); }
     void SendPacket(PacketBase* packet) { this->client->SendPacket(packet); }
 
+    void LoginAsCharacter(Character* character);
+    std::vector<Character*> GetCharacterList() const;
+    void ClearCharacterList();
 };
 
 class GameEventBase

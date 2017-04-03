@@ -3,9 +3,51 @@
 #include <iostream>
 
 ClientConnection::ClientConnection(Server* server, Address address, unsigned int connection_id) :
-    server(server), client_address(address), connection_id(connection_id), packet_sequence(0), account(NULL)
+connection_id(connection_id), packet_sequence(0), client_address(address), server(server), account(NULL),
+playing_character(nullptr), state(nullptr)
 {
+    this->ChangeState(new ClientStateInit(this));
+}
 
+ClientConnection::~ClientConnection()
+{
+    if (this->playing_character)
+    {
+        this->DoCharacterLogout();
+    }
+    if (this->account)
+    {
+        this->DoAccountLogout();
+    }
+}
+
+void ClientConnection::DoAccountLogout()
+{
+    if (this->account)
+    {
+        this->server->GetAccountService().UnregisterAccount(this->account->GetAccountId());
+        delete this->account;
+        this->account = nullptr;
+    }
+}
+
+void ClientConnection::FetchCharacterList()
+{
+    if (this->account)
+    {
+        this->account->ClearCharacterList();
+
+        Database* database = this->server->GetDatabaseConnection();
+        std::vector<int> char_id_list = database->ReadPlayerCharacters(this->account->GetEmail());
+
+        std::vector<int>::iterator iter;
+        for (iter = char_id_list.begin(); iter != char_id_list.end(); ++iter)
+        {
+            Character* character = database->ReadCharacterInfo(*iter);
+            character->SetCharacterId(*iter);
+            this->account->AddCharacterToList(character);
+        }
+    }
 }
 
 void ClientConnection::SendPacket(PacketBase* packet)
@@ -31,100 +73,15 @@ void ClientConnection::ProcessPacket(PacketBase* packet)
     this->ack_list.UpdatePacketAck(packet->GetSequence());
     this->ack_list.ConfirmPacketAcks(packet->GetAck(), packet->GetAckBitfield());
 
-    if (packet->GetType() == PacketBase::PACKET_INIT)
+    bool was_processed = this->state->ProcessPacket(packet);
+    if (was_processed)
     {
-        PacketInitResponse* packet = new PacketInitResponse();
-        packet->AssignConnectionId(this->connection_id);
-
-        this->SendPacket(packet);
+        // stuff
     }
-    else if (packet->GetType() == PacketBase::PACKET_DISCONNECT)
+    else
     {
-        PacketDisconnectResponse* packet = new PacketDisconnectResponse();
-        packet->SetNeedsAck(false);
-        this->SendPacket(packet);
-    }
-    else if (packet->GetType() == PacketBase::PACKET_PING)
-    {
-        PacketPong* packet = new PacketPong();
-        packet->SetNeedsAck(false);
-        this->SendPacket(packet);
-    }
-    else if ( packet->GetType() == PacketBase::PACKET_REGISTRATION_REQUEST)
-    {
-        PacketRegistrationRequest* registration_info = static_cast<PacketRegistrationRequest*>(packet);
-        PacketRegistrationResponse * registration_response = new PacketRegistrationResponse();
-
-        Database* database = this->server->GetDatabaseConnection();
-        Account* account = database->ReadAccount(registration_info->GetEmail());
-        if (account)
-        {
-            // notify client that account already exists
-            std::cout << "Account with email already exists: " << registration_info->GetEmail() << std::endl;
-            registration_response->SetResponse(PacketRegistrationResponse::RESPONSE_ACCOUNT_ALREADY_EXISTS);
-        }
-        else
-        {
-
-            try
-            {
-                database->CreateAccount(registration_info->GetEmail(), registration_info->GetPassword());
-
-                // notify client that account was successfully created
-                std::cout << "Account with email was created: " << registration_info->GetEmail() << std::endl;
-                registration_response->SetResponse(PacketRegistrationResponse::RESPONSE_ACCOUNT_CREATED);
-            }
-            catch (DatabaseCreateException &ex)
-            {
-                // notify client that account creation failed
-                std::cout << "Account creation with email failed: " << registration_info->GetEmail() << std::endl;
-                registration_response->SetResponse(PacketRegistrationResponse::RESPONSE_ERROR);
-
-            }
-        }
-        this->SendPacket(registration_response);
-        std::cout << "Sent response package with code: " << registration_response->GetResponse() << std::endl;
-    }
-    else if (packet->GetType() == PacketBase::PACKET_LOGIN_REQUEST)
-    {
-        PacketLoginRequest* login_request = static_cast<PacketLoginRequest*>(packet);
-        Database* database = this->server->GetDatabaseConnection();
-        Account* account = nullptr;
-
-        bool did_login = false;
-        bool was_error = false;
-
-        try
-        {
-            account = database->ReadAccount(login_request->GetEmail());
-            if (account)
-            {
-                did_login = (account->GetHash() == login_request->GetPassword());
-            }
-        }
-        catch (DatabaseReadException &ex)
-        {
-            was_error = true;
-        }
-
-        PacketLoginResponse* response = new PacketLoginResponse();
-        if (did_login)
-        {
-            response->SetResponse(PacketLoginResponse::LOGINRESPONSE_SUCCESS);
-            this->account = account;
-
-            std::cout << "Client[" << this->connection_id  << "] logged in as account: " << account->GetEmail() << std::endl;
-        }
-        else if (was_error)
-        {
-            response->SetResponse(PacketLoginResponse::LOGINRESPONSE_ERROR);
-        }
-        else
-        {
-            response->SetResponse(PacketLoginResponse::LOGINRESPONSE_FAIL);
-        }
-
-        this->SendPacket(response);
+        std::cout << "Dropping packet [id:" << packet->GetType() << "] [sequence:" << packet->GetSequence() << "]" << std::endl;
+        std::cout << "In State: " << this->state->GetName() << std::endl;
     }
 }
 
@@ -146,4 +103,161 @@ bool ClientConnection::CheckForTimeout()
 void ClientConnection::UpdateLastCommunicationTime()
 {
     this->last_communication = std::time(NULL);
+}
+
+void ClientConnection::ChangeState(ClientStateBase* state)
+{
+    if (this->state)
+    {
+        this->state->Exit();
+        delete this->state;
+    }
+
+    this->state = state;
+
+    this->state->Enter();
+}
+
+Character* ClientConnection::GetPlayingCharacter()
+{
+    return this->playing_character;
+}
+
+void ClientConnection::DoCharacterLogout()
+{
+    Map* map = this->playing_character->GetMap();
+    if (map)
+    {
+        World* world = this->server->GetWorld();
+
+        unsigned int map_id = map->GetMapId();
+        world->UnregisterClientInMap(this, map_id);
+
+        std::list<ClientConnection*> clients = world->GetClientsInMap(map_id);
+        std::list<ClientConnection*>::iterator iter;
+        for (iter = clients.begin(); iter != clients.end(); ++iter)
+        {
+            ClientConnection* client = *iter;
+            client->SendCharacterMapLeave(this->playing_character);
+        }
+
+        this->playing_character->ExitMap(map);
+    }
+}
+void ClientConnection::DoWarpCharacter(Map* map, Vector2 map_pos)
+{
+    World* world = this->server->GetWorld();
+
+    Map* last_map = this->playing_character->GetMap();
+    if (last_map)
+    {
+        unsigned int map_id = last_map->GetMapId();
+        world->UnregisterClientInMap(this, map_id);
+
+        std::list<ClientConnection*> clients = world->GetClientsInMap(map_id);
+        std::list<ClientConnection*>::iterator iter;
+        for (iter = clients.begin(); iter != clients.end(); ++iter)
+        {
+            ClientConnection* client = *iter;
+            client->SendCharacterMapLeave(this->playing_character);
+        }
+
+    }
+
+    this->playing_character->Warp(map, map_pos);
+
+    unsigned int map_id = map->GetMapId();
+
+    std::list<ClientConnection*> clients = world->GetClientsInMap(map_id);
+    std::list<ClientConnection*>::iterator iter;
+    for (iter = clients.begin(); iter != clients.end(); ++iter)
+    {
+        ClientConnection* client = *iter;
+        client->SendCharacterMapEnter(this->playing_character);
+    }
+
+    world->RegisterClientInMap(this, map_id);
+
+    PacketCharacterPosition* packet = new PacketCharacterPosition();
+    packet->SetCharacterId(this->playing_character->GetCharacterId());
+    packet->SetMapId(map->GetMapId());
+    packet->SetPositionX(map_pos.x);
+    packet->SetPositionY(map_pos.y);
+    packet->SetDirection(static_cast<uint8_t>(this->playing_character->GetDirection()));
+
+    this->SendPacket(packet);
+
+    std::list<Character*> character_list = map->GetCharacterList();
+    std::list<Character*>::iterator iter2;
+    for (iter2 = character_list.begin(); iter2 != character_list.end(); ++iter2)
+    {
+        Character* other = *iter2;
+        if (other != this->playing_character)
+        {
+            this->SendCharacterMapEnter(other);
+        }
+    }
+}
+
+void ClientConnection::SendCharacterAppearance(Character* character)
+{
+    PacketCharacterAppearance* packet = new PacketCharacterAppearance();
+    packet->SetCharacterId(character->GetCharacterId());
+    packet->SetName(character->GetName());
+    packet->SetGender(static_cast<uint8_t>(character->GetGender()));
+    packet->SetSkin(static_cast<uint8_t>(character->GetSkin()));
+
+    this->SendPacket(packet);
+}
+
+void ClientConnection::SendCharacterPosition(Character* character)
+{
+    PacketCharacterPosition* packet = new PacketCharacterPosition();
+    packet->SetCharacterId(character->GetCharacterId());
+    packet->SetMapId(character->GetMap()->GetMapId());
+    packet->SetPositionX(character->GetPosition().x);
+    packet->SetPositionY(character->GetPosition().y);
+    packet->SetDirection(character->GetDirection());
+
+    this->SendPacket(packet);
+}
+
+void ClientConnection::SendCharacterMapEnter(Character* character)
+{
+    PacketCharacterMapEnter* packet = new PacketCharacterMapEnter();
+    packet->SetCharacterId(character->GetCharacterId());
+    packet->SetMapId(this->playing_character->GetMap()->GetMapId());
+
+    this->SendPacket(packet);
+}
+
+void ClientConnection::SendCharacterMapLeave(Character* character)
+{
+    PacketCharacterMapLeave* packet = new PacketCharacterMapLeave();
+    packet->SetCharacterId(character->GetCharacterId());
+    packet->SetMapId(this->playing_character->GetMap()->GetMapId());
+
+    this->SendPacket(packet);
+}
+
+void ClientConnection::SendCharacterTurn(Character* character)
+{
+    PacketCharacterTurn* packet = new PacketCharacterTurn();
+    packet->SetCharacterId(character->GetCharacterId());
+    packet->SetDirection(character->GetDirection());
+
+    this->SendPacket(packet);
+}
+
+void ClientConnection::SendCharacterWalk(Character* character, Vector2 from_position)
+{
+    PacketCharacterWalk* packet = new PacketCharacterWalk();
+    packet->SetCharacterId(character->GetCharacterId());
+    packet->SetFromX(from_position.x);
+    packet->SetFromY(from_position.y);
+    packet->SetToX(character->GetPosition().x);
+    packet->SetToY(character->GetPosition().y);
+    packet->SetDirection(character->GetDirection());
+
+    this->SendPacket(packet);
 }

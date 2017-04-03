@@ -1,14 +1,14 @@
-#ifndef GUIFRAME_HPP_INCLUDE
-#define GUIFRAME_HPP_INCLUDE
+#ifndef GUIOBJECT_HPP_INCLUDE
+#define GUIOBJECT_HPP_INCLUDE
+
+#include "guibase.hpp"
 
 #include "allegro5/allegro.h"
 #include "allegro5/allegro_primitives.h"
 
-#include "guibase.hpp"
-
 #include "color3.hpp"
 
-class GuiFrame : public GuiBase
+class DLL_EXPORT GuiObject : public GuiBase
 {
 protected:
     bool is_filled;
@@ -21,11 +21,15 @@ protected:
 
     virtual void DoDraw() const;
 
+    GuiObject();
+    GuiObject(Vector2 size);
+    GuiObject(Vector2 size, Vector2 position);
+    GuiObject(const GuiObject& rhs);
+    GuiObject& operator=(const GuiObject& rhs);
+
 public:
-    GuiFrame();
-    GuiFrame(Vector2 size);
-    GuiFrame(Vector2 size, Vector2 position);
-    virtual ~GuiFrame();
+
+    virtual ~GuiObject();
 
     bool GetIsFilled() const;
     void SetIsFilled(bool val);
@@ -38,4 +42,4 @@ public:
 
 };
 
-#endif // GUIFRAME_HPP_INCLUDE
+#endif // GUIOBJECT_HPP_INCLUDE

@@ -43,14 +43,25 @@
 			</Target>
 		</Build>
 		<Compiler>
+			<Add option="-Wnon-virtual-dtor" />
+			<Add option="-Winit-self" />
+			<Add option="-Wredundant-decls" />
 			<Add option="-Wall" />
 			<Add option="-std=c++11" />
 			<Add directory=".." />
 		</Compiler>
 		<Unit filename="account.cpp" />
 		<Unit filename="account.hpp" />
+		<Unit filename="accountservice.cpp" />
+		<Unit filename="accountservice.hpp" />
 		<Unit filename="clientconnection.cpp" />
 		<Unit filename="clientconnection.hpp" />
+		<Unit filename="clientstate.hpp" />
+		<Unit filename="clientstatebase.cpp" />
+		<Unit filename="clientstateinit.cpp" />
+		<Unit filename="clientstateloggedin.cpp" />
+		<Unit filename="clientstatenologin.cpp" />
+		<Unit filename="clientstateplaying.cpp" />
 		<Unit filename="database.cpp" />
 		<Unit filename="database.hpp" />
 		<Unit filename="main.cpp" />

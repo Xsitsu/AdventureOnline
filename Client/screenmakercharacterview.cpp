@@ -3,37 +3,95 @@
 
 #include "gamestatecharacterview.hpp"
 #include "gamestatetitle.hpp"
+#include "gamestateplaying.hpp"
 
 
-class LogoutEvent : public GameEventBase
+#include <string>
+#include <cstdio>
+
+namespace CharacterViewScreenListeners
 {
-public:
-    LogoutEvent(Game* game) : GameEventBase(game) {}
-
-    virtual void HandleEvent()
+    class LogoutEvent : public GameEventBase
     {
-        this->game->PopScreen();
+    public:
+        LogoutEvent(Game* game) : GameEventBase(game) {}
 
-        ScreenMakerTitle maker(this->game);
-        GuiScreen* screen = maker.MakeScreen();
-        this->game->PushScreen(screen);
-        this->game->ChangeState(new GameStateTitle(this->game));
-    }
-};
+        virtual void HandleEvent()
+        {
+            PacketLogout* packet = new PacketLogout();
+            this->game->SendPacket(packet);
 
-class LogoutListener : public ListenerBase<GuiButtonArgs*>
-{
-protected:
-    Game* game;
+            this->game->PopScreen();
 
-public:
-    LogoutListener(Game* game) : game(game) {}
+            this->game->ClearCharacterList();
 
-    virtual void Notify(GuiButtonArgs*& args) const
+            ScreenMakerTitle maker(this->game);
+            GuiScreen* screen = maker.MakeScreen();
+            this->game->PushScreen(screen);
+            this->game->ChangeState(new GameStateTitle(this->game));
+        }
+    };
+
+    class LogoutListener : public ListenerBase<GuiButtonArgs*>
     {
-        this->game->RegisterEventToQueue(new LogoutEvent(this->game));
-    }
-};
+    protected:
+        Game* game;
+
+    public:
+        LogoutListener(Game* game) : game(game) {}
+
+        virtual void Notify(GuiButtonArgs*& args) const
+        {
+            this->game->RegisterEventToQueue(new LogoutEvent(this->game));
+        }
+    };
+
+    class LoginEvent : public GameEventBase
+    {
+    public:
+        LoginEvent(Game* game) : GameEventBase(game) {}
+
+        virtual void HandleEvent()
+        {
+            this->game->PopScreen();
+
+            //ScreenMakerPlaying maker(this->game);
+            //GuiScreen* screen = maker.MakeScreen();
+            //this->game->PushScreen(screen);
+            this->game->ChangeState(new GameStatePlaying(this->game));
+        }
+    };
+
+    class LoginListener : public ListenerBase<GuiButtonArgs*>
+    {
+    protected:
+        Game* game;
+        unsigned int slot_num;
+
+    public:
+        LoginListener(Game* game) : game(game) {}
+        void SetSlotNumber(unsigned int slot_num) { this->slot_num = slot_num; }
+
+        virtual void Notify(GuiButtonArgs*& args) const
+        {
+            unsigned int base = 0;
+            unsigned int slot = base + this->slot_num;
+
+            std::vector<Character*> character_list = this->game->GetCharacterList();
+            if (character_list.size() > slot)
+            {
+                Character* character = character_list[slot];
+                if (character)
+                {
+                    this->game->LoginAsCharacter(character);
+                    this->game->RegisterEventToQueue(new LoginEvent(this->game));
+                }
+            }
+
+        }
+    };
+}
+
 
 
 
@@ -45,20 +103,39 @@ GuiFrame* CreateCharacterFrame(ALLEGRO_FONT* font)
     GuiFrame* base = new GuiFrame(Vector2(345, 180), Vector2(0, 0));
     base->SetBackgroundColor(Color3(124, 57, 21));
 
-    GuiFrame* character_image_frame = new GuiFrame(Vector2(120 - 20, 180 - 20), Vector2(10, 10));
-    character_image_frame->SetBackgroundColor(Color3(0, 0, 0));
+    GuiFrame* character_draw_area = new GuiFrame(Vector2(120 - 20, 180 - 20), Vector2(10, 10));
+    character_draw_area->SetBackgroundColor(Color3(0, 0, 0));
+    character_draw_area->SetBackgroundAlpha(255);
 
     Color3 color_white = Color3(255, 255, 255);
 
-    GuiTextButton* character_name = new GuiTextButton(Vector2(220, font->height), Vector2(115, 10));
-    character_name->SetText("Character");
+    GuiTextLabel* character_name = new GuiTextLabel(Vector2(220, font->height), Vector2(115, 10));
+    character_name->SetText("Character Name");
     character_name->SetTextColor(color_white);
     character_name->SetBackgroundAlpha(255);
     character_name->SetTextFont(font);
-    character_name->SetTextAlign(GuiTextButton::ALIGN_CENTER);
+    character_name->SetTextAlign(GuiTextLabel::ALIGN_CENTER);
+
+    GuiTextLabel * character_strength = new GuiTextLabel(Vector2(220, font->height), Vector2(115, 10 + font->height));
+    character_strength->SetText("STR:");
+    character_strength->SetTextColor(color_white);
+    character_strength->SetBackgroundAlpha(255);
+    character_strength->SetTextFont(font);
+
+    GuiTextLabel * character_stamina = new GuiTextLabel(Vector2(220, font->height), Vector2(115, 10 + 2 * font->height));
+    character_stamina->SetText("END:");
+    character_stamina->SetTextColor(color_white);
+    character_stamina->SetBackgroundAlpha(255);
+    character_stamina->SetTextFont(font);
+
+    GuiTextLabel * character_hitpoints = new GuiTextLabel(Vector2(220, font->height), Vector2(115, 10 + 3 * font->height));
+    character_hitpoints->SetText("HP:");
+    character_hitpoints->SetTextColor(color_white);
+    character_hitpoints->SetBackgroundAlpha(255);
+    character_hitpoints->SetTextFont(font);
 
     Vector2 button_size = Vector2(105, font->height);
-    Vector2 start = character_image_frame->GetPosition() + Vector2(105, character_image_frame->GetSize().y - button_size.y);
+    Vector2 start = character_draw_area->GetPosition() + Vector2(105, character_draw_area->GetSize().y - button_size.y);
 
     GuiTextButton* login_button = new GuiTextButton(button_size, start);
     login_button->SetText("Login");
@@ -72,10 +149,18 @@ GuiFrame* CreateCharacterFrame(ALLEGRO_FONT* font)
     delete_button->SetTextFont(font);
     delete_button->SetTextAlign(GuiTextButton::ALIGN_CENTER);
 
-    base->AddChild(character_image_frame);
     base->AddChild(character_name);
     base->AddChild(login_button);
     base->AddChild(delete_button);
+    base->AddChild(character_hitpoints);
+    base->AddChild(character_stamina);
+    base->AddChild(character_strength);
+    base->AddChild(character_draw_area);
+
+    base->SetGuiId("character_name", character_name);
+    base->SetGuiId("login_button", login_button);
+    base->SetGuiId("delete_button", delete_button);
+    base->SetGuiId("character_draw_area", character_draw_area);
 
     return base;
 }
@@ -87,23 +172,18 @@ GuiFrame* CreateCharacterFrame(ALLEGRO_FONT* font)
 
 GuiScreen* ScreenMakerCharacterView::MakeScreen()
 {
-    LogoutListener* logout_listener = new LogoutListener(this->game);
+    ALLEGRO_FONT* font = FontService::Instance()->GetFont("title_button");
 
+    CharacterViewScreenListeners::LogoutListener* logout_listener = new CharacterViewScreenListeners::LogoutListener(this->game);
+    CharacterViewScreenListeners::LoginListener* login_listener_1 = new CharacterViewScreenListeners::LoginListener(this->game);
+    CharacterViewScreenListeners::LoginListener* login_listener_2 = new CharacterViewScreenListeners::LoginListener(this->game);
+
+    login_listener_1->SetSlotNumber(0);
+    login_listener_2->SetSlotNumber(1);
 
     GuiFrame* base_frame;
     base_frame = new GuiFrame(Vector2(640, 480), Vector2(0, 0));
     base_frame->SetBackgroundColor(Color3(20, 255, 20));
-
-
-    ALLEGRO_FONT* font = FontService::Instance()->GetFont("title_button");
-
-    GuiFrame* character_frame = CreateCharacterFrame(font);
-    character_frame->SetPosition(Vector2(260, 20));
-
-    GuiFrame* character_frame2 = CreateCharacterFrame(font);
-    character_frame2->SetPosition(Vector2(260, 20 + 180 + 10));
-
-
 
     Vector2 button_size = Vector2(160, 48);
 
@@ -121,16 +201,29 @@ GuiScreen* ScreenMakerCharacterView::MakeScreen()
     logout_button->RegisterOnClick(logout_listener);
 
 
+    GuiFrame* character_frame_1 = CreateCharacterFrame(font);
+    GuiFrame* character_frame_2 = CreateCharacterFrame(font);
+
+    character_frame_1->SetPosition(Vector2(260, 20 + 190*0));
+    character_frame_2->SetPosition(Vector2(260, 20 + 190*1));
+
+    static_cast<GuiButton*>(character_frame_1->GetGuiById("login_button"))->RegisterOnClick(login_listener_1);
+    static_cast<GuiButton*>(character_frame_2->GetGuiById("login_button"))->RegisterOnClick(login_listener_2);
 
 
-    base_frame->AddChild(character_frame);
-    base_frame->AddChild(character_frame2);
 
     base_frame->AddChild(create_char_button);
     base_frame->AddChild(logout_button);
+    base_frame->AddChild(character_frame_1);
+    base_frame->AddChild(character_frame_2);
 
     GuiScreen* screen = new GuiScreen(base_frame);
     screen->RegisterListener(logout_listener);
+    screen->RegisterListener(login_listener_1);
+    screen->RegisterListener(login_listener_2);
+
+    screen->SetGuiId("character_frame_1", character_frame_1);
+    screen->SetGuiId("character_frame_2", character_frame_2);
 
     return screen;
 }

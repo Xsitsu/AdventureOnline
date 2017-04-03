@@ -3,12 +3,14 @@
 #include "gamestatequit.hpp"
 
 #include <allegro5/allegro_native_dialog.h>
+#include <allegro5/allegro_image.h>
 
 #include <chrono>
 
 Game* Game::instance = NULL;
 
-Game::Game() : display(NULL), event_queue(NULL), timer(NULL), state(NULL), client(NULL)
+Game::Game() : display(NULL), event_queue(NULL), timer(NULL), state(NULL),
+client(NULL), current_map(nullptr), current_character(nullptr)
 {
 
 }
@@ -47,6 +49,7 @@ void Game::Init()
     al_install_keyboard();
     al_install_mouse();
     al_init_primitives_addon();
+    al_init_image_addon();
     al_init_font_addon();
     al_init_ttf_addon();
     event_queue = al_create_event_queue();
@@ -115,8 +118,8 @@ void Game::Run()
 				frame_counter = 0;
 
                 ping = 0;
-                std::list<int>::iterator iter = ping_calcs.begin();
-                for (iter; iter != ping_calcs.end(); ++iter)
+                std::list<int>::iterator iter;
+                for (iter = ping_calcs.begin(); iter != ping_calcs.end(); ++iter)
                 {
                     ping += *iter;
                 }
@@ -152,7 +155,6 @@ void Game::Run()
                         }
                         else
                         {
-                            std::cout << "Received packet code: " << packet->GetType() << std::endl;
                             this->state->HandlePacket(packet);
                         }
                     }
@@ -267,8 +269,8 @@ void Game::PopScreen()
 
 void Game::DrawScreens()
 {
-    screen_iter iter = this->screen_stack.begin();
-    for (iter; iter != this->screen_stack.end(); ++iter)
+    screen_iter iter;
+    for (iter = this->screen_stack.begin(); iter != this->screen_stack.end(); ++iter)
     {
         GuiScreen* screen = *iter;
         screen->Draw();
@@ -284,4 +286,27 @@ GuiScreen* Game::GetCurrentScreen()
 void Game::RegisterEventToQueue(GameEventBase* event)
 {
     this->game_event_queue.push_back(event);
+}
+
+void Game::LoginAsCharacter(Character* character)
+{
+    PacketCharacterLogin* packet = new PacketCharacterLogin();
+    packet->SetCharacterId(character->GetCharacterId());
+    this->SendPacket(packet);
+
+    this->current_character = character;
+}
+
+std::vector<Character*> Game::GetCharacterList() const
+{
+    return this->character_list;
+}
+
+void Game::ClearCharacterList()
+{
+    while (!this->character_list.empty())
+    {
+        delete this->character_list.back();
+        this->character_list.pop_back();
+    }
 }

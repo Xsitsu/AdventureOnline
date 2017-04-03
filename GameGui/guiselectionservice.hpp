@@ -12,7 +12,7 @@ class GuiTextBox;
 #include "guitextbox.hpp"
 #include "GameUtil/vector2.hpp"
 
-struct GuiSelectionContext
+struct DLL_EXPORT GuiSelectionContext
 {
     GuiTextBox* selected_text_box;
     GuiBase* current_mouse_hover;
@@ -20,14 +20,14 @@ struct GuiSelectionContext
     GuiButton* current_button_down;
 };
 
-class GuiSelectionService
+class DLL_EXPORT GuiSelectionService
 {
 protected: // Singleton stuff
     static GuiSelectionService* instance;
 
     GuiSelectionService();
     GuiSelectionService(const GuiSelectionService& copy) {}
-    GuiSelectionService& operator=(const GuiSelectionService& rhs) {}
+    GuiSelectionService& operator=(const GuiSelectionService& rhs) { return *this; }
     virtual ~GuiSelectionService() {}
 
 public:
@@ -55,7 +55,7 @@ protected: // Class stuff
     void InitKeyList();
     void SetKey(int index, char lower, char upper);
 
-    bool CheckModifier(unsigned int modifiers, int modifier);
+    bool CheckModifier(unsigned int modifiers, unsigned int modifier);
     char AllegroKeycodeToAscii(int keycode, unsigned int modifiers);
 
 public:

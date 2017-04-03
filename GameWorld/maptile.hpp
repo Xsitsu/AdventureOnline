@@ -22,7 +22,11 @@ protected:
 public:
     bool TileIsWalkable(Actor* actor) const;
 
+
+    void SetSpriteId(unsigned int sprite_id);
     unsigned int GetSpriteId() const;
+
+    void SetMovementPermissions(MovementPermissions permissions);
     MovementPermissions GetMovementPermissions() const;
 };
 #endif // MAPTILE_HPP_INCLUDE

@@ -1,12 +1,16 @@
 #include "world.hpp"
 
+#include <iostream>
+
 World::World(unsigned int number_maps): number_maps(number_maps)
 {
     this->maps = new Map*[number_maps];
-    for (int i = 0; i < number_maps; i++)
+    for (unsigned int i = 0; i < number_maps; i++)
     {
         this->maps[i] = nullptr;
     }
+
+    this->clients_in_maps = new std::list<ClientConnection*>[number_maps];
 }
 
 World::~World()
@@ -19,11 +23,12 @@ World::~World()
         }
     }
     delete[] this->maps;
+    delete[] this->clients_in_maps;
 }
 
 bool World::IsMapLoaded(unsigned int id)
 {
-    return this->maps[id] != nullptr;
+    return (this->maps[id] != nullptr);
 }
 
 Map* World::GetMap(unsigned int id)
@@ -33,11 +38,46 @@ Map* World::GetMap(unsigned int id)
 
 void World::LoadMap(unsigned int id)
 {
-    this->maps[id] = new Map();
+    Map* map = new Map();
+    map->LoadMap(id);
+    this->maps[id] = map;
+
+    std::cout << "Loaded map with id: " << map->GetMapId() << std::endl;
+
+    this->loaded_maps.push_back(map);
 }
 
 void World::UnloadMap(unsigned int id)
 {
-    delete this->maps[id];
+    Map* map = this->maps[id];
+    map->UnloadMap();
+    delete map;
     this->maps[id] = nullptr;
+
+    this->loaded_maps.remove(map);
+}
+
+void World::RegisterClientInMap(ClientConnection* client, unsigned int map_id)
+{
+    this->clients_in_maps[map_id].push_back(client);
+}
+
+void World::UnregisterClientInMap(ClientConnection* client, unsigned int map_id)
+{
+    this->clients_in_maps[map_id].remove(client);
+}
+
+std::list<ClientConnection*> World::GetClientsInMap(unsigned int map_id) const
+{
+    return this->clients_in_maps[map_id];
+}
+
+void World::Update()
+{
+    std::list<Map*>::iterator iter;
+    for (iter = this->loaded_maps.begin(); iter != this->loaded_maps.end(); ++iter)
+    {
+        Map* map = *iter;
+        map->Update();
+    }
 }
