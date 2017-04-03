@@ -36,7 +36,7 @@ void Timer::Reset()
     if (this->is_running)
     {
         this->time_count = this->GetNow();
-}
+    }
     else
     {
         this->time_count = 0;
