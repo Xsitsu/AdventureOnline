@@ -80,7 +80,7 @@ void Database::UpdateAccount(Account* account)
     sqlite3_stmt * ppStmt = nullptr;
     const char sql_statement[] = "UPDATE Users SET UserEmail = ?, UserSalt = ?, UserHash = ? WHERE rowid = ?";
 
-    if ( sqlite3_prepare_v2(db,sql_statement, sizeof(sql_statement), &ppStmt, nullptr))      throw DatabaseException();
+    if ( sqlite3_prepare_v2(db, sql_statement, sizeof(sql_statement), &ppStmt, nullptr))      throw DatabaseException();
     if ( sqlite3_bind_text(ppStmt, 1, account->GetEmail().c_str(), account->GetEmail().size(), nullptr))   std::cout << "Error binding email" << std::endl;
     if ( sqlite3_bind_text(ppStmt, 2, account->GetSalt().c_str(), account->GetSalt().size(), nullptr))   std::cout << "Error binding salt" << std::endl;
     if ( sqlite3_bind_text(ppStmt, 3, account->GetHash().c_str(), account->GetHash().size(), nullptr))   std::cout << "Error binding hash" << std::endl;
@@ -98,22 +98,24 @@ void Database::DeleteAccount(Account* account)
 vector<int> Database::ReadPlayerCharacters (int playerID)
 {
     sqlite3_stmt * ppStmt = nullptr;
-    const char sql_statement[] = "SELECT PlayerChar.CharID FROM PlayerChar WHERE UserID = ?;";
+    const char sql_statement[] = "SELECT rowid FROM PlayerChar WHERE UserID = ?;";
     vector<int> characters;
 
-    if ( sqlite3_prepare_v2(db,sql_statement, sizeof(sql_statement), &ppStmt, nullptr))      throw DatabaseException();
+    rc = sqlite3_prepare_v2(db, sql_statement, sizeof(sql_statement), &ppStmt, nullptr);
+    if ( rc )      throw DatabaseException();
     if ( sqlite3_bind_int(ppStmt, 1, playerID)) std::cout << "Error binding account ID" << std::endl;
 
-    while (!sqlite3_step(ppStmt))
+    while (sqlite3_step(ppStmt) == 100)
     {
-        characters.push_back(sqlite3_column_bytes(ppStmt, 1));
+        std::cout << sqlite3_column_bytes(ppStmt, 0) << "playerid: " << playerID << std::endl;
+        characters.push_back(sqlite3_column_bytes(ppStmt, 0));
     }
 
     sqlite3_finalize(ppStmt);
-    if(characters.empty())
-    {
-        throw DatabaseReadException();
-    }
+//    if(characters.empty())
+//    {
+//        throw DatabaseReadException();
+//    }
     return characters;
 //    char SQL_Code[1000] = "{CALL ReadUserCharacters(?) }";
 //    SQLLEN cBind = SQL_NTS;
@@ -156,52 +158,53 @@ vector<int> Database::ReadPlayerCharacters (int playerID)
 
 Character * Database::ReadCharacterInfo( int ID)
 {
-    Character * player_character = new Character();
+    Character * player_character = nullptr;
     sqlite3_stmt * ppStmt = nullptr;
-    const char sql_statement[] = "SELECT rowid, * FROM PlayerChar WHERE CharID = ?;";
+    const char sql_statement[] = "SELECT rowid, * FROM PlayerChar WHERE rowid = ?;";
     sqlite3_stmt * ppStmt2 = nullptr;
     const char sql_statement2[] = "SELECT CharStats.StatValue FROM CharStats WHERE CharID = ?;";
 
-    if ( sqlite3_prepare_v2(db,sql_statement2, sizeof(sql_statement2), &ppStmt2, nullptr))      throw DatabaseException();
     if ( sqlite3_prepare_v2(db,sql_statement, sizeof(sql_statement), &ppStmt, nullptr))      throw DatabaseException();
+    if ( sqlite3_prepare_v2(db,sql_statement2, sizeof(sql_statement2), &ppStmt2, nullptr))      throw DatabaseException();
 
-    if ( sqlite3_step(ppStmt)) std::cout << "Error executing statement" << std::endl;
+    if ( sqlite3_step(ppStmt) != 100) std::cout << "Error executing statement" << std::endl;
     else
     {
+        player_character = new Character();
         player_character->SetCharacterId(ID);
-        player_character->SetName(reinterpret_cast<const char*>(sqlite3_column_text(ppStmt, 2)));
-        player_character->Warp(nullptr, Vector2(sqlite3_column_bytes(ppStmt, 4), sqlite3_column_bytes(ppStmt, 5)));
+        player_character->SetName(reinterpret_cast<const char*>(sqlite3_column_text(ppStmt, 1)));
+        player_character->Warp(nullptr, Vector2(sqlite3_column_bytes(ppStmt, 3), sqlite3_column_bytes(ppStmt, 4)));
     }
 
-    if ( sqlite3_step(ppStmt2)) std::cout << "Error executing statement" << std::endl;
+    if ( sqlite3_step(ppStmt2) != 100) std::cout << "Error executing statement" << std::endl;
     else
     {
-        player_character->SetStrength(sqlite3_column_bytes(ppStmt, 1));
+        player_character->SetStrength(sqlite3_column_bytes(ppStmt, 0));
     }
-    if ( sqlite3_step(ppStmt2)) std::cout << "Error executing statement2" << std::endl;
+    if ( sqlite3_step(ppStmt2) != 100) std::cout << "Error executing statement2" << std::endl;
     else
     {
-        player_character->SetEndurance(sqlite3_column_bytes(ppStmt, 1));
+        player_character->SetEndurance(sqlite3_column_bytes(ppStmt, 0));
     }
-    if ( sqlite3_step(ppStmt2)) std::cout << "Error executing statement2" << std::endl;
+    if ( sqlite3_step(ppStmt2)!= 100) std::cout << "Error executing statement2" << std::endl;
     else
     {
-        player_character->SetGender(static_cast<Character::Gender>(sqlite3_column_bytes(ppStmt, 1)));
+        player_character->SetGender(static_cast<Character::Gender>(sqlite3_column_bytes(ppStmt, 0)));
     }
-    if ( sqlite3_step(ppStmt2)) std::cout << "Error executing statement2" << std::endl;
+    if ( sqlite3_step(ppStmt2)!= 100) std::cout << "Error executing statement2" << std::endl;
     else
     {
-        player_character->SetSkin(static_cast<Character::Skin>(sqlite3_column_bytes(ppStmt, 1)));
+        player_character->SetSkin(static_cast<Character::Skin>(sqlite3_column_bytes(ppStmt, 0)));
     }
-    if ( sqlite3_step(ppStmt2)) std::cout << "Error executing statement2" << std::endl;
+    if ( sqlite3_step(ppStmt2)!= 100) std::cout << "Error executing statement2" << std::endl;
     else
     {
-        player_character->SetMaxHealth(sqlite3_column_bytes(ppStmt, 1));
+        player_character->SetMaxHealth(sqlite3_column_bytes(ppStmt, 0));
     }
-    if ( sqlite3_step(ppStmt2)) std::cout << "Error executing statement2" << std::endl;
+    if ( sqlite3_step(ppStmt2)!= 100) std::cout << "Error executing statement2" << std::endl;
     else
     {
-        player_character->SetHealth(sqlite3_column_bytes(ppStmt, 1));
+        player_character->SetHealth(sqlite3_column_bytes(ppStmt, 0));
     }
 
     sqlite3_finalize(ppStmt);
