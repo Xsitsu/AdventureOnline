@@ -73,6 +73,9 @@ void ActorDrawer::DoDrawCharacter(Character* character, Vector2 draw_middle, boo
     int draw_frame = 0;
     int max_frames = 0;
 
+    int offset_x = 0;
+    int offset_y = 0;
+
     if (character->IsStanding())
     {
         character_bitmap = BitmapService::Instance()->GetBitmap("character_0");
@@ -87,6 +90,9 @@ void ActorDrawer::DoDrawCharacter(Character* character, Vector2 draw_middle, boo
         character_bitmap = BitmapService::Instance()->GetBitmap("character_1");
         sprite_width = 26;
         sprite_height = 61;
+
+        offset_x = 0;
+        offset_y = 2;
 
         max_frames = 4;
         draw_frame = max_frames * character->GetStatePercentDone();
@@ -109,7 +115,7 @@ void ActorDrawer::DoDrawCharacter(Character* character, Vector2 draw_middle, boo
 
     al_draw_tinted_bitmap_region(character_bitmap, al_map_rgba(255, 255, 255, 255),
                                 draw_x, draw_y, sprite_width, sprite_height,
-                                draw_base.x, draw_base.y, draw_flags);
+                                draw_base.x + offset_x, draw_base.y + offset_y, draw_flags);
 
 }
 
