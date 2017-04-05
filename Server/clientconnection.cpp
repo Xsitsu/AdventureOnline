@@ -38,7 +38,7 @@ void ClientConnection::FetchCharacterList()
         this->account->ClearCharacterList();
 
         Database* database = this->server->GetDatabaseConnection();
-        std::vector<int> char_id_list = database->ReadPlayerCharacters(this->account->GetAccountId());
+        std::vector<int> char_id_list = database->ReadPlayerCharacters(this->account->GetEmail());
 
         std::vector<int>::iterator iter;
         for (iter = char_id_list.begin(); iter != char_id_list.end(); ++iter)
