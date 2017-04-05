@@ -63,7 +63,7 @@ Account* Database::ReadAccount(std::string email)
     if ( sqlite3_prepare_v2(db,sql_statement, sizeof(sql_statement), &ppStmt, nullptr))      throw DatabaseException();
     if ( sqlite3_bind_text(ppStmt, 1, email.c_str(), email.size(), nullptr))   std::cout << "Error binding email" << std::endl;
     rc = sqlite3_step(ppStmt);
-    if ( rc == 0 || rc == 100 )
+    if ( rc == SQLITE_OK || rc == SQLITE_ROW )
     {
         account = new Account(sqlite3_column_int(ppStmt, 0), reinterpret_cast<const char*>(sqlite3_column_text(ppStmt, 1)), reinterpret_cast<const char*>(sqlite3_column_text(ppStmt, 2)), reinterpret_cast<const char*>(sqlite3_column_text(ppStmt, 3)));
     }
@@ -114,7 +114,7 @@ vector<int> Database::ReadPlayerCharacters (std::string email)
     if ( sqlite3_bind_int(ppStmt, 1, playerID)) throw DatabaseException();
 
 
-    while (sqlite3_step(ppStmt) != 101)
+    while (sqlite3_step(ppStmt) != SQLITE_DONE)
     {
         characters.push_back(sqlite3_column_int(ppStmt, 0));
     }
@@ -137,7 +137,7 @@ Character * Database::ReadCharacterInfo( int ID)
     if ( sqlite3_bind_int(ppStmt, 1, ID)) throw DatabaseException();
 
     rc = sqlite3_step(ppStmt);
-    if (  rc != 100 ) throw DatabaseReadException();
+    if (  rc != SQLITE_ROW ) throw DatabaseReadException();
     else
     {
         player_character->SetCharacterId(sqlite3_column_int(ppStmt,0));
@@ -149,32 +149,32 @@ Character * Database::ReadCharacterInfo( int ID)
     if ( sqlite3_prepare_v2(db,sql_statement2, sizeof(sql_statement2), &ppStmt2, nullptr))      throw DatabaseException();
     if ( sqlite3_bind_int(ppStmt2, 1, ID)) throw DatabaseException();
     rc = sqlite3_step(ppStmt2);
-    if ( rc!= 100 ) throw DatabaseReadException();
+    if ( rc!= SQLITE_ROW ) throw DatabaseReadException();
     else
     {
         player_character->SetStrength(sqlite3_column_int(ppStmt2, 0));
     }
-    if ( sqlite3_step(ppStmt2) != 100) throw DatabaseReadException();
+    if ( sqlite3_step(ppStmt2) != SQLITE_ROW) throw DatabaseReadException();
     else
     {
         player_character->SetEndurance(sqlite3_column_int(ppStmt2, 0));
     }
-    if ( sqlite3_step(ppStmt2)!= 100) throw DatabaseReadException();
+    if ( sqlite3_step(ppStmt2)!= SQLITE_ROW) throw DatabaseReadException();
     else
     {
         player_character->SetGender(static_cast<Character::Gender>(sqlite3_column_int(ppStmt2, 0)));
     }
-    if ( sqlite3_step(ppStmt2)!= 100) throw DatabaseReadException();
+    if ( sqlite3_step(ppStmt2)!= SQLITE_ROW) throw DatabaseReadException();
     else
     {
         player_character->SetSkin(static_cast<Character::Skin>(sqlite3_column_int(ppStmt2, 0)));
     }
-    if ( sqlite3_step(ppStmt2)!= 100) throw DatabaseReadException();
+    if ( sqlite3_step(ppStmt2)!= SQLITE_ROW) throw DatabaseReadException();
     else
     {
         player_character->SetMaxHealth(sqlite3_column_int(ppStmt2, 0));
     }
-    if ( sqlite3_step(ppStmt2)!= 100) throw DatabaseReadException();
+    if ( sqlite3_step(ppStmt2)!= SQLITE_ROW) throw DatabaseReadException();
     else
     {
         player_character->SetHealth(sqlite3_column_int(ppStmt2, 0));
