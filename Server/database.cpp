@@ -133,55 +133,73 @@ Character * Database::ReadCharacterInfo( int ID)
     sqlite3_stmt * ppStmt2 = nullptr;
     const char sql_statement2[] = "SELECT CharStats.StatValue FROM CharStats WHERE CharID = ?;";
 
-    if ( sqlite3_prepare_v2(db,sql_statement, sizeof(sql_statement), &ppStmt, nullptr))      throw DatabaseException();
-    if ( sqlite3_bind_int(ppStmt, 1, ID)) throw DatabaseException();
+    try
+    {
+        if ( sqlite3_prepare_v2(db,sql_statement, sizeof(sql_statement), &ppStmt, nullptr))      throw DatabaseException();
+        if ( sqlite3_bind_int(ppStmt, 1, ID)) throw DatabaseException();
 
-    rc = sqlite3_step(ppStmt);
-    if (  rc != SQLITE_ROW ) throw DatabaseReadException();
-    else
-    {
-        player_character->SetCharacterId(sqlite3_column_int(ppStmt,0));
-        player_character->SetName(reinterpret_cast<const char*>(sqlite3_column_text(ppStmt, 1)));
-        player_character->Warp(nullptr, Vector2(sqlite3_column_int(ppStmt, 3), sqlite3_column_int(ppStmt, 4)));
-    }
-    sqlite3_finalize(ppStmt);
+        rc = sqlite3_step(ppStmt);
+        if (  rc != SQLITE_ROW ) throw DatabaseReadException();
+        else
+        {
+            player_character->SetCharacterId(sqlite3_column_int(ppStmt,0));
+            player_character->SetName(reinterpret_cast<const char*>(sqlite3_column_text(ppStmt, 1)));
+            player_character->Warp(nullptr, Vector2(sqlite3_column_int(ppStmt, 3), sqlite3_column_int(ppStmt, 4)));
+        }
+        sqlite3_finalize(ppStmt);
+        ppStmt = nullptr;
 
-    if ( sqlite3_prepare_v2(db,sql_statement2, sizeof(sql_statement2), &ppStmt2, nullptr))      throw DatabaseException();
-    if ( sqlite3_bind_int(ppStmt2, 1, ID)) throw DatabaseException();
-    rc = sqlite3_step(ppStmt2);
-    if ( rc!= SQLITE_ROW ) throw DatabaseReadException();
-    else
-    {
-        player_character->SetStrength(sqlite3_column_int(ppStmt2, 0));
-    }
-    if ( sqlite3_step(ppStmt2) != SQLITE_ROW) throw DatabaseReadException();
-    else
-    {
-        player_character->SetEndurance(sqlite3_column_int(ppStmt2, 0));
-    }
-    if ( sqlite3_step(ppStmt2)!= SQLITE_ROW) throw DatabaseReadException();
-    else
-    {
-        player_character->SetGender(static_cast<Character::Gender>(sqlite3_column_int(ppStmt2, 0)));
-    }
-    if ( sqlite3_step(ppStmt2)!= SQLITE_ROW) throw DatabaseReadException();
-    else
-    {
-        player_character->SetSkin(static_cast<Character::Skin>(sqlite3_column_int(ppStmt2, 0)));
-    }
-    if ( sqlite3_step(ppStmt2)!= SQLITE_ROW) throw DatabaseReadException();
-    else
-    {
-        player_character->SetMaxHealth(sqlite3_column_int(ppStmt2, 0));
-    }
-    if ( sqlite3_step(ppStmt2)!= SQLITE_ROW) throw DatabaseReadException();
-    else
-    {
-        player_character->SetHealth(sqlite3_column_int(ppStmt2, 0));
-    }
+        if ( sqlite3_prepare_v2(db,sql_statement2, sizeof(sql_statement2), &ppStmt2, nullptr))      throw DatabaseException();
+        if ( sqlite3_bind_int(ppStmt2, 1, ID)) throw DatabaseException();
+        rc = sqlite3_step(ppStmt2);
+        if ( rc!= SQLITE_ROW ) throw DatabaseReadException();
+        else
+        {
+            player_character->SetStrength(sqlite3_column_int(ppStmt2, 0));
+        }
+        if ( sqlite3_step(ppStmt2) != SQLITE_ROW) throw DatabaseReadException();
+        else
+        {
+            player_character->SetEndurance(sqlite3_column_int(ppStmt2, 0));
+        }
+        if ( sqlite3_step(ppStmt2)!= SQLITE_ROW) throw DatabaseReadException();
+        else
+        {
+            player_character->SetGender(static_cast<Character::Gender>(sqlite3_column_int(ppStmt2, 0)));
+        }
+        if ( sqlite3_step(ppStmt2)!= SQLITE_ROW) throw DatabaseReadException();
+        else
+        {
+            player_character->SetSkin(static_cast<Character::Skin>(sqlite3_column_int(ppStmt2, 0)));
+        }
+        if ( sqlite3_step(ppStmt2)!= SQLITE_ROW) throw DatabaseReadException();
+        else
+        {
+            player_character->SetMaxHealth(sqlite3_column_int(ppStmt2, 0));
+        }
+        if ( sqlite3_step(ppStmt2)!= SQLITE_ROW) throw DatabaseReadException();
+        else
+        {
+            player_character->SetHealth(sqlite3_column_int(ppStmt2, 0));
+        }
 
 
-    sqlite3_finalize(ppStmt2);
+        sqlite3_finalize(ppStmt2);
+        ppStmt2 = nullptr;
+    }
+    catch( DatabaseException& problem)
+    {
+        delete player_character;
+        if(ppStmt)
+        {
+            sqlite3_finalize(ppStmt);
+        }
+        if(ppStmt2)
+        {
+            sqlite3_finalize(ppStmt2);
+        }
+        throw problem;
+    }
 
     return player_character;
 }
