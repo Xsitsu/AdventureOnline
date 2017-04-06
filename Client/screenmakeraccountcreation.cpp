@@ -77,9 +77,9 @@ public:
     {
         this->game->PopScreen();
 
-        ScreenMakerTitle maker(this->game);
-        GuiScreen* screen = maker.MakeScreen();
-        this->game->PushScreen(screen);
+//        ScreenMakerTitle maker(this->game);       //not needed since this screen is put on top of an existing title menu screen
+//        GuiScreen* screen = maker.MakeScreen();
+//        this->game->PushScreen(screen);
         this->game->ChangeState(new GameStateTitle(this->game));
     }
 };
@@ -169,7 +169,7 @@ public:
 
 GuiScreen* ScreenMakerAccountCreation::MakeScreen()
 {
-//font
+    //font
     ALLEGRO_FONT* button_font = FontService::Instance()->GetFont("title_button");
 
     //listeners
@@ -181,10 +181,12 @@ GuiScreen* ScreenMakerAccountCreation::MakeScreen()
     //frame
     GuiFrame * account_creation_frame = new GuiFrame(Vector2(640 * 0.7,480 * 0.7), Vector2(640*0.15, 480*0.15));
 
-    //buttons
+    //labels
     GuiTextButton * user_email_text = CreateAccountCreationButton(0, "Enter Email ",button_font);
     GuiTextButton * user_password_text = CreateAccountCreationButton(2, "Enter Password ",button_font);
     GuiTextButton * user_confirm_text = CreateAccountCreationButton(4, "Confirm Password", button_font);
+
+    //buttons
     GuiTextButton * register_button = CreateAccountCreationButton(7, "Register", button_font);
     GuiTextButton * done_button = CreateAccountCreationButton(8, "Exit", button_font);
 
@@ -208,7 +210,6 @@ GuiScreen* ScreenMakerAccountCreation::MakeScreen()
 
     //setup frame
     account_creation_frame->SetBackgroundColor(Color3(255, 155, 100));
-    //account_creation_frame->SetBackgroundAlpha(200);
     account_creation_frame->AddChild(user_email_text);
     account_creation_frame->AddChild(user_email);
     account_creation_frame->AddChild(user_password);

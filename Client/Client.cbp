@@ -65,6 +65,8 @@
 		<Unit filename="gamestateaccountcreation.hpp" />
 		<Unit filename="gamestateaccountcreationawaitresponse.cpp" />
 		<Unit filename="gamestateaccountcreationawaitresponse.hpp" />
+		<Unit filename="gamestatecharactercreation.cpp" />
+		<Unit filename="gamestatecharactercreation.hpp" />
 		<Unit filename="gamestatecharacterview.cpp" />
 		<Unit filename="gamestatecharacterview.hpp" />
 		<Unit filename="gamestateinit.cpp" />
@@ -84,6 +86,7 @@
 		<Unit filename="screenmaker.hpp" />
 		<Unit filename="screenmakeraccountcreation.cpp" />
 		<Unit filename="screenmakeraccountcreationresponsewait.cpp" />
+		<Unit filename="screenmakercharactercreation.cpp" />
 		<Unit filename="screenmakercharacterview.cpp" />
 		<Unit filename="screenmakerempty.cpp" />
 		<Unit filename="screenmakerlogin.cpp" />

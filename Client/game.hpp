@@ -37,6 +37,7 @@ friend class GameStateAccountCreation;
 friend class GameStateLoginAwaitResponse;
 friend class GameStateAccountCreationAwaitResponse;
 friend class GameStatePlaying;
+friend class GameStateCharacterCreation;
 
 protected: // Singleton stuff
     static Game* instance;
@@ -103,6 +104,7 @@ public:
     void LoginAsCharacter(Character* character);
     std::vector<Character*> GetCharacterList() const;
     void ClearCharacterList();
+    Character * GetCurrentCharacter() { return current_character; }
 };
 
 class GameEventBase
