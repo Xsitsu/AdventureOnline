@@ -1,7 +1,13 @@
 #include "screenmaker.hpp"
 
 #include "gamestatecharacterview.hpp"
+#include "bitmapservice.hpp"
 
+static const int BASE_WIDTH = 32;
+static const int UPPER_ALIGN = 480*0.23;
+static const int LOWER_ALIGN = 480 * 0.7;
+static const int LEFT_ALIGN = 640/5;
+static const int BUTTON_ALIGN = 640*0.57;
 namespace CharacterCreationListeners
 {
     class DirectionLeftEvent :public GameEventBase
@@ -320,6 +326,8 @@ GuiScreen * SreenMakerCharacterCreation::MakeScreen()
     GuiFrame * character_background_frame = nullptr;
     GuiFrame * hair_color_frame = nullptr;
 
+    GuiImageLabel * background = nullptr;
+
     GuiTextLabel * user_name_label = nullptr;
     GuiTextLabel * gender_label = nullptr;
     GuiTextLabel * skin_label = nullptr;
@@ -332,14 +340,14 @@ GuiScreen * SreenMakerCharacterCreation::MakeScreen()
 
     GuiTextButton * create_button = nullptr;
     GuiTextButton * cancel_button = nullptr;
-    GuiButton * change_direction_left_button = nullptr;
-    GuiButton * change_direction_right_button = nullptr;
-    GuiButton * female_button = nullptr;
-    GuiButton * male_button = nullptr;
-    GuiButton * skin_left_button = nullptr;
-    GuiButton * skin_right_button = nullptr;
-    GuiButton * hair_left_button = nullptr;
-    GuiButton * hair_right_button = nullptr;
+    GuiImageButton * change_direction_left_button = nullptr;
+    GuiImageButton * change_direction_right_button = nullptr;
+    GuiImageButton * female_button = nullptr;
+    GuiImageButton * male_button = nullptr;
+    GuiImageButton * skin_left_button = nullptr;
+    GuiImageButton * skin_right_button = nullptr;
+    GuiImageButton * hair_left_button = nullptr;
+    GuiImageButton * hair_right_button = nullptr;
     GuiButton * color_brown_button = nullptr;
     GuiButton * color_black_button = nullptr;
     GuiButton * color_white_button = nullptr;
@@ -380,122 +388,173 @@ GuiScreen * SreenMakerCharacterCreation::MakeScreen()
 
     //frame
     parent_frame = new GuiFrame(Vector2(640 ,480 ), Vector2(0, 0));
-    character_background_frame = new GuiFrame(Vector2(640 * 0.35,480 * 0.6), Vector2(640*0.10, 480*0.10));
-    hair_color_frame = new GuiFrame(Vector2(640 * (0.35) ,480 * 0.35), Vector2(640*0.45 +10, 480*0.60));
+    character_background_frame = new GuiFrame(Vector2(BASE_WIDTH*1.68*1.68, BASE_WIDTH *4), Vector2(LEFT_ALIGN, UPPER_ALIGN));
+    hair_color_frame = new GuiFrame(Vector2(640 * (0.35) , BASE_WIDTH*4), Vector2(LEFT_ALIGN +BASE_WIDTH*4, UPPER_ALIGN+button_font->height*4));
 
     //labels
-    user_name_label = new GuiTextLabel(Vector2(640*0.2, button_font->height), Vector2(640*0.45 +10, 6));
+    background = new GuiImageLabel(parent_frame->GetSize());
+    background->SetImage(BitmapService::Instance()->GetBitmap("background_1"));
+
+    user_name_label = new GuiTextLabel(Vector2(640*0.2, button_font->height), Vector2(LEFT_ALIGN +BASE_WIDTH*4, UPPER_ALIGN));
     user_name_label->SetText("Username:");
     user_name_label->SetTextFont(button_font);
-    user_name_label->SetTextColor(Color3(100,100,100));
-    gender_label = new GuiTextLabel(Vector2(640*0.2, button_font->height), Vector2(640*0.45 +10, 6+button_font->height*1.6));
+    user_name_label->SetTextColor(Color3(250,250,250));
+    user_name_label->SetBackgroundAlpha(0);
+
+    gender_label = new GuiTextLabel(Vector2(640*0.2, button_font->height), Vector2(LEFT_ALIGN +BASE_WIDTH*4, UPPER_ALIGN+button_font->height));
     gender_label->SetText("Gender:");
     gender_label->SetTextFont(button_font);
-    gender_label->SetTextColor(Color3(100,100,100));
-    skin_label = new GuiTextLabel(Vector2(640*0.2, button_font->height), Vector2(640*0.45 +10, 6+button_font->height*2*1.6));
+    gender_label->SetTextColor(Color3(250,250,250));
+    gender_label->SetBackgroundAlpha(0);
+
+    skin_label = new GuiTextLabel(Vector2(640*0.2, button_font->height), Vector2(LEFT_ALIGN +BASE_WIDTH*4, UPPER_ALIGN+button_font->height*2));
     skin_label->SetText("Skin:");
     skin_label->SetTextFont(button_font);
-    skin_label->SetTextColor(Color3(100,100,100));
-    skin_name_label = new GuiTextLabel(Vector2(640*0.2, button_font->height), Vector2(640*0.65 +10+button_font->height, 6+button_font->height*2*1.6));
-    skin_name_label->SetText("Skin type:");
+    skin_label->SetTextColor(Color3(250,250,250));
+    skin_label->SetBackgroundAlpha(0);
+
+    skin_name_label = new GuiTextLabel(Vector2(640*0.2, button_font->height), Vector2(BUTTON_ALIGN+button_font->height, UPPER_ALIGN+button_font->height*2));
+    skin_name_label->SetText("Skin type");
     skin_name_label->SetTextFont(button_font);
-    skin_name_label->SetTextColor(Color3(100,100,100));
-    hair_label = new GuiTextLabel(Vector2(640*0.2, button_font->height), Vector2(640*0.45 +10, 6+button_font->height*3*1.6));
+    skin_name_label->SetTextColor(Color3(250,250,250));
+    skin_name_label->SetBackgroundAlpha(66);
+    skin_name_label->SetTextAlign(GuiTextButton::ALIGN_CENTER);
+
+    hair_label = new GuiTextLabel(Vector2(640*0.2, button_font->height), Vector2(LEFT_ALIGN +BASE_WIDTH*4, UPPER_ALIGN+button_font->height*3));
     hair_label->SetText("Hair:");
     hair_label->SetTextFont(button_font);
-    hair_label->SetTextColor(Color3(100,100,100));
-    hair_name_label = new GuiTextLabel(Vector2(640*0.2, button_font->height), Vector2(640*0.65 +10+button_font->height, 6+button_font->height*3*1.6));
-    hair_name_label->SetText("Hair Type:");
+    hair_label->SetTextColor(Color3(250,250,250));
+    hair_label->SetBackgroundAlpha(0);
+
+    hair_name_label = new GuiTextLabel(Vector2(640*0.2, button_font->height), Vector2(BUTTON_ALIGN+button_font->height, UPPER_ALIGN+button_font->height*3));
+    hair_name_label->SetText("Hair Type");
     hair_name_label->SetTextFont(button_font);
-    hair_name_label->SetTextColor(Color3(100,100,100));
+    hair_name_label->SetTextColor(Color3(250,250,250));
+    hair_name_label->SetBackgroundAlpha(66);
+    hair_name_label->SetTextAlign(GuiTextButton::ALIGN_CENTER);
+
     hair_color_label = new GuiTextLabel(Vector2(640*0.2, button_font->height), Vector2(0, 0));
     hair_color_label->SetText("Hair Color:");
     hair_color_label->SetTextFont(button_font);
-    hair_color_label->SetTextColor(Color3(100,100,100));
+    hair_color_label->SetTextColor(Color3(250,250,250));
+    hair_color_label->SetBackgroundAlpha(0);
 
     //buttons
-    create_button = new GuiTextButton(Vector2(640*.175, button_font->height), Vector2(640*0.10, 480*0.7+10));
-    cancel_button = new GuiTextButton(Vector2(640*.175, button_font->height), Vector2(640*0.275 +10, 480*0.7+10));
-    change_direction_left_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(640*0.1, 480*0.7-button_font->height));
-    change_direction_right_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(640*0.45-button_font->height, 480*0.7-button_font->height));
-    female_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(640*0.65+10, 6+button_font->height*1.6));
-    male_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(640*0.85+10, 6+button_font->height*1.6));
-    skin_left_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(640*0.65+10, 6+button_font->height*2*1.6));
-    skin_right_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(640*0.85+10, 6+button_font->height*2*1.6));
-    hair_left_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(640*0.65+10, 6+button_font->height*3*1.6));
-    hair_right_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(640*0.85+10, 6+button_font->height*3*1.6));
-    color_brown_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(0, button_font->height * 1.6));
-    color_black_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(0 +button_font->height* 1.6, button_font->height * 1.6));
-    color_white_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(0 +button_font->height*2* 1.6, button_font->height * 1.6));
-    color_purple_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(0 +button_font->height*3* 1.6, button_font->height * 1.6));
-    color_light_blue_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(0 +button_font->height*4* 1.6, button_font->height * 1.6));
-    color_red_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(0 , button_font->height *2 * 1.6));
-    color_green_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(0 +button_font->height* 1.6, button_font->height*2 * 1.6));
-    color_dark_blue_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(0 +button_font->height*2* 1.6, button_font->height*2 * 1.6));
-    color_yellow_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(0 +button_font->height*3* 1.6, button_font->height*2 * 1.6));
-    color_pink_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(0 +button_font->height*4* 1.6,button_font->height*2 * 1.6));
+    create_button = new GuiTextButton(Vector2(BASE_WIDTH*1.68*1.68, button_font->height), Vector2(LEFT_ALIGN, (UPPER_ALIGN + BASE_WIDTH *5)));
+    cancel_button = new GuiTextButton(Vector2(BASE_WIDTH*1.68*1.68, button_font->height), Vector2(LEFT_ALIGN, (UPPER_ALIGN + BASE_WIDTH *5)+button_font->height*1.6));
+    change_direction_left_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(LEFT_ALIGN, UPPER_ALIGN + BASE_WIDTH *4 - button_font->height));
+    change_direction_right_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(LEFT_ALIGN+BASE_WIDTH *1.68*1.68 - button_font->height, UPPER_ALIGN + BASE_WIDTH *4 - button_font->height));
+    female_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(BUTTON_ALIGN, UPPER_ALIGN+button_font->height));
+    male_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(BUTTON_ALIGN+button_font->height*6, UPPER_ALIGN+button_font->height));
+    skin_left_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(BUTTON_ALIGN, UPPER_ALIGN+button_font->height*2));
+    skin_right_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(BUTTON_ALIGN+button_font->height*6, UPPER_ALIGN+button_font->height*2));
+    hair_left_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(BUTTON_ALIGN, UPPER_ALIGN+button_font->height*3));
+    hair_right_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(BUTTON_ALIGN+button_font->height*6, UPPER_ALIGN+button_font->height*3));
+    color_brown_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(button_font->height*.618, button_font->height * 1.6));
+    color_black_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(button_font->height*.618 +button_font->height* 1.6, button_font->height * 1.6));
+    color_white_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(button_font->height*.618 +button_font->height*2* 1.6, button_font->height * 1.6));
+    color_purple_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(button_font->height*.618 +button_font->height*3* 1.6, button_font->height * 1.6));
+    color_light_blue_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(button_font->height*.618 +button_font->height*4* 1.6, button_font->height * 1.6));
+    color_red_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(button_font->height*.618 , button_font->height *2 * 1.6));
+    color_green_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(button_font->height*.618 +button_font->height* 1.6, button_font->height*2 * 1.6));
+    color_dark_blue_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(button_font->height*.618 +button_font->height*2* 1.6, button_font->height*2 * 1.6));
+    color_yellow_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(button_font->height*.618 +button_font->height*3* 1.6, button_font->height*2 * 1.6));
+    color_pink_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(button_font->height*.618 +button_font->height*4* 1.6,button_font->height*2 * 1.6));
 
     //text boxes
-    user_name_text = new GuiTextBox(Vector2(640*0.2, button_font->height), Vector2(640*0.65 +10, 6));
+    user_name_text = new GuiTextBox(Vector2(button_font->height*7, button_font->height), Vector2(BUTTON_ALIGN, UPPER_ALIGN));
 
 
 
     //setup buttons
     create_button->SetText("Create");
     create_button->RegisterOnClick(create_listener);
-    create_button->SetTextColor(Color3(100,100,100));
+    create_button->SetTextColor(Color3(255,255,255));
     create_button->SetTextFont(button_font);
+    create_button->SetBackgroundColor(Color3(55,55,55));
+    create_button->SetTextAlign(GuiTextButton::ALIGN_CENTER);
+
     cancel_button->SetText("Cancel");
     cancel_button->RegisterOnClick(cancel_listener);
-    cancel_button->SetTextColor(Color3(100,100,100));
+    cancel_button->SetTextColor(Color3(255,255,255));
     cancel_button->SetTextFont(button_font);
-    change_direction_left_button->SetBackgroundColor(Color3(0,0,255));
+    cancel_button->SetBackgroundColor(Color3(55,55,55));
+    cancel_button->SetTextAlign(GuiTextButton::ALIGN_CENTER);
+
+    change_direction_left_button->SetBackgroundColor(Color3(0,0,255*0.618));
     change_direction_left_button->RegisterOnClick(change_direction_left);
-    change_direction_right_button->SetBackgroundColor(Color3(0,0,255));
+    //change_direction_right_button->SetImage(BitmapService::Instance()->GetBitmap("guielement_2"));
+
+    change_direction_right_button->SetBackgroundColor(Color3(0,0,255*0.618));
     change_direction_right_button->RegisterOnClick(change_direction_right);
+    //change_direction_right_button->SetImage(BitmapService::Instance()->GetBitmap("guielement_3"));
+
     female_button->SetBackgroundColor(Color3(0,152,255));
     female_button->RegisterOnClick(female_listener);
+    //female_button->SetImage(BitmapService::Instance()->GetBitmap("guielement_0"));
+
     male_button->SetBackgroundColor(Color3(0,152,255));
     male_button->RegisterOnClick(male_listener);
+    //male_button->SetImage(BitmapService::Instance()->GetBitmap("guielement_1"));
+
     skin_left_button->SetBackgroundColor(Color3(0,255,255));
     skin_left_button->RegisterOnClick(skin_left_listener);
+    //skin_left_button->SetImage(BitmapService::Instance()->GetBitmap("guielement_2"));
+
     skin_right_button->SetBackgroundColor(Color3(0,255,255));
     skin_right_button->RegisterOnClick(skin_right_listener);
+    //skin_right_button->SetImage(BitmapService::Instance()->GetBitmap("guielement_3"));
+
     hair_left_button->SetBackgroundColor(Color3(155,255,255));
     hair_left_button->RegisterOnClick(hair_left_listener);
+    //hair_left_button->SetImage(BitmapService::Instance()->GetBitmap("guielement_2"));
+
     hair_right_button->SetBackgroundColor(Color3(155,255,255));
     hair_right_button->RegisterOnClick(hair_right_listener);
-    color_brown_button->SetBackgroundColor(Color3(185,148,120));
+    //hair_right_button->SetImage(BitmapService::Instance()->GetBitmap("guielement_3"));
+
+    color_brown_button->SetBackgroundColor(Color3(74,0,0));
     color_brown_button->RegisterOnClick(color_brown_listener);
-    color_black_button->SetBackgroundColor(Color3(0,0,0));
+
+    color_black_button->SetBackgroundColor(Color3(82,82,82));
     color_black_button->RegisterOnClick(color_black_listener);
-    color_white_button->SetBackgroundColor(Color3(255,255,255));;
+
+    color_white_button->SetBackgroundColor(Color3(214,214,214));;
     color_white_button->RegisterOnClick(color_white_listener);
-    color_purple_button->SetBackgroundColor(Color3(128,0,128));;
+
+    color_purple_button->SetBackgroundColor(Color3(149, 65,165));;
     color_purple_button->RegisterOnClick(color_purple_listener);
-    color_light_blue_button->SetBackgroundColor(Color3(135,206,250));;
+
+    color_light_blue_button->SetBackgroundColor(Color3(115,156,198));;
     color_light_blue_button->RegisterOnClick(color_light_blue_listener);
-    color_red_button->SetBackgroundColor(Color3(255,0,0));;
+
+    color_red_button->SetBackgroundColor(Color3(239,33,8));;
     color_red_button->RegisterOnClick(color_red_listener);
-    color_green_button->SetBackgroundColor(Color3(0,255,0));;
+
+    color_green_button->SetBackgroundColor(Color3(90,148,33));;
     color_green_button->RegisterOnClick(color_green_listener);
-    color_dark_blue_button->SetBackgroundColor(Color3(0,0,255));;
+
+    color_dark_blue_button->SetBackgroundColor(Color3(49,74,215));;
     color_dark_blue_button->RegisterOnClick(color_dark_blue_listener);
-    color_yellow_button->SetBackgroundColor(Color3(255,255,0));;
+
+    color_yellow_button->SetBackgroundColor(Color3(255,189,74));;
     color_yellow_button->RegisterOnClick(color_yellow_listener);
-    color_pink_button->SetBackgroundColor(Color3(255,182,193));;
+
+    color_pink_button->SetBackgroundColor(Color3(231,123,173));;
     color_pink_button->RegisterOnClick(color_pink_listener);
 
     //setup text boxes
     user_name_text->SetTextFont(button_font);
-    user_name_text->SetTextColor(Color3(100,100,100));
-    user_name_text->SetText("myname");
-    user_name_text->SetBackgroundAlpha(80);
+    user_name_text->SetTextColor(Color3(50,50,50));
+    user_name_text->SetText("");
+    user_name_text->SetBackgroundAlpha(30);
+    user_name_text->SetBackgroundColor(Color3(155,155,155));
 
     //setup frames
     character_background_frame->AddChild(change_direction_left_button);
     character_background_frame->AddChild(change_direction_right_button);
     character_background_frame->SetBackgroundColor(Color3(55,55,55));
+    character_background_frame->SetBackgroundAlpha(66);
 
     hair_color_frame->AddChild(hair_color_label);
     hair_color_frame->AddChild(color_brown_button);
@@ -510,6 +569,7 @@ GuiScreen * SreenMakerCharacterCreation::MakeScreen()
     hair_color_frame->AddChild(color_pink_button);
     hair_color_frame->SetBackgroundColor(Color3(55,55,55));
 
+    parent_frame->AddChild(background);
     parent_frame->AddChild(character_background_frame);
     parent_frame->SetGuiId("char_frame",character_background_frame);
     parent_frame->AddChild(hair_color_frame);
