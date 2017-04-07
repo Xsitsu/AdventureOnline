@@ -15,7 +15,7 @@ GameStateCharacterCreation::~GameStateCharacterCreation()
 
 void GameStateCharacterCreation::Enter()
 {
-    std::cout << "test 'cuz I have no clue what to do" << std::endl;
+
 }
 void GameStateCharacterCreation::Exit()
 {
@@ -23,7 +23,6 @@ void GameStateCharacterCreation::Exit()
 }
 void GameStateCharacterCreation::Tick()
 {
-    std::cout << "tick" << std::endl;
     Character * pc = game->current_character;
     pc->Update();
     if(!pc->IsMoving())
