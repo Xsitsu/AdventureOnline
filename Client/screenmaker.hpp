@@ -84,6 +84,6 @@ class SreenMakerCharacterCreation: public AbstractScreenMaker
 public:
     SreenMakerCharacterCreation(Game * game) : AbstractScreenMaker(game) {}
     virtual ~SreenMakerCharacterCreation() {}
-    virtual GuiScreen * MakeScreen();
+    virtual GuiScreen* MakeScreen();
 };
 #endif // SCREENMAKER_HPP_INCLUDE

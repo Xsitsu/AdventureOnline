@@ -99,7 +99,7 @@ namespace CharacterViewScreenListeners
 
         virtual void HandleEvent()
         {
-            //this->game->PopScreen();
+            this->game->PopScreen();
 
             SreenMakerCharacterCreation maker(this->game);
             GuiScreen* screen = maker.MakeScreen();

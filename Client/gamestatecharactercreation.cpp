@@ -15,7 +15,7 @@ GameStateCharacterCreation::~GameStateCharacterCreation()
 
 void GameStateCharacterCreation::Enter()
 {
-
+    std::cout << "test 'cuz I have no clue what to do" << std::endl;
 }
 void GameStateCharacterCreation::Exit()
 {
@@ -23,6 +23,7 @@ void GameStateCharacterCreation::Exit()
 }
 void GameStateCharacterCreation::Tick()
 {
+    std::cout << "tick" << std::endl;
     Character * pc = game->current_character;
     pc->Update();
     if(!pc->IsMoving())
@@ -32,13 +33,15 @@ void GameStateCharacterCreation::Tick()
 }
 void GameStateCharacterCreation::Render()
 {
-    game->DrawScreens();
-
-    ActorDrawer actordraw;
-    GuiFrame * parent = static_cast<GuiFrame*>(game->GetCurrentScreen()->GetGuiById("parent_frame"));
-    GuiFrame * charframe = static_cast<GuiFrame*>(parent->GetGuiById("char_frame"));
-    Vector2 draw_middle = charframe->GetAbsolutePosition() + charframe->GetSize()/2;
-    actordraw.DrawActor(game->GetCurrentCharacter(), draw_middle);
+    this->game->DrawScreens();
+    if(this->game->GetCurrentCharacter())
+    {
+        ActorDrawer actordraw;
+        GuiFrame * parent = static_cast<GuiFrame*>(game->GetCurrentScreen()->GetGuiById("parent_frame"));
+        GuiFrame * charframe = static_cast<GuiFrame*>(parent->GetGuiById("char_frame"));
+        Vector2 draw_middle = charframe->GetAbsolutePosition() + charframe->GetSize()/2;
+        actordraw.DrawActor(this->game->GetCurrentCharacter(), draw_middle);
+    }
 }
 
 void GameStateCharacterCreation::HandleKeyDown(const ALLEGRO_KEYBOARD_EVENT& keyboard)

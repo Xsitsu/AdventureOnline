@@ -10,7 +10,7 @@ static const int LEFT_ALIGN = 640/5;
 static const int BUTTON_ALIGN = 640*0.57;
 namespace CharacterCreationListeners
 {
-    class DirectionLeftEvent :public GameEventBase
+    class DirectionLeftEvent : public GameEventBase
     {
     public:
         DirectionLeftEvent(Game * game): GameEventBase(game) {}
@@ -18,7 +18,9 @@ namespace CharacterCreationListeners
         virtual void HandleEvent()
         {
             //change direction clockwise
-            std::cout << "clockwise" << std::endl;
+            Character * display_toon =this->game->GetCurrentCharacter();
+            display_toon->SetDirection( static_cast<Actor::Direction>((display_toon->GetDirection()+1)%4));
+            display_toon->Update();
         }
     };
     class DirectionLeftListener: public ListenerBase<GuiButtonArgs*>
@@ -27,11 +29,11 @@ namespace CharacterCreationListeners
         Game * game;
 
     public:
-        DirectionLeftListener(Game * game) {}
+        DirectionLeftListener(Game * game): game(game) {}
 
         virtual void Notify(GuiButtonArgs*& args) const
         {
-            game->RegisterEventToQueue(new DirectionLeftEvent(game));
+            this->game->RegisterEventToQueue(new DirectionLeftEvent(this->game));
         }
     };
 
@@ -52,11 +54,10 @@ namespace CharacterCreationListeners
         Game * game;
 
     public:
-        DirectionRightListener(Game * game) {}
-
+        DirectionRightListener(Game * game): game(game) {}
         virtual void Notify(GuiButtonArgs*& args) const
         {
-            game->RegisterEventToQueue(new DirectionRightEvent(game));
+            this->game->RegisterEventToQueue(new DirectionRightEvent(this->game));
         }
     };
 
@@ -77,11 +78,11 @@ namespace CharacterCreationListeners
         Game * game;
 
     public:
-        CreatetListener(Game * game) {}
+        CreatetListener(Game * game): game(game) {}
 
         virtual void Notify(GuiButtonArgs*& args) const
         {
-            game->RegisterEventToQueue(new CreateEvent(game));
+            this->game->RegisterEventToQueue(new CreateEvent(this->game));
         }
     };
 
@@ -92,9 +93,8 @@ namespace CharacterCreationListeners
 
         virtual void HandleEvent()
         {
-            std::cout << "cancel" << std::endl;
-            game->PopScreen();
-            game->ChangeState(new GameStateCharacterView(game));
+            this->game->PopScreen();
+            this->game->ChangeState(new GameStateCharacterView(this->game));
             //to do
         }
     };
@@ -104,11 +104,11 @@ namespace CharacterCreationListeners
         Game * game;
 
     public:
-        CancelListener(Game * game) {}
+        CancelListener(Game * game): game(game) {}
 
         virtual void Notify(GuiButtonArgs*& args) const
         {
-            game->RegisterEventToQueue(new CancelEvent(game));
+            this->game->RegisterEventToQueue(new CancelEvent(this->game));
         }
     };
 
@@ -129,11 +129,11 @@ namespace CharacterCreationListeners
         Game * game;
 
     public:
-        FemaleListener(Game * game) {}
+        FemaleListener(Game * game): game(game) {}
 
         virtual void Notify(GuiButtonArgs*& args) const
         {
-            game->RegisterEventToQueue(new FemaleEvent(game));
+            this->game->RegisterEventToQueue(new FemaleEvent(this->game));
         }
     };
 
@@ -154,11 +154,11 @@ namespace CharacterCreationListeners
         Game * game;
 
     public:
-        MaleListener(Game * game) {}
+        MaleListener(Game * game): game(game) {}
 
         virtual void Notify(GuiButtonArgs*& args) const
         {
-            game->RegisterEventToQueue(new MaleEvent(game));
+            this->game->RegisterEventToQueue(new MaleEvent(this->game));
         }
     };
 
@@ -179,11 +179,11 @@ namespace CharacterCreationListeners
         Game * game;
 
     public:
-        SkinLeftListener(Game * game) {}
+        SkinLeftListener(Game * game): game(game) {}
 
         virtual void Notify(GuiButtonArgs*& args) const
         {
-            game->RegisterEventToQueue(new SkinLeftEvent(game));
+            this->game->RegisterEventToQueue(new SkinLeftEvent(this->game));
         }
     };
 
@@ -204,11 +204,11 @@ namespace CharacterCreationListeners
         Game * game;
 
     public:
-        SkinRightListener(Game * game) {}
+        SkinRightListener(Game * game): game(game) {}
 
         virtual void Notify(GuiButtonArgs*& args) const
         {
-            game->RegisterEventToQueue(new SkinRightEvent(game));
+            this->game->RegisterEventToQueue(new SkinRightEvent(this->game));
         }
     };
 
@@ -229,11 +229,11 @@ namespace CharacterCreationListeners
         Game * game;
 
     public:
-        HairLeftListener(Game * game) {}
+        HairLeftListener(Game * game): game(game) {}
 
         virtual void Notify(GuiButtonArgs*& args) const
         {
-            game->RegisterEventToQueue(new HairLeftEvent(game));
+            this->game->RegisterEventToQueue(new HairLeftEvent(this->game));
         }
     };
 
@@ -254,11 +254,11 @@ namespace CharacterCreationListeners
         Game * game;
 
     public:
-        HairRightListener(Game * game) {}
+        HairRightListener(Game * game): game(game) {}
 
         virtual void Notify(GuiButtonArgs*& args) const
         {
-            game->RegisterEventToQueue(new HairRightEvent(game));
+            this->game->RegisterEventToQueue(new HairRightEvent(this->game));
         }
     };
 
@@ -282,19 +282,19 @@ namespace CharacterCreationListeners
         std::string color;
 
     public:
-        ColorListener(Game * game, std::string color) {}
+        ColorListener(Game * game, std::string color): game(game), color(color) {}
 
         virtual void Notify(GuiButtonArgs*& args) const
         {
-            game->RegisterEventToQueue(new ColorEvent(game, color));
+            this->game->RegisterEventToQueue(new ColorEvent(this->game, color));
         }
     };
 }
 
 GuiScreen * SreenMakerCharacterCreation::MakeScreen()
 {
-    game->LoginAsCharacter(new Character());
-    game->GetCurrentCharacter()->SetDirection(Character::DIR_RIGHT);
+    this->game->LoginAsCharacter(new Character());
+    this->game->GetCurrentCharacter()->SetDirection(Character::DIR_RIGHT);
     ALLEGRO_FONT * button_font = nullptr;
 
     GuiScreen * screen = nullptr;
@@ -365,26 +365,26 @@ GuiScreen * SreenMakerCharacterCreation::MakeScreen()
     //listeners
 //    mouse_enter_listener = nullptr;
 //    mouse_leave_listener = nullptr;
-    change_direction_left = new CharacterCreationListeners::DirectionLeftListener(game);
-    change_direction_right = new CharacterCreationListeners::DirectionRightListener(game);;
-    create_listener = new CharacterCreationListeners::CreatetListener(game);
-    cancel_listener = new CharacterCreationListeners::CancelListener(game);;
-    female_listener = new CharacterCreationListeners::FemaleListener(game);;
-    male_listener = new CharacterCreationListeners::MaleListener(game);;
-    skin_left_listener = new CharacterCreationListeners::SkinLeftListener(game);;
-    skin_right_listener = new CharacterCreationListeners::SkinRightListener(game);;
-    hair_left_listener = new CharacterCreationListeners::HairLeftListener(game);;
-    hair_right_listener = new CharacterCreationListeners::HairRightListener(game);;
-    color_brown_listener = new CharacterCreationListeners::ColorListener(game, "brown");
-    color_black_listener = new CharacterCreationListeners::ColorListener(game, "black");
-    color_white_listener = new CharacterCreationListeners::ColorListener(game, "white");
-    color_purple_listener = new CharacterCreationListeners::ColorListener(game, "purple");
-    color_light_blue_listener = new CharacterCreationListeners::ColorListener(game, "light blue");
-    color_red_listener = new CharacterCreationListeners::ColorListener(game, "red");
-    color_green_listener = new CharacterCreationListeners::ColorListener(game, "green");
-    color_dark_blue_listener = new CharacterCreationListeners::ColorListener(game, "dark blue");
-    color_yellow_listener = new CharacterCreationListeners::ColorListener(game, "yellow");
-    color_pink_listener = new CharacterCreationListeners::ColorListener(game, "pink");
+    change_direction_left = new CharacterCreationListeners::DirectionLeftListener(this->game);
+    change_direction_right = new CharacterCreationListeners::DirectionRightListener(this->game);;
+    create_listener = new CharacterCreationListeners::CreatetListener(this->game);
+    cancel_listener = new CharacterCreationListeners::CancelListener(this->game);;
+    female_listener = new CharacterCreationListeners::FemaleListener(this->game);;
+    male_listener = new CharacterCreationListeners::MaleListener(this->game);;
+    skin_left_listener = new CharacterCreationListeners::SkinLeftListener(this->game);;
+    skin_right_listener = new CharacterCreationListeners::SkinRightListener(this->game);;
+    hair_left_listener = new CharacterCreationListeners::HairLeftListener(this->game);;
+    hair_right_listener = new CharacterCreationListeners::HairRightListener(this->game);;
+    color_brown_listener = new CharacterCreationListeners::ColorListener(this->game, "brown");
+    color_black_listener = new CharacterCreationListeners::ColorListener(this->game, "black");
+    color_white_listener = new CharacterCreationListeners::ColorListener(this->game, "white");
+    color_purple_listener = new CharacterCreationListeners::ColorListener(this->game, "purple");
+    color_light_blue_listener = new CharacterCreationListeners::ColorListener(this->game, "light blue");
+    color_red_listener = new CharacterCreationListeners::ColorListener(this->game, "red");
+    color_green_listener = new CharacterCreationListeners::ColorListener(this->game, "green");
+    color_dark_blue_listener = new CharacterCreationListeners::ColorListener(this->game, "dark blue");
+    color_yellow_listener = new CharacterCreationListeners::ColorListener(this->game, "yellow");
+    color_pink_listener = new CharacterCreationListeners::ColorListener(this->game, "pink");
 
     //frame
     parent_frame = new GuiFrame(Vector2(640 ,480 ), Vector2(0, 0));
@@ -468,18 +468,18 @@ GuiScreen * SreenMakerCharacterCreation::MakeScreen()
 
     //setup buttons
     create_button->SetText("Create");
-    create_button->RegisterOnClick(create_listener);
     create_button->SetTextColor(Color3(255,255,255));
     create_button->SetTextFont(button_font);
     create_button->SetBackgroundColor(Color3(55,55,55));
     create_button->SetTextAlign(GuiTextButton::ALIGN_CENTER);
+    create_button->RegisterOnClick(create_listener);
 
     cancel_button->SetText("Cancel");
-    cancel_button->RegisterOnClick(cancel_listener);
     cancel_button->SetTextColor(Color3(255,255,255));
     cancel_button->SetTextFont(button_font);
     cancel_button->SetBackgroundColor(Color3(55,55,55));
     cancel_button->SetTextAlign(GuiTextButton::ALIGN_CENTER);
+    cancel_button->RegisterOnClick(cancel_listener);
 
     change_direction_left_button->SetBackgroundColor(Color3(0,0,255*0.618));
     change_direction_left_button->RegisterOnClick(change_direction_left);
@@ -551,10 +551,13 @@ GuiScreen * SreenMakerCharacterCreation::MakeScreen()
     user_name_text->SetBackgroundColor(Color3(155,155,155));
 
     //setup frames
-    character_background_frame->AddChild(change_direction_left_button);
-    character_background_frame->AddChild(change_direction_right_button);
+    parent_frame->SetBackgroundColor(Color3(255,255,255));
     character_background_frame->SetBackgroundColor(Color3(55,55,55));
     character_background_frame->SetBackgroundAlpha(66);
+    hair_color_frame->SetBackgroundColor(Color3(55,55,55));
+
+    character_background_frame->AddChild(change_direction_left_button);
+    character_background_frame->AddChild(change_direction_right_button);
 
     hair_color_frame->AddChild(hair_color_label);
     hair_color_frame->AddChild(color_brown_button);
@@ -567,21 +570,16 @@ GuiScreen * SreenMakerCharacterCreation::MakeScreen()
     hair_color_frame->AddChild(color_dark_blue_button);
     hair_color_frame->AddChild(color_yellow_button);
     hair_color_frame->AddChild(color_pink_button);
-    hair_color_frame->SetBackgroundColor(Color3(55,55,55));
 
     parent_frame->AddChild(background);
     parent_frame->AddChild(character_background_frame);
-    parent_frame->SetGuiId("char_frame",character_background_frame);
     parent_frame->AddChild(hair_color_frame);
     parent_frame->AddChild(user_name_label);
-    parent_frame->AddChild(user_name_text);
     parent_frame->AddChild(gender_label);
     parent_frame->AddChild(skin_label);
     parent_frame->AddChild(skin_name_label);
     parent_frame->AddChild(hair_label);
     parent_frame->AddChild(hair_name_label);
-    parent_frame->AddChild(create_button);
-    parent_frame->AddChild(cancel_button);
     parent_frame->AddChild(change_direction_left_button);
     parent_frame->AddChild(change_direction_right_button);
     parent_frame->AddChild(female_button);
@@ -590,11 +588,14 @@ GuiScreen * SreenMakerCharacterCreation::MakeScreen()
     parent_frame->AddChild(skin_right_button);
     parent_frame->AddChild(hair_left_button);
     parent_frame->AddChild(hair_right_button);
-    parent_frame->SetBackgroundColor(Color3(255,255,255));
+    parent_frame->AddChild(user_name_text);
+    parent_frame->AddChild(cancel_button);
+    parent_frame->AddChild(create_button);
+
+    parent_frame->SetGuiId("char_frame",character_background_frame);
 
     //setup screen
     screen = new GuiScreen(parent_frame);
-    screen->SetGuiId("parent_frame", parent_frame);
     screen->RegisterListener(change_direction_left);
     screen->RegisterListener(change_direction_right);
     screen->RegisterListener(create_listener);
@@ -616,6 +617,7 @@ GuiScreen * SreenMakerCharacterCreation::MakeScreen()
     screen->RegisterListener(color_yellow_listener);
     screen->RegisterListener(color_pink_listener);
 
+    screen->SetGuiId("parent_frame", parent_frame);
 
     return screen;
 }

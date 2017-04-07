@@ -88,11 +88,12 @@ int main(int argc, char** argv)
 
     std::string basepath;
     //basepath = "B:/AdventureOnline/AO-Resource/image/";
-    basepath = "C:/Users/Jacob/Documents/GitHub/AO-Resource/image/";
+    basepath = "B:/AdventureOnline/AO-Resource/image/";
 
-    CreateResourceFile(0, basepath + "background/", ".png", 1);
+    CreateResourceFile(0, basepath + "background/", ".png", 2);
     CreateResourceFile(1, basepath + "tile/", ".png", 13);
     CreateResourceFile(2, basepath + "character/", ".png", 3);
+    CreateResourceFile(3, basepath + "guielement/", ".png", 4);
 
     return 0;
 }
