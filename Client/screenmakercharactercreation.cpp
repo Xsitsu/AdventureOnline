@@ -19,7 +19,7 @@ namespace CharacterCreationListeners
         {
             //change direction clockwise
             Character * display_toon =this->game->GetCurrentCharacter();
-            display_toon->SetDirection( static_cast<Actor::Direction>((display_toon->GetDirection()+1)%4));
+            display_toon->SetDirection( static_cast<Actor::Direction>((display_toon->GetDirection()-1)%4));
             display_toon->Update();
         }
     };
@@ -44,8 +44,9 @@ namespace CharacterCreationListeners
 
         virtual void HandleEvent()
         {
-            std::cout << "counter clockwise" << std::endl;
-            //change direction counterclockwise
+            Character * display_toon =this->game->GetCurrentCharacter();
+            display_toon->SetDirection( static_cast<Actor::Direction>((display_toon->GetDirection()+1)%4));
+            display_toon->Update();
         }
     };
     class DirectionRightListener: public ListenerBase<GuiButtonArgs*>
@@ -68,7 +69,6 @@ namespace CharacterCreationListeners
 
         virtual void HandleEvent()
         {
-            std::cout << "create" << std::endl;
             //to do
         }
     };
@@ -119,7 +119,6 @@ namespace CharacterCreationListeners
 
         virtual void HandleEvent()
         {
-            std::cout << "female" << std::endl;
             //to do
         }
     };
@@ -144,7 +143,6 @@ namespace CharacterCreationListeners
 
         virtual void HandleEvent()
         {
-            std::cout << "male" << std::endl;
             //to do
         }
     };
@@ -169,7 +167,6 @@ namespace CharacterCreationListeners
 
         virtual void HandleEvent()
         {
-            std::cout << "skin left change" << std::endl;
             //to do
         }
     };
@@ -194,7 +191,6 @@ namespace CharacterCreationListeners
 
         virtual void HandleEvent()
         {
-            std::cout << "skin right event" << std::endl;
             //to do
         }
     };
@@ -219,7 +215,6 @@ namespace CharacterCreationListeners
 
         virtual void HandleEvent()
         {
-            std::cout << "hair left event" << std::endl;
             //to do
         }
     };
@@ -244,7 +239,6 @@ namespace CharacterCreationListeners
 
         virtual void HandleEvent()
         {
-            std::cout << "hair right event" << std::endl;
             //to do
         }
     };
@@ -271,7 +265,6 @@ namespace CharacterCreationListeners
 
         virtual void HandleEvent()
         {
-            std::cout << "color event: " << color <<  std::endl;
             //to do
         }
     };
@@ -340,14 +333,14 @@ GuiScreen * SreenMakerCharacterCreation::MakeScreen()
 
     GuiTextButton * create_button = nullptr;
     GuiTextButton * cancel_button = nullptr;
-    GuiImageButton * change_direction_left_button = nullptr;
-    GuiImageButton * change_direction_right_button = nullptr;
-    GuiImageButton * female_button = nullptr;
-    GuiImageButton * male_button = nullptr;
-    GuiImageButton * skin_left_button = nullptr;
-    GuiImageButton * skin_right_button = nullptr;
-    GuiImageButton * hair_left_button = nullptr;
-    GuiImageButton * hair_right_button = nullptr;
+    GuiTextButton * change_direction_left_button = nullptr;
+    GuiTextButton * change_direction_right_button = nullptr;
+    GuiTextButton * female_button = nullptr;
+    GuiTextButton * male_button = nullptr;
+    GuiTextButton * skin_left_button = nullptr;
+    GuiTextButton * skin_right_button = nullptr;
+    GuiTextButton * hair_left_button = nullptr;
+    GuiTextButton * hair_right_button = nullptr;
     GuiButton * color_brown_button = nullptr;
     GuiButton * color_black_button = nullptr;
     GuiButton * color_white_button = nullptr;
@@ -389,80 +382,80 @@ GuiScreen * SreenMakerCharacterCreation::MakeScreen()
     //frame
     parent_frame = new GuiFrame(Vector2(640 ,480 ), Vector2(0, 0));
     character_background_frame = new GuiFrame(Vector2(BASE_WIDTH*1.68*1.68, BASE_WIDTH *4), Vector2(LEFT_ALIGN, UPPER_ALIGN));
-    hair_color_frame = new GuiFrame(Vector2(640 * (0.35) , BASE_WIDTH*4), Vector2(LEFT_ALIGN +BASE_WIDTH*4, UPPER_ALIGN+button_font->height*4));
-
+    hair_color_frame = new GuiFrame(Vector2(640 * (0.35) , BASE_WIDTH*4), Vector2(LEFT_ALIGN +BASE_WIDTH*4, UPPER_ALIGN+25*4));
+    std::cout << 25 << std::endl;
     //labels
     background = new GuiImageLabel(parent_frame->GetSize());
     background->SetImage(BitmapService::Instance()->GetBitmap("background_1"));
 
-    user_name_label = new GuiTextLabel(Vector2(640*0.2, button_font->height), Vector2(LEFT_ALIGN +BASE_WIDTH*4, UPPER_ALIGN));
+    user_name_label = new GuiTextLabel(Vector2(640*0.2, 25), Vector2(LEFT_ALIGN +BASE_WIDTH*4, UPPER_ALIGN));
     user_name_label->SetText("Username:");
     user_name_label->SetTextFont(button_font);
     user_name_label->SetTextColor(Color3(250,250,250));
     user_name_label->SetBackgroundAlpha(0);
 
-    gender_label = new GuiTextLabel(Vector2(640*0.2, button_font->height), Vector2(LEFT_ALIGN +BASE_WIDTH*4, UPPER_ALIGN+button_font->height));
+    gender_label = new GuiTextLabel(Vector2(640*0.2, 25), Vector2(LEFT_ALIGN +BASE_WIDTH*4, UPPER_ALIGN+25));
     gender_label->SetText("Gender:");
     gender_label->SetTextFont(button_font);
     gender_label->SetTextColor(Color3(250,250,250));
     gender_label->SetBackgroundAlpha(0);
 
-    skin_label = new GuiTextLabel(Vector2(640*0.2, button_font->height), Vector2(LEFT_ALIGN +BASE_WIDTH*4, UPPER_ALIGN+button_font->height*2));
+    skin_label = new GuiTextLabel(Vector2(640*0.2, 25), Vector2(LEFT_ALIGN +BASE_WIDTH*4, UPPER_ALIGN+25*2));
     skin_label->SetText("Skin:");
     skin_label->SetTextFont(button_font);
     skin_label->SetTextColor(Color3(250,250,250));
     skin_label->SetBackgroundAlpha(0);
 
-    skin_name_label = new GuiTextLabel(Vector2(640*0.2, button_font->height), Vector2(BUTTON_ALIGN+button_font->height, UPPER_ALIGN+button_font->height*2));
+    skin_name_label = new GuiTextLabel(Vector2(640*0.2, 25), Vector2(BUTTON_ALIGN+25, UPPER_ALIGN+25*2));
     skin_name_label->SetText("Skin type");
     skin_name_label->SetTextFont(button_font);
     skin_name_label->SetTextColor(Color3(250,250,250));
     skin_name_label->SetBackgroundAlpha(66);
     skin_name_label->SetTextAlign(GuiTextButton::ALIGN_CENTER);
 
-    hair_label = new GuiTextLabel(Vector2(640*0.2, button_font->height), Vector2(LEFT_ALIGN +BASE_WIDTH*4, UPPER_ALIGN+button_font->height*3));
+    hair_label = new GuiTextLabel(Vector2(640*0.2, 25), Vector2(LEFT_ALIGN +BASE_WIDTH*4, UPPER_ALIGN+25*3));
     hair_label->SetText("Hair:");
     hair_label->SetTextFont(button_font);
     hair_label->SetTextColor(Color3(250,250,250));
     hair_label->SetBackgroundAlpha(0);
 
-    hair_name_label = new GuiTextLabel(Vector2(640*0.2, button_font->height), Vector2(BUTTON_ALIGN+button_font->height, UPPER_ALIGN+button_font->height*3));
+    hair_name_label = new GuiTextLabel(Vector2(640*0.2, 25), Vector2(BUTTON_ALIGN+25, UPPER_ALIGN+25*3));
     hair_name_label->SetText("Hair Type");
     hair_name_label->SetTextFont(button_font);
     hair_name_label->SetTextColor(Color3(250,250,250));
     hair_name_label->SetBackgroundAlpha(66);
     hair_name_label->SetTextAlign(GuiTextButton::ALIGN_CENTER);
 
-    hair_color_label = new GuiTextLabel(Vector2(640*0.2, button_font->height), Vector2(0, 0));
+    hair_color_label = new GuiTextLabel(Vector2(640*0.2, 25), Vector2(0, 0));
     hair_color_label->SetText("Hair Color:");
     hair_color_label->SetTextFont(button_font);
     hair_color_label->SetTextColor(Color3(250,250,250));
     hair_color_label->SetBackgroundAlpha(0);
 
     //buttons
-    create_button = new GuiTextButton(Vector2(BASE_WIDTH*1.68*1.68, button_font->height), Vector2(LEFT_ALIGN, (UPPER_ALIGN + BASE_WIDTH *5)));
-    cancel_button = new GuiTextButton(Vector2(BASE_WIDTH*1.68*1.68, button_font->height), Vector2(LEFT_ALIGN, (UPPER_ALIGN + BASE_WIDTH *5)+button_font->height*1.6));
-    change_direction_left_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(LEFT_ALIGN, UPPER_ALIGN + BASE_WIDTH *4 - button_font->height));
-    change_direction_right_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(LEFT_ALIGN+BASE_WIDTH *1.68*1.68 - button_font->height, UPPER_ALIGN + BASE_WIDTH *4 - button_font->height));
-    female_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(BUTTON_ALIGN, UPPER_ALIGN+button_font->height));
-    male_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(BUTTON_ALIGN+button_font->height*6, UPPER_ALIGN+button_font->height));
-    skin_left_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(BUTTON_ALIGN, UPPER_ALIGN+button_font->height*2));
-    skin_right_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(BUTTON_ALIGN+button_font->height*6, UPPER_ALIGN+button_font->height*2));
-    hair_left_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(BUTTON_ALIGN, UPPER_ALIGN+button_font->height*3));
-    hair_right_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(BUTTON_ALIGN+button_font->height*6, UPPER_ALIGN+button_font->height*3));
-    color_brown_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(button_font->height*.618, button_font->height * 1.6));
-    color_black_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(button_font->height*.618 +button_font->height* 1.6, button_font->height * 1.6));
-    color_white_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(button_font->height*.618 +button_font->height*2* 1.6, button_font->height * 1.6));
-    color_purple_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(button_font->height*.618 +button_font->height*3* 1.6, button_font->height * 1.6));
-    color_light_blue_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(button_font->height*.618 +button_font->height*4* 1.6, button_font->height * 1.6));
-    color_red_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(button_font->height*.618 , button_font->height *2 * 1.6));
-    color_green_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(button_font->height*.618 +button_font->height* 1.6, button_font->height*2 * 1.6));
-    color_dark_blue_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(button_font->height*.618 +button_font->height*2* 1.6, button_font->height*2 * 1.6));
-    color_yellow_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(button_font->height*.618 +button_font->height*3* 1.6, button_font->height*2 * 1.6));
-    color_pink_button = new GuiImageButton(Vector2(button_font->height, button_font->height), Vector2(button_font->height*.618 +button_font->height*4* 1.6,button_font->height*2 * 1.6));
+    create_button = new GuiTextButton(Vector2(BASE_WIDTH*1.68*1.68, 25), Vector2(LEFT_ALIGN, (UPPER_ALIGN + BASE_WIDTH *5)));
+    cancel_button = new GuiTextButton(Vector2(BASE_WIDTH*1.68*1.68, 25), Vector2(LEFT_ALIGN, (UPPER_ALIGN + BASE_WIDTH *5)+25*1.6));
+    change_direction_left_button = new GuiTextButton(Vector2(25, 25), Vector2(0, 0 + BASE_WIDTH *4 - 25));
+    change_direction_right_button = new GuiTextButton(Vector2(25, 25), Vector2(0+BASE_WIDTH *1.68*1.68 - 25, 0 + BASE_WIDTH *4 - 25));
+    female_button = new GuiTextButton(Vector2(25, 25), Vector2(BUTTON_ALIGN, UPPER_ALIGN+25));
+    male_button = new GuiTextButton(Vector2(25, 25), Vector2(BUTTON_ALIGN+25*6, UPPER_ALIGN+25));
+    skin_left_button = new GuiTextButton(Vector2(25, 25), Vector2(BUTTON_ALIGN, UPPER_ALIGN+25*2));
+    skin_right_button = new GuiTextButton(Vector2(25, 25), Vector2(BUTTON_ALIGN+25*6, UPPER_ALIGN+25*2));
+    hair_left_button = new GuiTextButton(Vector2(25, 25), Vector2(BUTTON_ALIGN, UPPER_ALIGN+25*3));
+    hair_right_button = new GuiTextButton(Vector2(25, 25), Vector2(BUTTON_ALIGN+25*6, UPPER_ALIGN+25*3));
+    color_brown_button = new GuiTextButton(Vector2(25, 25), Vector2(25*.618, 25 * 1.6));
+    color_black_button = new GuiTextButton(Vector2(25, 25), Vector2(25*.618 +25* 1.6, 25 * 1.6));
+    color_white_button = new GuiTextButton(Vector2(25, 25), Vector2(25*.618 +25*2* 1.6, 25 * 1.6));
+    color_purple_button = new GuiTextButton(Vector2(25, 25), Vector2(25*.618 +25*3* 1.6, 25 * 1.6));
+    color_light_blue_button = new GuiTextButton(Vector2(25, 25), Vector2(25*.618 +25*4* 1.6, 25 * 1.6));
+    color_red_button = new GuiTextButton(Vector2(25, 25), Vector2(25*.618 , 25 *2 * 1.6));
+    color_green_button = new GuiTextButton(Vector2(25, 25), Vector2(25*.618 +25* 1.6, 25*2 * 1.6));
+    color_dark_blue_button = new GuiTextButton(Vector2(25, 25), Vector2(25*.618 +25*2* 1.6, 25*2 * 1.6));
+    color_yellow_button = new GuiTextButton(Vector2(25, 25), Vector2(25*.618 +25*3* 1.6, 25*2 * 1.6));
+    color_pink_button = new GuiTextButton(Vector2(25, 25), Vector2(25*.618 +25*4* 1.6,25*2 * 1.6));
 
     //text boxes
-    user_name_text = new GuiTextBox(Vector2(button_font->height*7, button_font->height), Vector2(BUTTON_ALIGN, UPPER_ALIGN));
+    user_name_text = new GuiTextBox(Vector2(25*7, 25), Vector2(BUTTON_ALIGN, UPPER_ALIGN));
 
 
 
@@ -483,7 +476,7 @@ GuiScreen * SreenMakerCharacterCreation::MakeScreen()
 
     change_direction_left_button->SetBackgroundColor(Color3(0,0,255*0.618));
     change_direction_left_button->RegisterOnClick(change_direction_left);
-    //change_direction_right_button->SetImage(BitmapService::Instance()->GetBitmap("guielement_2"));
+    //change_direction_left_button->SetImage(BitmapService::Instance()->GetBitmap("guielement_2"));
 
     change_direction_right_button->SetBackgroundColor(Color3(0,0,255*0.618));
     change_direction_right_button->RegisterOnClick(change_direction_right);
@@ -546,7 +539,7 @@ GuiScreen * SreenMakerCharacterCreation::MakeScreen()
     //setup text boxes
     user_name_text->SetTextFont(button_font);
     user_name_text->SetTextColor(Color3(50,50,50));
-    user_name_text->SetText("");
+    user_name_text->SetText("bob");
     user_name_text->SetBackgroundAlpha(30);
     user_name_text->SetBackgroundColor(Color3(155,155,155));
 
@@ -580,8 +573,8 @@ GuiScreen * SreenMakerCharacterCreation::MakeScreen()
     parent_frame->AddChild(skin_name_label);
     parent_frame->AddChild(hair_label);
     parent_frame->AddChild(hair_name_label);
-    parent_frame->AddChild(change_direction_left_button);
-    parent_frame->AddChild(change_direction_right_button);
+//    parent_frame->AddChild(change_direction_left_button);
+//    parent_frame->AddChild(change_direction_right_button);
     parent_frame->AddChild(female_button);
     parent_frame->AddChild(male_button);
     parent_frame->AddChild(skin_left_button);

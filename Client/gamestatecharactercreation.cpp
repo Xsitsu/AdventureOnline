@@ -1,35 +1,43 @@
 #include "gamestatecharactercreation.hpp"
 #include "actordrawer.hpp"
-
-GameStateCharacterCreation::GameStateCharacterCreation(Game * game): GameStateBase(game)
+GameStateCharacterCreation::GameStateCharacterCreation(Game* game) : GameStateBase(game)
 {
-    //ctor
+
 }
 
 GameStateCharacterCreation::~GameStateCharacterCreation()
 {
-    //dtor
+
 }
 
+void GameStateCharacterCreation::HandlePacket(PacketBase* packet)
+{
 
+}
 
 void GameStateCharacterCreation::Enter()
 {
 
 }
+
 void GameStateCharacterCreation::Exit()
 {
 
 }
+
 void GameStateCharacterCreation::Tick()
 {
     Character * pc = game->current_character;
-    pc->Update();
-    if(!pc->IsMoving())
+    if(pc)
     {
-        pc->ChangeState(new ActorStateWalk(pc));
+        pc->Update();
+        if(!pc->IsMoving())
+        {
+            pc->ChangeState(new ActorStateWalk(pc));
+        }
     }
 }
+
 void GameStateCharacterCreation::Render()
 {
     this->game->DrawScreens();
@@ -47,27 +55,26 @@ void GameStateCharacterCreation::HandleKeyDown(const ALLEGRO_KEYBOARD_EVENT& key
 {
 
 }
+
 void GameStateCharacterCreation::HandleKeyUp(const ALLEGRO_KEYBOARD_EVENT& keyboard)
 {
 
 }
+
 void GameStateCharacterCreation::HandleMouseMove(const ALLEGRO_MOUSE_EVENT& mouse)
 {
     Vector2 pos(mouse.x, mouse.y);
     this->game->GetCurrentScreen()->HandleMouseMove(pos);
 }
+
 void GameStateCharacterCreation::HandleMouseDown(const ALLEGRO_MOUSE_EVENT& mouse)
 {
     Vector2 pos(mouse.x, mouse.y);
-    this->game->GetCurrentScreen()->HandleMouseMove(pos);
+    this->game->GetCurrentScreen()->HandleMouseDown(pos);
 }
+
 void GameStateCharacterCreation::HandleMouseUp(const ALLEGRO_MOUSE_EVENT& mouse)
 {
     Vector2 pos(mouse.x, mouse.y);
-    this->game->GetCurrentScreen()->HandleMouseMove(pos);
+    this->game->GetCurrentScreen()->HandleMouseUp(pos);
 }
-void GameStateCharacterCreation::HandlePacket(PacketBase * packet)
-{
-
-}
-
