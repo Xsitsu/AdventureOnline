@@ -67,6 +67,10 @@
 		<Unit filename="main.cpp" />
 		<Unit filename="server.cpp" />
 		<Unit filename="server.hpp" />
+		<Unit filename="sqlite3.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="sqlite3.h" />
 		<Unit filename="world.cpp" />
 		<Unit filename="world.hpp" />
 		<Extensions>

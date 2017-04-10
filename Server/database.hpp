@@ -1,25 +1,21 @@
 #ifndef DATABASE_HPP_INCLUDE
 #define DATABASE_HPP_INCLUDE
-
-#include <windows.h>
-#include <sql.h>
-#include <sqlext.h>
+#include <sqlite3.h>
 #include <vector>
 using std::vector;
 
 #include <exception>
 
-#include "account.hpp"
+#include "Server/account.hpp"
 
 class Database
 {
 protected:
     bool is_connected;
 
-    SQLHANDLE h_Environment;
-    SQLHANDLE h_DBC;
-    SQLHANDLE h_Statement;
-    SQLRETURN r_ReturnCode;
+    sqlite3 *db;
+    char *zErrMsg;
+    int rc;
 
 public:
     Database();
