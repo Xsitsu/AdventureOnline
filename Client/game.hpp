@@ -105,6 +105,7 @@ public:
     std::vector<Character*> GetCharacterList() const;
     void ClearCharacterList();
     Character * GetCurrentCharacter() { return current_character; }
+    void SetCurrentCharacter( Character * val ) { current_character = val; }
 };
 
 class GameEventBase

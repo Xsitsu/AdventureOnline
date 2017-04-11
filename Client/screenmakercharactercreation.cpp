@@ -19,7 +19,14 @@ namespace CharacterCreationListeners
         {
             //change direction clockwise
             Character * display_toon =this->game->GetCurrentCharacter();
-            display_toon->SetDirection( static_cast<Actor::Direction>((display_toon->GetDirection()-1)%4));
+                        if(display_toon->GetDirection() == Actor::DIR_UP)
+            {
+                display_toon->SetDirection(Actor::DIR_RIGHT);
+            }
+            else
+            {
+                display_toon->SetDirection( static_cast<Actor::Direction>((display_toon->GetDirection()-1)));
+            }
             display_toon->Update();
         }
     };
@@ -45,7 +52,14 @@ namespace CharacterCreationListeners
         virtual void HandleEvent()
         {
             Character * display_toon =this->game->GetCurrentCharacter();
-            display_toon->SetDirection( static_cast<Actor::Direction>((display_toon->GetDirection()+1)%4));
+            if(display_toon->GetDirection() == Actor::DIR_RIGHT)
+            {
+                display_toon->SetDirection(Actor::DIR_UP);
+            }
+            else
+            {
+                display_toon->SetDirection( static_cast<Actor::Direction>((display_toon->GetDirection()+1)));
+            }
             display_toon->Update();
         }
     };
@@ -93,7 +107,15 @@ namespace CharacterCreationListeners
 
         virtual void HandleEvent()
         {
+            Character * temp = this->game->GetCurrentCharacter();
+            this->game->SetCurrentCharacter(nullptr);
+            delete temp;
+
+            GuiScreen * newScreen = nullptr;
             this->game->PopScreen();
+            ScreenMakerCharacterView maker(game);
+            newScreen = maker.MakeScreen();
+            this->game->PushScreen(newScreen);
             this->game->ChangeState(new GameStateCharacterView(this->game));
             //to do
         }
@@ -286,8 +308,6 @@ namespace CharacterCreationListeners
 
 GuiScreen * SreenMakerCharacterCreation::MakeScreen()
 {
-    this->game->LoginAsCharacter(new Character());
-    this->game->GetCurrentCharacter()->SetDirection(Character::DIR_RIGHT);
     ALLEGRO_FONT * button_font = nullptr;
 
     GuiScreen * screen = nullptr;
@@ -333,14 +353,14 @@ GuiScreen * SreenMakerCharacterCreation::MakeScreen()
 
     GuiTextButton * create_button = nullptr;
     GuiTextButton * cancel_button = nullptr;
-    GuiTextButton * change_direction_left_button = nullptr;
-    GuiTextButton * change_direction_right_button = nullptr;
-    GuiTextButton * female_button = nullptr;
-    GuiTextButton * male_button = nullptr;
-    GuiTextButton * skin_left_button = nullptr;
-    GuiTextButton * skin_right_button = nullptr;
-    GuiTextButton * hair_left_button = nullptr;
-    GuiTextButton * hair_right_button = nullptr;
+    GuiImageButton * change_direction_left_button = nullptr;
+    GuiImageButton * change_direction_right_button = nullptr;
+    GuiImageButton * female_button = nullptr;
+    GuiImageButton * male_button = nullptr;
+    GuiImageButton * skin_left_button = nullptr;
+    GuiImageButton * skin_right_button = nullptr;
+    GuiImageButton * hair_left_button = nullptr;
+    GuiImageButton * hair_right_button = nullptr;
     GuiButton * color_brown_button = nullptr;
     GuiButton * color_black_button = nullptr;
     GuiButton * color_white_button = nullptr;
@@ -383,7 +403,7 @@ GuiScreen * SreenMakerCharacterCreation::MakeScreen()
     parent_frame = new GuiFrame(Vector2(640 ,480 ), Vector2(0, 0));
     character_background_frame = new GuiFrame(Vector2(BASE_WIDTH*1.68*1.68, BASE_WIDTH *4), Vector2(LEFT_ALIGN, UPPER_ALIGN));
     hair_color_frame = new GuiFrame(Vector2(640 * (0.35) , BASE_WIDTH*4), Vector2(LEFT_ALIGN +BASE_WIDTH*4, UPPER_ALIGN+25*4));
-    std::cout << 25 << std::endl;
+
     //labels
     background = new GuiImageLabel(parent_frame->GetSize());
     background->SetImage(BitmapService::Instance()->GetBitmap("background_1"));
@@ -435,14 +455,14 @@ GuiScreen * SreenMakerCharacterCreation::MakeScreen()
     //buttons
     create_button = new GuiTextButton(Vector2(BASE_WIDTH*1.68*1.68, 25), Vector2(LEFT_ALIGN, (UPPER_ALIGN + BASE_WIDTH *5)));
     cancel_button = new GuiTextButton(Vector2(BASE_WIDTH*1.68*1.68, 25), Vector2(LEFT_ALIGN, (UPPER_ALIGN + BASE_WIDTH *5)+25*1.6));
-    change_direction_left_button = new GuiTextButton(Vector2(25, 25), Vector2(0, 0 + BASE_WIDTH *4 - 25));
-    change_direction_right_button = new GuiTextButton(Vector2(25, 25), Vector2(0+BASE_WIDTH *1.68*1.68 - 25, 0 + BASE_WIDTH *4 - 25));
-    female_button = new GuiTextButton(Vector2(25, 25), Vector2(BUTTON_ALIGN, UPPER_ALIGN+25));
-    male_button = new GuiTextButton(Vector2(25, 25), Vector2(BUTTON_ALIGN+25*6, UPPER_ALIGN+25));
-    skin_left_button = new GuiTextButton(Vector2(25, 25), Vector2(BUTTON_ALIGN, UPPER_ALIGN+25*2));
-    skin_right_button = new GuiTextButton(Vector2(25, 25), Vector2(BUTTON_ALIGN+25*6, UPPER_ALIGN+25*2));
-    hair_left_button = new GuiTextButton(Vector2(25, 25), Vector2(BUTTON_ALIGN, UPPER_ALIGN+25*3));
-    hair_right_button = new GuiTextButton(Vector2(25, 25), Vector2(BUTTON_ALIGN+25*6, UPPER_ALIGN+25*3));
+    change_direction_left_button = new GuiImageButton(Vector2(25, 25), Vector2(0, 0 + BASE_WIDTH *4 - 25));
+    change_direction_right_button = new GuiImageButton(Vector2(25, 25), Vector2(0+BASE_WIDTH *1.68*1.68 - 25, 0 + BASE_WIDTH *4 - 25));
+    female_button = new GuiImageButton(Vector2(25, 25), Vector2(BUTTON_ALIGN, UPPER_ALIGN+25));
+    male_button = new GuiImageButton(Vector2(25, 25), Vector2(BUTTON_ALIGN+25*6, UPPER_ALIGN+25));
+    skin_left_button = new GuiImageButton(Vector2(25, 25), Vector2(BUTTON_ALIGN, UPPER_ALIGN+25*2));
+    skin_right_button = new GuiImageButton(Vector2(25, 25), Vector2(BUTTON_ALIGN+25*6, UPPER_ALIGN+25*2));
+    hair_left_button = new GuiImageButton(Vector2(25, 25), Vector2(BUTTON_ALIGN, UPPER_ALIGN+25*3));
+    hair_right_button = new GuiImageButton(Vector2(25, 25), Vector2(BUTTON_ALIGN+25*6, UPPER_ALIGN+25*3));
     color_brown_button = new GuiTextButton(Vector2(25, 25), Vector2(25*.618, 25 * 1.6));
     color_black_button = new GuiTextButton(Vector2(25, 25), Vector2(25*.618 +25* 1.6, 25 * 1.6));
     color_white_button = new GuiTextButton(Vector2(25, 25), Vector2(25*.618 +25*2* 1.6, 25 * 1.6));
@@ -476,35 +496,35 @@ GuiScreen * SreenMakerCharacterCreation::MakeScreen()
 
     change_direction_left_button->SetBackgroundColor(Color3(0,0,255*0.618));
     change_direction_left_button->RegisterOnClick(change_direction_left);
-    //change_direction_left_button->SetImage(BitmapService::Instance()->GetBitmap("guielement_2"));
+    change_direction_left_button->SetImage(BitmapService::Instance()->GetBitmap("guielement_2"));
 
     change_direction_right_button->SetBackgroundColor(Color3(0,0,255*0.618));
     change_direction_right_button->RegisterOnClick(change_direction_right);
-    //change_direction_right_button->SetImage(BitmapService::Instance()->GetBitmap("guielement_3"));
+    change_direction_right_button->SetImage(BitmapService::Instance()->GetBitmap("guielement_3"));
 
     female_button->SetBackgroundColor(Color3(0,152,255));
     female_button->RegisterOnClick(female_listener);
-    //female_button->SetImage(BitmapService::Instance()->GetBitmap("guielement_0"));
+    female_button->SetImage(BitmapService::Instance()->GetBitmap("guielement_0"));
 
     male_button->SetBackgroundColor(Color3(0,152,255));
     male_button->RegisterOnClick(male_listener);
-    //male_button->SetImage(BitmapService::Instance()->GetBitmap("guielement_1"));
+    male_button->SetImage(BitmapService::Instance()->GetBitmap("guielement_1"));
 
     skin_left_button->SetBackgroundColor(Color3(0,255,255));
     skin_left_button->RegisterOnClick(skin_left_listener);
-    //skin_left_button->SetImage(BitmapService::Instance()->GetBitmap("guielement_2"));
+    skin_left_button->SetImage(BitmapService::Instance()->GetBitmap("guielement_2"));
 
     skin_right_button->SetBackgroundColor(Color3(0,255,255));
     skin_right_button->RegisterOnClick(skin_right_listener);
-    //skin_right_button->SetImage(BitmapService::Instance()->GetBitmap("guielement_3"));
+    skin_right_button->SetImage(BitmapService::Instance()->GetBitmap("guielement_3"));
 
     hair_left_button->SetBackgroundColor(Color3(155,255,255));
     hair_left_button->RegisterOnClick(hair_left_listener);
-    //hair_left_button->SetImage(BitmapService::Instance()->GetBitmap("guielement_2"));
+    hair_left_button->SetImage(BitmapService::Instance()->GetBitmap("guielement_2"));
 
     hair_right_button->SetBackgroundColor(Color3(155,255,255));
     hair_right_button->RegisterOnClick(hair_right_listener);
-    //hair_right_button->SetImage(BitmapService::Instance()->GetBitmap("guielement_3"));
+    hair_right_button->SetImage(BitmapService::Instance()->GetBitmap("guielement_3"));
 
     color_brown_button->SetBackgroundColor(Color3(74,0,0));
     color_brown_button->RegisterOnClick(color_brown_listener);
@@ -539,7 +559,7 @@ GuiScreen * SreenMakerCharacterCreation::MakeScreen()
     //setup text boxes
     user_name_text->SetTextFont(button_font);
     user_name_text->SetTextColor(Color3(50,50,50));
-    user_name_text->SetText("bob");
+    user_name_text->SetText("");
     user_name_text->SetBackgroundAlpha(30);
     user_name_text->SetBackgroundColor(Color3(155,155,155));
 
@@ -585,7 +605,7 @@ GuiScreen * SreenMakerCharacterCreation::MakeScreen()
     parent_frame->AddChild(cancel_button);
     parent_frame->AddChild(create_button);
 
-    parent_frame->SetGuiId("char_frame",character_background_frame);
+
 
     //setup screen
     screen = new GuiScreen(parent_frame);
@@ -611,6 +631,8 @@ GuiScreen * SreenMakerCharacterCreation::MakeScreen()
     screen->RegisterListener(color_pink_listener);
 
     screen->SetGuiId("parent_frame", parent_frame);
+    screen->SetGuiId("char_frame",character_background_frame);
+    screen->SetGuiId("char_name_text",user_name_text);
 
     return screen;
 }

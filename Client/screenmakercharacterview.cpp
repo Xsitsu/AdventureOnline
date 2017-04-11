@@ -99,12 +99,17 @@ namespace CharacterViewScreenListeners
 
         virtual void HandleEvent()
         {
-            //this->game->PopScreen();
+            if(this->game->GetCharacterList().size() < 2)
+            {
+                this->game->PopScreen();
+                this->game->SetCurrentCharacter(new Character());
+                this->game->GetCurrentCharacter()->SetDirection(Character::DIR_RIGHT);
 
-            SreenMakerCharacterCreation maker(this->game);
-            GuiScreen* screen = maker.MakeScreen();
-            this->game->PushScreen(screen);
-            this->game->ChangeState(new GameStateCharacterCreation(this->game));
+                SreenMakerCharacterCreation maker(this->game);
+                GuiScreen* screen = maker.MakeScreen();
+                this->game->PushScreen(screen);
+                this->game->ChangeState(new GameStateCharacterCreation(this->game));
+            }
         }
     };
 

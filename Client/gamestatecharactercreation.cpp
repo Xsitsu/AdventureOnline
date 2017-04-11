@@ -44,8 +44,7 @@ void GameStateCharacterCreation::Render()
     if(this->game->GetCurrentCharacter())
     {
         ActorDrawer actordraw;
-        GuiFrame * parent = static_cast<GuiFrame*>(game->GetCurrentScreen()->GetGuiById("parent_frame"));
-        GuiFrame * charframe = static_cast<GuiFrame*>(parent->GetGuiById("char_frame"));
+        GuiFrame * charframe = static_cast<GuiFrame*>(game->GetCurrentScreen()->GetGuiById("char_frame"));
         Vector2 draw_middle = charframe->GetAbsolutePosition() + charframe->GetSize()/2;
         actordraw.DrawActor(this->game->GetCurrentCharacter(), draw_middle);
     }
