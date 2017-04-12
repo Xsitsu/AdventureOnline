@@ -4,6 +4,7 @@
 #include "gamestatecharacterview.hpp"
 #include "gamestatetitle.hpp"
 #include "gamestateplaying.hpp"
+#include "gamestatecharactercreation.hpp"
 
 
 #include <string>
@@ -88,6 +89,41 @@ namespace CharacterViewScreenListeners
                 }
             }
 
+        }
+    };
+
+    class CreateCharacterEvent : public GameEventBase
+    {
+    public:
+        CreateCharacterEvent(Game* game) : GameEventBase(game) {}
+
+        virtual void HandleEvent()
+        {
+            if(this->game->GetCharacterList().size() < 2)
+            {
+                this->game->PopScreen();
+                this->game->SetCurrentCharacter(new Character());
+                this->game->GetCurrentCharacter()->SetDirection(Character::DIR_RIGHT);
+
+                SreenMakerCharacterCreation maker(this->game);
+                GuiScreen* screen = maker.MakeScreen();
+                this->game->PushScreen(screen);
+                this->game->ChangeState(new GameStateCharacterCreation(this->game));
+            }
+        }
+    };
+
+    class CreateCharacterListener : public ListenerBase<GuiButtonArgs*>
+    {
+    protected:
+        Game* game;
+
+    public:
+        CreateCharacterListener(Game* game) : game(game) {}
+
+        virtual void Notify(GuiButtonArgs*& args) const
+        {
+            this->game->RegisterEventToQueue(new CreateCharacterEvent(this->game));
         }
     };
 }
@@ -177,6 +213,7 @@ GuiScreen* ScreenMakerCharacterView::MakeScreen()
     CharacterViewScreenListeners::LogoutListener* logout_listener = new CharacterViewScreenListeners::LogoutListener(this->game);
     CharacterViewScreenListeners::LoginListener* login_listener_1 = new CharacterViewScreenListeners::LoginListener(this->game);
     CharacterViewScreenListeners::LoginListener* login_listener_2 = new CharacterViewScreenListeners::LoginListener(this->game);
+    CharacterViewScreenListeners::CreateCharacterListener * create_listener = new CharacterViewScreenListeners::CreateCharacterListener(this->game);
 
     login_listener_1->SetSlotNumber(0);
     login_listener_2->SetSlotNumber(1);
@@ -192,6 +229,7 @@ GuiScreen* ScreenMakerCharacterView::MakeScreen()
     create_char_button->SetTextColor(Color3(255, 255, 255));
     create_char_button->SetText("Create");
     create_char_button->SetTextAlign(GuiTextButton::ALIGN_CENTER);
+    create_char_button->RegisterOnClick(create_listener);
 
     GuiTextButton* logout_button = new GuiTextButton(button_size, Vector2(20 + button_size.x + 20, 480 - 48 - 20));
     logout_button->SetTextFont(font);
@@ -221,6 +259,7 @@ GuiScreen* ScreenMakerCharacterView::MakeScreen()
     screen->RegisterListener(logout_listener);
     screen->RegisterListener(login_listener_1);
     screen->RegisterListener(login_listener_2);
+    screen->RegisterListener(create_listener);
 
     screen->SetGuiId("character_frame_1", character_frame_1);
     screen->SetGuiId("character_frame_2", character_frame_2);
