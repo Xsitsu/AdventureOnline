@@ -259,6 +259,7 @@ GuiScreen* ScreenMakerCharacterView::MakeScreen()
     screen->RegisterListener(logout_listener);
     screen->RegisterListener(login_listener_1);
     screen->RegisterListener(login_listener_2);
+    screen->RegisterListener(create_listener);
 
     screen->SetGuiId("character_frame_1", character_frame_1);
     screen->SetGuiId("character_frame_2", character_frame_2);
