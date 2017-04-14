@@ -10,9 +10,6 @@
 #include "fontservice.hpp"
 #include "bitmapservice.hpp"
 
-#include "GameUtil/resourcefile.hpp"
-#include "GameUtil/resource.hpp"
-
 #include "allegro5/allegro_native_dialog.h"
 
 GameStateInit::GameStateInit(Game* game) : GameStateBase(game)
@@ -41,171 +38,13 @@ void GameStateInit::Tick()
 
     try
     {
-        std::list<Resource*> rlist;
-        ResourceFile rfile;
-        int c;
-
-
-        rfile.Open("resource00");
-        rlist = rfile.Read();
-        rfile.Close();
-
-        c = 0;
-        while (!rlist.empty())
-        {
-            Resource* resource = rlist.front();
-            rlist.pop_front();
-
-            uint32_t width = resource->GetWidth();
-            uint32_t height = resource->GetHeight();
-
-            ALLEGRO_BITMAP* bitmap = al_create_bitmap(width, height);
-            al_lock_bitmap(bitmap, ALLEGRO_PIXEL_FORMAT_ANY, ALLEGRO_LOCK_WRITEONLY);
-
-            al_set_target_bitmap(bitmap);
-
-            for (uint32_t w = 0; w < width; w++)
-            {
-                for (uint32_t h = 0; h < height; h++)
-                {
-                    Pixel pixel = resource->GetPixel(w, h);
-                    al_put_pixel(w,  h, al_map_rgba(pixel.r, pixel.g, pixel.b, pixel.a));
-                }
-            }
-
-            al_unlock_bitmap(bitmap);
-            delete resource;
-
-            std::stringstream ss;
-            ss << "background_" << c;
-
-            BitmapService::Instance()->RegisterBitmap(ss.str(), bitmap);
-
-            c++;
-        }
-
-
-
-        rfile.Open("resource01");
-        rlist = rfile.Read();
-        rfile.Close();
-
-        c = 0;
-        while (!rlist.empty())
-        {
-            Resource* resource = rlist.front();
-            rlist.pop_front();
-
-            uint32_t width = resource->GetWidth();
-            uint32_t height = resource->GetHeight();
-
-            ALLEGRO_BITMAP* bitmap = al_create_bitmap(width, height);
-            al_lock_bitmap(bitmap, ALLEGRO_PIXEL_FORMAT_ANY, ALLEGRO_LOCK_WRITEONLY);
-
-            al_set_target_bitmap(bitmap);
-
-            for (uint32_t w = 0; w < width; w++)
-            {
-                for (uint32_t h = 0; h < height; h++)
-                {
-                    Pixel pixel = resource->GetPixel(w, h);
-                    al_put_pixel(w,  h, al_map_rgba(pixel.r, pixel.g, pixel.b, pixel.a));
-                }
-            }
-
-            al_unlock_bitmap(bitmap);
-            delete resource;
-
-            std::stringstream ss;
-            ss << "tile_" << c;
-
-            al_convert_mask_to_alpha(bitmap, al_map_rgb(0, 0, 0));
-            BitmapService::Instance()->RegisterBitmap(ss.str(), bitmap);
-
-            c++;
-        }
-
-
-
-        rfile.Open("resource02");
-        rlist = rfile.Read();
-        rfile.Close();
-
-        c = 0;
-        while (!rlist.empty())
-        {
-            Resource* resource = rlist.front();
-            rlist.pop_front();
-
-            uint32_t width = resource->GetWidth();
-            uint32_t height = resource->GetHeight();
-
-            ALLEGRO_BITMAP* bitmap = al_create_bitmap(width, height);
-            al_lock_bitmap(bitmap, ALLEGRO_PIXEL_FORMAT_ANY, ALLEGRO_LOCK_WRITEONLY);
-
-            al_set_target_bitmap(bitmap);
-
-            for (uint32_t w = 0; w < width; w++)
-            {
-                for (uint32_t h = 0; h < height; h++)
-                {
-                    Pixel pixel = resource->GetPixel(w, h);
-                    al_put_pixel(w,  h, al_map_rgba(pixel.r, pixel.g, pixel.b, pixel.a));
-                }
-            }
-
-            al_unlock_bitmap(bitmap);
-            delete resource;
-
-            std::stringstream ss;
-            ss << "character_" << c;
-
-            al_convert_mask_to_alpha(bitmap, al_map_rgb(0, 0, 0));
-            BitmapService::Instance()->RegisterBitmap(ss.str(), bitmap);
-
-            c++;
-        }
-
-        rfile.Open("resource03");
-        rlist = rfile.Read();
-        rfile.Close();
-
-        c = 0;
-        while (!rlist.empty())
-        {
-            Resource* resource = rlist.front();
-            rlist.pop_front();
-
-            uint32_t width = resource->GetWidth();
-            uint32_t height = resource->GetHeight();
-
-            ALLEGRO_BITMAP* bitmap = al_create_bitmap(width, height);
-            al_lock_bitmap(bitmap, ALLEGRO_PIXEL_FORMAT_ANY, ALLEGRO_LOCK_WRITEONLY);
-
-            al_set_target_bitmap(bitmap);
-
-            for (uint32_t w = 0; w < width; w++)
-            {
-                for (uint32_t h = 0; h < height; h++)
-                {
-                    Pixel pixel = resource->GetPixel(w, h);
-                    al_put_pixel(w,  h, al_map_rgba(pixel.r, pixel.g, pixel.b, pixel.a));
-                }
-            }
-
-            al_unlock_bitmap(bitmap);
-            delete resource;
-
-            std::stringstream ss;
-            ss << "guielement_" << c;
-
-            al_convert_mask_to_alpha(bitmap, al_map_rgb(0, 0, 0));
-            BitmapService::Instance()->RegisterBitmap(ss.str(), bitmap);
-
-            c++;
-        }
-
-
+        ALLEGRO_COLOR mask_color = al_map_rgb(0, 0, 0);
+        this->game->LoadResourceFile("resource0", "background_", mask_color);
+        this->game->LoadResourceFile("resource1", "tile_", mask_color);
+        this->game->LoadResourceFile("resource2", "character_", mask_color);
+        this->game->LoadResourceFile("resource3", "guielement_", mask_color);
+        this->game->LoadResourceFile("resource4", "hairf_", mask_color);
+        this->game->LoadResourceFile("resource5", "hairm_", mask_color);
     }
     catch (FileException::FileException& e)
     {
