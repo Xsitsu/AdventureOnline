@@ -146,6 +146,14 @@ bool ClientStatePlaying::ProcessPacket(PacketBase* packet)
 
         return true;
     }
+    else if (packet->GetType() == PacketBase::PACKET_CHARACTER_LOGOUT)
+    {
+        this->client->DoCharacterLogout();
+
+        this->client->ChangeState(new ClientStateLoggedIn(this->client));
+
+        return true;
+    }
 
     return false;
 }
