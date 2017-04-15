@@ -36,7 +36,7 @@ void GameStateServerConnect::Tick()
         }
         else
         {
-            al_show_native_message_box(nullptr, "Connection Refused", "Could Not Connect To Server",
+            al_show_native_message_box(this->game->display, "Connection Refused", "Could Not Connect To Server",
                                    "The server refused the connection. Please try again at a later time.",
                                    0, ALLEGRO_MESSAGEBOX_ERROR);
 
@@ -45,7 +45,7 @@ void GameStateServerConnect::Tick()
     }
     else if (std::time(NULL) - this->start_time > this->CONNECT_TIMEOUT)
     {
-        al_show_native_message_box(nullptr, "Connection Error", "Could Not Connect To Server",
+        al_show_native_message_box(this->game->display, "Connection Error", "Could Not Connect To Server",
                                    "The server could not be found. Please try again at a later time.",
                                    0, ALLEGRO_MESSAGEBOX_ERROR);
 
