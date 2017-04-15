@@ -39,7 +39,9 @@ public:
         PACKET_CHARACTER_MAP_LEAVE,
 
         PACKET_CHARACTER_TURN,
-        PACKET_CHARACTER_WALK
+        PACKET_CHARACTER_WALK,
+
+        PACKET_CHARACTER_CREATE_REQUEST
     };
 
 protected:
@@ -499,4 +501,31 @@ public:
 
 };
 
+class DLL_EXPORT PacketCharacterCreationRequest : public PacketBase
+{
+protected:
+    std::string name;
+    uint8_t skin;
+    uint8_t hair;
+    uint8_t hairColor;
+    uint8_t gender;
+
+public:
+    PacketCharacterCreationRequest();
+
+    virtual unsigned int Encode(char * buffer);
+    virtual void Decode(char * buffer);
+
+    void SetName(std::string val) { name = val; }
+    void SetSkin(int val ) { skin = val; }
+    void SetHair( int val ) { hair = val; }
+    void SetHairColor(int val ) { hairColor = val; }
+    void SetGender(int val ) { gender = val;}
+
+    std::string GetName() {return name; }
+    int GetSkin() { return skin; }
+    int GetHair() { return hair; }
+    int GetHairColor() { return hairColor; }
+    int GetGender() { return gender; }
+};
 #endif // PACKET_HPP_INCLUDE
