@@ -106,6 +106,9 @@ public:
     void ClearCharacterList();
     Character * GetCurrentCharacter() { return current_character; }
     void SetCurrentCharacter( Character * val ) { current_character = val; }
+
+
+    void LoadResourceFile(std::string fname, std::string regname, ALLEGRO_COLOR mask_color);
 };
 
 class GameEventBase

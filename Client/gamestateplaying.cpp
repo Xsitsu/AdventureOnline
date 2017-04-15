@@ -10,6 +10,9 @@
 
 #include "actordrawer.hpp"
 
+#include "gamestatecharacterview.hpp"
+#include "screenmaker.hpp"
+
 GameStatePlaying::GameStatePlaying(Game* game) : GameStateBase(game)
 {
 
@@ -378,6 +381,17 @@ void GameStatePlaying::HandleKeyDown(const ALLEGRO_KEYBOARD_EVENT& keyboard)
     {
         Character* cur_char = this->game->current_character;
         cur_char->SetHasNowall(!cur_char->GetHasNowall());
+    }
+    else if (keyboard.keycode == ALLEGRO_KEY_BACKSPACE)
+    {
+        PacketCharacterLogout* packet = new PacketCharacterLogout();
+        this->game->SendPacket(packet);
+
+        ScreenMakerCharacterView maker(this->game);
+        this->game->PushScreen(maker.MakeScreen());
+
+        this->game->current_character = nullptr;
+        this->game->ChangeState(new GameStateCharacterView(this->game));
     }
 
 

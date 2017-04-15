@@ -32,6 +32,7 @@ public:
         PACKET_CHARACTER_LIST,
         PACKET_CHARACTER_DATA_REQUEST,
         PACKET_CHARACTER_LOGIN,
+        PACKET_CHARACTER_LOGOUT,
         PACKET_CHARACTER_APPEARANCE,
         PACKET_CHARACTER_POSITION,
 
@@ -350,6 +351,15 @@ public:
 
     uint32_t GetCharacterId() const;
     void SetCharacterId(uint32_t character_id);
+};
+
+class DLL_EXPORT PacketCharacterLogout : public PacketBase
+{
+public:
+    PacketCharacterLogout();
+
+    virtual unsigned int Encode(char* buffer);
+    virtual void Decode(char* buffer);
 };
 
 class DLL_EXPORT PacketCharacterAppearance : public PacketBase
