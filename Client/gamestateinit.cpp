@@ -5,7 +5,8 @@
 #include <sstream>
 
 #include "screenmaker.hpp"
-#include "gamestatetitle.hpp"
+#include "gamestateserverconnect.hpp"
+#include "gamestatequit.hpp"
 
 #include "fontservice.hpp"
 #include "bitmapservice.hpp"
@@ -61,10 +62,5 @@ void GameStateInit::Tick()
 
     al_set_target_bitmap(base_bitmap);
 
-
-
-    ScreenMakerTitle maker(this->game);
-    GuiScreen* screen = maker.MakeScreen();
-    this->game->PushScreen(screen);
-    this->game->ChangeState(new GameStateTitle(this->game));
+    this->game->ChangeState(new GameStateServerConnect(this->game));
 }

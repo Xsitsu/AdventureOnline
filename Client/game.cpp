@@ -1,5 +1,5 @@
 #include "game.hpp"
-#include "gamestateserverconnect.hpp"
+#include "gamestateinit.hpp"
 #include "gamestatequit.hpp"
 
 #include <allegro5/allegro_native_dialog.h>
@@ -77,7 +77,7 @@ void Game::Init()
 	FontService::Instance()->RegisterFont("debug", debug_font);
 
 	// Initialize game state stuff
-    this->state = new GameStateServerConnect(this);
+    this->state = new GameStateInit(this);
     this->state->Enter();
 }
 
