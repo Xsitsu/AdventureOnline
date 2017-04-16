@@ -56,9 +56,9 @@ namespace CharacterViewScreenListeners
         {
             this->game->PopScreen();
 
-            //ScreenMakerPlaying maker(this->game);
-            //GuiScreen* screen = maker.MakeScreen();
-            //this->game->PushScreen(screen);
+            ScreenMakerPlaying maker(this->game);
+            GuiScreen* screen = maker.MakeScreen();
+            this->game->PushScreen(screen);
             this->game->ChangeState(new GameStatePlaying(this->game));
         }
     };
