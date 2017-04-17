@@ -37,6 +37,7 @@ friend class GameStateAccountCreation;
 friend class GameStateLoginAwaitResponse;
 friend class GameStateAccountCreationAwaitResponse;
 friend class GameStatePlaying;
+friend class GameStateCharacterCreation;
 
 protected: // Singleton stuff
     static Game* instance;
@@ -103,6 +104,11 @@ public:
     void LoginAsCharacter(Character* character);
     std::vector<Character*> GetCharacterList() const;
     void ClearCharacterList();
+    Character * GetCurrentCharacter() { return current_character; }
+    void SetCurrentCharacter( Character * val ) { current_character = val; }
+
+
+    void LoadResourceFile(std::string fname, std::string regname, ALLEGRO_COLOR mask_color);
 };
 
 class GameEventBase

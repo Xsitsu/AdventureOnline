@@ -114,6 +114,9 @@ PacketBase* PacketReader::ReadPacket(char* buffer, int bytes_read)
     case PacketBase::PACKET_CHARACTER_LOGIN:
         packet = new PacketCharacterLogin();
         break;
+    case PacketBase::PACKET_CHARACTER_LOGOUT:
+        packet = new PacketCharacterLogout();
+        break;
     case PacketBase::PACKET_CHARACTER_APPEARANCE:
         packet = new PacketCharacterAppearance();
         break;
@@ -650,6 +653,21 @@ void PacketCharacterLogin::SetCharacterId(uint32_t character_id)
     this->character_id = character_id;
 }
 
+
+PacketCharacterLogout::PacketCharacterLogout() : PacketBase(PacketBase::PACKET_CHARACTER_LOGOUT)
+{}
+
+unsigned int PacketCharacterLogout::Encode(char* buffer)
+{
+    PacketBase::Encode(buffer);
+
+    return this->buffer_pos;
+}
+
+void PacketCharacterLogout::Decode(char* buffer)
+{
+    PacketBase::Decode(buffer);
+}
 
 PacketCharacterAppearance::PacketCharacterAppearance() : PacketBase(PacketBase::PACKET_CHARACTER_APPEARANCE)
 {}

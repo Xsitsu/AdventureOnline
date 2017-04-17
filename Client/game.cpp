@@ -1,11 +1,16 @@
 #include "game.hpp"
-#include "gamestateserverconnect.hpp"
+#include "gamestateinit.hpp"
 #include "gamestatequit.hpp"
 
 #include <allegro5/allegro_native_dialog.h>
 #include <allegro5/allegro_image.h>
 
 #include <chrono>
+#include <sstream>
+
+#include "bitmapservice.hpp"
+#include "GameUtil/resourcefile.hpp"
+#include "GameUtil/resource.hpp"
 
 Game* Game::instance = NULL;
 
@@ -72,7 +77,7 @@ void Game::Init()
 	FontService::Instance()->RegisterFont("debug", debug_font);
 
 	// Initialize game state stuff
-    this->state = new GameStateServerConnect(this);
+    this->state = new GameStateInit(this);
     this->state->Enter();
 }
 
@@ -308,5 +313,50 @@ void Game::ClearCharacterList()
     {
         delete this->character_list.back();
         this->character_list.pop_back();
+    }
+}
+
+void Game::LoadResourceFile(std::string fname, std::string regname, ALLEGRO_COLOR mask_color)
+{
+    std::list<Resource*> rlist;
+    ResourceFile rfile;
+
+    rfile.Open(fname);
+    rlist = rfile.Read();
+    rfile.Close();
+
+    int c = 0;
+    while (!rlist.empty())
+    {
+        Resource* resource = rlist.front();
+        rlist.pop_front();
+
+        uint32_t width = resource->GetWidth();
+        uint32_t height = resource->GetHeight();
+
+        ALLEGRO_BITMAP* bitmap = al_create_bitmap(width, height);
+        al_lock_bitmap(bitmap, ALLEGRO_PIXEL_FORMAT_ANY, ALLEGRO_LOCK_WRITEONLY);
+
+        al_set_target_bitmap(bitmap);
+
+        for (uint32_t w = 0; w < width; w++)
+        {
+            for (uint32_t h = 0; h < height; h++)
+            {
+                Pixel pixel = resource->GetPixel(w, h);
+                al_put_pixel(w,  h, al_map_rgba(pixel.r, pixel.g, pixel.b, pixel.a));
+            }
+        }
+
+        al_unlock_bitmap(bitmap);
+        delete resource;
+
+        std::stringstream ss;
+        ss << regname << c;
+
+        al_convert_mask_to_alpha(bitmap, mask_color);
+        BitmapService::Instance()->RegisterBitmap(ss.str(), bitmap);
+
+        c++;
     }
 }

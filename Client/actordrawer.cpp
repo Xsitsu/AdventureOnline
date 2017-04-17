@@ -67,6 +67,10 @@ void ActorDrawer::DoDrawCharacter(Character* character, Vector2 draw_middle, boo
         dir_flag = 1;
     }
 
+
+    int hair_id = 0;
+    int color_id = 0;
+    ALLEGRO_BITMAP* hair_bitmap = nullptr;
     ALLEGRO_BITMAP* character_bitmap = nullptr;
     int sprite_width = 0;
     int sprite_height = 0;
@@ -76,6 +80,19 @@ void ActorDrawer::DoDrawCharacter(Character* character, Vector2 draw_middle, boo
     int offset_x = 0;
     int offset_y = 0;
 
+    Vector2 hair_offset;
+
+    if (gender == Character::GENDER_FEMALE)
+    {
+        hair_bitmap = BitmapService::Instance()->GetBitmap("hairf_0");
+        color_id = 0;
+    }
+    else if (gender == Character::GENDER_MALE)
+    {
+        hair_bitmap = BitmapService::Instance()->GetBitmap("hairm_10");
+        color_id = 5;
+    }
+
     if (character->IsStanding())
     {
         character_bitmap = BitmapService::Instance()->GetBitmap("character_0");
@@ -84,6 +101,8 @@ void ActorDrawer::DoDrawCharacter(Character* character, Vector2 draw_middle, boo
 
         draw_frame = 0;
         max_frames = 1;
+
+        hair_offset = Vector2(5, 13);
     }
     else if (character->IsMoving())
     {
@@ -98,6 +117,8 @@ void ActorDrawer::DoDrawCharacter(Character* character, Vector2 draw_middle, boo
         draw_frame = max_frames * character->GetStatePercentDone();
         if (draw_frame > max_frames)
             draw_frame = max_frames;
+
+        hair_offset = Vector2(1, 12);
     }
 
     int draw_x = (sprite_width *  draw_frame) + (sprite_width * max_frames * dir_flag) + (sprite_width * max_frames * 2 * (int)gender);
@@ -113,9 +134,36 @@ void ActorDrawer::DoDrawCharacter(Character* character, Vector2 draw_middle, boo
         draw_base = draw_middle - Vector2(sprite_width / 2, sprite_height);
     }
 
+    Vector2 top = draw_base + Vector2(offset_x, offset_y);
+
+    // Compensate for females being shorter than males.
+    if (gender == Character::GENDER_FEMALE)
+    {
+        hair_offset = hair_offset - Vector2(0, 1);
+    }
+
+    // Hair needs to be moved 1 pixel horizontally depending on if the bitmap is flipped or not.
+    if (draw_flags == ALLEGRO_FLIP_HORIZONTAL)
+    {
+        hair_offset = hair_offset - Vector2(1, 0);
+    }
+    else
+    {
+        hair_offset = hair_offset + Vector2(1, 0);
+    }
+
+    // Actually do drawing.
+    al_draw_tinted_bitmap_region(hair_bitmap, al_map_rgba(255, 255, 255, 255),
+                                56 * dir_flag, 54 * color_id, 28, 54,
+                                top.x - hair_offset.x, top.y - hair_offset.y, draw_flags);
+
     al_draw_tinted_bitmap_region(character_bitmap, al_map_rgba(255, 255, 255, 255),
                                 draw_x, draw_y, sprite_width, sprite_height,
-                                draw_base.x + offset_x, draw_base.y + offset_y, draw_flags);
+                                top.x, top.y, draw_flags);
+
+    al_draw_tinted_bitmap_region(hair_bitmap, al_map_rgba(255, 255, 255, 255),
+                                28 + 56 * dir_flag, 54 * color_id, 28, 54,
+                                top.x - hair_offset.x, top.y - hair_offset.y, draw_flags);
 
 }
 

@@ -16,11 +16,7 @@ std::list<Resource*> GetResourceList(std::string path, std::string extension, in
     for (int i = 0; i < num; i++)
     {
         std::stringstream ss;
-        ss << path;
-
-        if (i < 100) ss << "0";
-        if (i < 10) ss << "0";
-        ss << i << extension;
+        ss << path << i << extension;
 
         std::cout << "Trying to open file: '" << ss.str() << "'" << std::endl;
         bitmap = al_load_bitmap(ss.str().c_str());
@@ -65,9 +61,7 @@ void CreateResourceFile(int id, std::string path, std::string extension, int num
     std::cout << std::endl << std::endl;
 
     std::stringstream ss;
-    ss << "resource";
-    if (id < 10) ss << 0;
-    ss << id;
+    ss << "resource" << id;
 
     ResourceFile rfile;
     std::list<Resource*> rlist;
@@ -90,9 +84,12 @@ int main(int argc, char** argv)
     //basepath = "B:/AdventureOnline/AO-Resource/image/";
     basepath = "C:/Users/Jacob/Documents/GitHub/AO-Resource/image/";
 
-    CreateResourceFile(0, basepath + "background/", ".png", 1);
+    CreateResourceFile(0, basepath + "background/", ".png", 2);
     CreateResourceFile(1, basepath + "tile/", ".png", 13);
     CreateResourceFile(2, basepath + "character/", ".png", 3);
+    CreateResourceFile(3, basepath + "guielement/", ".png", 4);
+    CreateResourceFile(4, basepath + "hair_f/", ".png", 50);
+    CreateResourceFile(5, basepath + "hair_m/", ".png", 50);
 
     return 0;
 }
