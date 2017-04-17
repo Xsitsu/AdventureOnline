@@ -30,6 +30,7 @@ void GameStateCharacterCreationAwaitResponse::HandlePacket(PacketBase* packet)
         else
         {
             game->PopScreen();
+            game->ChangeState(new GameStateCharacterCreation());
             //std::cout << "Account creation failed" << std::endl;
 //            if(response->GetResponse()== PacketCharacterCreationResponse::RESPONSE_CHARACTER_ALREADY_EXISTS)
 //                static_cast<GuiTextButton*>(game->GetCurrentScreen()->GetGuiById("Confirmation"))->SetText("Character name already in use.");
