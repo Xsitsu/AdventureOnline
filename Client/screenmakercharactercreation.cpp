@@ -1,7 +1,9 @@
 #include "screenmaker.hpp"
 
 #include "gamestatecharacterview.hpp"
+#include "gamestatecharactercreationawaitresponse.hpp"
 #include "bitmapservice.hpp"
+//#include "GameNetwork/packet.hpp"
 
 static const int BASE_WIDTH = 32;
 static const int UPPER_ALIGN = 480*0.23;
@@ -81,18 +83,29 @@ namespace CharacterCreationListeners
 
         virtual void HandleEvent()
         {
-            GuiTextBox * username = this->game->GetCurrentScreen()->GetGuiById("char_name_text");
+            GuiTextBox * username = static_cast<GuiTextBox*>(this->game->GetCurrentScreen()->GetGuiById("char_name_text"));
             Character * playerCharacter = this->game->GetCurrentCharacter();
+            PacketCharacterCreationRequest * packet = nullptr;
             if(username->GetText().size() > 2 && username->GetText().size() < 13)
             {
-                Packet * packet = new PacketCharacterCreationRequest();
+                packet = new PacketCharacterCreationRequest();
                 packet->SetName(username->GetText());
                 packet->SetSkin(static_cast<int>(playerCharacter->GetSkin()));
-                packet->SetGender(static_cast<int>(playerCharacter->GetSkin()));
+                packet->SetGender(static_cast<int>(playerCharacter->GetGender()));
                 packet->SetHair(static_cast<int>(playerCharacter->GetHair()));
                 packet->SetHairColor(static_cast<int>(playerCharacter->GetHairColor()));
 
                 this->game->SendPacket(packet);
+
+                SreenMakerCharacterCreationAwaitResponse maker(this->game);
+                ScreenMakerEmpty makeempty(this->game);
+                GuiScreen * newScreen = nullptr;
+//                newScreen = maker.MakeScreen();
+//                this->game->PushScreen(newScreen);
+                newScreen = makeempty.MakeScreen();
+                this->game->PushScreen(newScreen);
+                this->game->ChangeState(new GameStateCharacterCreationAwaitResponse(this->game));
+
             }
             //to do
         }
@@ -276,7 +289,7 @@ namespace CharacterCreationListeners
             }
             else
             {
-                temp->SetHair(static_cast<Character::Skin>(temp->GetHair()-1));
+                temp->SetHair(static_cast<Character::Hair>(temp->GetHair()-1));
             }
         }
     };
@@ -308,7 +321,7 @@ namespace CharacterCreationListeners
             }
             else
             {
-                temp->SetHair(static_cast<Character::Skin>(temp->GetHair()+1));
+                temp->SetHair(static_cast<Character::Hair>(temp->GetHair()+1));
             }
         }
     };

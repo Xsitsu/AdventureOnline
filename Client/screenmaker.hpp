@@ -86,4 +86,12 @@ public:
     virtual ~SreenMakerCharacterCreation() {}
     virtual GuiScreen* MakeScreen();
 };
+
+class SreenMakerCharacterCreationAwaitResponse: public AbstractScreenMaker
+{
+public:
+    SreenMakerCharacterCreationAwaitResponse(Game * game) : AbstractScreenMaker(game) {}
+    virtual ~SreenMakerCharacterCreationAwaitResponse() {}
+    virtual GuiScreen* MakeScreen();
+};
 #endif // SCREENMAKER_HPP_INCLUDE

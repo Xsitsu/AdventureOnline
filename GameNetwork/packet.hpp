@@ -42,7 +42,8 @@ public:
         PACKET_CHARACTER_TURN,
         PACKET_CHARACTER_WALK,
 
-        PACKET_CHARACTER_CREATE_REQUEST
+        PACKET_CHARACTER_CREATE_REQUEST,
+        PACKET_CHARACTER_CREATE_RESPONSE
     };
 
 protected:
@@ -537,5 +538,29 @@ public:
     int GetHair() { return hair; }
     int GetHairColor() { return hairColor; }
     int GetGender() { return gender; }
+};
+
+class DLL_EXPORT PacketCharacterCreationResponse : public PacketBase
+{
+
+
+public:
+    enum Response
+    {
+        RESPONSE_CHARACTER_CREATED,
+        RESPONSE_CHARACTER_ALREADY_EXISTS,
+        RESPONSE_ERROR
+    };
+    PacketCharacterCreationResponse():PacketBase(PACKET_CHARACTER_CREATE_RESPONSE){}
+
+    Response GetResponse() {return returnCode; }
+    void SetResponse(Response val) { returnCode = val; }
+
+    virtual unsigned int Encode(char* buffer);
+    virtual void Decode(char* buffer);
+
+
+protected:
+    Response returnCode;
 };
 #endif // PACKET_HPP_INCLUDE

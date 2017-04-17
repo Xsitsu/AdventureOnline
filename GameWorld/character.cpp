@@ -1,6 +1,6 @@
 #include "character.hpp"
 
-Character::Character() : Actor(), character_id(0), name("N/A"), gender(Character::GENDER_FEMALE), skin(Character::SKIN_WHITE),hair(Character::TYPE_ONE), hairColor(Character::HAIR_BROWN)
+Character::Character() : Actor(), character_id(0), name("N/A"), gender(Character::GENDER_FEMALE), skin(Character::SKIN_WHITE),hair(Character::HAIR_ONE), hairColor(Character::HAIR_BROWN)
 {
 
 }
