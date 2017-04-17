@@ -90,6 +90,7 @@
 		<Unit filename="screenmakercharacterview.cpp" />
 		<Unit filename="screenmakerempty.cpp" />
 		<Unit filename="screenmakerlogin.cpp" />
+		<Unit filename="screenmakerplaying.cpp" />
 		<Unit filename="screenmakertitle.cpp" />
 		<Extensions>
 			<code_completion />
