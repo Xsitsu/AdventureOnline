@@ -404,24 +404,18 @@ void GameStatePlaying::HandleKeyUp(const ALLEGRO_KEYBOARD_EVENT& keyboard)
 
 void GameStatePlaying::HandleMouseMove(const ALLEGRO_MOUSE_EVENT& mouse)
 {
-    if (true) return;
-
     Vector2 pos(mouse.x, mouse.y);
     this->game->GetCurrentScreen()->HandleMouseMove(pos);
 }
 
 void GameStatePlaying::HandleMouseDown(const ALLEGRO_MOUSE_EVENT& mouse)
 {
-    if (true) return;
-
     Vector2 pos(mouse.x, mouse.y);
     this->game->GetCurrentScreen()->HandleMouseDown(pos);
 }
 
 void GameStatePlaying::HandleMouseUp(const ALLEGRO_MOUSE_EVENT& mouse)
 {
-    if (true) return;
-
     Vector2 pos(mouse.x, mouse.y);
     this->game->GetCurrentScreen()->HandleMouseUp(pos);
 }
