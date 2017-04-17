@@ -17,6 +17,9 @@ void GameStateCharacterCreationAwaitResponse::HandlePacket(PacketBase* packet)
             game->PopScreen();
             game->PopScreen();
             ScreenMakerCharacterView maker(this->game);
+            Character * temp = this->game->GetCurrentCharacter();
+            delete temp;
+            this->game->SetCurrentCharacter(nullptr);
             game->PushScreen(maker.MakeScreen());
             game->ChangeState(new GameStateCharacterView(this->game));
             //std::cout << "Account created successfully" << std::endl;
@@ -26,12 +29,13 @@ void GameStateCharacterCreationAwaitResponse::HandlePacket(PacketBase* packet)
         }
         else
         {
+            game->PopScreen();
             //std::cout << "Account creation failed" << std::endl;
-            if(response->GetResponse()== PacketCharacterCreationResponse::RESPONSE_CHARACTER_ALREADY_EXISTS)
-                static_cast<GuiTextButton*>(game->GetCurrentScreen()->GetGuiById("Confirmation"))->SetText("Character name already in use.");
-            else
-                static_cast<GuiTextButton*>(game->GetCurrentScreen()->GetGuiById("Confirmation"))->SetText("Unknown error creating character.");
-            game->GetCurrentScreen()->GetGuiById("Continue")->SetVisible(true);
+//            if(response->GetResponse()== PacketCharacterCreationResponse::RESPONSE_CHARACTER_ALREADY_EXISTS)
+//                static_cast<GuiTextButton*>(game->GetCurrentScreen()->GetGuiById("Confirmation"))->SetText("Character name already in use.");
+//            else
+//                static_cast<GuiTextButton*>(game->GetCurrentScreen()->GetGuiById("Confirmation"))->SetText("Unknown error creating character.");
+//            game->GetCurrentScreen()->GetGuiById("Continue")->SetVisible(true);
         }
     }
 }
