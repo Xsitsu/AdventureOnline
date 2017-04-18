@@ -14,6 +14,7 @@ protected:
     bool is_filled;
     Color3 background_color;
     unsigned char background_alpha;
+    Vector2 rounding;
 
     ALLEGRO_COLOR bg_draw_color;
 
@@ -39,6 +40,9 @@ public:
 
     unsigned char GetBackgroundAlpha() const;
     void SetBackgroundAlpha(unsigned char alpha);
+
+    Vector2 GetRounding() const;
+    void SetRounding(Vector2 rounding);
 
 };
 
