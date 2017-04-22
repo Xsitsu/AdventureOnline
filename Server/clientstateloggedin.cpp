@@ -142,6 +142,7 @@ bool ClientStateLoggedIn::ProcessPacket(PacketBase* packet)
             }
             catch(std::exception problem)
             {
+                database->DeleteCharacter(newCharacter->GetName());
                 response->SetResponse(PacketCharacterCreationResponse::RESPONSE_ERROR);
                 this->client->SendPacket(response);
                 delete newCharacter;

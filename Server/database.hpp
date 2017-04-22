@@ -38,6 +38,7 @@ public:
     vector<int> ReadPlayerCharacters (std::string email);
     Character * ReadCharacterInfo(int);
     bool CharacterExists(std::string name);
+    void DeleteCharacter(std::string name);
 };
 
 

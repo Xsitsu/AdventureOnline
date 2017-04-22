@@ -276,3 +276,28 @@ bool Database::CharacterExists(std::string name)
     if ( sqlite3_step(statement) != SQLITE_ROW) return false;
     return true;
 }
+
+void Database::DeleteCharacter(std::string name)
+{
+    sqlite3_stmt * statement = nullptr;
+    const char getcharacterid[] = "SELECT rowid FROM playerchar WHERE charname = ?";
+    const char deletecharacter[] = "DELETE FROM playerchar WHERE charname = ?";
+    const char deletecharacterstats[] = "DELETE FROM charstats WHERE charid = ?";
+    int charID = 0;
+
+    if ( sqlite3_prepare_v2(db,getcharacterid, sizeof(getcharacterid), &statement, nullptr))    throw DatabaseException();
+    if ( sqlite3_bind_text(statement, 1, name.c_str(), name.size(), nullptr))   throw DatabaseException();
+    if ( sqlite3_step(statement) != SQLITE_ROW) throw DatabaseException();
+    charID = sqlite3_column_int(statement,0);
+    sqlite3_finalize(statement);
+
+    if ( sqlite3_prepare_v2(db,deletecharacter, sizeof(deletecharacter), &statement, nullptr))  throw DatabaseException();
+    if ( sqlite3_bind_text(statement, 1, name.c_str(), name.size(), nullptr))   throw DatabaseException();
+    if ( sqlite3_step(statement) != SQLITE_DONE)    throw DatabaseException();
+    sqlite3_finalize(statement);
+
+    if ( sqlite3_prepare_v2(db,deletecharacterstats, sizeof(deletecharacterstats), &statement, nullptr) )   throw DatabaseException();
+    if ( sqlite3_bind_int(statement, 1, charID) )   throw DatabaseException();
+    if ( sqlite3_step(statement) != SQLITE_DONE )   throw DatabaseException();
+    sqlite3_finalize(statement);
+}
