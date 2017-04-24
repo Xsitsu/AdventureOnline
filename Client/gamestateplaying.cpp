@@ -131,6 +131,9 @@ void GameStatePlaying::Render()
 
     }
 
+    //update status bars
+    this->game->GetCurrentScreen()->GetGuiById("health_bar")->SetSize(Vector2(112*(static_cast<float>(game->GetCurrentCharacter()->GetHealth())/game->GetCurrentCharacter()->GetMaxHealth()), 26));
+
     // Screen drawing
     this->game->DrawScreens();
 
