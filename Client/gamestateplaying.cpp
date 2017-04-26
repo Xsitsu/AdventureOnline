@@ -63,6 +63,8 @@ void GameStatePlaying::Render()
 
         Vector2 current_pos = this->game->current_character->GetPosition();
 
+        const BitmapSet* tile_set = BitmapService::Instance()->GetBitmapSet(BitmapService::BITMAPSET_TILE);
+
         // Draw map
         int range = 14;
         for (int x = -range; x < range; x++)
@@ -82,7 +84,8 @@ void GameStatePlaying::Render()
 
                     try
                     {
-                        ALLEGRO_BITMAP* tile_bitmap = BitmapService::Instance()->GetBitmap(bitmap_name);
+                        //ALLEGRO_BITMAP* tile_bitmap = BitmapService::Instance()->GetBitmap(bitmap_name);
+                        ALLEGRO_BITMAP* tile_bitmap = tile_set->GetBitmap(tile.GetSpriteId());
 
                         Vector2 draw_pos = base_draw + (tile_step_x * x) + (tile_step_y * y);
                         draw_pos = draw_pos + draw_offset;

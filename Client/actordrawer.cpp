@@ -82,20 +82,22 @@ void ActorDrawer::DoDrawCharacter(Character* character, Vector2 draw_middle, boo
 
     Vector2 hair_offset;
 
+    BitmapService* service = BitmapService::Instance();
+
     if (gender == Character::GENDER_FEMALE)
     {
-        hair_bitmap = BitmapService::Instance()->GetBitmap("hairf_0");
+        hair_bitmap = service->GetBitmap(BitmapService::BITMAPSET_HAIR_FEMALE, 0);
         color_id = 0;
     }
     else if (gender == Character::GENDER_MALE)
     {
-        hair_bitmap = BitmapService::Instance()->GetBitmap("hairm_10");
+        hair_bitmap = service->GetBitmap(BitmapService::BITMAPSET_HAIR_MALE, 10);
         color_id = 5;
     }
 
     if (character->IsStanding())
     {
-        character_bitmap = BitmapService::Instance()->GetBitmap("character_0");
+        character_bitmap = service->GetBitmap(BitmapService::BITMAPSET_CHARACTER, 0);
         sprite_width = 18;
         sprite_height = 58;
 
@@ -106,7 +108,7 @@ void ActorDrawer::DoDrawCharacter(Character* character, Vector2 draw_middle, boo
     }
     else if (character->IsMoving())
     {
-        character_bitmap = BitmapService::Instance()->GetBitmap("character_1");
+        character_bitmap = service->GetBitmap(BitmapService::BITMAPSET_CHARACTER, 1);
         sprite_width = 26;
         sprite_height = 61;
 

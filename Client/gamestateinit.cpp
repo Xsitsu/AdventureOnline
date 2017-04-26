@@ -40,15 +40,17 @@ void GameStateInit::Tick()
 
     ALLEGRO_BITMAP* base_bitmap = al_get_target_bitmap();
 
+
+
     try
     {
         ALLEGRO_COLOR mask_color = al_map_rgb(0, 0, 0);
-        this->game->LoadResourceFile("resource0", "background_", mask_color);
-        this->game->LoadResourceFile("resource1", "tile_", mask_color);
-        this->game->LoadResourceFile("resource2", "character_", mask_color);
-        this->game->LoadResourceFile("resource3", "guielement_", mask_color);
-        this->game->LoadResourceFile("resource4", "hairf_", mask_color);
-        this->game->LoadResourceFile("resource5", "hairm_", mask_color);
+        this->game->LoadResourceFile("resource0", BitmapService::BITMAPSET_BACKGROUND, mask_color);
+        this->game->LoadResourceFile("resource1", BitmapService::BITMAPSET_TILE, mask_color);
+        this->game->LoadResourceFile("resource2", BitmapService::BITMAPSET_CHARACTER, mask_color);
+        this->game->LoadResourceFile("resource3", BitmapService::BITMAPSET_GUI_ELEMENT, mask_color);
+        this->game->LoadResourceFile("resource4", BitmapService::BITMAPSET_HAIR_FEMALE, mask_color);
+        this->game->LoadResourceFile("resource5", BitmapService::BITMAPSET_HAIR_MALE, mask_color);
     }
     catch (FileException::FileException& e)
     {
