@@ -50,13 +50,16 @@ void GuiObject::DoDraw() const
     size_x = this->size.x;
     size_y = this->size.y;
 
+    int rx = this->rounding.x;
+    int ry = this->rounding.y;
+
     if (this->is_filled)
     {
-        al_draw_filled_rectangle(pos_x, pos_y, size_x + pos_x, size_y + pos_y, this->bg_draw_color);
+        al_draw_filled_rounded_rectangle(pos_x, pos_y, pos_x + size_x, pos_y + size_y, rx, ry, this->bg_draw_color);
     }
     else
     {
-        al_draw_rectangle(pos_x, pos_y, size_x + pos_x, size_y + pos_y, this->bg_draw_color, 2);
+        al_draw_rounded_rectangle(pos_x, pos_y, pos_x + size_x, pos_y + size_y, rx, ry, this->bg_draw_color, 2);
     }
 }
 
@@ -96,4 +99,14 @@ void GuiObject::UpdateBackgroundDrawColor()
 {
     Color3* color = &this->background_color;
     this->bg_draw_color = al_map_rgba(color->r, color->g, color->b, this->background_alpha);
+}
+
+Vector2 GuiObject::GetRounding() const
+{
+    return this->rounding;
+}
+
+void GuiObject::SetRounding(Vector2 rounding)
+{
+    this->rounding = rounding;
 }

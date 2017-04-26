@@ -86,4 +86,12 @@ public:
     virtual ~SreenMakerCharacterCreation() {}
     virtual GuiScreen* MakeScreen();
 };
+
+class ScreenMakerPlaying : public AbstractScreenMaker
+{
+public:
+    ScreenMakerPlaying(Game* game) : AbstractScreenMaker(game) {}
+    virtual ~ScreenMakerPlaying() {}
+    virtual GuiScreen* MakeScreen();
+};
 #endif // SCREENMAKER_HPP_INCLUDE
