@@ -1,4 +1,5 @@
 #include "actordrawer.hpp"
+#include <sstream>
 
 ActorDrawer::ActorDrawer()
 {
@@ -53,6 +54,7 @@ void ActorDrawer::DoDrawCharacter(Character* character, Vector2 draw_middle, boo
     Actor::Direction dir = character->GetDirection();
     Character::Gender gender = character->GetGender();
     Character::Skin skin = character->GetSkin();
+    std::stringstream hairType;
 
     int draw_flags = 0;
     int dir_flag = 0;
@@ -69,7 +71,7 @@ void ActorDrawer::DoDrawCharacter(Character* character, Vector2 draw_middle, boo
 
 
     int hair_id = 0;
-    int color_id = 0;
+    int color_id = static_cast<int>(character->GetHairColor());
     ALLEGRO_BITMAP* hair_bitmap = nullptr;
     ALLEGRO_BITMAP* character_bitmap = nullptr;
     int sprite_width = 0;
@@ -84,15 +86,14 @@ void ActorDrawer::DoDrawCharacter(Character* character, Vector2 draw_middle, boo
 
     if (gender == Character::GENDER_FEMALE)
     {
-        hair_bitmap = BitmapService::Instance()->GetBitmap("hairf_0");
-        color_id = 0;
+        hairType << "hairf_" << static_cast<int>(character->GetHair());
     }
     else if (gender == Character::GENDER_MALE)
     {
-        hair_bitmap = BitmapService::Instance()->GetBitmap("hairm_10");
-        color_id = 5;
+        hairType << "hairm_" << static_cast<int>(character->GetHair());
     }
 
+    hair_bitmap = BitmapService::Instance()->GetBitmap(hairType.str().c_str());
     if (character->IsStanding())
     {
         character_bitmap = BitmapService::Instance()->GetBitmap("character_0");

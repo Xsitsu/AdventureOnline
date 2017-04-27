@@ -10,7 +10,7 @@ class DLL_EXPORT Character : public Actor
 public:
     enum Gender { GENDER_FEMALE = 0, GENDER_MALE };
     enum Skin { SKIN_WHITE = 0, SKIN_BROWN, SKIN_GREEN };
-    enum Hair { HAIR_ONE = 0, HAIR_TWO};
+    enum Hair { HAIR_MIN = 0, HAIR_MAX = 49};
     enum HairColor { HAIR_BROWN, HAIR_BLACK, HAIR_WHITE, HAIR_PURPLE,
                      HAIR_LIGHT_BLUE, HAIR_RED, HAIR_GREEN, HAIR_DARK_BLUE,
                      HAIR_YELLOW, HAIR_PINK};

@@ -283,9 +283,9 @@ namespace CharacterCreationListeners
         virtual void HandleEvent()
         {
             Character * temp = this->game->GetCurrentCharacter();
-            if(temp->GetHair() == Character::HAIR_ONE)
+            if(temp->GetHair() == Character::HAIR_MIN)
             {
-                temp->SetHair(Character::HAIR_TWO);
+                temp->SetHair(Character::HAIR_MAX);
             }
             else
             {
@@ -315,9 +315,9 @@ namespace CharacterCreationListeners
         virtual void HandleEvent()
         {
                      Character * temp = this->game->GetCurrentCharacter();
-            if(temp->GetHair() == Character::HAIR_TWO)
+            if(temp->GetHair() == Character::HAIR_MAX)
             {
-                temp->SetHair(Character::HAIR_ONE);
+                temp->SetHair(Character::HAIR_MIN);
             }
             else
             {
