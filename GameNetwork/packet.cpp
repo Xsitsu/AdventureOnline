@@ -687,6 +687,8 @@ unsigned int PacketCharacterAppearance::Encode(char* buffer)
     reader.WriteInt(buffer, this->buffer_pos, this->character_id);
     reader.WriteByte(buffer, this->buffer_pos, this->gender);
     reader.WriteByte(buffer, this->buffer_pos, this->skin);
+    reader.WriteByte(buffer, this->buffer_pos, this->hair);
+    reader.WriteByte(buffer, this->buffer_pos, this->hairColor);
 
     uint8_t name_length = this->name.length();
     reader.WriteByte(buffer, this->buffer_pos, name_length);
@@ -711,6 +713,8 @@ void PacketCharacterAppearance::Decode(char* buffer)
     this->character_id = reader.ReadInt(buffer, this->buffer_pos);
     this->gender = reader.ReadByte(buffer, this->buffer_pos);
     this->skin = reader.ReadByte(buffer, this->buffer_pos);
+    this->hair = reader.ReadByte(buffer, this->buffer_pos);
+    this->hairColor = reader.ReadByte(buffer, this->buffer_pos);
 
     uint8_t name_length = reader.ReadByte(buffer, this->buffer_pos);
 

@@ -70,7 +70,7 @@ void ActorDrawer::DoDrawCharacter(Character* character, Vector2 draw_middle, boo
     }
 
 
-    int hair_id = 0;
+    //int hair_id = 0;
     int color_id = static_cast<int>(character->GetHairColor());
     ALLEGRO_BITMAP* hair_bitmap = nullptr;
     ALLEGRO_BITMAP* character_bitmap = nullptr;

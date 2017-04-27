@@ -182,6 +182,16 @@ Character * Database::ReadCharacterInfo( int ID)
         {
             player_character->SetHealth(sqlite3_column_int(ppStmt2, 0));
         }
+        if ( sqlite3_step(ppStmt2)!= SQLITE_ROW) throw DatabaseReadException();
+        else
+        {
+            player_character->SetHair(static_cast<Character::Hair>(sqlite3_column_int(ppStmt2, 0)));
+        }
+        if ( sqlite3_step(ppStmt2)!= SQLITE_ROW) throw DatabaseReadException();
+        else
+        {
+            player_character->SetHairColor(static_cast<Character::HairColor>(sqlite3_column_int(ppStmt2, 0)));
+        }
 
 
         sqlite3_finalize(ppStmt2);

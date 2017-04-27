@@ -371,6 +371,8 @@ protected:
     std::string name;
     uint8_t gender;
     uint8_t skin;
+    uint8_t hair;
+    uint8_t hairColor;
 
 public:
     PacketCharacterAppearance();
@@ -382,11 +384,15 @@ public:
     std::string GetName() const;
     uint8_t GetGender() const;
     uint8_t GetSkin() const;
+    uint8_t GetHair() const { return hair; }
+    uint8_t GetHairColor() const{ return hairColor; }
 
     void SetCharacterId(uint32_t character_id);
     void SetName(std::string name);
     void SetGender(uint8_t gender);
     void SetSkin(uint8_t skin);
+    void SetHair(uint8_t val)   { hair = val;}
+    void SetHairColor(uint8_t val) { hairColor = val;}
 
 };
 
