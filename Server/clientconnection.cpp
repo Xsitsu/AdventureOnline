@@ -206,6 +206,8 @@ void ClientConnection::SendCharacterAppearance(Character* character)
     packet->SetName(character->GetName());
     packet->SetGender(static_cast<uint8_t>(character->GetGender()));
     packet->SetSkin(static_cast<uint8_t>(character->GetSkin()));
+    packet->SetHair(static_cast<uint8_t>(character->GetHair()));
+    packet->SetHairColor(static_cast<uint8_t>(character->GetHairColor()));
 
     this->SendPacket(packet);
 }

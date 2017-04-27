@@ -217,6 +217,8 @@ void GameStatePlaying::HandlePacket(PacketBase* packet)
                     character->SetName(return_character->GetName());
                     character->SetGender(static_cast<Character::Gender>(return_character->GetGender()));
                     character->SetSkin(static_cast<Character::Skin>(return_character->GetSkin()));
+                    character->SetHair(static_cast<Character::Hair>(return_character->GetHair()));
+                    character->SetHairColor(static_cast<Character::HairColor>(return_character->GetHairColor()));
                 }
             }
         }
