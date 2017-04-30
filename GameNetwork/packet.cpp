@@ -135,6 +135,12 @@ PacketBase* PacketReader::ReadPacket(char* buffer, int bytes_read)
     case PacketBase::PACKET_CHARACTER_WALK:
         packet = new PacketCharacterWalk();
         break;
+    case PacketBase::PACKET_CHARACTER_CREATE_REQUEST:
+        packet = new PacketCharacterCreationRequest();
+        break;
+    case PacketBase::PACKET_CHARACTER_CREATE_RESPONSE:
+        packet = new PacketCharacterCreationResponse();
+        break;
     default:
         //std::cout << "bad type: " << (unsigned int) type << std::endl;s
         break;
@@ -681,6 +687,8 @@ unsigned int PacketCharacterAppearance::Encode(char* buffer)
     reader.WriteInt(buffer, this->buffer_pos, this->character_id);
     reader.WriteByte(buffer, this->buffer_pos, this->gender);
     reader.WriteByte(buffer, this->buffer_pos, this->skin);
+    reader.WriteByte(buffer, this->buffer_pos, this->hair);
+    reader.WriteByte(buffer, this->buffer_pos, this->hairColor);
 
     uint8_t name_length = this->name.length();
     reader.WriteByte(buffer, this->buffer_pos, name_length);
@@ -705,6 +713,8 @@ void PacketCharacterAppearance::Decode(char* buffer)
     this->character_id = reader.ReadInt(buffer, this->buffer_pos);
     this->gender = reader.ReadByte(buffer, this->buffer_pos);
     this->skin = reader.ReadByte(buffer, this->buffer_pos);
+    this->hair = reader.ReadByte(buffer, this->buffer_pos);
+    this->hairColor = reader.ReadByte(buffer, this->buffer_pos);
 
     uint8_t name_length = reader.ReadByte(buffer, this->buffer_pos);
 
@@ -936,3 +946,59 @@ void PacketCharacterWalk::Decode(char* buffer)
     this->direction = reader.ReadByte(buffer, this->buffer_pos);
 }
 
+PacketCharacterCreationRequest::PacketCharacterCreationRequest():PacketBase(PACKET_CHARACTER_CREATE_REQUEST), name(""), skin(0), hair(0), hairColor(0), gender(0){}
+
+unsigned int PacketCharacterCreationRequest::Encode(char * buffer)
+{
+    PacketBase::Encode(buffer);
+    const char * name_buffer = this->name.c_str();
+    uint8_t name_length = this->name.size();
+
+    PacketReader reader;
+
+    reader.WriteByte(buffer, this->buffer_pos, this->skin);
+    reader.WriteByte(buffer, this->buffer_pos, this->hair);
+    reader.WriteByte(buffer, this->buffer_pos, this->hairColor);
+    reader.WriteByte(buffer, this->buffer_pos, this->gender);
+    reader.WriteByte(buffer, this->buffer_pos, name_length);
+
+    for (uint8_t c = 0; c < name_length ; c++)
+    {
+        reader.WriteByte(buffer, this->buffer_pos, name_buffer[c]);
+    }
+
+    return this->buffer_pos;
+}
+
+void PacketCharacterCreationRequest::Decode(char * buffer)
+{
+    PacketBase::Decode(buffer);
+    uint8_t name_length = 0;
+
+    PacketReader reader;
+
+    this->skin = reader.ReadByte(buffer, this->buffer_pos);
+    this->hair = reader.ReadByte(buffer, this->buffer_pos);
+    this->hairColor = reader.ReadByte(buffer, this->buffer_pos);
+    this->gender = reader.ReadByte(buffer, this->buffer_pos);
+    name_length = reader.ReadByte(buffer, this->buffer_pos);
+    for (uint8_t c = 0; c < name_length ; c++)
+    {
+        this->name += static_cast<char>(reader.ReadByte(buffer, this->buffer_pos));
+    }
+}
+
+unsigned int PacketCharacterCreationResponse::Encode(char* buffer)
+{
+    PacketReader reader;
+    PacketBase::Encode(buffer);
+    reader.WriteByte(buffer, buffer_pos, static_cast<uint8_t>(returnCode));
+    return buffer_pos;
+}
+
+void PacketCharacterCreationResponse::Decode(char* buffer)
+{
+    PacketReader reader;
+    PacketBase::Decode(buffer);
+    returnCode = static_cast<Response>(reader.ReadByte(buffer, buffer_pos));
+}

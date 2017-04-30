@@ -17,6 +17,9 @@ protected:
     char *zErrMsg;
     int rc;
 
+    void AddCharacterStat(int charID, std::string statname, int statValue);
+    int GetStatID(std::string name);
+
 public:
     Database();
     ~Database();
@@ -31,8 +34,11 @@ public:
     void UpdateAccount(Account* account);
     void DeleteAccount(Account* account);
 
+    void CreateCharacter(int accID, Character * Character);
     vector<int> ReadPlayerCharacters (std::string email);
     Character * ReadCharacterInfo(int);
+    bool CharacterExists(std::string name);
+    void DeleteCharacter(std::string name);
 };
 
 
