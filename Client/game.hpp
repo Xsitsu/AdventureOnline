@@ -40,6 +40,7 @@ friend class GameStateLoginAwaitResponse;
 friend class GameStateAccountCreationAwaitResponse;
 friend class GameStatePlaying;
 friend class GameStateCharacterCreation;
+friend class GameStateCharacterCreationAwaitResponse;
 
 protected: // Singleton stuff
     static Game* instance;

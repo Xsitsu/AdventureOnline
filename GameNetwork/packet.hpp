@@ -40,7 +40,10 @@ public:
         PACKET_CHARACTER_MAP_LEAVE,
 
         PACKET_CHARACTER_TURN,
-        PACKET_CHARACTER_WALK
+        PACKET_CHARACTER_WALK,
+
+        PACKET_CHARACTER_CREATE_REQUEST,
+        PACKET_CHARACTER_CREATE_RESPONSE
     };
 
 protected:
@@ -368,6 +371,8 @@ protected:
     std::string name;
     uint8_t gender;
     uint8_t skin;
+    uint8_t hair;
+    uint8_t hairColor;
 
 public:
     PacketCharacterAppearance();
@@ -379,11 +384,15 @@ public:
     std::string GetName() const;
     uint8_t GetGender() const;
     uint8_t GetSkin() const;
+    uint8_t GetHair() const { return hair; }
+    uint8_t GetHairColor() const{ return hairColor; }
 
     void SetCharacterId(uint32_t character_id);
     void SetName(std::string name);
     void SetGender(uint8_t gender);
     void SetSkin(uint8_t skin);
+    void SetHair(uint8_t val)   { hair = val;}
+    void SetHairColor(uint8_t val) { hairColor = val;}
 
 };
 
@@ -509,4 +518,55 @@ public:
 
 };
 
+class DLL_EXPORT PacketCharacterCreationRequest : public PacketBase
+{
+protected:
+    std::string name;
+    uint8_t skin;
+    uint8_t hair;
+    uint8_t hairColor;
+    uint8_t gender;
+
+public:
+    PacketCharacterCreationRequest();
+
+    virtual unsigned int Encode(char * buffer);
+    virtual void Decode(char * buffer);
+
+    void SetName(std::string val) { name = val; }
+    void SetSkin(int val ) { skin = val; }
+    void SetHair( int val ) { hair = val; }
+    void SetHairColor(int val ) { hairColor = val; }
+    void SetGender(int val ) { gender = val;}
+
+    std::string GetName() {return name; }
+    int GetSkin() { return skin; }
+    int GetHair() { return hair; }
+    int GetHairColor() { return hairColor; }
+    int GetGender() { return gender; }
+};
+
+class DLL_EXPORT PacketCharacterCreationResponse : public PacketBase
+{
+
+
+public:
+    enum Response
+    {
+        RESPONSE_CHARACTER_CREATED,
+        RESPONSE_CHARACTER_ALREADY_EXISTS,
+        RESPONSE_ERROR
+    };
+    PacketCharacterCreationResponse():PacketBase(PACKET_CHARACTER_CREATE_RESPONSE){}
+
+    Response GetResponse() {return returnCode; }
+    void SetResponse(Response val) { returnCode = val; }
+
+    virtual unsigned int Encode(char* buffer);
+    virtual void Decode(char* buffer);
+
+
+protected:
+    Response returnCode;
+};
 #endif // PACKET_HPP_INCLUDE

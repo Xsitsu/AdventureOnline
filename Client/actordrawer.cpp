@@ -1,4 +1,5 @@
 #include "actordrawer.hpp"
+#include <sstream>
 
 ActorDrawer::ActorDrawer()
 {
@@ -53,6 +54,7 @@ void ActorDrawer::DoDrawCharacter(Character* character, Vector2 draw_middle, boo
     Actor::Direction dir = character->GetDirection();
     Character::Gender gender = character->GetGender();
     Character::Skin skin = character->GetSkin();
+    std::stringstream hairType;
 
     int draw_flags = 0;
     int dir_flag = 0;
@@ -68,8 +70,8 @@ void ActorDrawer::DoDrawCharacter(Character* character, Vector2 draw_middle, boo
     }
 
 
-    int hair_id = 0;
-    int color_id = 0;
+    //int hair_id = 0;
+    int color_id = static_cast<int>(character->GetHairColor());
     ALLEGRO_BITMAP* hair_bitmap = nullptr;
     ALLEGRO_BITMAP* character_bitmap = nullptr;
     int sprite_width = 0;
@@ -83,17 +85,19 @@ void ActorDrawer::DoDrawCharacter(Character* character, Vector2 draw_middle, boo
     Vector2 hair_offset;
 
     BitmapService* service = BitmapService::Instance();
+    BitmapService::BitmapSets hair_set;
 
     if (gender == Character::GENDER_FEMALE)
     {
-        hair_bitmap = service->GetBitmap(BitmapService::BITMAPSET_HAIR_FEMALE, 0);
-        color_id = 0;
+        hair_set = BitmapService::BITMAPSET_HAIR_FEMALE;
     }
     else if (gender == Character::GENDER_MALE)
     {
-        hair_bitmap = service->GetBitmap(BitmapService::BITMAPSET_HAIR_MALE, 10);
-        color_id = 5;
+        hair_set = BitmapService::BITMAPSET_HAIR_MALE;
     }
+
+    hair_bitmap = service->GetBitmap(hair_set, character->GetHair());
+    color_id = character->GetHairColor();
 
     if (character->IsStanding())
     {

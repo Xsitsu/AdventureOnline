@@ -71,6 +71,8 @@ bool ClientStateLoggedIn::ProcessPacket(PacketBase* packet)
                     packet->SetName(character->GetName());
                     packet->SetGender(static_cast<uint8_t>(character->GetGender()));
                     packet->SetSkin(static_cast<uint8_t>(character->GetSkin()));
+                    packet->SetHair(static_cast<uint8_t>(character->GetHair()));
+                    packet->SetHairColor(static_cast<uint8_t>(character->GetHairColor()));
 
                     this->client->SendPacket(packet);
                 }
@@ -103,6 +105,56 @@ bool ClientStateLoggedIn::ProcessPacket(PacketBase* packet)
             }
         }
 
+        return true;
+    }
+    else if (packet->GetType() == PacketBase::PACKET_CHARACTER_CREATE_REQUEST)
+    {
+        PacketCharacterCreationRequest * character_create = static_cast<PacketCharacterCreationRequest*>(packet);
+        int accID = this->client->account->GetAccountId();
+        Character * newCharacter = new Character();
+        Database* database = this->client->server->GetDatabaseConnection();
+        PacketCharacterCreationResponse * response = new PacketCharacterCreationResponse();
+
+        if((character_create->GetName().size()) < 3
+           || (character_create->GetName().size()) > 12
+           || client->account->GetCharacterList().size() > 1)
+        {
+            response->SetResponse(PacketCharacterCreationResponse::RESPONSE_ERROR);
+            this->client->SendPacket(response);
+        }
+        if(database->CharacterExists(character_create->GetName()))
+        {
+            response->SetResponse(PacketCharacterCreationResponse::RESPONSE_CHARACTER_ALREADY_EXISTS);
+            this->client->SendPacket(response);
+        }
+        else
+        {
+            newCharacter->SetName(character_create->GetName());
+            newCharacter->SetStrength(10);
+            newCharacter->SetEndurance(10);
+            newCharacter->SetGender(static_cast<Character::Gender>(character_create->GetGender()));
+            newCharacter->SetSkin(static_cast<Character::Skin>(character_create->GetSkin()));
+            newCharacter->SetMaxHealth(100);
+            newCharacter->SetHealth(100);
+            newCharacter->SetHair(static_cast<Character::Hair>(character_create->GetHair()));
+            newCharacter->SetHairColor(static_cast<Character::HairColor>(character_create->GetHairColor()));
+            try
+            {
+                database->CreateCharacter(accID, newCharacter);
+            }
+            catch(std::exception problem)
+            {
+                database->DeleteCharacter(newCharacter->GetName());
+                response->SetResponse(PacketCharacterCreationResponse::RESPONSE_ERROR);
+                this->client->SendPacket(response);
+                delete newCharacter;
+                return true;
+            }
+            response->SetResponse(PacketCharacterCreationResponse::RESPONSE_CHARACTER_CREATED);
+            this->client->SendPacket(response);
+            this->client->FetchCharacterList();
+        }
+        delete newCharacter;
         return true;
     }
 
