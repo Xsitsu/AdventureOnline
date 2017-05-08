@@ -49,7 +49,7 @@ void Database::CreateAccount(std::string email, std::string password)
     if ( sqlite3_bind_text(ppStmt, 1, email.c_str(), email.size(), nullptr))   throw DatabaseException();
     if ( sqlite3_bind_text(ppStmt, 2, password.c_str(), password.size(), nullptr))   throw DatabaseException();
     if ( sqlite3_bind_text(ppStmt, 3, password.c_str(), password.size(), nullptr))   throw DatabaseException();
-    if ( sqlite3_step(ppStmt)) throw DatabaseException();
+    if ( sqlite3_step(ppStmt) != SQLITE_DONE) throw DatabaseException();
 
     sqlite3_finalize(ppStmt);
 }
@@ -85,7 +85,7 @@ void Database::UpdateAccount(Account* account)
     if ( sqlite3_bind_text(ppStmt, 3, account->GetHash().c_str(), account->GetHash().size(), nullptr))   throw DatabaseException();
     if ( sqlite3_bind_int(ppStmt, 4, account->GetAccountId())) throw DatabaseException();
 
-    if ( sqlite3_step(ppStmt)) throw DatabaseException();
+    if ( sqlite3_step(ppStmt) != SQLITE_DONE) throw DatabaseException();
     sqlite3_finalize(ppStmt);
 }
 
@@ -144,7 +144,7 @@ Character * Database::ReadCharacterInfo( int ID)
         {
             player_character->SetCharacterId(sqlite3_column_int(ppStmt,0));
             player_character->SetName(reinterpret_cast<const char*>(sqlite3_column_text(ppStmt, 1)));
-            player_character->Warp(nullptr, Vector2(sqlite3_column_int(ppStmt, 3), sqlite3_column_int(ppStmt, 4)));
+            player_character->Warp(nullptr, Vector2(sqlite3_column_int(ppStmt, 2), sqlite3_column_int(ppStmt, 3)));
         }
         sqlite3_finalize(ppStmt);
         ppStmt = nullptr;
@@ -182,6 +182,16 @@ Character * Database::ReadCharacterInfo( int ID)
         {
             player_character->SetHealth(sqlite3_column_int(ppStmt2, 0));
         }
+        if ( sqlite3_step(ppStmt2)!= SQLITE_ROW) throw DatabaseReadException();
+        else
+        {
+            player_character->SetHair(static_cast<Character::Hair>(sqlite3_column_int(ppStmt2, 0)));
+        }
+        if ( sqlite3_step(ppStmt2)!= SQLITE_ROW) throw DatabaseReadException();
+        else
+        {
+            player_character->SetHairColor(static_cast<Character::HairColor>(sqlite3_column_int(ppStmt2, 0)));
+        }
 
 
         sqlite3_finalize(ppStmt2);
@@ -202,4 +212,102 @@ Character * Database::ReadCharacterInfo( int ID)
     }
 
     return player_character;
+}
+
+void Database::CreateCharacter(int accID, Character * toon)
+{
+    if(toon)
+    {
+        sqlite3_stmt * statement = nullptr;
+        const char characterInsert[] = "INSERT INTO playerchar VALUES( ?, ?, ?, ?, ?)";
+        int mapID = 0;
+        int posX = toon->GetPosition().x;
+        int posY = toon->GetPosition().y;
+        int charID = 0;
+
+        if ( sqlite3_prepare_v2(db,characterInsert, sizeof(characterInsert), &statement, nullptr))      throw DatabaseException();
+        if ( sqlite3_bind_text(statement, 1, toon->GetName().c_str(), toon->GetName().size(), nullptr))   throw DatabaseException();
+        if ( sqlite3_bind_int(statement, 2, accID)) throw DatabaseException();
+        if ( sqlite3_bind_int(statement, 3, posX)) throw DatabaseException();
+        if ( sqlite3_bind_int(statement, 4, posY)) throw DatabaseException();
+        if ( sqlite3_bind_int(statement, 5, mapID)) throw DatabaseException();
+        rc = sqlite3_step(statement);
+        if ( rc != SQLITE_DONE ) throw DatabaseException();
+
+        charID = sqlite3_last_insert_rowid(db);
+        sqlite3_finalize(statement);
+
+        AddCharacterStat(charID, "strength", toon->GetStrength() );
+        AddCharacterStat(charID, "endurance", toon->GetEndurance());
+        AddCharacterStat(charID, "gender", static_cast<int>(toon->GetGender()));
+        AddCharacterStat(charID, "skin", static_cast<int>(toon->GetSkin()));
+        AddCharacterStat(charID, "maxhp", toon->GetMaxHealth());
+        AddCharacterStat(charID, "hitpoints", toon->GetHealth());
+        AddCharacterStat(charID, "hair", static_cast<int>(toon->GetHair()));
+        AddCharacterStat(charID, "haircolor", static_cast<int>(toon->GetHairColor()));
+    }
+}
+
+void Database::AddCharacterStat(int charID, std::string statname, int statValue)
+{
+    int statID = GetStatID(statname);
+    sqlite3_stmt * statement = nullptr;
+    const char statInsert[] = "INSERT INTO CharStats VALUES( ?, ?, ?)";
+
+    if ( sqlite3_prepare_v2(db,statInsert, sizeof(statInsert), &statement, nullptr))      throw DatabaseException();
+    if ( sqlite3_bind_int(statement, 1, charID)) throw DatabaseException();
+    if ( sqlite3_bind_int(statement, 2, statID)) throw DatabaseException();
+    if ( sqlite3_bind_int(statement, 3, statValue)) throw DatabaseException();
+    if ( sqlite3_step(statement) != SQLITE_DONE) throw DatabaseException();
+    //to do
+}
+
+int Database::GetStatID(std::string name)
+{
+    sqlite3_stmt * statement = nullptr;
+    const char getStatID[] = "SELECT rowid FROM stat WHERE statname = ?";
+    int statID = 0;
+
+    if ( sqlite3_prepare_v2(db,getStatID, sizeof(getStatID), &statement, nullptr))      throw DatabaseException();
+    if ( sqlite3_bind_text(statement, 1, name.c_str(), name.size(), nullptr))   throw DatabaseException();
+    if ( sqlite3_step(statement) != SQLITE_ROW) throw DatabaseException();
+    statID = sqlite3_column_int(statement,0);
+
+    sqlite3_finalize(statement);
+    return statID;
+}
+
+bool Database::CharacterExists(std::string name)
+{
+    sqlite3_stmt * statement = nullptr;
+    const char getcharacterid[] = "SELECT rowid FROM playerchar WHERE charname = ?";
+    if ( sqlite3_prepare_v2(db,getcharacterid, sizeof(getcharacterid), &statement, nullptr))      throw DatabaseException();
+    if ( sqlite3_bind_text(statement, 1, name.c_str(), name.size(), nullptr))   throw DatabaseException();
+    if ( sqlite3_step(statement) != SQLITE_ROW) return false;
+    return true;
+}
+
+void Database::DeleteCharacter(std::string name)
+{
+    sqlite3_stmt * statement = nullptr;
+    const char getcharacterid[] = "SELECT rowid FROM playerchar WHERE charname = ?";
+    const char deletecharacter[] = "DELETE FROM playerchar WHERE charname = ?";
+    const char deletecharacterstats[] = "DELETE FROM charstats WHERE charid = ?";
+    int charID = 0;
+
+    if ( sqlite3_prepare_v2(db,getcharacterid, sizeof(getcharacterid), &statement, nullptr))    throw DatabaseException();
+    if ( sqlite3_bind_text(statement, 1, name.c_str(), name.size(), nullptr))   throw DatabaseException();
+    if ( sqlite3_step(statement) != SQLITE_ROW) throw DatabaseException();
+    charID = sqlite3_column_int(statement,0);
+    sqlite3_finalize(statement);
+
+    if ( sqlite3_prepare_v2(db,deletecharacter, sizeof(deletecharacter), &statement, nullptr))  throw DatabaseException();
+    if ( sqlite3_bind_text(statement, 1, name.c_str(), name.size(), nullptr))   throw DatabaseException();
+    if ( sqlite3_step(statement) != SQLITE_DONE)    throw DatabaseException();
+    sqlite3_finalize(statement);
+
+    if ( sqlite3_prepare_v2(db,deletecharacterstats, sizeof(deletecharacterstats), &statement, nullptr) )   throw DatabaseException();
+    if ( sqlite3_bind_int(statement, 1, charID) )   throw DatabaseException();
+    if ( sqlite3_step(statement) != SQLITE_DONE )   throw DatabaseException();
+    sqlite3_finalize(statement);
 }
