@@ -6,8 +6,10 @@
 #include "GameUtil/vector2.hpp"
 
 class ActorStateBase;
+class ActorManagerBase;
 
 #include "actorstate.hpp"
+#include "actormanager.hpp"
 
 class Map;
 
@@ -18,6 +20,8 @@ public:
     enum Direction { DIR_UP = 0, DIR_LEFT, DIR_DOWN, DIR_RIGHT };
 
 protected:
+    ActorManagerBase *actor_manager;
+
     Map* current_map;
     Vector2 map_position;
 
@@ -38,6 +42,9 @@ public:
 
     virtual bool IsNPC() const = 0;
     virtual bool IsPlayer() const = 0;
+
+    void SetActorManager(ActorManagerBase *manager);
+    ActorManagerBase* GetActorManager() const;
 
     void EnterMap(Map* map);
     void ExitMap(Map* map);

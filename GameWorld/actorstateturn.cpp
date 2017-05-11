@@ -17,7 +17,7 @@ void ActorStateTurn::Exit()
 
 void ActorStateTurn::Update()
 {
-        if (this->GetPercentDone() >= 1.0)
+    if (this->GetPercentDone() >= 1.0)
     {
         this->actor->ChangeState(new ActorStateStand(this->actor));
     }

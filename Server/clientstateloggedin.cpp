@@ -100,7 +100,7 @@ bool ClientStateLoggedIn::ProcessPacket(PacketBase* packet)
             Character* character = *iter;
             if (character->GetCharacterId() == character_id)
             {
-                this->client->playing_character = character;
+                this->client->DoCharacterLogin(character);
                 this->client->ChangeState(new ClientStatePlaying(this->client));
             }
         }

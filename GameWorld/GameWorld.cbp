@@ -56,6 +56,7 @@
 		</ExtraCommands>
 		<Unit filename="actor.cpp" />
 		<Unit filename="actor.hpp" />
+		<Unit filename="actormanager.hpp" />
 		<Unit filename="actorstate.hpp" />
 		<Unit filename="actorstatestand.cpp" />
 		<Unit filename="actorstateturn.cpp" />

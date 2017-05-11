@@ -144,7 +144,7 @@ Character * Database::ReadCharacterInfo( int ID)
         {
             player_character->SetCharacterId(sqlite3_column_int(ppStmt,0));
             player_character->SetName(reinterpret_cast<const char*>(sqlite3_column_text(ppStmt, 1)));
-            player_character->Warp(nullptr, Vector2(sqlite3_column_int(ppStmt, 2), sqlite3_column_int(ppStmt, 3)));
+            //player_character->Warp(nullptr, Vector2(sqlite3_column_int(ppStmt, 2), sqlite3_column_int(ppStmt, 3)));
         }
         sqlite3_finalize(ppStmt);
         ppStmt = nullptr;

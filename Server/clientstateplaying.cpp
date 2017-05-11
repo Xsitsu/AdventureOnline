@@ -22,7 +22,8 @@ void ClientStatePlaying::Enter()
     }
 
     Map* map = world->GetMap(map_id);
-    this->client->DoWarpCharacter(map, map_pos);
+    //this->client->DoWarpCharacter(map, map_pos);
+    this->client->playing_character->Warp(map, map_pos);
 }
 
 void ClientStatePlaying::Exit()
@@ -79,13 +80,14 @@ bool ClientStatePlaying::ProcessPacket(PacketBase* packet)
         PacketCharacterTurn* turn = static_cast<PacketCharacterTurn*>(packet);
 
         Character* character = this->client->playing_character;
-        Map* cur_map = character->GetMap();
+        //Map* cur_map = character->GetMap();
         if (turn->GetCharacterId() == character->GetCharacterId())
         {
             if (character->CanMove())
             {
                 character->Turn(static_cast<Actor::Direction>(turn->GetDirection()));
 
+                /*
                 std::list<ClientConnection*> client_list = this->client->server->GetWorld()->GetClientsInMap(cur_map->GetMapId());
                 std::list<ClientConnection*>::iterator iter;
                 for (iter = client_list.begin(); iter != client_list.end(); ++iter)
@@ -96,6 +98,7 @@ bool ClientStatePlaying::ProcessPacket(PacketBase* packet)
                         client->SendCharacterTurn(character);
                     }
                 }
+                */
             }
             else
             {
@@ -110,7 +113,7 @@ bool ClientStatePlaying::ProcessPacket(PacketBase* packet)
         PacketCharacterWalk* walk = static_cast<PacketCharacterWalk*>(packet);
 
         Character* character = this->client->playing_character;
-        Map* cur_map = character->GetMap();
+        //Map* cur_map = character->GetMap();
         if (walk->GetCharacterId() == character->GetCharacterId())
         {
             //Vector2 from_pos = Vector2(walk->GetFromX(), walk->GetFromY());
@@ -121,11 +124,10 @@ bool ClientStatePlaying::ProcessPacket(PacketBase* packet)
             {
                 if (!character->CanMove()) throw "BREAK";
 
-                Vector2 old_pos = character->GetPosition();
-
                 character->SetDirection(dir);
                 character->Move(to_pos);
 
+                /*
                 std::list<ClientConnection*> client_list = this->client->server->GetWorld()->GetClientsInMap(cur_map->GetMapId());
                 std::list<ClientConnection*>::iterator iter;
                 for (iter = client_list.begin(); iter != client_list.end(); ++iter)
@@ -133,9 +135,10 @@ bool ClientStatePlaying::ProcessPacket(PacketBase* packet)
                     ClientConnection* client = *iter;
                     if (client->GetPlayingCharacter() != character)
                     {
-                        client->SendCharacterWalk(character, old_pos);
+                        client->SendCharacterWalk(character);
                     }
                 }
+                */
 
             }
             catch(...)
