@@ -54,6 +54,8 @@
 		<Unit filename="account.hpp" />
 		<Unit filename="accountservice.cpp" />
 		<Unit filename="accountservice.hpp" />
+		<Unit filename="actormanagercharacter.cpp" />
+		<Unit filename="actormanagercharacter.hpp" />
 		<Unit filename="clientconnection.cpp" />
 		<Unit filename="clientconnection.hpp" />
 		<Unit filename="clientstate.hpp" />
@@ -65,6 +67,8 @@
 		<Unit filename="database.cpp" />
 		<Unit filename="database.hpp" />
 		<Unit filename="main.cpp" />
+		<Unit filename="mapmanagerworld.cpp" />
+		<Unit filename="mapmanagerworld.hpp" />
 		<Unit filename="server.cpp" />
 		<Unit filename="server.hpp" />
 		<Unit filename="sqlite3.c">

@@ -7,6 +7,7 @@ connection_id(connection_id), packet_sequence(0), client_address(address), serve
 playing_character(nullptr), state(nullptr)
 {
     this->ChangeState(new ClientStateInit(this));
+    this->character_manager = new ActorManagerCharacter(this);
 }
 
 ClientConnection::~ClientConnection()
@@ -19,6 +20,13 @@ ClientConnection::~ClientConnection()
     {
         this->DoAccountLogout();
     }
+
+    delete this->character_manager;
+}
+
+Server* ClientConnection::GetServer() const
+{
+    return this->server;
 }
 
 void ClientConnection::DoAccountLogout()
@@ -123,79 +131,20 @@ Character* ClientConnection::GetPlayingCharacter()
     return this->playing_character;
 }
 
+void ClientConnection::DoCharacterLogin(Character *login_char)
+{
+    this->playing_character = login_char;
+    login_char->SetActorManager(this->character_manager);
+}
+
 void ClientConnection::DoCharacterLogout()
 {
+    this->playing_character->SetActorManager(nullptr);
+
     Map* map = this->playing_character->GetMap();
     if (map)
     {
-        World* world = this->server->GetWorld();
-
-        unsigned int map_id = map->GetMapId();
-        world->UnregisterClientInMap(this, map_id);
-
-        std::list<ClientConnection*> clients = world->GetClientsInMap(map_id);
-        std::list<ClientConnection*>::iterator iter;
-        for (iter = clients.begin(); iter != clients.end(); ++iter)
-        {
-            ClientConnection* client = *iter;
-            client->SendCharacterMapLeave(this->playing_character);
-        }
-
         this->playing_character->ExitMap(map);
-    }
-}
-void ClientConnection::DoWarpCharacter(Map* map, Vector2 map_pos)
-{
-    World* world = this->server->GetWorld();
-
-    Map* last_map = this->playing_character->GetMap();
-    if (last_map)
-    {
-        unsigned int map_id = last_map->GetMapId();
-        world->UnregisterClientInMap(this, map_id);
-
-        std::list<ClientConnection*> clients = world->GetClientsInMap(map_id);
-        std::list<ClientConnection*>::iterator iter;
-        for (iter = clients.begin(); iter != clients.end(); ++iter)
-        {
-            ClientConnection* client = *iter;
-            client->SendCharacterMapLeave(this->playing_character);
-        }
-
-    }
-
-    this->playing_character->Warp(map, map_pos);
-
-    unsigned int map_id = map->GetMapId();
-
-    std::list<ClientConnection*> clients = world->GetClientsInMap(map_id);
-    std::list<ClientConnection*>::iterator iter;
-    for (iter = clients.begin(); iter != clients.end(); ++iter)
-    {
-        ClientConnection* client = *iter;
-        client->SendCharacterMapEnter(this->playing_character);
-    }
-
-    world->RegisterClientInMap(this, map_id);
-
-    PacketCharacterPosition* packet = new PacketCharacterPosition();
-    packet->SetCharacterId(this->playing_character->GetCharacterId());
-    packet->SetMapId(map->GetMapId());
-    packet->SetPositionX(map_pos.x);
-    packet->SetPositionY(map_pos.y);
-    packet->SetDirection(static_cast<uint8_t>(this->playing_character->GetDirection()));
-
-    this->SendPacket(packet);
-
-    std::list<Character*> character_list = map->GetCharacterList();
-    std::list<Character*>::iterator iter2;
-    for (iter2 = character_list.begin(); iter2 != character_list.end(); ++iter2)
-    {
-        Character* other = *iter2;
-        if (other != this->playing_character)
-        {
-            this->SendCharacterMapEnter(other);
-        }
     }
 }
 
@@ -251,14 +200,34 @@ void ClientConnection::SendCharacterTurn(Character* character)
     this->SendPacket(packet);
 }
 
-void ClientConnection::SendCharacterWalk(Character* character, Vector2 from_position)
+void ClientConnection::SendCharacterWalk(Character* character)
 {
+    Actor::Direction dir = character->GetDirection();
+    Vector2 cur_pos = character->GetPosition();
+    Vector2 prev_pos = cur_pos;
+    if (dir == Actor::DIR_DOWN)
+    {
+        prev_pos.y -= 1;
+    }
+    else if (dir == Actor::DIR_LEFT)
+    {
+        prev_pos.x += 1;
+    }
+    else if (dir == Actor::DIR_UP)
+    {
+        prev_pos.y += 1;
+    }
+    else if (dir == Actor::DIR_RIGHT)
+    {
+        prev_pos.x -= 1;
+    }
+
     PacketCharacterWalk* packet = new PacketCharacterWalk();
     packet->SetCharacterId(character->GetCharacterId());
-    packet->SetFromX(from_position.x);
-    packet->SetFromY(from_position.y);
-    packet->SetToX(character->GetPosition().x);
-    packet->SetToY(character->GetPosition().y);
+    packet->SetFromX(prev_pos.x);
+    packet->SetFromY(prev_pos.y);
+    packet->SetToX(cur_pos.x);
+    packet->SetToY(cur_pos.y);
     packet->SetDirection(character->GetDirection());
 
     this->SendPacket(packet);

@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-Actor::Actor() : current_map(nullptr), map_position(0,0), direction(DIR_DOWN), has_nowall(false),
+Actor::Actor() : actor_manager(nullptr), current_map(nullptr), map_position(0,0), direction(DIR_DOWN), has_nowall(false),
 state(nullptr),health(10), max_health(10), strength(0), endurance(0)
 {
     this->ChangeState(new ActorStateStand(this));
@@ -15,21 +15,66 @@ Actor::~Actor()
 
 }
 
+void Actor::SetActorManager(ActorManagerBase *manager)
+{
+    this->actor_manager = manager;
+}
+
+ActorManagerBase* Actor::GetActorManager() const
+{
+    return this->actor_manager;
+}
+
 void Actor::EnterMap(Map* map)
 {
+    if (!map->IsMapLoaded())
+    {
+        if (map->GetMapManager())
+        {
+            map->GetMapManager()->RequestMapLoad(map);
+        }
+    }
+
+    std::list<Character*> char_list = map->GetCharacterList();
+    std::list<Character*>::iterator iter;
+    for (iter = char_list.begin(); iter != char_list.end(); ++iter)
+    {
+        Character *ch = *iter;
+        Actor *chact = ch;
+
+        if (chact != this && chact->GetActorManager())
+        {
+            chact->GetActorManager()->SignalMapEnter(chact, this);
+        }
+    }
+
     map->HandleActorEnter(this);
     this->current_map = map;
 }
 
 void Actor::ExitMap(Map* map)
 {
+    std::list<Character*> char_list = map->GetCharacterList();
+    std::list<Character*>::iterator iter;
+    for (iter = char_list.begin(); iter != char_list.end(); ++iter)
+    {
+        Character *ch = *iter;
+        Actor *chact = ch;
+
+        if (chact != this && chact->GetActorManager())
+        {
+            chact->GetActorManager()->SignalMapLeave(chact, this);
+        }
+    }
+
     map->HandleActorLeave(this);
     this->current_map = nullptr;
 }
 
 void Actor::Warp(Map* map, Vector2 coords)
 {
-    if (this->current_map != map)
+    bool did_change_maps = (this->current_map != map);
+    if (did_change_maps)
     {
         if (this->current_map)
         {
@@ -40,12 +85,55 @@ void Actor::Warp(Map* map, Vector2 coords)
 
     this->map_position = coords;
 
+    std::list<Character*> char_list = map->GetCharacterList();
+    std::list<Character*>::iterator iter;
+    for (iter = char_list.begin(); iter != char_list.end(); ++iter)
+    {
+        Character *ch = *iter;
+        Actor *chact = ch;
+
+        // Want to send to own character as well.
+        //if (chact != this && chact->GetActorManager())
+        if (chact->GetActorManager())
+        {
+            chact->GetActorManager()->SignalPosition(chact, this);
+        }
+    }
+
+    if (this->GetActorManager())
+    {
+        for (iter = char_list.begin(); iter != char_list.end(); ++iter)
+        {
+            Character *ch = *iter;
+            Actor *chact = ch;
+
+            if (chact != this && chact->GetActorManager())
+            {
+                this->GetActorManager()->SignalMapEnter(this, chact);
+            }
+        }
+    }
+
     this->ChangeState(new ActorStateStand(this));
 }
 
 void Actor::Turn(Actor::Direction direction)
 {
     this->direction = direction;
+
+    std::list<Character*> char_list = this->current_map->GetCharacterList();
+    std::list<Character*>::iterator iter;
+    for (iter = char_list.begin(); iter != char_list.end(); ++iter)
+    {
+        Character *ch = *iter;
+        Actor *chact = ch;
+
+        if (chact != this && chact->GetActorManager())
+        {
+            chact->GetActorManager()->SignalTurn(chact, this);
+        }
+    }
+
     this->ChangeState(new ActorStateTurn(this));
 }
 
@@ -104,6 +192,19 @@ void Actor::Move(Vector2 coords)
         (this->current_map->CoordsAreInBounds(coords) && this->current_map->GetTile(coords).TileIsWalkable(this)))
     {
         this->map_position = coords;
+
+        std::list<Character*> char_list = this->current_map->GetCharacterList();
+        std::list<Character*>::iterator iter;
+        for (iter = char_list.begin(); iter != char_list.end(); ++iter)
+        {
+            Character *ch = *iter;
+            Actor *chact = ch;
+
+            if (chact != this && chact->GetActorManager())
+            {
+                chact->GetActorManager()->SignalMove(chact, this);
+            }
+        }
 
         this->ChangeState(new ActorStateWalk(this));
     }

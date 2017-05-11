@@ -370,6 +370,9 @@ namespace CharacterCreationListeners
 
 GuiScreen * SreenMakerCharacterCreation::MakeScreen()
 {
+    const BitmapSet* bg_set = BitmapService::Instance()->GetBitmapSet(BitmapService::BITMAPSET_BACKGROUND);
+    const BitmapSet* elem_set = BitmapService::Instance()->GetBitmapSet(BitmapService::BITMAPSET_GUI_ELEMENT);
+
     ALLEGRO_FONT * button_font = nullptr;
 
     GuiScreen * screen = nullptr;
@@ -468,7 +471,7 @@ GuiScreen * SreenMakerCharacterCreation::MakeScreen()
 
     //labels
     background = new GuiImageLabel(parent_frame->GetSize());
-    background->SetImage(BitmapService::Instance()->GetBitmap("background_1"));
+    background->SetImage(bg_set->GetBitmap(1));
 
     user_name_label = new GuiTextLabel(Vector2(640*0.2, 25), Vector2(LEFT_ALIGN +BASE_WIDTH*4, UPPER_ALIGN));
     user_name_label->SetText("Username:");
@@ -558,35 +561,35 @@ GuiScreen * SreenMakerCharacterCreation::MakeScreen()
 
     change_direction_left_button->SetBackgroundColor(Color3(0,0,255*0.618));
     change_direction_left_button->RegisterOnClick(change_direction_left);
-    change_direction_left_button->SetImage(BitmapService::Instance()->GetBitmap("guielement_2"));
+    change_direction_left_button->SetImage(elem_set->GetBitmap(2));
 
     change_direction_right_button->SetBackgroundColor(Color3(0,0,255*0.618));
     change_direction_right_button->RegisterOnClick(change_direction_right);
-    change_direction_right_button->SetImage(BitmapService::Instance()->GetBitmap("guielement_3"));
+    change_direction_right_button->SetImage(elem_set->GetBitmap(3));
 
     female_button->SetBackgroundColor(Color3(0,152,255));
     female_button->RegisterOnClick(female_listener);
-    female_button->SetImage(BitmapService::Instance()->GetBitmap("guielement_0"));
+    female_button->SetImage(elem_set->GetBitmap(0));
 
     male_button->SetBackgroundColor(Color3(0,152,255));
     male_button->RegisterOnClick(male_listener);
-    male_button->SetImage(BitmapService::Instance()->GetBitmap("guielement_1"));
+    male_button->SetImage(elem_set->GetBitmap(1));
 
     skin_left_button->SetBackgroundColor(Color3(0,255,255));
     skin_left_button->RegisterOnClick(skin_left_listener);
-    skin_left_button->SetImage(BitmapService::Instance()->GetBitmap("guielement_2"));
+    skin_left_button->SetImage(elem_set->GetBitmap(2));
 
     skin_right_button->SetBackgroundColor(Color3(0,255,255));
     skin_right_button->RegisterOnClick(skin_right_listener);
-    skin_right_button->SetImage(BitmapService::Instance()->GetBitmap("guielement_3"));
+    skin_right_button->SetImage(elem_set->GetBitmap(3));
 
     hair_left_button->SetBackgroundColor(Color3(155,255,255));
     hair_left_button->RegisterOnClick(hair_left_listener);
-    hair_left_button->SetImage(BitmapService::Instance()->GetBitmap("guielement_2"));
+    hair_left_button->SetImage(elem_set->GetBitmap(2));
 
     hair_right_button->SetBackgroundColor(Color3(155,255,255));
     hair_right_button->RegisterOnClick(hair_right_listener);
-    hair_right_button->SetImage(BitmapService::Instance()->GetBitmap("guielement_3"));
+    hair_right_button->SetImage(elem_set->GetBitmap(3));
 
     color_brown_button->SetBackgroundColor(Color3(74,0,0));
     color_brown_button->RegisterOnClick(color_brown_listener);

@@ -63,7 +63,7 @@ void MapFile::DoReadV1(Map* map)
 
     if (id != map->GetMapId())
     {
-        throw FileException::FileCorrupted(this->filename);
+        //throw FileException::FileCorrupted(this->filename);
     }
 
     map->size = Vector2(width, height);

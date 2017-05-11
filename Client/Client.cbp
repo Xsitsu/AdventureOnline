@@ -54,6 +54,8 @@
 		<Unit filename="actordrawer.hpp" />
 		<Unit filename="bitmapservice.cpp" />
 		<Unit filename="bitmapservice.hpp" />
+		<Unit filename="bitmapset.cpp" />
+		<Unit filename="bitmapset.hpp" />
 		<Unit filename="client.cpp" />
 		<Unit filename="client.hpp" />
 		<Unit filename="fontservice.cpp" />
