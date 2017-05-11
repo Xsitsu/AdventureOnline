@@ -144,77 +144,7 @@ void ClientConnection::DoCharacterLogout()
     Map* map = this->playing_character->GetMap();
     if (map)
     {
-        World* world = this->server->GetWorld();
-
-        unsigned int map_id = map->GetMapId();
-        world->UnregisterClientInMap(this, map_id);
-
-
-        /*
-        std::list<ClientConnection*> clients = world->GetClientsInMap(map_id);
-        std::list<ClientConnection*>::iterator iter;
-        for (iter = clients.begin(); iter != clients.end(); ++iter)
-        {
-            ClientConnection* client = *iter;
-            client->SendCharacterMapLeave(this->playing_character);
-        }
-        */
-
         this->playing_character->ExitMap(map);
-    }
-}
-void ClientConnection::DoWarpCharacter(Map* map, Vector2 map_pos)
-{
-    World* world = this->server->GetWorld();
-
-    Map* last_map = this->playing_character->GetMap();
-    if (last_map)
-    {
-        unsigned int map_id = last_map->GetMapId();
-        world->UnregisterClientInMap(this, map_id);
-
-        std::list<ClientConnection*> clients = world->GetClientsInMap(map_id);
-        std::list<ClientConnection*>::iterator iter;
-        for (iter = clients.begin(); iter != clients.end(); ++iter)
-        {
-            ClientConnection* client = *iter;
-            client->SendCharacterMapLeave(this->playing_character);
-        }
-
-    }
-
-    this->playing_character->Warp(map, map_pos);
-
-    unsigned int map_id = map->GetMapId();
-
-    std::list<ClientConnection*> clients = world->GetClientsInMap(map_id);
-    std::list<ClientConnection*>::iterator iter;
-    for (iter = clients.begin(); iter != clients.end(); ++iter)
-    {
-        ClientConnection* client = *iter;
-        client->SendCharacterMapEnter(this->playing_character);
-    }
-
-    world->RegisterClientInMap(this, map_id);
-
-    PacketCharacterPosition* packet = new PacketCharacterPosition();
-    packet->SetCharacterId(this->playing_character->GetCharacterId());
-    packet->SetMapId(map->GetMapId());
-    packet->SetPositionX(map_pos.x);
-    packet->SetPositionY(map_pos.y);
-    packet->SetDirection(static_cast<uint8_t>(this->playing_character->GetDirection()));
-
-    this->SendPacket(packet);
-
-    std::list<Character*> character_list = map->GetCharacterList();
-    std::list<Character*>::iterator iter2;
-    for (iter2 = character_list.begin(); iter2 != character_list.end(); ++iter2)
-    {
-        Character* other = *iter2;
-        if (other != this->playing_character)
-        {
-            this->SendCharacterMapEnter(other);
-        }
     }
 }
 

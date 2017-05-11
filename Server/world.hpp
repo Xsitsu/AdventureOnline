@@ -14,7 +14,6 @@ protected:
     unsigned int number_maps;
     Map** maps;
     std::list<Map*> loaded_maps;
-    std::list<ClientConnection*>* clients_in_maps;
 
 public:
     World(unsigned int number_maps);
@@ -25,11 +24,6 @@ public:
     Map* GetMap(unsigned int id);
     void LoadMap(unsigned int id);
     void UnloadMap(unsigned int id);
-
-    void RegisterClientInMap(ClientConnection* client, unsigned int map_id);
-    void UnregisterClientInMap(ClientConnection* client, unsigned int map_id);
-
-    std::list<ClientConnection*> GetClientsInMap(unsigned int map_id) const;
 
     void Update();
 };

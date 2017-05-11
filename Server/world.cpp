@@ -17,8 +17,6 @@ World::World(unsigned int number_maps): number_maps(number_maps)
 
         this->maps[i] = map;
     }
-
-    this->clients_in_maps = new std::list<ClientConnection*>[number_maps];
 }
 
 World::~World()
@@ -33,7 +31,6 @@ World::~World()
         delete this->maps[i];
     }
     delete[] this->maps;
-    delete[] this->clients_in_maps;
 }
 
 bool World::IsMapLoaded(unsigned int id)
@@ -62,21 +59,6 @@ void World::UnloadMap(unsigned int id)
     map->UnloadMap();
 
     this->loaded_maps.remove(map);
-}
-
-void World::RegisterClientInMap(ClientConnection* client, unsigned int map_id)
-{
-    this->clients_in_maps[map_id].push_back(client);
-}
-
-void World::UnregisterClientInMap(ClientConnection* client, unsigned int map_id)
-{
-    this->clients_in_maps[map_id].remove(client);
-}
-
-std::list<ClientConnection*> World::GetClientsInMap(unsigned int map_id) const
-{
-    return this->clients_in_maps[map_id];
 }
 
 void World::Update()

@@ -54,7 +54,6 @@ protected:
 
     void DoCharacterLogin(Character *login_char);
     void DoCharacterLogout();
-    void DoWarpCharacter(Map* map, Vector2 map_pos);
 
 public:
     ClientConnection(Server* server, Address address, unsigned int connection_id);
