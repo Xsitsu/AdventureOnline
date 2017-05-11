@@ -21,6 +21,10 @@ public:
     virtual ~MapWarpBase();
 
     virtual bool HandleWarp(Actor *actor);
+
+    unsigned int GetTargetMapId() const;
+    Vector2 GetTargetCoordinates() const;
+    virtual uint8_t GetWarpType() const = 0;
 };
 
 #endif // MAPWARP_HPP_INCLUDE

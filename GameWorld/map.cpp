@@ -3,6 +3,8 @@
 #include <sstream>
 #include <iostream>
 
+#include "mapwarpregular.hpp"
+
 Map::Map(unsigned int id) : map_manager(nullptr), map_id(id), is_loaded(false), tiles(nullptr)
 {
 
@@ -34,42 +36,48 @@ unsigned int Map::GetMapId() const
 
 void Map::DebugTestLoad()
 {
-    this->size = Vector2(20, 20);
+    Map *map = this;
+    map->CreateMap(Vector2(10, 10));
 
-    this->tiles = new MapTile*[this->size.x];
-    for (int x = 0; x < this->size.x; x++)
+    for (int x = 0; x < 10; x++)
     {
-        this->tiles[x] = new MapTile[this->size.y];
-
-        for (int y = 0; y < this->size.y; y++)
+        for (int y = 0; y < 10; y++)
         {
-            MapTile& tile = this->tiles[x][y];
-            tile.SetSpriteId(1);
-            tile.SetMovementPermissions(MapTile::MOVEPERM_NONE);
+            MapTile &tile = map->GetTile(Vector2(x, y));
+
+            if (!((x == 0 || (x == 9)) && (y == 0 || y == 9)))
+            {
+                tile.SetSpriteId(1);
+                tile.SetMovementPermissions(MapTile::MOVEPERM_NONE);
+            }
+            else
+            {
+                tile.SetSpriteId(0);
+                tile.SetMovementPermissions(MapTile::MOVEPERM_WALL);
+            }
+
         }
     }
 
-    this->GetTile(Vector2(9, 9)).SetSpriteId(10);
-    this->GetTile(Vector2(9, 10)).SetSpriteId(10);
-    this->GetTile(Vector2(10, 9)).SetSpriteId(10);
-    this->GetTile(Vector2(10, 10)).SetSpriteId(10);
+    MapTile &tile = map->GetTile(Vector2(3, 3));
+    tile.SetSpriteId(2);
+    MapWarpRegular *warp = new MapWarpRegular(map, 2, Vector2(1, 0));
+    tile.SetMapWarp(warp);
+}
 
-    this->GetTile(Vector2(11, 11)).SetSpriteId(8);
-    this->GetTile(Vector2(8, 8)).SetSpriteId(7);
-    this->GetTile(Vector2(8, 11)).SetSpriteId(6);
-    this->GetTile(Vector2(11, 8)).SetSpriteId(9);
+void Map::CreateMap(Vector2 size)
+{
+    if (!this->IsMapLoaded())
+    {
+        this->size = size;
+        this->tiles = new MapTile*[size.x];
+        for (uint16_t x = 0; x < size.x; x++)
+        {
+            this->tiles[x] = new MapTile[size.y];
+        }
 
-    this->GetTile(Vector2(11, 9)).SetSpriteId(5);
-    this->GetTile(Vector2(11, 10)).SetSpriteId(5);
-
-    this->GetTile(Vector2(8, 9)).SetSpriteId(4);
-    this->GetTile(Vector2(8, 10)).SetSpriteId(4);
-
-    this->GetTile(Vector2(9, 11)).SetSpriteId(12);
-    this->GetTile(Vector2(10, 11)).SetSpriteId(12);
-
-    this->GetTile(Vector2(9, 8)).SetSpriteId(11);
-    this->GetTile(Vector2(10, 8)).SetSpriteId(11);
+        this->is_loaded = true;
+    }
 }
 
 void Map::SaveMap()
@@ -93,6 +101,14 @@ void Map::LoadMap()
 {
     if (!this->IsMapLoaded())
     {
+        // Enable for debug test load.
+        if (false)
+        {
+            this->DebugTestLoad();
+            this->is_loaded = true;
+            return;
+        }
+
         std::stringstream ss;
         if (map_id < 1000) ss << "0";
         if (map_id < 100) ss << "0";
@@ -104,13 +120,7 @@ void Map::LoadMap()
         file.Read(this);
         file.Close();
 
-
-        //this->DebugTestLoad();
-
         this->is_loaded = true;
-
-        MapWarpBase *map_warp = new MapWarpBase(this, 2, Vector2(10, 5));
-        this->GetTile(Vector2(5, 5)).SetMapWarp(map_warp);
     }
 }
 

@@ -23,3 +23,13 @@ bool MapWarpBase::HandleWarp(Actor *actor)
 
     return false;
 }
+
+unsigned int MapWarpBase::GetTargetMapId() const
+{
+    return this->targ_map_id;
+}
+
+Vector2 MapWarpBase::GetTargetCoordinates() const
+{
+    return this->targ_coords;
+}
