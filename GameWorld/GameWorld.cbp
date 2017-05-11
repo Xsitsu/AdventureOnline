@@ -68,8 +68,11 @@
 		<Unit filename="map.hpp" />
 		<Unit filename="mapfile.cpp" />
 		<Unit filename="mapfile.hpp" />
+		<Unit filename="mapmanager.hpp" />
 		<Unit filename="maptile.cpp" />
 		<Unit filename="maptile.hpp" />
+		<Unit filename="mapwarp.hpp" />
+		<Unit filename="mapwarpbase.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

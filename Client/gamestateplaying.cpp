@@ -242,8 +242,8 @@ void GameStatePlaying::HandlePacket(PacketBase* packet)
             bool change_map = (!cur_map) || (targ_map->GetMapId() != map_id);
             if (change_map)
             {
-                targ_map = new Map();
-                targ_map->LoadMap(map_id);
+                targ_map = new Map(map_id);
+                targ_map->LoadMap();
             }
 
             character->Warp(targ_map, pos);

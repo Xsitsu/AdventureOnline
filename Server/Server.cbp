@@ -65,6 +65,8 @@
 		<Unit filename="database.cpp" />
 		<Unit filename="database.hpp" />
 		<Unit filename="main.cpp" />
+		<Unit filename="mapmanagerworld.cpp" />
+		<Unit filename="mapmanagerworld.hpp" />
 		<Unit filename="server.cpp" />
 		<Unit filename="server.hpp" />
 		<Unit filename="sqlite3.c">

@@ -17,6 +17,14 @@ Actor::~Actor()
 
 void Actor::EnterMap(Map* map)
 {
+    if (!map->IsMapLoaded())
+    {
+        if (map->GetMapManager())
+        {
+            map->GetMapManager()->RequestMapLoad(map);
+        }
+    }
+
     map->HandleActorEnter(this);
     this->current_map = map;
 }

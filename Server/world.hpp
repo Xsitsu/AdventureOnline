@@ -2,12 +2,15 @@
 #define WORLD_HPP_INCLUDE
 
 #include "GameWorld\map.hpp"
+#include "GameWorld\mapmanager.hpp"
 
 class ClientConnection;
 
 class World
 {
 protected:
+    MapManagerBase *map_manager;
+
     unsigned int number_maps;
     Map** maps;
     std::list<Map*> loaded_maps;

@@ -27,14 +27,10 @@ ALLEGRO_BITMAP* BitmapService::GetBitmap(BitmapSets set_id, int bitmap_id)
 
 void BitmapService::RegisterBitmap(BitmapSets set_id, int bitmap_id, ALLEGRO_BITMAP* bitmap)
 {
-    try
+    ALLEGRO_BITMAP* bm = this->bitmap_sets[set_id]->GetBitmap(bitmap_id);
+    if (bm)
     {
-        this->GetBitmap(set_id, bitmap_id);
         throw BitmapAlreadyLoadedException();
-    }
-    catch (BitmapNotLoadedException &e)
-    {
-        // Bitmap not loaded, so everything is fine.
     }
 
     this->bitmap_sets[set_id]->SetBitmap(bitmap_id, bitmap);

@@ -1,13 +1,21 @@
 #include "world.hpp"
 
+#include "GameWorld/mapwarp.hpp"
 #include <iostream>
+
+#include "mapmanagerworld.hpp"
 
 World::World(unsigned int number_maps): number_maps(number_maps)
 {
+    this->map_manager = new MapManagerWorld(this);
+
     this->maps = new Map*[number_maps];
     for (unsigned int i = 0; i < number_maps; i++)
     {
-        this->maps[i] = nullptr;
+        Map *map = new Map(i);
+        map->SetMapManager(this->map_manager);
+
+        this->maps[i] = map;
     }
 
     this->clients_in_maps = new std::list<ClientConnection*>[number_maps];
@@ -21,6 +29,8 @@ World::~World()
         {
             this->UnloadMap(i);
         }
+
+        delete this->maps[i];
     }
     delete[] this->maps;
     delete[] this->clients_in_maps;
@@ -28,7 +38,7 @@ World::~World()
 
 bool World::IsMapLoaded(unsigned int id)
 {
-    return (this->maps[id] != nullptr);
+    return this->maps[id]->IsMapLoaded();
 }
 
 Map* World::GetMap(unsigned int id)
@@ -38,9 +48,8 @@ Map* World::GetMap(unsigned int id)
 
 void World::LoadMap(unsigned int id)
 {
-    Map* map = new Map();
-    map->LoadMap(id);
-    this->maps[id] = map;
+    Map* map = this->maps[id];
+    map->LoadMap();
 
     std::cout << "Loaded map with id: " << map->GetMapId() << std::endl;
 
@@ -51,8 +60,6 @@ void World::UnloadMap(unsigned int id)
 {
     Map* map = this->maps[id];
     map->UnloadMap();
-    delete map;
-    this->maps[id] = nullptr;
 
     this->loaded_maps.remove(map);
 }
@@ -75,7 +82,9 @@ std::list<ClientConnection*> World::GetClientsInMap(unsigned int map_id) const
 void World::Update()
 {
     std::list<Map*>::iterator iter;
-    for (iter = this->loaded_maps.begin(); iter != this->loaded_maps.end(); ++iter)
+    std::list<Map*> use_loaded_maps = this->loaded_maps;
+
+    for (iter = use_loaded_maps.begin(); iter != use_loaded_maps.end(); ++iter)
     {
         Map* map = *iter;
         map->Update();

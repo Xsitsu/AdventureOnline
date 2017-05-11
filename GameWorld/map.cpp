@@ -1,8 +1,9 @@
 #include "map.hpp"
 
 #include <sstream>
+#include <iostream>
 
-Map::Map() : map_id(0), is_loaded(false), tiles(nullptr)
+Map::Map(unsigned int id) : map_manager(nullptr), map_id(id), is_loaded(false), tiles(nullptr)
 {
 
 }
@@ -14,6 +15,17 @@ Map::~Map()
         this->UnloadMap();
     }
 }
+
+void Map::SetMapManager(MapManagerBase *map_manager)
+{
+    this->map_manager = map_manager;
+}
+
+MapManagerBase* Map::GetMapManager() const
+{
+    return this->map_manager;
+}
+
 
 unsigned int Map::GetMapId() const
 {
@@ -77,17 +89,15 @@ void Map::SaveMap()
     }
 }
 
-void Map::LoadMap(int map_id)
+void Map::LoadMap()
 {
     if (!this->IsMapLoaded())
     {
-        this->map_id = map_id;
-
         std::stringstream ss;
         if (map_id < 1000) ss << "0";
         if (map_id < 100) ss << "0";
         if (map_id < 10) ss << "0";
-        ss << map_id;
+        ss << this->map_id;
 
         MapFile file;
         file.Open(ss.str());
@@ -98,6 +108,9 @@ void Map::LoadMap(int map_id)
         //this->DebugTestLoad();
 
         this->is_loaded = true;
+
+        MapWarpBase *map_warp = new MapWarpBase(this, 2, Vector2(10, 5));
+        this->GetTile(Vector2(5, 5)).SetMapWarp(map_warp);
     }
 }
 
@@ -196,7 +209,12 @@ std::list<Actor*> Map::GetNPCList() const
 void Map::Update()
 {
     std::list<Actor*>::iterator iter;
-    for (iter = this->actors.begin(); iter != this->actors.end(); ++iter)
+    std::list<Actor*> actor_list = this->actors;
+
+    // Need to copy the list because Actor::Update() could do things like warping which
+    // changes the actor list of a map which isn't good while we're iterating over it.
+
+    for (iter = actor_list.begin(); iter != actor_list.end(); ++iter)
     {
         Actor* actor = *iter;
         actor->Update();
