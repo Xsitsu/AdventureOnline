@@ -40,6 +40,11 @@
 			<Add directory=".." />
 		</Compiler>
 		<Unit filename="main.cpp" />
+		<Unit filename="mapgen1.cpp" />
+		<Unit filename="mapgen2.cpp" />
+		<Unit filename="mapgenfunctions.hpp" />
+		<Unit filename="maphelpfunctions.cpp" />
+		<Unit filename="maphelpfunctions.hpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

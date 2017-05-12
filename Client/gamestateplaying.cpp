@@ -82,20 +82,24 @@ void GameStatePlaying::Render()
 
                     std::string bitmap_name = ss.str();
 
-                    try
+                    if (tile.GetSpriteId() > 0)
                     {
-                        //ALLEGRO_BITMAP* tile_bitmap = BitmapService::Instance()->GetBitmap(bitmap_name);
-                        ALLEGRO_BITMAP* tile_bitmap = tile_set->GetBitmap(tile.GetSpriteId());
+                        try
+                        {
+                            //ALLEGRO_BITMAP* tile_bitmap = BitmapService::Instance()->GetBitmap(bitmap_name);
+                            ALLEGRO_BITMAP* tile_bitmap = tile_set->GetBitmap(tile.GetSpriteId());
 
-                        Vector2 draw_pos = base_draw + (tile_step_x * x) + (tile_step_y * y);
-                        draw_pos = draw_pos + draw_offset;
+                            Vector2 draw_pos = base_draw + (tile_step_x * x) + (tile_step_y * y);
+                            draw_pos = draw_pos + draw_offset;
 
-                        al_draw_bitmap(tile_bitmap, draw_pos.x, draw_pos.y, 0);
+                            al_draw_bitmap(tile_bitmap, draw_pos.x, draw_pos.y, 0);
+                        }
+                        catch (BitmapNotLoadedException &e)
+                        {
+
+                        }
                     }
-                    catch (BitmapNotLoadedException &e)
-                    {
 
-                    }
                 }
             }
         }

@@ -1,37 +1,28 @@
-#include "GameWorld/map.hpp"
-#include "GameWorld/mapwarpregular.hpp"
+#include "mapgenfunctions.hpp"
+#include "maphelpfunctions.hpp"
 
 int main()
 {
-    Map *map = new Map(1);
-    map->CreateMap(Vector2(10, 10));
+    Map *map1 = GenerateMap1();
+    Map *map2 = GenerateMap2();
 
-    for (int x = 0; x < 10; x++)
-    {
-        for (int y = 0; y < 10; y++)
-        {
-            MapTile &tile = map->GetTile(Vector2(x, y));
+    map1->SaveMap();
+    map2->SaveMap();
 
-            if (!((x == 0 || (x == 9)) && (y == 0 || y == 9)))
-            {
-                tile.SetSpriteId(1);
-                tile.SetMovementPermissions(MapTile::MOVEPERM_NONE);
-            }
-            else
-            {
-                tile.SetSpriteId(0);
-                tile.SetMovementPermissions(MapTile::MOVEPERM_WALL);
-            }
+    Map *map1l = new Map(1);
+    map1l->LoadMap();
 
-        }
-    }
+    Map *map2l = new Map(2);
+    map2l->LoadMap();
 
-    MapTile &tile = map->GetTile(Vector2(3, 3));
-    tile.SetSpriteId(2);
-    MapWarpRegular *warp = new MapWarpRegular(map, 2, Vector2(1, 0));
-    tile.SetMapWarp(warp);
+    //OutputMapData(map1);
+    //OutputMapData(map1l);
 
-    map->SaveMap();
+    //OutputMapData(map2);
+    //OutputMapData(map2l);
+
+    //PrintMap(map2);
+    //PrintMap(map2l);
 
     return 0;
 }
