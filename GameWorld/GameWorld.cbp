@@ -74,6 +74,8 @@
 		<Unit filename="maptile.hpp" />
 		<Unit filename="mapwarp.hpp" />
 		<Unit filename="mapwarpbase.cpp" />
+		<Unit filename="mapwarpregular.cpp" />
+		<Unit filename="mapwarpregular.hpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

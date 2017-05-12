@@ -50,6 +50,7 @@ public:
 
     unsigned int GetMapId() const;
 
+    void CreateMap(Vector2 size);
     void SaveMap();
     void LoadMap();
     void UnloadMap();

@@ -18,6 +18,7 @@ public:
 
     ALLEGRO_BITMAP* GetBitmap(int index) const;
     void SetBitmap(int index, ALLEGRO_BITMAP* bitmap);
+    bool IsBitmapLoaded(int index) const;
 };
 
 #endif // BITMAPSET_HPP_INCLUDE

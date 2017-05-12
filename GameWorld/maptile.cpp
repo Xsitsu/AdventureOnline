@@ -1,6 +1,6 @@
 #include "maptile.hpp"
 
-MapTile::MapTile() : warp(nullptr)
+MapTile::MapTile() : sprite_id(0), move_permissions(MapTile::MOVEPERM_NONE), warp(nullptr)
 {
 
 }

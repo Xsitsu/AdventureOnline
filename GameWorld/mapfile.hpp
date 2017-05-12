@@ -4,6 +4,7 @@
 #include "GameUtil/filebase.hpp"
 
 #include "map.hpp"
+#include "mapwarp.hpp"
 
 class MapFile : public FileBase
 {
