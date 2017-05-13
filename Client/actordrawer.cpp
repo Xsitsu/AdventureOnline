@@ -126,6 +126,22 @@ void ActorDrawer::DoDrawCharacter(Character* character, Vector2 draw_middle, boo
 
         hair_offset = Vector2(1, 12);
     }
+    else if (character->IsAttacking())
+    {
+        character_bitmap = service->GetBitmap(BitmapService::BITMAPSET_CHARACTER, 2);
+        sprite_width = 24;
+        sprite_height = 58;
+
+        offset_x = 0;
+        offset_y = 0;
+
+        max_frames = 2;
+        draw_frame = max_frames * character->GetStatePercentDone();
+        if (draw_frame > max_frames)
+            draw_frame = max_frames;
+
+        hair_offset = Vector2(5, 13);
+    }
 
     int draw_x = (sprite_width *  draw_frame) + (sprite_width * max_frames * dir_flag) + (sprite_width * max_frames * 2 * (int)gender);
     int draw_y = (sprite_height * (int)skin);

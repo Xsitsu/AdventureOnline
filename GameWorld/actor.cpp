@@ -216,6 +216,16 @@ void Actor::Move(Vector2 coords)
 
 }
 
+void Actor::Attack()
+{
+    this->ChangeState(new ActorStateAttack(this));
+}
+
+void Actor::FeignAttack()
+{
+    this->ChangeState(new ActorStateFeignAttack(this));
+}
+
 Vector2 Actor::GetPosition() const
 {
     return this->map_position;
@@ -306,6 +316,11 @@ bool Actor::IsStanding()
 bool Actor::IsMoving()
 {
     return this->state->IsMoving();
+}
+
+bool Actor::IsAttacking()
+{
+    return this->state->IsAttacking();
 }
 
 double Actor::GetStatePercentDone()

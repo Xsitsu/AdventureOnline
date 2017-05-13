@@ -31,6 +31,7 @@ public:
 
     virtual bool IsStanding() { return false; }
     virtual bool IsMoving() { return false; }
+    virtual bool IsAttacking() { return false; }
 };
 
 class DLL_EXPORT ActorStateStand : public ActorStateBase
@@ -82,6 +83,31 @@ public:
     virtual bool CanAttack();
 
     virtual bool IsMoving();
+};
+
+class DLL_EXPORT ActorStateAttack : public ActorStateBase
+{
+protected:
+
+public:
+    ActorStateAttack(Actor *actor);
+    virtual ~ActorStateAttack();
+
+    virtual void Enter();
+    virtual void Exit();
+    virtual void Update();
+    virtual double GetPercentDone();
+    virtual bool CanMove();
+    virtual bool CanAttack();
+
+    virtual bool IsAttacking();
+};
+
+class DLL_EXPORT ActorStateFeignAttack : public ActorStateAttack
+{
+public:
+    ActorStateFeignAttack(Actor *actor);
+    virtual void Update();
 };
 
 #endif // ACTORSTATE_HPP_INCLUDE

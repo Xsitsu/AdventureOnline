@@ -405,6 +405,13 @@ void GameStatePlaying::HandleKeyDown(const ALLEGRO_KEYBOARD_EVENT& keyboard)
         this->game->current_character = nullptr;
         this->game->ChangeState(new GameStateCharacterView(this->game));
     }
+    else if (keyboard.keycode == ALLEGRO_KEY_LCTRL)
+    {
+        if (this->game->current_character->CanAttack())
+        {
+            this->game->current_character->Attack();
+        }
+    }
 
 
 }
