@@ -32,6 +32,7 @@ public:
     virtual bool IsStanding() { return false; }
     virtual bool IsMoving() { return false; }
     virtual bool IsAttacking() { return false; }
+    virtual bool IsDieing() { return false; }
 };
 
 class DLL_EXPORT ActorStateStand : public ActorStateBase
@@ -108,6 +109,38 @@ class DLL_EXPORT ActorStateFeignAttack : public ActorStateAttack
 public:
     ActorStateFeignAttack(Actor *actor);
     virtual void Update();
+};
+
+class DLL_EXPORT ActorStateDead : public ActorStateBase
+{
+public:
+    ActorStateDead(Actor *actor);
+    virtual ~ActorStateDead();
+
+    virtual void Enter();
+    virtual void Exit();
+    virtual void Update();
+    virtual double GetPercentDone();
+    virtual bool CanMove();
+    virtual bool CanAttack();
+
+    virtual bool IsDieing();
+};
+
+class DLL_EXPORT ActorStateRevive : public ActorStateBase
+{
+public:
+    ActorStateRevive(Actor *actor);
+    virtual ~ActorStateRevive();
+
+    virtual void Enter();
+    virtual void Exit();
+    virtual void Update();
+    virtual double GetPercentDone();
+    virtual bool CanMove();
+    virtual bool CanAttack();
+
+    virtual bool IsStanding();
 };
 
 #endif // ACTORSTATE_HPP_INCLUDE

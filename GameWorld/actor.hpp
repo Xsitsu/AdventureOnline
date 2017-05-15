@@ -64,6 +64,9 @@ public:
     unsigned short GetStrength() { return strength; }
     unsigned short GetEndurance() { return endurance; }
 
+    void TakeDamage(unsigned short value);
+    bool IsDead() const;
+
     Vector2 GetPosition() const;
 
     Vector2 GetDirectionVector() const;
@@ -83,6 +86,7 @@ public:
     bool IsStanding();
     bool IsMoving();
     bool IsAttacking();
+    bool IsDieing();
     double GetStatePercentDone();
 
 };

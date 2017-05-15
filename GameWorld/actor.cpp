@@ -226,6 +226,20 @@ void Actor::FeignAttack()
     this->ChangeState(new ActorStateFeignAttack(this));
 }
 
+void Actor::TakeDamage(unsigned short value)
+{
+    this->health -= value;
+    if (this->health < 0)
+    {
+        this->health = 0;
+    }
+}
+
+bool Actor::IsDead() const
+{
+    return (this->health < 1);
+}
+
 Vector2 Actor::GetPosition() const
 {
     return this->map_position;
@@ -321,6 +335,11 @@ bool Actor::IsMoving()
 bool Actor::IsAttacking()
 {
     return this->state->IsAttacking();
+}
+
+bool Actor::IsDieing()
+{
+    return this->state->IsDieing();
 }
 
 double Actor::GetStatePercentDone()
