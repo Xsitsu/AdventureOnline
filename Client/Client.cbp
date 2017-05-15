@@ -54,6 +54,8 @@
 		<Unit filename="actordrawer.hpp" />
 		<Unit filename="bitmapservice.cpp" />
 		<Unit filename="bitmapservice.hpp" />
+		<Unit filename="bitmapset.cpp" />
+		<Unit filename="bitmapset.hpp" />
 		<Unit filename="client.cpp" />
 		<Unit filename="client.hpp" />
 		<Unit filename="fontservice.cpp" />
@@ -67,6 +69,8 @@
 		<Unit filename="gamestateaccountcreationawaitresponse.hpp" />
 		<Unit filename="gamestatecharactercreation.cpp" />
 		<Unit filename="gamestatecharactercreation.hpp" />
+		<Unit filename="gamestatecharactercreationawaitresponse.cpp" />
+		<Unit filename="gamestatecharactercreationawaitresponse.hpp" />
 		<Unit filename="gamestatecharacterview.cpp" />
 		<Unit filename="gamestatecharacterview.hpp" />
 		<Unit filename="gamestateinit.cpp" />
@@ -87,6 +91,7 @@
 		<Unit filename="screenmakeraccountcreation.cpp" />
 		<Unit filename="screenmakeraccountcreationresponsewait.cpp" />
 		<Unit filename="screenmakercharactercreation.cpp" />
+		<Unit filename="screenmakercharactercreationawaitresponse.cpp" />
 		<Unit filename="screenmakercharacterview.cpp" />
 		<Unit filename="screenmakerempty.cpp" />
 		<Unit filename="screenmakerlogin.cpp" />

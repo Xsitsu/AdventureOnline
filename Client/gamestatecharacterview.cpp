@@ -45,6 +45,7 @@ void GameStateCharacterView::HandlePacket(PacketBase * packet)
             PacketCharacterDataRequest* packet = new PacketCharacterDataRequest();
             packet->SetCharacterId(*iter);
             packet->SetRequestAppearance(true);
+            packet->SetRequestStats(true);
             this->game->SendPacket(packet);
         }
     }
@@ -61,6 +62,22 @@ void GameStateCharacterView::HandlePacket(PacketBase * packet)
                 character->SetName(return_character->GetName());
                 character->SetGender(static_cast<Character::Gender>(return_character->GetGender()));
                 character->SetSkin(static_cast<Character::Skin>(return_character->GetSkin()));
+                character->SetHair(static_cast<Character::Hair>(return_character->GetHair()));
+                character->SetHairColor(static_cast<Character::HairColor>(return_character->GetHairColor()));
+            }
+        }
+    }
+    else if (packet->GetType() == PacketBase::PACKET_CHARACTER_STATS)
+    {
+        PacketCharacterStats *stats = static_cast<PacketCharacterStats*>(packet);
+        std::vector<Character*>::iterator iter;
+        for (iter = this->game->character_list.begin(); iter != this->game->character_list.end(); ++iter)
+        {
+            Character* character = *iter;
+            if (character->GetCharacterId() == stats->GetCharacterId())
+            {
+                character->SetMaxHealth(stats->GetMaxHealth());
+                character->SetHealth(stats->GetHealth());
             }
         }
     }

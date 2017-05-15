@@ -81,5 +81,23 @@ namespace FileException
             return err.c_str();
         }
     };
+
+    class DLL_EXPORT InvalidFileVersion : public FileException
+    {
+    protected:
+        int version;
+
+    public:
+        InvalidFileVersion(std::string filename, int version) : FileException(filename), version(version) {}
+        virtual const char* what() const noexcept
+        {
+            std::string err = "Incorrect file version in file: ";
+            err += this->filename;
+            err += " with V";
+            err += this->version;
+            err += ".";
+            return err.c_str();
+        }
+    };
 }
 #endif // FILEBASE_HPP_INCLUDE

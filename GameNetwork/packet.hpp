@@ -35,12 +35,19 @@ public:
         PACKET_CHARACTER_LOGOUT,
         PACKET_CHARACTER_APPEARANCE,
         PACKET_CHARACTER_POSITION,
+        PACKET_CHARACTER_STATS,
 
         PACKET_CHARACTER_MAP_ENTER,
         PACKET_CHARACTER_MAP_LEAVE,
 
         PACKET_CHARACTER_TURN,
-        PACKET_CHARACTER_WALK
+        PACKET_CHARACTER_WALK,
+        PACKET_CHARACTER_ATTACK,
+        PACKET_CHARACTER_TAKE_DAMAGE,
+        PACKET_CHARACTER_DIED,
+
+        PACKET_CHARACTER_CREATE_REQUEST,
+        PACKET_CHARACTER_CREATE_RESPONSE
     };
 
 protected:
@@ -368,6 +375,8 @@ protected:
     std::string name;
     uint8_t gender;
     uint8_t skin;
+    uint8_t hair;
+    uint8_t hairColor;
 
 public:
     PacketCharacterAppearance();
@@ -379,11 +388,15 @@ public:
     std::string GetName() const;
     uint8_t GetGender() const;
     uint8_t GetSkin() const;
+    uint8_t GetHair() const { return hair; }
+    uint8_t GetHairColor() const{ return hairColor; }
 
     void SetCharacterId(uint32_t character_id);
     void SetName(std::string name);
     void SetGender(uint8_t gender);
     void SetSkin(uint8_t skin);
+    void SetHair(uint8_t val)   { hair = val;}
+    void SetHairColor(uint8_t val) { hairColor = val;}
 
 };
 
@@ -414,6 +427,31 @@ public:
     void SetPositionX(uint16_t pos_x);
     void SetPositionY(uint16_t pos_y);
     void SetDirection(uint8_t direction);
+};
+
+class DLL_EXPORT PacketCharacterStats : public PacketBase
+{
+protected:
+    uint32_t character_id;
+
+    uint16_t health;
+    uint16_t max_health;
+
+public:
+    PacketCharacterStats();
+
+    virtual unsigned int Encode(char* buffer);
+    virtual void Decode(char* buffer);
+
+    uint32_t GetCharacterId() const { return this->character_id; }
+    void SetCharacterId(uint32_t character_id) { this->character_id = character_id; }
+
+    uint16_t GetHealth() const { return this->health; }
+    void SetHealth(uint16_t health) { this->health = health; }
+
+    uint16_t GetMaxHealth() const { return this->max_health; }
+    void SetMaxHealth(uint16_t max_health) { this->max_health = max_health; }
+
 };
 
 class DLL_EXPORT PacketCharacterMapEnter : public PacketBase
@@ -507,6 +545,108 @@ public:
     void SetToY(uint16_t to_y) { this->to_y = to_y; }
     void SetDirection(uint8_t direction) { this->direction = direction; }
 
+};
+
+class DLL_EXPORT PacketCharacterCreationRequest : public PacketBase
+{
+protected:
+    std::string name;
+    uint8_t skin;
+    uint8_t hair;
+    uint8_t hairColor;
+    uint8_t gender;
+
+public:
+    PacketCharacterCreationRequest();
+
+    virtual unsigned int Encode(char * buffer);
+    virtual void Decode(char * buffer);
+
+    void SetName(std::string val) { name = val; }
+    void SetSkin(int val ) { skin = val; }
+    void SetHair( int val ) { hair = val; }
+    void SetHairColor(int val ) { hairColor = val; }
+    void SetGender(int val ) { gender = val;}
+
+    std::string GetName() {return name; }
+    int GetSkin() { return skin; }
+    int GetHair() { return hair; }
+    int GetHairColor() { return hairColor; }
+    int GetGender() { return gender; }
+};
+
+class DLL_EXPORT PacketCharacterCreationResponse : public PacketBase
+{
+public:
+    enum Response
+    {
+        RESPONSE_CHARACTER_CREATED,
+        RESPONSE_CHARACTER_ALREADY_EXISTS,
+        RESPONSE_ERROR
+    };
+    PacketCharacterCreationResponse():PacketBase(PACKET_CHARACTER_CREATE_RESPONSE){}
+
+    Response GetResponse() {return returnCode; }
+    void SetResponse(Response val) { returnCode = val; }
+
+    virtual unsigned int Encode(char* buffer);
+    virtual void Decode(char* buffer);
+
+protected:
+    Response returnCode;
+};
+
+class DLL_EXPORT PacketCharacterAttack : public PacketBase
+{
+protected:
+    uint32_t character_id;
+
+public:
+    PacketCharacterAttack();
+
+    virtual unsigned int Encode(char* buffer);
+    virtual void Decode(char* buffer);
+
+    uint32_t GetCharacterId() const { return this->character_id; }
+    void SetCharacterId(uint32_t character_id) { this->character_id = character_id; }
+};
+
+class DLL_EXPORT PacketCharacterTakeDamage : public PacketBase
+{
+protected:
+    uint32_t character_id;
+    uint16_t new_health;
+    uint16_t taken_damage;
+
+public:
+    PacketCharacterTakeDamage();
+
+    virtual unsigned int Encode(char* buffer);
+    virtual void Decode(char* buffer);
+
+    uint32_t GetCharacterId() const { return this->character_id; }
+    void SetCharacterId(uint32_t character_id) { this->character_id = character_id; }
+
+    uint16_t GetNewHealth() const { return this->new_health; }
+    void SetNewHealth(uint16_t new_health) { this->new_health = new_health; }
+
+    uint16_t GetTakenDamage() const { return this->taken_damage; }
+    void SetTakenDamage(uint16_t taken_damage) { this->taken_damage = taken_damage; }
+};
+
+class DLL_EXPORT PacketCharacterDied : public PacketBase
+{
+protected:
+    uint32_t character_id;
+
+public:
+    PacketCharacterDied();
+
+    virtual unsigned int Encode(char* buffer);
+    virtual void Decode(char* buffer);
+
+    uint32_t GetCharacterId() const { return this->character_id; }
+    void SetCharacterId(uint32_t character_id) { this->character_id = character_id; }
 };
 
 #endif // PACKET_HPP_INCLUDE

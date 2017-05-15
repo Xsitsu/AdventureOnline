@@ -21,6 +21,13 @@ GameStatePlaying::GameStatePlaying(Game* game) : GameStateBase(game)
 void GameStatePlaying::Enter()
 {
     this->game->current_character->ChangeState(new ActorStateStand(this->game->current_character));
+
+    PacketCharacterDataRequest *request = new PacketCharacterDataRequest();
+    request->SetCharacterId(this->game->current_character->GetCharacterId());
+    request->SetRequestPosition(true);
+    request->SetRequestStats(true);
+
+    this->game->SendPacket(request);
 }
 
 void GameStatePlaying::Exit()
@@ -63,6 +70,8 @@ void GameStatePlaying::Render()
 
         Vector2 current_pos = this->game->current_character->GetPosition();
 
+        const BitmapSet* tile_set = BitmapService::Instance()->GetBitmapSet(BitmapService::BITMAPSET_TILE);
+
         // Draw map
         int range = 14;
         for (int x = -range; x < range; x++)
@@ -80,19 +89,24 @@ void GameStatePlaying::Render()
 
                     std::string bitmap_name = ss.str();
 
-                    try
+                    if (tile.GetSpriteId() > 0)
                     {
-                        ALLEGRO_BITMAP* tile_bitmap = BitmapService::Instance()->GetBitmap(bitmap_name);
+                        try
+                        {
+                            //ALLEGRO_BITMAP* tile_bitmap = BitmapService::Instance()->GetBitmap(bitmap_name);
+                            ALLEGRO_BITMAP* tile_bitmap = tile_set->GetBitmap(tile.GetSpriteId());
 
-                        Vector2 draw_pos = base_draw + (tile_step_x * x) + (tile_step_y * y);
-                        draw_pos = draw_pos + draw_offset;
+                            Vector2 draw_pos = base_draw + (tile_step_x * x) + (tile_step_y * y);
+                            draw_pos = draw_pos + draw_offset;
 
-                        al_draw_bitmap(tile_bitmap, draw_pos.x, draw_pos.y, 0);
+                            al_draw_bitmap(tile_bitmap, draw_pos.x, draw_pos.y, 0);
+                        }
+                        catch (BitmapNotLoadedException &e)
+                        {
+
+                        }
                     }
-                    catch (BitmapNotLoadedException &e)
-                    {
 
-                    }
                 }
             }
         }
@@ -131,6 +145,9 @@ void GameStatePlaying::Render()
 
     }
 
+    //update status bars
+    this->game->GetCurrentScreen()->GetGuiById("health_bar")->SetSize(Vector2(112*(static_cast<float>(game->GetCurrentCharacter()->GetHealth())/game->GetCurrentCharacter()->GetMaxHealth()), 26));
+
     // Screen drawing
     this->game->DrawScreens();
 
@@ -167,6 +184,7 @@ void GameStatePlaying::HandlePacket(PacketBase* packet)
                 request->SetCharacterId(character->GetCharacterId());
                 request->SetRequestAppearance(true);
                 request->SetRequestPosition(true);
+                request->SetRequestStats(true);
 
                 this->game->SendPacket(request);
             }
@@ -214,6 +232,8 @@ void GameStatePlaying::HandlePacket(PacketBase* packet)
                     character->SetName(return_character->GetName());
                     character->SetGender(static_cast<Character::Gender>(return_character->GetGender()));
                     character->SetSkin(static_cast<Character::Skin>(return_character->GetSkin()));
+                    character->SetHair(static_cast<Character::Hair>(return_character->GetHair()));
+                    character->SetHairColor(static_cast<Character::HairColor>(return_character->GetHairColor()));
                 }
             }
         }
@@ -234,8 +254,8 @@ void GameStatePlaying::HandlePacket(PacketBase* packet)
             bool change_map = (!cur_map) || (targ_map->GetMapId() != map_id);
             if (change_map)
             {
-                targ_map = new Map();
-                targ_map->LoadMap(map_id);
+                targ_map = new Map(map_id);
+                targ_map->LoadMap();
             }
 
             character->Warp(targ_map, pos);
@@ -265,6 +285,25 @@ void GameStatePlaying::HandlePacket(PacketBase* packet)
 
                     character->Warp(cur_map, pos);
                     character->SetDirection(dir);
+                }
+            }
+        }
+    }
+    else if (packet->GetType() == PacketBase::PACKET_CHARACTER_STATS)
+    {
+        PacketCharacterStats *stats = static_cast<PacketCharacterStats*>(packet);
+        Map* cur_map = this->game->current_map;
+        if (cur_map)
+        {
+            std::list<Character*> char_list = cur_map->GetCharacterList();
+            std::list<Character*>::iterator iter;
+            for (iter = char_list.begin(); iter != char_list.end(); ++iter)
+            {
+                Character* character = *iter;
+                if (character->GetCharacterId() == stats->GetCharacterId())
+                {
+                    character->SetMaxHealth(stats->GetMaxHealth());
+                    character->SetHealth(stats->GetHealth());
                 }
             }
         }
@@ -305,6 +344,65 @@ void GameStatePlaying::HandlePacket(PacketBase* packet)
                     c->Warp(cur_map, Vector2(walk_packet->GetFromX(), walk_packet->GetFromY()));
                     c->SetDirection(static_cast<Actor::Direction>(walk_packet->GetDirection()));
                     c->Move(Vector2(walk_packet->GetToX(), walk_packet->GetToY()));
+                }
+            }
+        }
+    }
+    else if (packet->GetType() == PacketBase::PACKET_CHARACTER_ATTACK)
+    {
+        PacketCharacterAttack *got_packet = static_cast<PacketCharacterAttack*>(packet);
+        Map* cur_map = this->game->current_map;
+        if (cur_map)
+        {
+            std::list<Character*> char_list = cur_map->GetCharacterList();
+            std::list<Character*>::iterator iter;
+            for (iter = char_list.begin(); iter != char_list.end(); ++iter)
+            {
+                Character* c = *iter;
+                if (c->GetCharacterId() == got_packet->GetCharacterId())
+                {
+                    c->FeignAttack();
+                }
+            }
+        }
+    }
+    else if (packet->GetType() == PacketBase::PACKET_CHARACTER_TAKE_DAMAGE)
+    {
+        PacketCharacterTakeDamage *got_packet = static_cast<PacketCharacterTakeDamage*>(packet);
+        Map* cur_map = this->game->current_map;
+        if (cur_map)
+        {
+            std::list<Character*> char_list = cur_map->GetCharacterList();
+            std::list<Character*>::iterator iter;
+            for (iter = char_list.begin(); iter != char_list.end(); ++iter)
+            {
+                Character* c = *iter;
+                if (c->GetCharacterId() == got_packet->GetCharacterId())
+                {
+                    if (c == this->game->current_character)
+                    {
+                        c->TakeDamage(got_packet->GetTakenDamage());
+                    }
+
+                    // Display some health bar / damage number animation above head.
+                }
+            }
+        }
+    }
+    else if (packet->GetType() == PacketBase::PACKET_CHARACTER_DIED)
+    {
+        PacketCharacterDied *got_packet = static_cast<PacketCharacterDied*>(packet);
+        Map* cur_map = this->game->current_map;
+        if (cur_map)
+        {
+            std::list<Character*> char_list = cur_map->GetCharacterList();
+            std::list<Character*>::iterator iter;
+            for (iter = char_list.begin(); iter != char_list.end(); ++iter)
+            {
+                Character* c = *iter;
+                if (c->GetCharacterId() == got_packet->GetCharacterId())
+                {
+                    c->ChangeState(new ActorStateDead(c));
                 }
             }
         }
@@ -392,6 +490,17 @@ void GameStatePlaying::HandleKeyDown(const ALLEGRO_KEYBOARD_EVENT& keyboard)
 
         this->game->current_character = nullptr;
         this->game->ChangeState(new GameStateCharacterView(this->game));
+    }
+    else if (keyboard.keycode == ALLEGRO_KEY_LCTRL)
+    {
+        if (this->game->current_character->CanAttack())
+        {
+            this->game->current_character->FeignAttack();
+
+            PacketCharacterAttack *packet = new PacketCharacterAttack();
+            packet->SetCharacterId(this->game->current_character->GetCharacterId());
+            this->game->SendPacket(packet);
+        }
     }
 
 

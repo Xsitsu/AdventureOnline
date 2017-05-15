@@ -59,7 +59,7 @@ bool Server::Init()
     this->socket.Open(this->port, true);
     if (!this->socket.IsOpen()) return false;
 
-    this->world = new World(2);
+    this->world = new World(5);
 
     return true;
 }

@@ -13,6 +13,10 @@
 
 #include "clientstate.hpp"
 
+class ActorManagerCharacter;
+
+#include "actormanagercharacter.hpp"
+
 class ClientStateBase;
 
 class Server;
@@ -41,25 +45,33 @@ protected:
 
     Account* account;
     Character* playing_character;
+    ActorManagerCharacter *character_manager;
 
     ClientStateBase* state;
 
     void DoAccountLogout();
     void FetchCharacterList();
 
+    void DoCharacterLogin(Character *login_char);
     void DoCharacterLogout();
-    void DoWarpCharacter(Map* map, Vector2 map_pos);
-
-    void SendCharacterAppearance(Character* character);
-    void SendCharacterPosition(Character* character);
-    void SendCharacterMapEnter(Character* character);
-    void SendCharacterMapLeave(Character* character);
-    void SendCharacterTurn(Character* character);
-    void SendCharacterWalk(Character* character, Vector2 from_position);
 
 public:
     ClientConnection(Server* server, Address address, unsigned int connection_id);
     ~ClientConnection();
+
+    void SendCharacterAppearance(Character* character);
+    void SendCharacterPosition(Character* character);
+    void SendCharacterStats(Character *character);
+    void SendCharacterMapEnter(Character* character);
+    void SendCharacterMapLeave(Character* character);
+    void SendCharacterTurn(Character* character);
+    void SendCharacterWalk(Character* character);
+    void SendCharacterAttack(Character *character);
+    void SendCharacterTakeDamage(Character *character, unsigned short taken_damage);
+    void SendCharacterDied(Character *character);
+    void SendCharacterHealth(Character *character);
+
+    Server* GetServer() const;
 
     void SendPacket(PacketBase* packet);
     void ProcessPacket(PacketBase* packet);

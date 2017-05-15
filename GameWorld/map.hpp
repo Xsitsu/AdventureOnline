@@ -5,6 +5,9 @@
 
 #include <list>
 
+class MapTile;
+class MapWarpData;
+
 #include "actor.hpp"
 #include "character.hpp"
 #include "maptile.hpp"
@@ -13,13 +16,18 @@
 
 class MapFile;
 
+class MapManagerBase;
+
 #include "mapfile.hpp"
+#include "mapmanager.hpp"
 
 class DLL_EXPORT Map
 {
     friend class MapFile;
 
 protected:
+    MapManagerBase *map_manager;
+
     unsigned int map_id;
     bool is_loaded;
 
@@ -34,13 +42,17 @@ protected:
     void DebugTestLoad();
 
 public:
-    Map();
+    Map(unsigned int id);
     ~Map();
+
+    void SetMapManager(MapManagerBase *map_manager);
+    MapManagerBase* GetMapManager() const;
 
     unsigned int GetMapId() const;
 
+    void CreateMap(Vector2 size);
     void SaveMap();
-    void LoadMap(int map_id);
+    void LoadMap();
     void UnloadMap();
     bool IsMapLoaded() const;
 

@@ -56,7 +56,11 @@
 		</ExtraCommands>
 		<Unit filename="actor.cpp" />
 		<Unit filename="actor.hpp" />
+		<Unit filename="actormanager.hpp" />
 		<Unit filename="actorstate.hpp" />
+		<Unit filename="actorstateattack.cpp" />
+		<Unit filename="actorstatedead.cpp" />
+		<Unit filename="actorstaterevive.cpp" />
 		<Unit filename="actorstatestand.cpp" />
 		<Unit filename="actorstateturn.cpp" />
 		<Unit filename="actorstatewalk.cpp" />
@@ -68,8 +72,13 @@
 		<Unit filename="map.hpp" />
 		<Unit filename="mapfile.cpp" />
 		<Unit filename="mapfile.hpp" />
+		<Unit filename="mapmanager.hpp" />
 		<Unit filename="maptile.cpp" />
 		<Unit filename="maptile.hpp" />
+		<Unit filename="mapwarp.hpp" />
+		<Unit filename="mapwarpbase.cpp" />
+		<Unit filename="mapwarpregular.cpp" />
+		<Unit filename="mapwarpregular.hpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

@@ -1,8 +1,11 @@
 #include "map.hpp"
 
 #include <sstream>
+#include <iostream>
 
-Map::Map() : map_id(0), is_loaded(false), tiles(nullptr)
+#include "mapwarpregular.hpp"
+
+Map::Map(unsigned int id) : map_manager(nullptr), map_id(id), is_loaded(false), tiles(nullptr)
 {
 
 }
@@ -15,6 +18,17 @@ Map::~Map()
     }
 }
 
+void Map::SetMapManager(MapManagerBase *map_manager)
+{
+    this->map_manager = map_manager;
+}
+
+MapManagerBase* Map::GetMapManager() const
+{
+    return this->map_manager;
+}
+
+
 unsigned int Map::GetMapId() const
 {
     return this->map_id;
@@ -22,42 +36,67 @@ unsigned int Map::GetMapId() const
 
 void Map::DebugTestLoad()
 {
-    this->size = Vector2(20, 20);
+    Map *map = this;
 
-    this->tiles = new MapTile*[this->size.x];
-    for (int x = 0; x < this->size.x; x++)
+
+    map->CreateMap(Vector2(7, 14));
+
+    for (int x = 0; x < 7; x++)
     {
-        this->tiles[x] = new MapTile[this->size.y];
-
-        for (int y = 0; y < this->size.y; y++)
+        for (int y = 0; y < 14; y++)
         {
-            MapTile& tile = this->tiles[x][y];
-            tile.SetSpriteId(1);
+            MapTile &tile = map->GetTile(Vector2(x, y));
+            tile.SetMovementPermissions(MapTile::MOVEPERM_WALL);
+        }
+    }
+
+
+    for (int x = 4; x < 7; x++)
+    {
+        for (int y = 0; y < 9; y++)
+        {
+            MapTile &tile = map->GetTile(Vector2(x, y));
+            tile.SetSpriteId(3);
             tile.SetMovementPermissions(MapTile::MOVEPERM_NONE);
         }
     }
 
-    this->GetTile(Vector2(9, 9)).SetSpriteId(10);
-    this->GetTile(Vector2(9, 10)).SetSpriteId(10);
-    this->GetTile(Vector2(10, 9)).SetSpriteId(10);
-    this->GetTile(Vector2(10, 10)).SetSpriteId(10);
+    map->GetTile(Vector2(4, 0)).SetMapWarp(new MapWarpRegular(map, 1, Vector2(3, 3)));
+    map->GetTile(Vector2(5, 0)).SetMapWarp(new MapWarpRegular(map, 1, Vector2(3, 3)));
+    map->GetTile(Vector2(6, 0)).SetMapWarp(new MapWarpRegular(map, 1, Vector2(3, 3)));
 
-    this->GetTile(Vector2(11, 11)).SetSpriteId(8);
-    this->GetTile(Vector2(8, 8)).SetSpriteId(7);
-    this->GetTile(Vector2(8, 11)).SetSpriteId(6);
-    this->GetTile(Vector2(11, 8)).SetSpriteId(9);
 
-    this->GetTile(Vector2(11, 9)).SetSpriteId(5);
-    this->GetTile(Vector2(11, 10)).SetSpriteId(5);
+    for (int x = 0; x < 3; x++)
+    {
+        for (int y = 5; y < 14; y++)
+        {
+            MapTile &tile = map->GetTile(Vector2(x, y));
+            tile.SetSpriteId(3);
+            tile.SetMovementPermissions(MapTile::MOVEPERM_NONE);
+        }
+    }
 
-    this->GetTile(Vector2(8, 9)).SetSpriteId(4);
-    this->GetTile(Vector2(8, 10)).SetSpriteId(4);
+    for (int y = 5; y < 9; y++)
+    {
+        MapTile &tile = map->GetTile(Vector2(3, y));
+        tile.SetSpriteId(3);
+        tile.SetMovementPermissions(MapTile::MOVEPERM_NONE);
+    }
+}
 
-    this->GetTile(Vector2(9, 11)).SetSpriteId(12);
-    this->GetTile(Vector2(10, 11)).SetSpriteId(12);
+void Map::CreateMap(Vector2 size)
+{
+    if (!this->IsMapLoaded())
+    {
+        this->size = size;
+        this->tiles = new MapTile*[size.x];
+        for (uint16_t x = 0; x < size.x; x++)
+        {
+            this->tiles[x] = new MapTile[size.y];
+        }
 
-    this->GetTile(Vector2(9, 8)).SetSpriteId(11);
-    this->GetTile(Vector2(10, 8)).SetSpriteId(11);
+        this->is_loaded = true;
+    }
 }
 
 void Map::SaveMap()
@@ -77,25 +116,28 @@ void Map::SaveMap()
     }
 }
 
-void Map::LoadMap(int map_id)
+void Map::LoadMap()
 {
     if (!this->IsMapLoaded())
     {
-        this->map_id = map_id;
+        // Enable for debug test load.
+        if (false)
+        {
+            this->DebugTestLoad();
+            this->is_loaded = true;
+            return;
+        }
 
         std::stringstream ss;
         if (map_id < 1000) ss << "0";
         if (map_id < 100) ss << "0";
         if (map_id < 10) ss << "0";
-        ss << map_id;
+        ss << this->map_id;
 
         MapFile file;
         file.Open(ss.str());
         file.Read(this);
         file.Close();
-
-
-        //this->DebugTestLoad();
 
         this->is_loaded = true;
     }
@@ -196,7 +238,12 @@ std::list<Actor*> Map::GetNPCList() const
 void Map::Update()
 {
     std::list<Actor*>::iterator iter;
-    for (iter = this->actors.begin(); iter != this->actors.end(); ++iter)
+    std::list<Actor*> actor_list = this->actors;
+
+    // Need to copy the list because Actor::Update() could do things like warping which
+    // changes the actor list of a map which isn't good while we're iterating over it.
+
+    for (iter = actor_list.begin(); iter != actor_list.end(); ++iter)
     {
         Actor* actor = *iter;
         actor->Update();

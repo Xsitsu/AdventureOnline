@@ -24,6 +24,8 @@ class GameStateBase;
 #include "GameWorld/character.hpp"
 #include "GameWorld/map.hpp"
 
+#include "bitmapservice.hpp"
+
 class GameEventBase;
 
 class Game
@@ -38,6 +40,7 @@ friend class GameStateLoginAwaitResponse;
 friend class GameStateAccountCreationAwaitResponse;
 friend class GameStatePlaying;
 friend class GameStateCharacterCreation;
+friend class GameStateCharacterCreationAwaitResponse;
 
 protected: // Singleton stuff
     static Game* instance;
@@ -108,7 +111,7 @@ public:
     void SetCurrentCharacter( Character * val ) { current_character = val; }
 
 
-    void LoadResourceFile(std::string fname, std::string regname, ALLEGRO_COLOR mask_color);
+    void LoadResourceFile(std::string fname, BitmapService::BitmapSets set_id, ALLEGRO_COLOR mask_color);
 };
 
 class GameEventBase

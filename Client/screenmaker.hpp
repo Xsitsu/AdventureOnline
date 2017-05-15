@@ -87,6 +87,15 @@ public:
     virtual GuiScreen* MakeScreen();
 };
 
+
+class SreenMakerCharacterCreationAwaitResponse: public AbstractScreenMaker
+{
+public:
+    SreenMakerCharacterCreationAwaitResponse(Game * game) : AbstractScreenMaker(game) {}
+    virtual ~SreenMakerCharacterCreationAwaitResponse() {}
+    virtual GuiScreen* MakeScreen();
+};
+
 class ScreenMakerPlaying : public AbstractScreenMaker
 {
 public:

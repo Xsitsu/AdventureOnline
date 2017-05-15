@@ -316,7 +316,7 @@ void Game::ClearCharacterList()
     }
 }
 
-void Game::LoadResourceFile(std::string fname, std::string regname, ALLEGRO_COLOR mask_color)
+void Game::LoadResourceFile(std::string fname, BitmapService::BitmapSets set_id, ALLEGRO_COLOR mask_color)
 {
     std::list<Resource*> rlist;
     ResourceFile rfile;
@@ -324,6 +324,8 @@ void Game::LoadResourceFile(std::string fname, std::string regname, ALLEGRO_COLO
     rfile.Open(fname);
     rlist = rfile.Read();
     rfile.Close();
+
+    BitmapService::Instance()->InitBitmapSet(set_id, rlist.size());
 
     int c = 0;
     while (!rlist.empty())
@@ -351,11 +353,8 @@ void Game::LoadResourceFile(std::string fname, std::string regname, ALLEGRO_COLO
         al_unlock_bitmap(bitmap);
         delete resource;
 
-        std::stringstream ss;
-        ss << regname << c;
-
         al_convert_mask_to_alpha(bitmap, mask_color);
-        BitmapService::Instance()->RegisterBitmap(ss.str(), bitmap);
+        BitmapService::Instance()->RegisterBitmap(set_id, c, bitmap);
 
         c++;
     }

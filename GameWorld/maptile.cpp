@@ -1,5 +1,15 @@
 #include "maptile.hpp"
 
+MapTile::MapTile() : sprite_id(0), move_permissions(MapTile::MOVEPERM_NONE), warp(nullptr)
+{
+
+}
+
+MapTile::~MapTile()
+{
+    delete this->warp;
+}
+
 bool MapTile::TileIsWalkable(Actor* actor) const
 {
     bool can_walk = false;
@@ -39,4 +49,14 @@ void MapTile::SetMovementPermissions(MovementPermissions permissions)
 MapTile::MovementPermissions MapTile::GetMovementPermissions() const
 {
     return this->move_permissions;
+}
+
+void MapTile::SetMapWarp(MapWarpBase *warp)
+{
+    this->warp = warp;
+}
+
+MapWarpBase* MapTile::GetMapWarp() const
+{
+    return this->warp;
 }
