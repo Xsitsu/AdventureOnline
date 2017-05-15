@@ -65,6 +65,9 @@ public:
     void SendCharacterMapLeave(Character* character);
     void SendCharacterTurn(Character* character);
     void SendCharacterWalk(Character* character);
+    void SendCharacterAttack(Character *character);
+    void SendCharacterTakeDamage(Character *character, unsigned short taken_damage);
+    void SendCharacterDied(Character *character);
 
     Server* GetServer() const;
 

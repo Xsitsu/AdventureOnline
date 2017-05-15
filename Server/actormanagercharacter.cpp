@@ -49,3 +49,27 @@ void ActorManagerCharacter::SignalPosition(Actor *signalto, Actor *other)
         this->connection->SendCharacterPosition(static_cast<Character*>(other));
     }
 }
+
+void ActorManagerCharacter::SignalAttack(Actor *signalto, Actor *other)
+{
+    if (other->IsPlayer())
+    {
+        this->connection->SendCharacterAttack(static_cast<Character*>(other));
+    }
+}
+
+void ActorManagerCharacter::SignalTakeDamage(Actor *signalto, Actor *other, unsigned short taken_damage)
+{
+    if (other->IsPlayer())
+    {
+        this->connection->SendCharacterTakeDamage(static_cast<Character*>(other), taken_damage);
+    }
+}
+
+void ActorManagerCharacter::SignalDied(Actor *signalto, Actor *other)
+{
+    if (other->IsPlayer())
+    {
+        this->connection->SendCharacterDied(static_cast<Character*>(other));
+    }
+}

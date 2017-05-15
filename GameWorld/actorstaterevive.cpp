@@ -1,5 +1,7 @@
 #include "actorstate.hpp"
 
+#include <iostream>
+
 ActorStateRevive::ActorStateRevive(Actor *actor) : ActorStateBase(actor)
 {
 

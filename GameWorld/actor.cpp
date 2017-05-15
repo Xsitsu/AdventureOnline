@@ -218,6 +218,19 @@ void Actor::Move(Vector2 coords)
 
 void Actor::Attack()
 {
+    std::list<Character*> char_list = this->current_map->GetCharacterList();
+    std::list<Character*>::iterator iter;
+    for (iter = char_list.begin(); iter != char_list.end(); ++iter)
+    {
+        Character *ch = *iter;
+        Actor *chact = ch;
+
+        if (chact != this && chact->GetActorManager())
+        {
+            chact->GetActorManager()->SignalAttack(chact, this);
+        }
+    }
+
     this->ChangeState(new ActorStateAttack(this));
 }
 
@@ -228,10 +241,38 @@ void Actor::FeignAttack()
 
 void Actor::TakeDamage(unsigned short value)
 {
+    if (this->IsDead()) return;
+
+    if (value < 0)
+    {
+        value = 0;
+    }
+
     this->health -= value;
-    if (this->health < 0)
+
+    bool did_die = false;
+    if (this->health <= 0)
     {
         this->health = 0;
+        did_die = true;
+        this->ChangeState(new ActorStateDead(this));
+    }
+
+    std::list<Character*> char_list = this->current_map->GetCharacterList();
+    std::list<Character*>::iterator iter;
+    for (iter = char_list.begin(); iter != char_list.end(); ++iter)
+    {
+        Character *ch = *iter;
+        Actor *chact = ch;
+
+        if (chact->GetActorManager())
+        {
+            chact->GetActorManager()->SignalTakeDamage(chact, this, value);
+            if (did_die && chact != this)
+            {
+                chact->GetActorManager()->SignalDied(chact, this);
+            }
+        }
     }
 }
 

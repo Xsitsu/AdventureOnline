@@ -321,6 +321,65 @@ void GameStatePlaying::HandlePacket(PacketBase* packet)
             }
         }
     }
+    else if (packet->GetType() == PacketBase::PACKET_CHARACTER_ATTACK)
+    {
+        PacketCharacterAttack *got_packet = static_cast<PacketCharacterAttack*>(packet);
+        Map* cur_map = this->game->current_map;
+        if (cur_map)
+        {
+            std::list<Character*> char_list = cur_map->GetCharacterList();
+            std::list<Character*>::iterator iter;
+            for (iter = char_list.begin(); iter != char_list.end(); ++iter)
+            {
+                Character* c = *iter;
+                if (c->GetCharacterId() == got_packet->GetCharacterId())
+                {
+                    c->FeignAttack();
+                }
+            }
+        }
+    }
+    else if (packet->GetType() == PacketBase::PACKET_CHARACTER_TAKE_DAMAGE)
+    {
+        PacketCharacterTakeDamage *got_packet = static_cast<PacketCharacterTakeDamage*>(packet);
+        Map* cur_map = this->game->current_map;
+        if (cur_map)
+        {
+            std::list<Character*> char_list = cur_map->GetCharacterList();
+            std::list<Character*>::iterator iter;
+            for (iter = char_list.begin(); iter != char_list.end(); ++iter)
+            {
+                Character* c = *iter;
+                if (c->GetCharacterId() == got_packet->GetCharacterId())
+                {
+                    if (c == this->game->current_character)
+                    {
+                        c->TakeDamage(got_packet->GetTakenDamage());
+                    }
+
+                    // Display some health bar / damage number animation above head.
+                }
+            }
+        }
+    }
+    else if (packet->GetType() == PacketBase::PACKET_CHARACTER_DIED)
+    {
+        PacketCharacterDied *got_packet = static_cast<PacketCharacterDied*>(packet);
+        Map* cur_map = this->game->current_map;
+        if (cur_map)
+        {
+            std::list<Character*> char_list = cur_map->GetCharacterList();
+            std::list<Character*>::iterator iter;
+            for (iter = char_list.begin(); iter != char_list.end(); ++iter)
+            {
+                Character* c = *iter;
+                if (c->GetCharacterId() == got_packet->GetCharacterId())
+                {
+                    c->ChangeState(new ActorStateDead(c));
+                }
+            }
+        }
+    }
 }
 
 void GameStatePlaying::HandleKeyDown(const ALLEGRO_KEYBOARD_EVENT& keyboard)
@@ -409,7 +468,11 @@ void GameStatePlaying::HandleKeyDown(const ALLEGRO_KEYBOARD_EVENT& keyboard)
     {
         if (this->game->current_character->CanAttack())
         {
-            this->game->current_character->Attack();
+            this->game->current_character->FeignAttack();
+
+            PacketCharacterAttack *packet = new PacketCharacterAttack();
+            packet->SetCharacterId(this->game->current_character->GetCharacterId());
+            this->game->SendPacket(packet);
         }
     }
 

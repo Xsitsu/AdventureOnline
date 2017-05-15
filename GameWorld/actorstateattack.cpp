@@ -43,10 +43,6 @@ void ActorStateAttack::Update()
                 if (!act->IsDead())
                 {
                     act->TakeDamage(5);
-                    if (act->IsDead())
-                    {
-                        act->ChangeState(new ActorStateDead(act));
-                    }
                 }
             }
         }

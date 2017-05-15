@@ -135,6 +135,15 @@ PacketBase* PacketReader::ReadPacket(char* buffer, int bytes_read)
     case PacketBase::PACKET_CHARACTER_WALK:
         packet = new PacketCharacterWalk();
         break;
+    case PacketBase::PACKET_CHARACTER_ATTACK:
+        packet = new PacketCharacterAttack();
+        break;
+    case PacketBase::PACKET_CHARACTER_TAKE_DAMAGE:
+        packet = new PacketCharacterTakeDamage();
+        break;
+    case PacketBase::PACKET_CHARACTER_DIED:
+        packet = new PacketCharacterDied();
+        break;
     case PacketBase::PACKET_CHARACTER_CREATE_REQUEST:
         packet = new PacketCharacterCreationRequest();
         break;
@@ -945,6 +954,76 @@ void PacketCharacterWalk::Decode(char* buffer)
     this->to_y = reader.ReadShort(buffer, this->buffer_pos);
     this->direction = reader.ReadByte(buffer, this->buffer_pos);
 }
+
+
+PacketCharacterAttack::PacketCharacterAttack() : PacketBase(PacketBase::PACKET_CHARACTER_ATTACK)
+{}
+
+unsigned int PacketCharacterAttack::Encode(char* buffer)
+{
+    PacketBase::Encode(buffer);
+
+    PacketReader reader;
+    reader.WriteInt(buffer, this->buffer_pos, this->character_id);
+
+    return this->buffer_pos;
+}
+
+void PacketCharacterAttack::Decode(char* buffer)
+{
+    PacketBase::Decode(buffer);
+
+    PacketReader reader;
+    this->character_id = reader.ReadInt(buffer, this->buffer_pos);
+}
+
+PacketCharacterTakeDamage::PacketCharacterTakeDamage() : PacketBase(PacketBase::PACKET_CHARACTER_TAKE_DAMAGE)
+{}
+
+unsigned int PacketCharacterTakeDamage::Encode(char* buffer)
+{
+    PacketBase::Encode(buffer);
+
+    PacketReader reader;
+    reader.WriteInt(buffer, this->buffer_pos, this->character_id);
+    reader.WriteShort(buffer, this->buffer_pos, this->new_health);
+    reader.WriteShort(buffer, this->buffer_pos, this->taken_damage);
+
+    return this->buffer_pos;
+}
+
+void PacketCharacterTakeDamage::Decode(char* buffer)
+{
+    PacketBase::Decode(buffer);
+
+    PacketReader reader;
+    this->character_id = reader.ReadInt(buffer, this->buffer_pos);
+    this->new_health = reader.ReadShort(buffer, this->buffer_pos);
+    this->taken_damage = reader.ReadShort(buffer, this->buffer_pos);
+}
+
+PacketCharacterDied::PacketCharacterDied() : PacketBase(PacketBase::PACKET_CHARACTER_DIED)
+{}
+
+unsigned int PacketCharacterDied::Encode(char* buffer)
+{
+    PacketBase::Encode(buffer);
+
+    PacketReader reader;
+    reader.WriteInt(buffer, this->buffer_pos, this->character_id);
+
+    return this->buffer_pos;
+}
+
+void PacketCharacterDied::Decode(char* buffer)
+{
+    PacketBase::Decode(buffer);
+
+    PacketReader reader;
+    this->character_id = reader.ReadInt(buffer, this->buffer_pos);
+}
+
+
 
 PacketCharacterCreationRequest::PacketCharacterCreationRequest():PacketBase(PACKET_CHARACTER_CREATE_REQUEST), name(""), skin(0), hair(0), hairColor(0), gender(0){}
 

@@ -41,6 +41,9 @@ public:
 
         PACKET_CHARACTER_TURN,
         PACKET_CHARACTER_WALK,
+        PACKET_CHARACTER_ATTACK,
+        PACKET_CHARACTER_TAKE_DAMAGE,
+        PACKET_CHARACTER_DIED,
 
         PACKET_CHARACTER_CREATE_REQUEST,
         PACKET_CHARACTER_CREATE_RESPONSE
@@ -548,8 +551,6 @@ public:
 
 class DLL_EXPORT PacketCharacterCreationResponse : public PacketBase
 {
-
-
 public:
     enum Response
     {
@@ -565,8 +566,61 @@ public:
     virtual unsigned int Encode(char* buffer);
     virtual void Decode(char* buffer);
 
-
 protected:
     Response returnCode;
 };
+
+class DLL_EXPORT PacketCharacterAttack : public PacketBase
+{
+protected:
+    uint32_t character_id;
+
+public:
+    PacketCharacterAttack();
+
+    virtual unsigned int Encode(char* buffer);
+    virtual void Decode(char* buffer);
+
+    uint32_t GetCharacterId() const { return this->character_id; }
+    void SetCharacterId(uint32_t character_id) { this->character_id = character_id; }
+};
+
+class DLL_EXPORT PacketCharacterTakeDamage : public PacketBase
+{
+protected:
+    uint32_t character_id;
+    uint16_t new_health;
+    uint16_t taken_damage;
+
+public:
+    PacketCharacterTakeDamage();
+
+    virtual unsigned int Encode(char* buffer);
+    virtual void Decode(char* buffer);
+
+    uint32_t GetCharacterId() const { return this->character_id; }
+    void SetCharacterId(uint32_t character_id) { this->character_id = character_id; }
+
+    uint16_t GetNewHealth() const { return this->new_health; }
+    void SetNewHealth(uint16_t new_health) { this->new_health = new_health; }
+
+    uint16_t GetTakenDamage() const { return this->taken_damage; }
+    void SetTakenDamage(uint16_t taken_damage) { this->taken_damage = taken_damage; }
+};
+
+class DLL_EXPORT PacketCharacterDied : public PacketBase
+{
+protected:
+    uint32_t character_id;
+
+public:
+    PacketCharacterDied();
+
+    virtual unsigned int Encode(char* buffer);
+    virtual void Decode(char* buffer);
+
+    uint32_t GetCharacterId() const { return this->character_id; }
+    void SetCharacterId(uint32_t character_id) { this->character_id = character_id; }
+};
+
 #endif // PACKET_HPP_INCLUDE

@@ -232,3 +232,29 @@ void ClientConnection::SendCharacterWalk(Character* character)
 
     this->SendPacket(packet);
 }
+
+void ClientConnection::SendCharacterAttack(Character *character)
+{
+    PacketCharacterAttack *packet = new PacketCharacterAttack();
+    packet->SetCharacterId(character->GetCharacterId());
+
+    this->SendPacket(packet);
+}
+
+void ClientConnection::SendCharacterTakeDamage(Character *character, unsigned short taken_damage)
+{
+    PacketCharacterTakeDamage *packet = new PacketCharacterTakeDamage();
+    packet->SetCharacterId(character->GetCharacterId());
+    packet->SetNewHealth(character->GetHealth());
+    packet->SetTakenDamage(taken_damage);
+
+    this->SendPacket(packet);
+}
+
+void ClientConnection::SendCharacterDied(Character *character)
+{
+    PacketCharacterDied *packet = new PacketCharacterDied();
+    packet->SetCharacterId(character->GetCharacterId());
+
+    this->SendPacket(packet);
+}
