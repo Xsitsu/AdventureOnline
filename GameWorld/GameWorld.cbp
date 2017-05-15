@@ -58,6 +58,9 @@
 		<Unit filename="actor.hpp" />
 		<Unit filename="actormanager.hpp" />
 		<Unit filename="actorstate.hpp" />
+		<Unit filename="actorstateattack.cpp" />
+		<Unit filename="actorstatedead.cpp" />
+		<Unit filename="actorstaterevive.cpp" />
 		<Unit filename="actorstatestand.cpp" />
 		<Unit filename="actorstateturn.cpp" />
 		<Unit filename="actorstatewalk.cpp" />

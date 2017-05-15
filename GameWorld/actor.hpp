@@ -51,9 +51,11 @@ public:
     void Warp(Map* map, Vector2 coords);
     void Turn(Direction direction);
     void Move(Vector2 coords);
+    void Attack();
+    void FeignAttack();
 
     void SetMaxHealth( unsigned short val) { max_health = val; }
-    void SetHealth( unsigned short val) { health = val; }
+    void SetHealth( unsigned short val);
     void SetStrength( unsigned short val ) { strength = val; }
     void SetEndurance( unsigned short val ) { endurance = val; }
 
@@ -61,6 +63,9 @@ public:
     unsigned short GetHealth() { return health; }
     unsigned short GetStrength() { return strength; }
     unsigned short GetEndurance() { return endurance; }
+
+    void TakeDamage(unsigned short value);
+    bool IsDead() const;
 
     Vector2 GetPosition() const;
 
@@ -80,6 +85,8 @@ public:
     bool CanAttack();
     bool IsStanding();
     bool IsMoving();
+    bool IsAttacking();
+    bool IsDieing();
     double GetStatePercentDone();
 
 };

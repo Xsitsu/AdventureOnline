@@ -216,6 +216,101 @@ void Actor::Move(Vector2 coords)
 
 }
 
+void Actor::Attack()
+{
+    std::list<Character*> char_list = this->current_map->GetCharacterList();
+    std::list<Character*>::iterator iter;
+    for (iter = char_list.begin(); iter != char_list.end(); ++iter)
+    {
+        Character *ch = *iter;
+        Actor *chact = ch;
+
+        if (chact != this && chact->GetActorManager())
+        {
+            chact->GetActorManager()->SignalAttack(chact, this);
+        }
+    }
+
+    this->ChangeState(new ActorStateAttack(this));
+}
+
+void Actor::FeignAttack()
+{
+    this->ChangeState(new ActorStateFeignAttack(this));
+}
+
+void Actor::TakeDamage(unsigned short value)
+{
+    if (this->IsDead()) return;
+
+    if (value < 0)
+    {
+        value = 0;
+    }
+
+    int hp = this->health;
+    hp -= value;
+
+    bool did_die = false;
+    if (hp <= 0)
+    {
+        hp = 0;
+        did_die = true;
+        this->ChangeState(new ActorStateDead(this));
+    }
+
+    this->health = hp;
+
+    std::list<Character*> char_list = this->current_map->GetCharacterList();
+    std::list<Character*>::iterator iter;
+    for (iter = char_list.begin(); iter != char_list.end(); ++iter)
+    {
+        Character *ch = *iter;
+        Actor *chact = ch;
+
+        if (chact->GetActorManager())
+        {
+            chact->GetActorManager()->SignalTakeDamage(chact, this, value);
+            if (did_die && chact != this)
+            {
+                chact->GetActorManager()->SignalDied(chact, this);
+            }
+        }
+    }
+}
+
+bool Actor::IsDead() const
+{
+    return (this->health < 1);
+}
+
+void Actor::SetHealth(unsigned short val)
+{
+    if (val > this->max_health)
+    {
+        val = this->max_health;
+    }
+
+    this->health = val;
+
+    if (this->current_map)
+    {
+        std::list<Character*> char_list = this->current_map->GetCharacterList();
+        std::list<Character*>::iterator iter;
+        for (iter = char_list.begin(); iter != char_list.end(); ++iter)
+        {
+            Character *ch = *iter;
+            Actor *chact = ch;
+
+            if (chact->GetActorManager())
+            {
+                chact->GetActorManager()->SignalHealth(chact, this);
+            }
+        }
+    }
+}
+
+
 Vector2 Actor::GetPosition() const
 {
     return this->map_position;
@@ -306,6 +401,16 @@ bool Actor::IsStanding()
 bool Actor::IsMoving()
 {
     return this->state->IsMoving();
+}
+
+bool Actor::IsAttacking()
+{
+    return this->state->IsAttacking();
+}
+
+bool Actor::IsDieing()
+{
+    return this->state->IsDieing();
 }
 
 double Actor::GetStatePercentDone()

@@ -69,7 +69,7 @@ bool ClientStatePlaying::ProcessPacket(PacketBase* packet)
                 }
                 if (request->GetRequestStats())
                 {
-                    // Maybe eventually.
+                    this->client->SendCharacterStats(character);
                 }
             }
         }
@@ -80,25 +80,11 @@ bool ClientStatePlaying::ProcessPacket(PacketBase* packet)
         PacketCharacterTurn* turn = static_cast<PacketCharacterTurn*>(packet);
 
         Character* character = this->client->playing_character;
-        //Map* cur_map = character->GetMap();
         if (turn->GetCharacterId() == character->GetCharacterId())
         {
             if (character->CanMove())
             {
                 character->Turn(static_cast<Actor::Direction>(turn->GetDirection()));
-
-                /*
-                std::list<ClientConnection*> client_list = this->client->server->GetWorld()->GetClientsInMap(cur_map->GetMapId());
-                std::list<ClientConnection*>::iterator iter;
-                for (iter = client_list.begin(); iter != client_list.end(); ++iter)
-                {
-                    ClientConnection* client = *iter;
-                    if (client->GetPlayingCharacter() != character)
-                    {
-                        client->SendCharacterTurn(character);
-                    }
-                }
-                */
             }
             else
             {
@@ -126,24 +112,32 @@ bool ClientStatePlaying::ProcessPacket(PacketBase* packet)
 
                 character->SetDirection(dir);
                 character->Move(to_pos);
-
-                /*
-                std::list<ClientConnection*> client_list = this->client->server->GetWorld()->GetClientsInMap(cur_map->GetMapId());
-                std::list<ClientConnection*>::iterator iter;
-                for (iter = client_list.begin(); iter != client_list.end(); ++iter)
-                {
-                    ClientConnection* client = *iter;
-                    if (client->GetPlayingCharacter() != character)
-                    {
-                        client->SendCharacterWalk(character);
-                    }
-                }
-                */
-
             }
             catch(...)
             {
                 this->client->SendCharacterPosition(character);
+            }
+        }
+
+        return true;
+    }
+    else if (packet->GetType() == PacketBase::PACKET_CHARACTER_ATTACK)
+    {
+        PacketCharacterAttack *attack = static_cast<PacketCharacterAttack*>(packet);
+
+        Character* character = this->client->playing_character;
+        if (attack->GetCharacterId() == character->GetCharacterId())
+        {
+            try
+            {
+                if (!character->CanAttack()) throw "BREAK";
+
+                character->Attack();
+            }
+            catch(...)
+            {
+                // ToDo: Maybe some other way to let client know of their current state.
+                //this->client->SendCharacterPosition(character);
             }
         }
 

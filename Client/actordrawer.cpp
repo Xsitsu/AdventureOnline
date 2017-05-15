@@ -1,6 +1,8 @@
 #include "actordrawer.hpp"
 #include <sstream>
 
+#include "GameGui/color3.hpp"
+
 ActorDrawer::ActorDrawer()
 {
 
@@ -70,6 +72,9 @@ void ActorDrawer::DoDrawCharacter(Character* character, Vector2 draw_middle, boo
     }
 
 
+    Color3 draw_tint = Color3(255, 255, 255);
+    unsigned char draw_alpha = 255;
+
     //int hair_id = 0;
     int color_id = static_cast<int>(character->GetHairColor());
     ALLEGRO_BITMAP* hair_bitmap = nullptr;
@@ -126,6 +131,35 @@ void ActorDrawer::DoDrawCharacter(Character* character, Vector2 draw_middle, boo
 
         hair_offset = Vector2(1, 12);
     }
+    else if (character->IsAttacking())
+    {
+        character_bitmap = service->GetBitmap(BitmapService::BITMAPSET_CHARACTER, 2);
+        sprite_width = 24;
+        sprite_height = 58;
+
+        offset_x = 0;
+        offset_y = 0;
+
+        max_frames = 2;
+        draw_frame = max_frames * character->GetStatePercentDone();
+        if (draw_frame > max_frames)
+            draw_frame = max_frames;
+
+        hair_offset = Vector2(5, 13);
+    }
+    else if (character->IsDieing())
+    {
+        character_bitmap = service->GetBitmap(BitmapService::BITMAPSET_CHARACTER, 0);
+        sprite_width = 18;
+        sprite_height = 58;
+
+        draw_frame = 0;
+        max_frames = 1;
+
+        hair_offset = Vector2(5, 13);
+
+        draw_alpha = 160;
+    }
 
     int draw_x = (sprite_width *  draw_frame) + (sprite_width * max_frames * dir_flag) + (sprite_width * max_frames * 2 * (int)gender);
     int draw_y = (sprite_height * (int)skin);
@@ -158,16 +192,19 @@ void ActorDrawer::DoDrawCharacter(Character* character, Vector2 draw_middle, boo
         hair_offset = hair_offset + Vector2(1, 0);
     }
 
+
+    ALLEGRO_COLOR tint = al_map_rgba(draw_tint.r, draw_tint.g, draw_tint.b, draw_alpha);
+
     // Actually do drawing.
-    al_draw_tinted_bitmap_region(hair_bitmap, al_map_rgba(255, 255, 255, 255),
+    al_draw_tinted_bitmap_region(hair_bitmap, tint,
                                 56 * dir_flag, 54 * color_id, 28, 54,
                                 top.x - hair_offset.x, top.y - hair_offset.y, draw_flags);
 
-    al_draw_tinted_bitmap_region(character_bitmap, al_map_rgba(255, 255, 255, 255),
+    al_draw_tinted_bitmap_region(character_bitmap, tint,
                                 draw_x, draw_y, sprite_width, sprite_height,
                                 top.x, top.y, draw_flags);
 
-    al_draw_tinted_bitmap_region(hair_bitmap, al_map_rgba(255, 255, 255, 255),
+    al_draw_tinted_bitmap_region(hair_bitmap, tint,
                                 28 + 56 * dir_flag, 54 * color_id, 28, 54,
                                 top.x - hair_offset.x, top.y - hair_offset.y, draw_flags);
 
