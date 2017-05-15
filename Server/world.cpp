@@ -66,13 +66,9 @@ void World::Update()
     std::list<Map*>::iterator iter;
     std::list<Map*> use_loaded_maps = this->loaded_maps;
 
-    //std::cout << "Map ticks: " << std::endl;
-
     for (iter = use_loaded_maps.begin(); iter != use_loaded_maps.end(); ++iter)
     {
         Map* map = *iter;
         map->Update();
-
-        //std::cout << "\t" << map->GetMapId() << std::endl;
     }
 }
