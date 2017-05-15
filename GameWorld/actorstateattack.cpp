@@ -42,7 +42,7 @@ void ActorStateAttack::Update()
             {
                 if (!act->IsDead())
                 {
-                    act->TakeDamage(5);
+                    act->TakeDamage(13);
                 }
             }
         }

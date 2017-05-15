@@ -248,15 +248,18 @@ void Actor::TakeDamage(unsigned short value)
         value = 0;
     }
 
-    this->health -= value;
+    int hp = this->health;
+    hp -= value;
 
     bool did_die = false;
-    if (this->health <= 0)
+    if (hp <= 0)
     {
-        this->health = 0;
+        hp = 0;
         did_die = true;
         this->ChangeState(new ActorStateDead(this));
     }
+
+    this->health = hp;
 
     std::list<Character*> char_list = this->current_map->GetCharacterList();
     std::list<Character*>::iterator iter;
