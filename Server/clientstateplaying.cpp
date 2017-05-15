@@ -69,7 +69,7 @@ bool ClientStatePlaying::ProcessPacket(PacketBase* packet)
                 }
                 if (request->GetRequestStats())
                 {
-                    // Maybe eventually.
+                    this->client->SendCharacterStats(character);
                 }
             }
         }

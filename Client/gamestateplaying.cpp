@@ -21,6 +21,13 @@ GameStatePlaying::GameStatePlaying(Game* game) : GameStateBase(game)
 void GameStatePlaying::Enter()
 {
     this->game->current_character->ChangeState(new ActorStateStand(this->game->current_character));
+
+    PacketCharacterDataRequest *request = new PacketCharacterDataRequest();
+    request->SetCharacterId(this->game->current_character->GetCharacterId());
+    request->SetRequestPosition(true);
+    request->SetRequestStats(true);
+
+    this->game->SendPacket(request);
 }
 
 void GameStatePlaying::Exit()
@@ -177,6 +184,7 @@ void GameStatePlaying::HandlePacket(PacketBase* packet)
                 request->SetCharacterId(character->GetCharacterId());
                 request->SetRequestAppearance(true);
                 request->SetRequestPosition(true);
+                request->SetRequestStats(true);
 
                 this->game->SendPacket(request);
             }
@@ -277,6 +285,25 @@ void GameStatePlaying::HandlePacket(PacketBase* packet)
 
                     character->Warp(cur_map, pos);
                     character->SetDirection(dir);
+                }
+            }
+        }
+    }
+    else if (packet->GetType() == PacketBase::PACKET_CHARACTER_STATS)
+    {
+        PacketCharacterStats *stats = static_cast<PacketCharacterStats*>(packet);
+        Map* cur_map = this->game->current_map;
+        if (cur_map)
+        {
+            std::list<Character*> char_list = cur_map->GetCharacterList();
+            std::list<Character*>::iterator iter;
+            for (iter = char_list.begin(); iter != char_list.end(); ++iter)
+            {
+                Character* character = *iter;
+                if (character->GetCharacterId() == stats->GetCharacterId())
+                {
+                    character->SetMaxHealth(stats->GetMaxHealth());
+                    character->SetHealth(stats->GetHealth());
                 }
             }
         }

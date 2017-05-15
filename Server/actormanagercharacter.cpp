@@ -73,3 +73,12 @@ void ActorManagerCharacter::SignalDied(Actor *signalto, Actor *other)
         this->connection->SendCharacterDied(static_cast<Character*>(other));
     }
 }
+
+
+void ActorManagerCharacter::SignalHealth(Actor *signalto, Actor *other)
+{
+    if (other->IsPlayer())
+    {
+        this->connection->SendCharacterHealth(static_cast<Character*>(other));
+    }
+}

@@ -24,6 +24,7 @@ public:
     virtual void SignalAttack(Actor *signalto, Actor *other);
     virtual void SignalTakeDamage(Actor *signalto, Actor *other, unsigned short taken_damage);
     virtual void SignalDied(Actor *signalto, Actor *other);
+    virtual void SignalHealth(Actor *signalto, Actor *other);
 };
 
 #endif // ACTORMANAGERCHARACTER_HPP_INCLUDE

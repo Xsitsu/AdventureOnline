@@ -281,6 +281,33 @@ bool Actor::IsDead() const
     return (this->health < 1);
 }
 
+void Actor::SetHealth(unsigned short val)
+{
+    if (val > this->max_health)
+    {
+        val = this->max_health;
+    }
+
+    this->health = val;
+
+    if (this->current_map)
+    {
+        std::list<Character*> char_list = this->current_map->GetCharacterList();
+        std::list<Character*>::iterator iter;
+        for (iter = char_list.begin(); iter != char_list.end(); ++iter)
+        {
+            Character *ch = *iter;
+            Actor *chact = ch;
+
+            if (chact->GetActorManager())
+            {
+                chact->GetActorManager()->SignalHealth(chact, this);
+            }
+        }
+    }
+}
+
+
 Vector2 Actor::GetPosition() const
 {
     return this->map_position;

@@ -55,7 +55,7 @@ public:
     void FeignAttack();
 
     void SetMaxHealth( unsigned short val) { max_health = val; }
-    void SetHealth( unsigned short val) { health = val; }
+    void SetHealth( unsigned short val);
     void SetStrength( unsigned short val ) { strength = val; }
     void SetEndurance( unsigned short val ) { endurance = val; }
 

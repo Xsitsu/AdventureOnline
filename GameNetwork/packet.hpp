@@ -35,6 +35,7 @@ public:
         PACKET_CHARACTER_LOGOUT,
         PACKET_CHARACTER_APPEARANCE,
         PACKET_CHARACTER_POSITION,
+        PACKET_CHARACTER_STATS,
 
         PACKET_CHARACTER_MAP_ENTER,
         PACKET_CHARACTER_MAP_LEAVE,
@@ -426,6 +427,31 @@ public:
     void SetPositionX(uint16_t pos_x);
     void SetPositionY(uint16_t pos_y);
     void SetDirection(uint8_t direction);
+};
+
+class DLL_EXPORT PacketCharacterStats : public PacketBase
+{
+protected:
+    uint32_t character_id;
+
+    uint16_t health;
+    uint16_t max_health;
+
+public:
+    PacketCharacterStats();
+
+    virtual unsigned int Encode(char* buffer);
+    virtual void Decode(char* buffer);
+
+    uint32_t GetCharacterId() const { return this->character_id; }
+    void SetCharacterId(uint32_t character_id) { this->character_id = character_id; }
+
+    uint16_t GetHealth() const { return this->health; }
+    void SetHealth(uint16_t health) { this->health = health; }
+
+    uint16_t GetMaxHealth() const { return this->max_health; }
+    void SetMaxHealth(uint16_t max_health) { this->max_health = max_health; }
+
 };
 
 class DLL_EXPORT PacketCharacterMapEnter : public PacketBase

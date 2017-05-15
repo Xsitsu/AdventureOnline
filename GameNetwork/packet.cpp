@@ -123,6 +123,9 @@ PacketBase* PacketReader::ReadPacket(char* buffer, int bytes_read)
     case PacketBase::PACKET_CHARACTER_POSITION:
         packet = new PacketCharacterPosition();
         break;
+    case PacketBase::PACKET_CHARACTER_STATS:
+        packet = new PacketCharacterStats();
+        break;
     case PacketBase::PACKET_CHARACTER_MAP_ENTER:
         packet = new PacketCharacterMapEnter();
         break;
@@ -854,6 +857,34 @@ void PacketCharacterPosition::SetDirection(uint8_t direction)
 {
     this->direction = direction;
 }
+
+PacketCharacterStats::PacketCharacterStats() : PacketBase(PacketBase::PACKET_CHARACTER_STATS)
+{}
+
+unsigned int PacketCharacterStats::Encode(char* buffer)
+{
+    PacketBase::Encode(buffer);
+
+    PacketReader reader;
+
+    reader.WriteInt(buffer, this->buffer_pos, this->character_id);
+    reader.WriteShort(buffer, this->buffer_pos, this->health);
+    reader.WriteShort(buffer, this->buffer_pos, this->max_health);
+
+    return this->buffer_pos;
+}
+
+void PacketCharacterStats::Decode(char* buffer)
+{
+    PacketBase::Decode(buffer);
+
+    PacketReader reader;
+
+    this->character_id = reader.ReadInt(buffer, this->buffer_pos);
+    this->health = reader.ReadShort(buffer, this->buffer_pos);
+    this->max_health = reader.ReadShort(buffer, this->buffer_pos);
+}
+
 
 PacketCharacterMapEnter::PacketCharacterMapEnter() : PacketBase(PacketBase::PACKET_CHARACTER_MAP_ENTER)
 {}

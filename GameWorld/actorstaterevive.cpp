@@ -1,6 +1,10 @@
 #include "actorstate.hpp"
 
 #include <iostream>
+#include <list>
+
+#include "character.hpp"
+#include "map.hpp"
 
 ActorStateRevive::ActorStateRevive(Actor *actor) : ActorStateBase(actor)
 {
@@ -24,8 +28,9 @@ void ActorStateRevive::Exit()
 
 void ActorStateRevive::Update()
 {
+    Map *cur_map = this->actor->GetMap();
     this->actor->SetHealth(this->actor->GetMaxHealth());
-    this->actor->Warp(this->actor->GetMap(), Vector2(2, 2));
+    this->actor->Warp(cur_map, Vector2(2, 2));
     this->actor->ChangeState(new ActorStateStand(this->actor));
 }
 

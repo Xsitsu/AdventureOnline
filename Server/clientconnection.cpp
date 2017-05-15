@@ -173,6 +173,16 @@ void ClientConnection::SendCharacterPosition(Character* character)
     this->SendPacket(packet);
 }
 
+void ClientConnection::SendCharacterStats(Character *character)
+{
+    PacketCharacterStats *packet = new PacketCharacterStats();
+    packet->SetCharacterId(character->GetCharacterId());
+    packet->SetHealth(character->GetHealth());
+    packet->SetMaxHealth(character->GetMaxHealth());
+
+    this->SendPacket(packet);
+}
+
 void ClientConnection::SendCharacterMapEnter(Character* character)
 {
     PacketCharacterMapEnter* packet = new PacketCharacterMapEnter();
@@ -257,4 +267,10 @@ void ClientConnection::SendCharacterDied(Character *character)
     packet->SetCharacterId(character->GetCharacterId());
 
     this->SendPacket(packet);
+}
+
+void ClientConnection::SendCharacterHealth(Character *character)
+{
+    // ToDo: Use custom HP update packet eventually or update system.
+    this->SendCharacterStats(character);
 }

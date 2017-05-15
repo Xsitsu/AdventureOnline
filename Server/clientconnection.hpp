@@ -61,6 +61,7 @@ public:
 
     void SendCharacterAppearance(Character* character);
     void SendCharacterPosition(Character* character);
+    void SendCharacterStats(Character *character);
     void SendCharacterMapEnter(Character* character);
     void SendCharacterMapLeave(Character* character);
     void SendCharacterTurn(Character* character);
@@ -68,6 +69,7 @@ public:
     void SendCharacterAttack(Character *character);
     void SendCharacterTakeDamage(Character *character, unsigned short taken_damage);
     void SendCharacterDied(Character *character);
+    void SendCharacterHealth(Character *character);
 
     Server* GetServer() const;
 
