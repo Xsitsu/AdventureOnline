@@ -77,7 +77,8 @@ void Server::Tick()
         {
             //std::cout << "PacketInit" << std::endl;
             unsigned short listen_port = static_cast<PacketInit*>(packet)->GetListenPort();
-            Address clientAddress(sender.GetAddress(), listen_port);
+            //Address clientAddress(sender.GetAddress(), listen_port);
+            Address clientAddress(sender.GetAddress(), sender.GetPort());
 
             unsigned int con_id = 0;
             try
