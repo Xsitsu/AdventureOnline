@@ -13,7 +13,7 @@ void GameStateLoginAwaitResponse::Render()
     this->game->DrawScreens();
 }
 
-void GameStateLoginAwaitResponse::HandlePacket(PacketBase* packet)
+bool GameStateLoginAwaitResponse::HandlePacket(PacketBase* packet)
 {
     if (packet->GetType() == PacketBase::PACKET_LOGIN_RESPONSE)
     {
@@ -51,7 +51,11 @@ void GameStateLoginAwaitResponse::HandlePacket(PacketBase* packet)
             this->game->PopScreen();
             this->game->ChangeState(new GameStateTitle(this->game));
         }
+
+        return true;
     }
+
+    return false;
 }
 
 

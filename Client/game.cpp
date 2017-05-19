@@ -67,8 +67,8 @@ void Game::Init()
 
 	// Initialize client stuff
     unsigned short listen_port = 50000;
-	this->client = new Client(Address(127, 0, 0, 1, 50000));
-	////this->client = new Client(Address(104,255,231,252, 50000));
+	//this->client = new Client(Address(127, 0, 0, 1, 50000));
+	this->client = new Client(Address(172, 93, 52, 252, 50000));
 
 	while (!this->client->Init(listen_port)) { ++listen_port; }
 	std::cout << "Started listening on port: " << listen_port << std::endl;
@@ -160,7 +160,11 @@ void Game::Run()
                         }
                         else
                         {
-                            this->state->HandlePacket(packet);
+                            bool did_handle = this->state->HandlePacket(packet);
+                            if (!did_handle)
+                            {
+                                std::cout << "Packet was not handled with type: " << (int)packet->GetType() << std::endl;
+                            }
                         }
                     }
                     delete packet;

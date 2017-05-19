@@ -12,7 +12,7 @@ public:
 
     virtual void Render();
 
-    virtual void HandlePacket(PacketBase* packet);
+    virtual bool HandlePacket(PacketBase* packet);
 
     virtual std::string GetStateName() { return "AccountCreationAwaitResponse"; }
 

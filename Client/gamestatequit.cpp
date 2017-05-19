@@ -19,10 +19,13 @@ void GameStateQuit::Tick()
     }
 }
 
-void GameStateQuit::HandlePacket(PacketBase* packet)
+bool GameStateQuit::HandlePacket(PacketBase* packet)
 {
     if (packet->GetType() == PacketBase::PACKET_DISCONNECT_RESPONSE)
     {
         this->game->client->FinalizeDisconnect();
+        return true;
     }
+
+    return false;
 }

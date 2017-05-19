@@ -12,9 +12,9 @@ GameStateAccountCreation::~GameStateAccountCreation()
 {
 
 }
-void GameStateAccountCreation::HandlePacket(PacketBase* packet)
+bool GameStateAccountCreation::HandlePacket(PacketBase* packet)
 {
-
+    return false;
 }
 void GameStateAccountCreation::Enter()
 {

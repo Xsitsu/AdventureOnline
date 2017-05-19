@@ -26,7 +26,7 @@ void GameStateCharacterView::Exit()
 
 }
 
-void GameStateCharacterView::HandlePacket(PacketBase * packet)
+bool GameStateCharacterView::HandlePacket(PacketBase * packet)
 {
     if (packet->GetType() == PacketBase::PACKET_CHARACTER_LIST)
     {
@@ -48,6 +48,8 @@ void GameStateCharacterView::HandlePacket(PacketBase * packet)
             packet->SetRequestStats(true);
             this->game->SendPacket(packet);
         }
+
+        return true;
     }
     else if(packet->GetType() == PacketBase::PACKET_CHARACTER_APPEARANCE)
     {
@@ -66,6 +68,8 @@ void GameStateCharacterView::HandlePacket(PacketBase * packet)
                 character->SetHairColor(static_cast<Character::HairColor>(return_character->GetHairColor()));
             }
         }
+
+        return true;
     }
     else if (packet->GetType() == PacketBase::PACKET_CHARACTER_STATS)
     {
@@ -80,8 +84,11 @@ void GameStateCharacterView::HandlePacket(PacketBase * packet)
                 character->SetHealth(stats->GetHealth());
             }
         }
+
+        return true;
     }
 
+    return false;
 }
 void GameStateCharacterView::Tick()
 {
