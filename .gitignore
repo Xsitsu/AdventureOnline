@@ -16,3 +16,6 @@ resource
 *.aorf
 *.aomf
 *.db
+
+bin/
+obj/
