@@ -98,7 +98,8 @@ void Server::Tick()
             client = new ClientConnection(this, clientAddress, con_id);
             this->ConnectClient(client);
 
-            std::cout << "New client connected with id: " << con_id << std::endl;
+            std::cout << "New client connected with id: " << con_id
+                << " - " << clientAddress.ToString() << std::endl;
         }
         else if (packet->GetType() == PacketBase::PACKET_DISCONNECT)
         {

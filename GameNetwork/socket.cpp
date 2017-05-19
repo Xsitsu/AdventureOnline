@@ -1,6 +1,7 @@
 #include "socket.hpp"
 
-#include <iostream>
+#include <string>
+#include <sstream>
 
 bool InitializeSockets()
 {
@@ -73,6 +74,17 @@ sockaddr_in Address::ToSockaddr_in() const
 	addr.sin_port = htons(this->GetPort());
 
 	return addr;
+}
+
+std::string Address::ToString() const
+{
+    std::stringstream stream;
+
+    stream << (int)this->GetA() << "." << (int)this->GetB() << "."
+        << (int)this->GetC() << "." << (int)this->GetD() << ":"
+        << (int)this->GetPort();
+
+    return stream.str();
 }
 
 bool Address::operator==(const Address& rhs)
