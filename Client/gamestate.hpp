@@ -35,7 +35,7 @@ public:
     virtual void Tick() {}
     virtual void Render() {}
 
-    virtual void HandlePacket(PacketBase* packet) {}
+    virtual bool HandlePacket(PacketBase* packet) { return false; }
 
     virtual void HandleKeyDown(const ALLEGRO_KEYBOARD_EVENT& keyboard) {}
     virtual void HandleKeyUp(const ALLEGRO_KEYBOARD_EVENT& keyboard) {}

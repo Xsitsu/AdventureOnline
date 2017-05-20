@@ -27,7 +27,7 @@ Map* GenerateMap1()
 
     MapTile &tile = map->GetTile(Vector2(3, 3));
     tile.SetSpriteId(2);
-    MapWarpRegular *warp = new MapWarpRegular(map, 2, Vector2(5, 0));
+    MapWarpRegular *warp = new MapWarpRegular(map, 2, Vector2(5, 1));
     tile.SetMapWarp(warp);
 
     return map;

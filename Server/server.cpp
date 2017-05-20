@@ -77,7 +77,8 @@ void Server::Tick()
         {
             //std::cout << "PacketInit" << std::endl;
             unsigned short listen_port = static_cast<PacketInit*>(packet)->GetListenPort();
-            Address clientAddress(sender.GetAddress(), listen_port);
+            //Address clientAddress(sender.GetAddress(), listen_port);
+            Address clientAddress(sender.GetAddress(), sender.GetPort());
 
             unsigned int con_id = 0;
             try
@@ -97,7 +98,8 @@ void Server::Tick()
             client = new ClientConnection(this, clientAddress, con_id);
             this->ConnectClient(client);
 
-            std::cout << "New client connected with id: " << con_id << std::endl;
+            std::cout << "New client connected with id: " << con_id
+                << " - " << clientAddress.ToString() << std::endl;
         }
         else if (packet->GetType() == PacketBase::PACKET_DISCONNECT)
         {

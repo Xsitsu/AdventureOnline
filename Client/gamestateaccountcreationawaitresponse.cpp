@@ -5,7 +5,7 @@ void GameStateAccountCreationAwaitResponse::Render()
     this->game->DrawScreens();
 }
 
-void GameStateAccountCreationAwaitResponse::HandlePacket(PacketBase* packet)
+bool GameStateAccountCreationAwaitResponse::HandlePacket(PacketBase* packet)
 {
     if(packet->GetType() == PacketBase::PACKET_REGISTRATION_RESPONSE)
     {
@@ -24,7 +24,11 @@ void GameStateAccountCreationAwaitResponse::HandlePacket(PacketBase* packet)
                 static_cast<GuiTextButton*>(game->GetCurrentScreen()->GetGuiById("Confirmation"))->SetText("Unknown error creating account.");
             game->GetCurrentScreen()->GetGuiById("Continue")->SetVisible(true);
         }
+
+        return true;
     }
+
+    return false;
 }
 
 void GameStateAccountCreationAwaitResponse::HandleMouseMove(const ALLEGRO_MOUSE_EVENT& mouse)

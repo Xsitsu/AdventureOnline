@@ -10,9 +10,9 @@ GameStateCharacterCreation::~GameStateCharacterCreation()
 
 }
 
-void GameStateCharacterCreation::HandlePacket(PacketBase* packet)
+bool GameStateCharacterCreation::HandlePacket(PacketBase* packet)
 {
-
+    return false;
 }
 
 void GameStateCharacterCreation::Enter()

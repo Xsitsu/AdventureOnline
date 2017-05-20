@@ -153,7 +153,7 @@ void GameStatePlaying::Render()
 
 }
 
-void GameStatePlaying::HandlePacket(PacketBase* packet)
+bool GameStatePlaying::HandlePacket(PacketBase* packet)
 {
     if (packet->GetType() == PacketBase::PACKET_CHARACTER_MAP_ENTER)
     {
@@ -189,6 +189,8 @@ void GameStatePlaying::HandlePacket(PacketBase* packet)
                 this->game->SendPacket(request);
             }
         }
+
+        return true;
     }
     else if (packet->GetType() == PacketBase::PACKET_CHARACTER_MAP_LEAVE)
     {
@@ -215,6 +217,8 @@ void GameStatePlaying::HandlePacket(PacketBase* packet)
                 delete character;
             }
         }
+
+        return true;
     }
     else if (packet->GetType() == PacketBase::PACKET_CHARACTER_APPEARANCE)
     {
@@ -237,6 +241,8 @@ void GameStatePlaying::HandlePacket(PacketBase* packet)
                 }
             }
         }
+
+        return true;
     }
     else if (packet->GetType() == PacketBase::PACKET_CHARACTER_POSITION)
     {
@@ -288,6 +294,8 @@ void GameStatePlaying::HandlePacket(PacketBase* packet)
                 }
             }
         }
+
+        return true;
     }
     else if (packet->GetType() == PacketBase::PACKET_CHARACTER_STATS)
     {
@@ -307,6 +315,8 @@ void GameStatePlaying::HandlePacket(PacketBase* packet)
                 }
             }
         }
+
+        return true;
     }
     else if (packet->GetType() == PacketBase::PACKET_CHARACTER_TURN)
     {
@@ -326,6 +336,8 @@ void GameStatePlaying::HandlePacket(PacketBase* packet)
                 }
             }
         }
+
+        return true;
     }
     else if (packet->GetType() == PacketBase::PACKET_CHARACTER_WALK)
     {
@@ -347,6 +359,8 @@ void GameStatePlaying::HandlePacket(PacketBase* packet)
                 }
             }
         }
+
+        return true;
     }
     else if (packet->GetType() == PacketBase::PACKET_CHARACTER_ATTACK)
     {
@@ -365,6 +379,8 @@ void GameStatePlaying::HandlePacket(PacketBase* packet)
                 }
             }
         }
+
+        return true;
     }
     else if (packet->GetType() == PacketBase::PACKET_CHARACTER_TAKE_DAMAGE)
     {
@@ -388,6 +404,8 @@ void GameStatePlaying::HandlePacket(PacketBase* packet)
                 }
             }
         }
+
+        return true;
     }
     else if (packet->GetType() == PacketBase::PACKET_CHARACTER_DIED)
     {
@@ -406,7 +424,11 @@ void GameStatePlaying::HandlePacket(PacketBase* packet)
                 }
             }
         }
+
+        return true;
     }
+
+    return false;
 }
 
 void GameStatePlaying::HandleKeyDown(const ALLEGRO_KEYBOARD_EVENT& keyboard)

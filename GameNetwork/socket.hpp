@@ -3,6 +3,8 @@
 
 #include "main.h"
 
+#include <iostream>
+
 #if PLATFORM == PLATFORM_WINDOWS
 
 #include <winsock2.h>
@@ -31,6 +33,7 @@ public:
 	unsigned char GetC() const;
 	unsigned char GetD() const;
 	unsigned short GetPort() const;
+	std::string ToString() const;
 
 	sockaddr_in ToSockaddr_in() const;
 
