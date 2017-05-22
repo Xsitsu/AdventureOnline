@@ -17,10 +17,19 @@
 					<Add option="-Wall" />
 					<Add option="-g" />
 					<Add option="-DBUILD_DLL" />
+					<Add option="-DWINDOWS" />
 				</Compiler>
 				<Linker>
 					<Add library="user32" />
 				</Linker>
+				<ExtraCommands>
+					<Add after='cmd /c copy &quot;$(PROJECT_DIR)$(TARGET_OUTPUT_FILE)&quot; &quot;$(PROJECT_DIR)..\Client\bin\$(TARGET_NAME)&quot;' />
+					<Add after='cmd /c copy &quot;$(PROJECT_DIR)$(TARGET_OUTPUT_FILE)&quot; &quot;$(PROJECT_DIR)..\Server\bin\$(TARGET_NAME)&quot;' />
+					<Add after='cmd /c copy &quot;$(PROJECT_DIR)$(TARGET_OUTPUT_FILE)&quot; &quot;$(PROJECT_DIR)..\FileMaker\bin\$(TARGET_NAME)&quot;' />
+					<Add after='cmd /c copy &quot;$(PROJECT_DIR)$(TARGET_OUTPUT_FILE)&quot; &quot;$(PROJECT_DIR)..\GameWorld\bin\$(TARGET_NAME)&quot;' />
+					<Add after='cmd /c copy &quot;$(PROJECT_DIR)$(TARGET_OUTPUT_FILE)&quot; &quot;$(PROJECT_DIR)..\GameGui\bin\$(TARGET_NAME)&quot;' />
+					<Add after='cmd /c copy &quot;$(PROJECT_DIR)$(TARGET_OUTPUT_FILE)&quot; &quot;$(PROJECT_DIR)..\MapAssembler\bin\$(TARGET_NAME)&quot;' />
+				</ExtraCommands>
 			</Target>
 			<Target title="Release">
 				<Option output="bin/Release/GameUtil" prefix_auto="1" extension_auto="1" />
@@ -30,13 +39,38 @@
 				<Option createDefFile="1" />
 				<Option createStaticLib="1" />
 				<Compiler>
+					<Add option="-O2" />
 					<Add option="-Wall" />
 					<Add option="-DBUILD_DLL" />
-					<Add option="-O2" />
+					<Add option="-DWINDOWS" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
 					<Add library="user32" />
+				</Linker>
+				<ExtraCommands>
+					<Add after='cmd /c copy &quot;$(PROJECT_DIR)$(TARGET_OUTPUT_FILE)&quot; &quot;$(PROJECT_DIR)..\Client\bin\$(TARGET_NAME)&quot;' />
+					<Add after='cmd /c copy &quot;$(PROJECT_DIR)$(TARGET_OUTPUT_FILE)&quot; &quot;$(PROJECT_DIR)..\Server\bin\$(TARGET_NAME)&quot;' />
+					<Add after='cmd /c copy &quot;$(PROJECT_DIR)$(TARGET_OUTPUT_FILE)&quot; &quot;$(PROJECT_DIR)..\FileMaker\bin\$(TARGET_NAME)&quot;' />
+					<Add after='cmd /c copy &quot;$(PROJECT_DIR)$(TARGET_OUTPUT_FILE)&quot; &quot;$(PROJECT_DIR)..\GameWorld\bin\$(TARGET_NAME)&quot;' />
+					<Add after='cmd /c copy &quot;$(PROJECT_DIR)$(TARGET_OUTPUT_FILE)&quot; &quot;$(PROJECT_DIR)..\GameGui\bin\$(TARGET_NAME)&quot;' />
+					<Add after='cmd /c copy &quot;$(PROJECT_DIR)$(TARGET_OUTPUT_FILE)&quot; &quot;$(PROJECT_DIR)..\MapAssembler\bin\$(TARGET_NAME)&quot;' />
+				</ExtraCommands>
+			</Target>
+			<Target title="Linux">
+				<Option output="bin/Linux/GameUtil" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Linux/" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-Wall" />
+					<Add option="-fPIC" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
 				</Linker>
 			</Target>
 		</Build>
@@ -46,16 +80,7 @@
 			<Add option="-Wredundant-decls" />
 			<Add option="-Wall" />
 			<Add option="-std=c++11" />
-			<Add option="-DWINDOWS" />
 		</Compiler>
-		<ExtraCommands>
-			<Add after='cmd /c copy &quot;$(PROJECT_DIR)$(TARGET_OUTPUT_FILE)&quot; &quot;$(PROJECT_DIR)..\Client\bin\$(TARGET_NAME)&quot;' />
-			<Add after='cmd /c copy &quot;$(PROJECT_DIR)$(TARGET_OUTPUT_FILE)&quot; &quot;$(PROJECT_DIR)..\Server\bin\$(TARGET_NAME)&quot;' />
-			<Add after='cmd /c copy &quot;$(PROJECT_DIR)$(TARGET_OUTPUT_FILE)&quot; &quot;$(PROJECT_DIR)..\FileMaker\bin\$(TARGET_NAME)&quot;' />
-			<Add after='cmd /c copy &quot;$(PROJECT_DIR)$(TARGET_OUTPUT_FILE)&quot; &quot;$(PROJECT_DIR)..\GameWorld\bin\$(TARGET_NAME)&quot;' />
-			<Add after='cmd /c copy &quot;$(PROJECT_DIR)$(TARGET_OUTPUT_FILE)&quot; &quot;$(PROJECT_DIR)..\GameGui\bin\$(TARGET_NAME)&quot;' />
-			<Add after='cmd /c copy &quot;$(PROJECT_DIR)$(TARGET_OUTPUT_FILE)&quot; &quot;$(PROJECT_DIR)..\MapAssembler\bin\$(TARGET_NAME)&quot;' />
-		</ExtraCommands>
 		<Unit filename="filebase.cpp" />
 		<Unit filename="filebase.hpp" />
 		<Unit filename="main.cpp" />

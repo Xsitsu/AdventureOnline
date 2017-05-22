@@ -19,11 +19,16 @@
 					<Add option="-DBUILD_DLL" />
 					<Add option="-D_DEBUG" />
 					<Add option="-DPLATFORM=PLATFORM_WINDOWS" />
+					<Add option="-DWINDOWS" />
 				</Compiler>
 				<Linker>
 					<Add library="user32" />
 					<Add library="ws2_32" />
 				</Linker>
+				<ExtraCommands>
+					<Add after='cmd /c copy &quot;$(PROJECT_DIR)$(TARGET_OUTPUT_FILE)&quot; &quot;$(PROJECT_DIR)..\Client\bin\$(TARGET_NAME)&quot;' />
+					<Add after='cmd /c copy &quot;$(PROJECT_DIR)$(TARGET_OUTPUT_FILE)&quot; &quot;$(PROJECT_DIR)..\Server\bin\$(TARGET_NAME)&quot;' />
+				</ExtraCommands>
 			</Target>
 			<Target title="Release">
 				<Option output="bin/Release/GameNetwork" prefix_auto="1" extension_auto="1" />
@@ -37,11 +42,33 @@
 					<Add option="-Wall" />
 					<Add option="-DBUILD_DLL" />
 					<Add option="-DPLATFORM=PLATFORM_WINDOWS" />
+					<Add option="-DWINDOWS" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
 					<Add library="user32" />
 					<Add library="ws2_32" />
+				</Linker>
+				<ExtraCommands>
+					<Add after='cmd /c copy &quot;$(PROJECT_DIR)$(TARGET_OUTPUT_FILE)&quot; &quot;$(PROJECT_DIR)..\Client\bin\$(TARGET_NAME)&quot;' />
+					<Add after='cmd /c copy &quot;$(PROJECT_DIR)$(TARGET_OUTPUT_FILE)&quot; &quot;$(PROJECT_DIR)..\Server\bin\$(TARGET_NAME)&quot;' />
+				</ExtraCommands>
+			</Target>
+			<Target title="Linux">
+				<Option output="bin/Linux/GameNetwork" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Linux/" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-Wall" />
+					<Add option="-DPLATFORM=PLATFORM_UNIX" />
+					<Add option="-fPIC" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
 				</Linker>
 			</Target>
 		</Build>
@@ -54,13 +81,8 @@
 			<Add option="-DPLATFORM_WINDOWS=1" />
 			<Add option="-DPLATFORM_MAC=2" />
 			<Add option="-DPLATFORM_UNIX=3" />
-			<Add option="-DWINDOWS" />
 			<Add directory="../" />
 		</Compiler>
-		<ExtraCommands>
-			<Add after='cmd /c copy &quot;$(PROJECT_DIR)$(TARGET_OUTPUT_FILE)&quot; &quot;$(PROJECT_DIR)..\Client\bin\$(TARGET_NAME)&quot;' />
-			<Add after='cmd /c copy &quot;$(PROJECT_DIR)$(TARGET_OUTPUT_FILE)&quot; &quot;$(PROJECT_DIR)..\Server\bin\$(TARGET_NAME)&quot;' />
-		</ExtraCommands>
 		<Unit filename="main.cpp" />
 		<Unit filename="main.h" />
 		<Unit filename="packet.cpp" />

@@ -14,6 +14,7 @@
 				<Compiler>
 					<Add option="-g" />
 					<Add option="-DPLATFORM=PLATFORM_WINDOWS" />
+					<Add option="-DWINDOWS" />
 					<Add directory="include" />
 					<Add directory="../Server" />
 				</Compiler>
@@ -32,6 +33,7 @@
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="-DPLATFORM=PLATFORM_WINDOWS" />
+					<Add option="-DWINDOWS" />
 					<Add directory="include" />
 					<Add directory="../Server" />
 				</Compiler>
@@ -41,6 +43,24 @@
 					<Add library="odbc32" />
 					<Add library="../GameWorld/bin/Release/libGameWorld.a" />
 					<Add library="../GameUtil/bin/Release/libGameUtil.a" />
+				</Linker>
+			</Target>
+			<Target title="Linux">
+				<Option output="bin/Linux/Server" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Linux/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-DPLATFORM=PLATFORM_UNIX" />
+					<Add directory="include" />
+					<Add directory="../Server" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="../GameNetwork/bin/Linux/GameNetwork.so" />
+					<Add library="../GameWorld/bin/Linux/GameWorld.so" />
+					<Add library="../GameUtil/bin/Linux/GameUtil.so" />
 				</Linker>
 			</Target>
 		</Build>
@@ -53,7 +73,6 @@
 			<Add option="-DPLATFORM_WINDOWS=1" />
 			<Add option="-DPLATFORM_MAC=2" />
 			<Add option="-DPLATFORM_UNIX=3" />
-			<Add option="-DWINDOWS" />
 			<Add directory=".." />
 		</Compiler>
 		<Unit filename="account.cpp" />
