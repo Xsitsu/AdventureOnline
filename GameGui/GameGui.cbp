@@ -50,6 +50,7 @@
 			<Add option="-Wredundant-decls" />
 			<Add option="-Wall" />
 			<Add option="-std=c++11" />
+			<Add option="-DWINDOWS" />
 			<Add directory=".." />
 			<Add directory="../allegro/include" />
 		</Compiler>

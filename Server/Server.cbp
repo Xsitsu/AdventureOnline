@@ -13,6 +13,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add option="-DPLATFORM=PLATFORM_WINDOWS" />
 					<Add directory="include" />
 					<Add directory="../Server" />
 				</Compiler>
@@ -30,6 +31,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add option="-DPLATFORM=PLATFORM_WINDOWS" />
 					<Add directory="include" />
 					<Add directory="../Server" />
 				</Compiler>
@@ -48,6 +50,10 @@
 			<Add option="-Wredundant-decls" />
 			<Add option="-Wall" />
 			<Add option="-std=c++11" />
+			<Add option="-DPLATFORM_WINDOWS=1" />
+			<Add option="-DPLATFORM_MAC=2" />
+			<Add option="-DPLATFORM_UNIX=3" />
+			<Add option="-DWINDOWS" />
 			<Add directory=".." />
 		</Compiler>
 		<Unit filename="account.cpp" />

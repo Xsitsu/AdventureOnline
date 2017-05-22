@@ -8,7 +8,11 @@ class Map;
 
 #include "GameUtil/vector2.hpp"
 
-class DLL_EXPORT MapWarpBase
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+MapWarpBase
 {
 protected:
     Map *from_map;

@@ -4,7 +4,11 @@
 #include "guibutton.hpp"
 #include "guitextelement.hpp"
 
-class DLL_EXPORT GuiTextButton : public GuiButton, public GuiTextElement
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+GuiTextButton : public GuiButton, public GuiTextElement
 {
 protected:
     virtual void DoDraw() const;

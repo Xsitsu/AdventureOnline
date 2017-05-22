@@ -41,6 +41,7 @@
 			<Add option="-Wall" />
 			<Add option="-std=c++11" />
 			<Add option="-fexceptions" />
+			<Add option="-DWINDOWS" />
 			<Add directory=".." />
 			<Add directory="../allegro/include" />
 		</Compiler>

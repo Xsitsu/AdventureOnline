@@ -13,7 +13,11 @@ class ActorManagerBase;
 
 class Map;
 
-class DLL_EXPORT Actor
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+Actor
 {
 public:
     // This allows you to compute backwards direction by doing (current_direction + 2)%4

@@ -8,10 +8,22 @@
 
 #include "guiselectionservice.hpp"
 
-struct DLL_EXPORT TextBoxSelectionArgs;
-struct DLL_EXPORT TextBoxTypingArgs;
+struct
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+TextBoxSelectionArgs;
+struct
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+TextBoxTypingArgs;
 
-class DLL_EXPORT GuiTextBox : public GuiObject, public GuiTextElement
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+GuiTextBox : public GuiObject, public GuiTextElement
 {
     friend class GuiSelectionService;
 
@@ -57,12 +69,20 @@ public:
 
 };
 
-struct DLL_EXPORT TextBoxSelectionArgs
+struct
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+TextBoxSelectionArgs
 {
     GuiTextBox* text_box;
 };
 
-struct DLL_EXPORT TextBoxTypingArgs
+struct
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+TextBoxTypingArgs
 {
     GuiTextBox* text_box;
     char character;

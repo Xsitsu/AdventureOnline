@@ -8,7 +8,11 @@
 #include "filebase.hpp"
 #include "resource.hpp"
 
-class DLL_EXPORT ResourceFile : public FileBase
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+ResourceFile : public FileBase
 {
 protected:
     std::list<Resource*> DoReadV1();

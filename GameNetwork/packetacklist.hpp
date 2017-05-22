@@ -14,7 +14,11 @@ struct PacketAck
 
 typedef std::list<PacketAck>::iterator ack_iter;
 
-class DLL_EXPORT PacketAckList
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+PacketAckList
 {
 protected:
     unsigned int packet_ack;
