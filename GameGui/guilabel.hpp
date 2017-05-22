@@ -3,7 +3,11 @@
 
 #include "guiobject.hpp"
 
-class DLL_EXPORT GuiLabel : public GuiObject
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+GuiLabel : public GuiObject
 {
 protected:
     virtual void DoDraw() const;

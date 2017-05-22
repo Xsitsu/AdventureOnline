@@ -83,17 +83,10 @@ void GameStatePlaying::Render()
                 {
                     MapTile& tile = current_map->GetTile(targ_coords);
 
-                    std::stringstream ss;
-                    ss << "tile_";
-                    ss << tile.GetSpriteId();
-
-                    std::string bitmap_name = ss.str();
-
                     if (tile.GetSpriteId() > 0)
                     {
                         try
                         {
-                            //ALLEGRO_BITMAP* tile_bitmap = BitmapService::Instance()->GetBitmap(bitmap_name);
                             ALLEGRO_BITMAP* tile_bitmap = tile_set->GetBitmap(tile.GetSpriteId());
 
                             Vector2 draw_pos = base_draw + (tile_step_x * x) + (tile_step_y * y);
@@ -119,7 +112,10 @@ void GameStatePlaying::Render()
         Vector2 middle = Vector2(640/2, 480/2);
 
         std::list<Actor*> actor_list = this->game->current_map->GetActorList();
-        for (std::list<Actor*>::iterator iter = actor_list.begin(); iter != actor_list.end(); ++iter)
+        std::list<Actor*>::iterator iter;
+
+        // Draw sprites
+        for (iter = actor_list.begin(); iter != actor_list.end(); ++iter)
         {
             Actor* actor = *iter;
             if (actor != self_actor)
@@ -140,6 +136,50 @@ void GameStatePlaying::Render()
             }
         }
 
+        ALLEGRO_FONT *actor_name_font = FontService::Instance()->GetFont("actor_name");
+
+        // Draw names and health bars
+        for (iter = actor_list.begin(); iter != actor_list.end(); ++iter)
+        {
+            Actor* actor = *iter;
+            if (actor != self_actor)
+            {
+                Vector2 pos_offset = actor->GetPosition() - mychar->GetPosition();
+                Vector2 tile_mid = middle + (tile_step_x * pos_offset.x) + (tile_step_y * pos_offset.y);
+
+                if (actor->IsMoving())
+                {
+                    double percent = 1.0 - actor->GetStatePercentDone();
+                    Vector2 dir = actor->GetDirectionVector();
+
+                    Vector2 offset = ((tile_step_x * dir.x) + (tile_step_y * dir.y)) * percent;
+                    tile_mid = tile_mid - offset;
+                }
+
+                actordrawer.DrawActorOnTile(actor, tile_mid + draw_offset);
+
+                if (actor->IsPlayer())
+                {
+                    Vector2 pos = tile_mid + draw_offset;
+
+                    Character *character = static_cast<Character*>(actor);
+                    const char *name = character->GetName().c_str();
+
+                    int y_offset = 12;
+
+                    int w = al_get_text_width(actor_name_font, name);
+                    int h = al_get_font_line_height(actor_name_font);
+                    int x1 = pos.x - w/2;
+                    int x2 = pos.x + w/2;
+                    int y1 = pos.y + y_offset - h/2;
+                    int y2 = pos.y + y_offset + h/2;
+
+                    al_draw_filled_rounded_rectangle(x1 - 4, y1 - 2, x2 + 4, y2 + 2, 2, 2, al_map_rgba(0, 0, 0, 180));
+                    al_draw_text(actor_name_font, al_map_rgb(255, 255, 255), pos.x, pos.y + y_offset - h/2, ALLEGRO_ALIGN_CENTER, name);
+                }
+            }
+        }
+
         // Draw own character
         actordrawer.DrawActorOnTile(mychar, middle);
 
@@ -153,7 +193,7 @@ void GameStatePlaying::Render()
 
 }
 
-void GameStatePlaying::HandlePacket(PacketBase* packet)
+bool GameStatePlaying::HandlePacket(PacketBase* packet)
 {
     if (packet->GetType() == PacketBase::PACKET_CHARACTER_MAP_ENTER)
     {
@@ -189,6 +229,8 @@ void GameStatePlaying::HandlePacket(PacketBase* packet)
                 this->game->SendPacket(request);
             }
         }
+
+        return true;
     }
     else if (packet->GetType() == PacketBase::PACKET_CHARACTER_MAP_LEAVE)
     {
@@ -215,6 +257,8 @@ void GameStatePlaying::HandlePacket(PacketBase* packet)
                 delete character;
             }
         }
+
+        return true;
     }
     else if (packet->GetType() == PacketBase::PACKET_CHARACTER_APPEARANCE)
     {
@@ -237,6 +281,8 @@ void GameStatePlaying::HandlePacket(PacketBase* packet)
                 }
             }
         }
+
+        return true;
     }
     else if (packet->GetType() == PacketBase::PACKET_CHARACTER_POSITION)
     {
@@ -288,6 +334,8 @@ void GameStatePlaying::HandlePacket(PacketBase* packet)
                 }
             }
         }
+
+        return true;
     }
     else if (packet->GetType() == PacketBase::PACKET_CHARACTER_STATS)
     {
@@ -307,6 +355,8 @@ void GameStatePlaying::HandlePacket(PacketBase* packet)
                 }
             }
         }
+
+        return true;
     }
     else if (packet->GetType() == PacketBase::PACKET_CHARACTER_TURN)
     {
@@ -326,6 +376,8 @@ void GameStatePlaying::HandlePacket(PacketBase* packet)
                 }
             }
         }
+
+        return true;
     }
     else if (packet->GetType() == PacketBase::PACKET_CHARACTER_WALK)
     {
@@ -347,6 +399,8 @@ void GameStatePlaying::HandlePacket(PacketBase* packet)
                 }
             }
         }
+
+        return true;
     }
     else if (packet->GetType() == PacketBase::PACKET_CHARACTER_ATTACK)
     {
@@ -365,6 +419,8 @@ void GameStatePlaying::HandlePacket(PacketBase* packet)
                 }
             }
         }
+
+        return true;
     }
     else if (packet->GetType() == PacketBase::PACKET_CHARACTER_TAKE_DAMAGE)
     {
@@ -388,6 +444,8 @@ void GameStatePlaying::HandlePacket(PacketBase* packet)
                 }
             }
         }
+
+        return true;
     }
     else if (packet->GetType() == PacketBase::PACKET_CHARACTER_DIED)
     {
@@ -406,7 +464,11 @@ void GameStatePlaying::HandlePacket(PacketBase* packet)
                 }
             }
         }
+
+        return true;
     }
+
+    return false;
 }
 
 void GameStatePlaying::HandleKeyDown(const ALLEGRO_KEYBOARD_EVENT& keyboard)

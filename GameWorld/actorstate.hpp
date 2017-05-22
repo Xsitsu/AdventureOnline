@@ -9,7 +9,11 @@ class Actor;
 
 #include "actor.hpp"
 
-class DLL_EXPORT ActorStateBase
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+ActorStateBase
 {
 protected:
     Actor* actor;
@@ -35,7 +39,11 @@ public:
     virtual bool IsDieing() { return false; }
 };
 
-class DLL_EXPORT ActorStateStand : public ActorStateBase
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+ActorStateStand : public ActorStateBase
 {
 protected:
 
@@ -52,7 +60,11 @@ public:
     virtual bool IsStanding();
 };
 
-class DLL_EXPORT ActorStateTurn : public ActorStateBase
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+ActorStateTurn : public ActorStateBase
 {
 protected:
 
@@ -69,7 +81,11 @@ public:
     virtual bool IsStanding();
 };
 
-class DLL_EXPORT ActorStateWalk : public ActorStateBase
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+ActorStateWalk : public ActorStateBase
 {
 protected:
 
@@ -86,7 +102,11 @@ public:
     virtual bool IsMoving();
 };
 
-class DLL_EXPORT ActorStateAttack : public ActorStateBase
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+ActorStateAttack : public ActorStateBase
 {
 protected:
 
@@ -104,14 +124,22 @@ public:
     virtual bool IsAttacking();
 };
 
-class DLL_EXPORT ActorStateFeignAttack : public ActorStateAttack
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+ActorStateFeignAttack : public ActorStateAttack
 {
 public:
     ActorStateFeignAttack(Actor *actor);
     virtual void Update();
 };
 
-class DLL_EXPORT ActorStateDead : public ActorStateBase
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+ActorStateDead : public ActorStateBase
 {
 public:
     ActorStateDead(Actor *actor);
@@ -127,7 +155,11 @@ public:
     virtual bool IsDieing();
 };
 
-class DLL_EXPORT ActorStateRevive : public ActorStateBase
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+ActorStateRevive : public ActorStateBase
 {
 public:
     ActorStateRevive(Actor *actor);

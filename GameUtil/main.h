@@ -1,6 +1,9 @@
 #ifndef __MAIN_H__
 #define __MAIN_H__
 
+
+#ifdef WINDOWS
+
 #include <windows.h>
 
 /*  To use this exported function of dll, include this header
@@ -13,6 +16,7 @@
     #define DLL_EXPORT __declspec(dllimport)
 #endif
 
+#endif // WINDOWS
 
 #ifdef __cplusplus
 extern "C"

@@ -1,8 +1,8 @@
 #ifndef WORLD_HPP_INCLUDE
 #define WORLD_HPP_INCLUDE
 
-#include "GameWorld\map.hpp"
-#include "GameWorld\mapmanager.hpp"
+#include "GameWorld/map.hpp"
+#include "GameWorld/mapmanager.hpp"
 
 class ClientConnection;
 

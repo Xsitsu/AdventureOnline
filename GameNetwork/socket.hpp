@@ -3,6 +3,8 @@
 
 #include "main.h"
 
+#include <iostream>
+
 #if PLATFORM == PLATFORM_WINDOWS
 
 #include <winsock2.h>
@@ -16,10 +18,22 @@
 
 #endif
 
-bool DLL_EXPORT InitializeSockets();
-void DLL_EXPORT ShutdownSockets();
+bool
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+InitializeSockets();
+void
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+ShutdownSockets();
 
-class DLL_EXPORT Address
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+Address
 {
 public:
 	Address();
@@ -31,6 +45,7 @@ public:
 	unsigned char GetC() const;
 	unsigned char GetD() const;
 	unsigned short GetPort() const;
+	std::string ToString() const;
 
 	sockaddr_in ToSockaddr_in() const;
 
@@ -42,7 +57,11 @@ private:
 
 };
 
-class DLL_EXPORT Socket
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+Socket
 {
 public:
 	Socket();

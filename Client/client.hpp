@@ -10,7 +10,7 @@
 
 class Client
 {
-    const int CONNECTION_TIMEOUT = 240;
+    const int CONNECTION_TIMEOUT = 10;
 
 protected:
     bool is_connected;

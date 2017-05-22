@@ -5,7 +5,11 @@
 
 #include <stdint.h>
 
-struct DLL_EXPORT Pixel
+struct
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+Pixel
 {
     unsigned char r;
     unsigned char g;
@@ -13,7 +17,11 @@ struct DLL_EXPORT Pixel
     unsigned char a;
 };
 
-class DLL_EXPORT Resource
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+Resource
 {
 protected:
     uint32_t width;

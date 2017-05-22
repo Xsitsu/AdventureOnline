@@ -5,7 +5,11 @@
 
 #include "main.h"
 
-class DLL_EXPORT Timer
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+Timer
 {
 protected:
     uint64_t time_count;

@@ -21,7 +21,11 @@ class MapManagerBase;
 #include "mapfile.hpp"
 #include "mapmanager.hpp"
 
-class DLL_EXPORT Map
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+Map
 {
     friend class MapFile;
 

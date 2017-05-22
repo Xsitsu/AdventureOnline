@@ -7,7 +7,7 @@ void GameStateCharacterCreationAwaitResponse::Render()
     this->game->DrawScreens();
 }
 
-void GameStateCharacterCreationAwaitResponse::HandlePacket(PacketBase* packet)
+bool GameStateCharacterCreationAwaitResponse::HandlePacket(PacketBase* packet)
 {
     if(packet->GetType() == PacketBase::PACKET_CHARACTER_CREATE_RESPONSE)
     {
@@ -39,7 +39,11 @@ void GameStateCharacterCreationAwaitResponse::HandlePacket(PacketBase* packet)
 //                static_cast<GuiTextButton*>(game->GetCurrentScreen()->GetGuiById("Confirmation"))->SetText("Unknown error creating character.");
 //            game->GetCurrentScreen()->GetGuiById("Continue")->SetVisible(true);
         }
+
+        return true;
     }
+
+    return false;
 }
 
 void GameStateCharacterCreationAwaitResponse::HandleMouseMove(const ALLEGRO_MOUSE_EVENT& mouse)

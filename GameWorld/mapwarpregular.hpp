@@ -5,7 +5,12 @@ class MapWarpBase;
 
 #include "mapwarp.hpp"
 
-class DLL_EXPORT MapWarpRegular : public MapWarpBase
+
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+MapWarpRegular : public MapWarpBase
 {
 protected:
 
