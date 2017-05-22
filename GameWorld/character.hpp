@@ -5,7 +5,11 @@
 
 #include "actor.hpp"
 
-class DLL_EXPORT Character : public Actor
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+Character : public Actor
 {
 public:
     enum Gender { GENDER_FEMALE = 0, GENDER_MALE };

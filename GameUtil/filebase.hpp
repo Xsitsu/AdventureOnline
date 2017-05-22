@@ -7,7 +7,11 @@
 
 #include "main.h"
 
-class DLL_EXPORT FileBase
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+FileBase
 {
 protected:
     char readbuffer[4];
@@ -40,7 +44,11 @@ public:
 
 namespace FileException
 {
-    class DLL_EXPORT FileException : public std::exception
+    class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+    FileException : public std::exception
     {
     protected:
         std::string filename;
@@ -52,7 +60,11 @@ namespace FileException
         virtual const char* what() const noexcept = 0;
     };
 
-    class DLL_EXPORT OpenFailed : public FileException
+    class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+    OpenFailed : public FileException
     {
     protected:
 
@@ -67,7 +79,11 @@ namespace FileException
         }
     };
 
-    class DLL_EXPORT FileCorrupted : public FileException
+    class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+    FileCorrupted : public FileException
     {
     protected:
 
@@ -82,7 +98,11 @@ namespace FileException
         }
     };
 
-    class DLL_EXPORT InvalidFileVersion : public FileException
+    class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+    InvalidFileVersion : public FileException
     {
     protected:
         int version;

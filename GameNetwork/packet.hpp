@@ -9,7 +9,11 @@
 
 #include "socket.hpp"
 
-class DLL_EXPORT PacketBase
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+PacketBase
 {
 public:
     static const unsigned int MAX_BUFFER;
@@ -90,7 +94,11 @@ public:
 
 
 // This is named PacketReader, but it actually handles both reading and writing of packets.
-class DLL_EXPORT PacketReader
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+PacketReader
 {
 protected:
 
@@ -120,7 +128,11 @@ public:
 
 
 // PacketInit
-class DLL_EXPORT PacketInit : public PacketBase
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+PacketInit : public PacketBase
 {
 protected:
     unsigned short listen_port;
@@ -136,7 +148,11 @@ public:
 };
 
 // PacketInitResponse
-class DLL_EXPORT PacketInitResponse : public PacketBase
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+PacketInitResponse : public PacketBase
 {
 protected:
     bool connection_accepted;
@@ -155,7 +171,11 @@ public:
 };
 
 // PacketDisconnect
-class DLL_EXPORT PacketDisconnect : public PacketBase
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+PacketDisconnect : public PacketBase
 {
 protected:
 
@@ -164,7 +184,11 @@ public:
 };
 
 // PacketDisconnectResponse
-class DLL_EXPORT PacketDisconnectResponse : public PacketBase
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+PacketDisconnectResponse : public PacketBase
 {
 protected:
 
@@ -173,7 +197,11 @@ public:
 };
 
 // PacketPing
-class DLL_EXPORT PacketPing : public PacketBase
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+PacketPing : public PacketBase
 {
 protected:
 
@@ -182,7 +210,11 @@ public:
 };
 
 // PacketPong
-class DLL_EXPORT PacketPong : public PacketBase
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+PacketPong : public PacketBase
 {
 protected:
 
@@ -190,7 +222,11 @@ public:
     PacketPong();
 };
 
-class DLL_EXPORT PacketRegistrationRequest: public PacketBase
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+PacketRegistrationRequest: public PacketBase
 {
 protected:
     std::string p_email;
@@ -213,7 +249,11 @@ public:
 };
 
 
-class DLL_EXPORT PacketRegistrationResponse : public PacketBase
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+PacketRegistrationResponse : public PacketBase
 {
 
 
@@ -238,7 +278,11 @@ protected:
     Response returnCode;
 };
 
-class DLL_EXPORT PacketLoginRequest : public PacketBase
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+PacketLoginRequest : public PacketBase
 {
 protected:
     uint8_t email_length;
@@ -259,7 +303,11 @@ public:
 };
 
 
-class DLL_EXPORT PacketLoginResponse : public PacketBase
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+PacketLoginResponse : public PacketBase
 {
 public:
     enum LoginResponse
@@ -282,7 +330,11 @@ public:
     virtual void Decode(char* buffer);
 };
 
-class DLL_EXPORT PacketLogout : public PacketBase
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+PacketLogout : public PacketBase
 {
 protected:
 
@@ -290,13 +342,21 @@ public:
     PacketLogout();
 };
 
-class DLL_EXPORT PacketCharacterListRequest : public PacketBase
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+PacketCharacterListRequest : public PacketBase
 {
 public:
     PacketCharacterListRequest();
 };
 
-class DLL_EXPORT PacketCharacterList : public PacketBase
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+PacketCharacterList : public PacketBase
 {
 protected:
     std::list<uint32_t> character_ids;
@@ -311,7 +371,11 @@ public:
     void SetCharacterList(std::list<uint32_t> character_ids);
 };
 
-class DLL_EXPORT PacketCharacterDataRequest : public PacketBase
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+PacketCharacterDataRequest : public PacketBase
 {
 public:
     // Used for encoding bools into a single byte
@@ -343,7 +407,11 @@ public:
     void SetRequestStats(bool val);
 };
 
-class DLL_EXPORT PacketCharacterLogin : public PacketBase
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+PacketCharacterLogin : public PacketBase
 {
 protected:
     uint32_t character_id;
@@ -358,7 +426,11 @@ public:
     void SetCharacterId(uint32_t character_id);
 };
 
-class DLL_EXPORT PacketCharacterLogout : public PacketBase
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+PacketCharacterLogout : public PacketBase
 {
 public:
     PacketCharacterLogout();
@@ -367,7 +439,11 @@ public:
     virtual void Decode(char* buffer);
 };
 
-class DLL_EXPORT PacketCharacterAppearance : public PacketBase
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+PacketCharacterAppearance : public PacketBase
 {
 protected:
     uint32_t character_id;
@@ -400,7 +476,11 @@ public:
 
 };
 
-class DLL_EXPORT PacketCharacterPosition : public PacketBase
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+PacketCharacterPosition : public PacketBase
 {
 protected:
     uint32_t character_id;
@@ -429,7 +509,11 @@ public:
     void SetDirection(uint8_t direction);
 };
 
-class DLL_EXPORT PacketCharacterStats : public PacketBase
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+PacketCharacterStats : public PacketBase
 {
 protected:
     uint32_t character_id;
@@ -454,7 +538,11 @@ public:
 
 };
 
-class DLL_EXPORT PacketCharacterMapEnter : public PacketBase
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+PacketCharacterMapEnter : public PacketBase
 {
 protected:
     uint32_t character_id;
@@ -473,7 +561,11 @@ public:
     void SetMapId(uint16_t id) { this->map_id = id; }
 };
 
-class DLL_EXPORT PacketCharacterMapLeave : public PacketBase
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+PacketCharacterMapLeave : public PacketBase
 {
 protected:
     uint32_t character_id;
@@ -492,7 +584,11 @@ public:
     void SetMapId(uint16_t id) { this->map_id = id; }
 };
 
-class DLL_EXPORT PacketCharacterTurn : public PacketBase
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+PacketCharacterTurn : public PacketBase
 {
 protected:
     uint32_t character_id;
@@ -512,7 +608,11 @@ public:
 
 };
 
-class DLL_EXPORT PacketCharacterWalk : public PacketBase
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+PacketCharacterWalk : public PacketBase
 {
 protected:
     uint32_t character_id;
@@ -547,7 +647,11 @@ public:
 
 };
 
-class DLL_EXPORT PacketCharacterCreationRequest : public PacketBase
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+PacketCharacterCreationRequest : public PacketBase
 {
 protected:
     std::string name;
@@ -575,7 +679,11 @@ public:
     int GetGender() { return gender; }
 };
 
-class DLL_EXPORT PacketCharacterCreationResponse : public PacketBase
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+PacketCharacterCreationResponse : public PacketBase
 {
 public:
     enum Response
@@ -596,7 +704,11 @@ protected:
     Response returnCode;
 };
 
-class DLL_EXPORT PacketCharacterAttack : public PacketBase
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+PacketCharacterAttack : public PacketBase
 {
 protected:
     uint32_t character_id;
@@ -611,7 +723,11 @@ public:
     void SetCharacterId(uint32_t character_id) { this->character_id = character_id; }
 };
 
-class DLL_EXPORT PacketCharacterTakeDamage : public PacketBase
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+PacketCharacterTakeDamage : public PacketBase
 {
 protected:
     uint32_t character_id;
@@ -634,7 +750,11 @@ public:
     void SetTakenDamage(uint16_t taken_damage) { this->taken_damage = taken_damage; }
 };
 
-class DLL_EXPORT PacketCharacterDied : public PacketBase
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+PacketCharacterDied : public PacketBase
 {
 protected:
     uint32_t character_id;

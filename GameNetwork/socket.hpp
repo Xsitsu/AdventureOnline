@@ -18,10 +18,22 @@
 
 #endif
 
-bool DLL_EXPORT InitializeSockets();
-void DLL_EXPORT ShutdownSockets();
+bool
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+InitializeSockets();
+void
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+ShutdownSockets();
 
-class DLL_EXPORT Address
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+Address
 {
 public:
 	Address();
@@ -45,7 +57,11 @@ private:
 
 };
 
-class DLL_EXPORT Socket
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+Socket
 {
 public:
 	Socket();

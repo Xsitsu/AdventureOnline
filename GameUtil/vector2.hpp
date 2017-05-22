@@ -3,7 +3,11 @@
 
 #include "main.h"
 
-struct DLL_EXPORT Vector2
+struct
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+Vector2
 {
     int x;
     int y;

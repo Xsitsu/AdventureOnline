@@ -6,7 +6,11 @@
 
 #include "color3.hpp"
 
-class DLL_EXPORT GuiImageElement
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+GuiImageElement
 {
 protected:
     ALLEGRO_BITMAP* image;

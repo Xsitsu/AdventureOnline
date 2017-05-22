@@ -8,7 +8,11 @@ class MapWarpBase;
 #include "actor.hpp"
 #include "mapwarp.hpp"
 
-class DLL_EXPORT MapTile
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+MapTile
 {
 public:
     enum MovementPermissions

@@ -5,7 +5,11 @@ class Map;
 
 #include "map.hpp"
 
-class DLL_EXPORT MapManagerBase
+class
+#ifdef WINDOWS
+DLL_EXPORT
+#endif
+MapManagerBase
 {
 protected:
 

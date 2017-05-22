@@ -1,5 +1,6 @@
 #include "main.h"
 
+#ifdef WINDOWS
 extern "C" DLL_EXPORT BOOL APIENTRY DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 {
     switch (fdwReason)
@@ -23,3 +24,4 @@ extern "C" DLL_EXPORT BOOL APIENTRY DllMain(HINSTANCE hinstDLL, DWORD fdwReason,
     }
     return TRUE; // succesful
 }
+#endif

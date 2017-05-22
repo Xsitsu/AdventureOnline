@@ -38,6 +38,10 @@ void GameStateInit::Tick()
     ALLEGRO_FONT* stat_bar_font = al_load_font("C:/Windows/Fonts/arial.ttf", 14, 0);
     FontService::Instance()->RegisterFont("stat_bar", stat_bar_font);
 
+    ALLEGRO_FONT* actor_name_font = al_load_font("C:/Windows/Fonts/arial.ttf", 11, 0);
+    FontService::Instance()->RegisterFont("actor_name", actor_name_font);
+
+
     ALLEGRO_BITMAP* base_bitmap = al_get_target_bitmap();
 
 
