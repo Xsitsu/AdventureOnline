@@ -94,8 +94,8 @@ GuiScreen* ScreenMakerLogin::MakeScreen()
     base_frame->SetBackgroundAlpha(200);
 
 
-    Vector2 label_size = Vector2(base_size.x / 3, text_font->height + 4);
-    Vector2 textbox_size = Vector2(base_size.x / 2, text_font->height + 4);
+    Vector2 label_size = Vector2(base_size.x / 3, al_get_font_line_height(text_font) + 4);
+    Vector2 textbox_size = Vector2(base_size.x / 2, al_get_font_line_height(text_font) + 4);
     int y_pos = 52;
 
     GuiTextLabel* email_label = new GuiTextLabel(label_size, Vector2(0, y_pos));
@@ -125,7 +125,7 @@ GuiScreen* ScreenMakerLogin::MakeScreen()
 
 
 
-    Vector2 button_size = Vector2(base_size.x / 4, text_font->height + 4);
+    Vector2 button_size = Vector2(base_size.x / 4, al_get_font_line_height(text_font) + 4);
     Vector2 button_pos = Vector2((base_size.x - button_size.x) / 2, base_size.y - button_size.y - 4);
     Vector2 pos_adder = Vector2(button_size.x / 3 * 2, 0);
 

@@ -93,10 +93,6 @@
 		<Unit filename="timer.hpp" />
 		<Unit filename="vector2.cpp" />
 		<Unit filename="vector2.hpp" />
-		<Extensions>
-			<code_completion />
-			<envvars />
-			<debugger />
-		</Extensions>
+		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

@@ -145,32 +145,32 @@ GuiFrame* CreateCharacterFrame(ALLEGRO_FONT* font)
 
     Color3 color_white = Color3(255, 255, 255);
 
-    GuiTextLabel* character_name = new GuiTextLabel(Vector2(220, font->height), Vector2(115, 10));
+    GuiTextLabel* character_name = new GuiTextLabel(Vector2(220, al_get_font_line_height(font)), Vector2(115, 10));
     character_name->SetText("Character Name");
     character_name->SetTextColor(color_white);
     character_name->SetBackgroundAlpha(255);
     character_name->SetTextFont(font);
     character_name->SetTextAlign(GuiTextLabel::ALIGN_CENTER);
 
-    GuiTextLabel * character_strength = new GuiTextLabel(Vector2(220, font->height), Vector2(115, 10 + font->height));
+    GuiTextLabel * character_strength = new GuiTextLabel(Vector2(220, al_get_font_line_height(font)), Vector2(115, 10 + al_get_font_line_height(font)));
     character_strength->SetText("STR:");
     character_strength->SetTextColor(color_white);
     character_strength->SetBackgroundAlpha(255);
     character_strength->SetTextFont(font);
 
-    GuiTextLabel * character_stamina = new GuiTextLabel(Vector2(220, font->height), Vector2(115, 10 + 2 * font->height));
+    GuiTextLabel * character_stamina = new GuiTextLabel(Vector2(220, al_get_font_line_height(font)), Vector2(115, 10 + 2 * al_get_font_line_height(font)));
     character_stamina->SetText("END:");
     character_stamina->SetTextColor(color_white);
     character_stamina->SetBackgroundAlpha(255);
     character_stamina->SetTextFont(font);
 
-    GuiTextLabel * character_hitpoints = new GuiTextLabel(Vector2(220, font->height), Vector2(115, 10 + 3 * font->height));
+    GuiTextLabel * character_hitpoints = new GuiTextLabel(Vector2(220, al_get_font_line_height(font)), Vector2(115, 10 + 3 * al_get_font_line_height(font)));
     character_hitpoints->SetText("HP:");
     character_hitpoints->SetTextColor(color_white);
     character_hitpoints->SetBackgroundAlpha(255);
     character_hitpoints->SetTextFont(font);
 
-    Vector2 button_size = Vector2(105, font->height);
+    Vector2 button_size = Vector2(105, al_get_font_line_height(font));
     Vector2 start = character_draw_area->GetPosition() + Vector2(105, character_draw_area->GetSize().y - button_size.y);
 
     GuiTextButton* login_button = new GuiTextButton(button_size, start);

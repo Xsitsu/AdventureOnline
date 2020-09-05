@@ -1,4 +1,5 @@
 #include "guipasswordtextbox.hpp"
+#include <allegro5/allegro_font.h>.
 
 GuiPasswordTextBox::GuiPasswordTextBox() : GuiTextBox()
 {}
@@ -32,7 +33,7 @@ void GuiPasswordTextBox::DoDraw() const
             draw_x += this->size.x;
             align = ALLEGRO_ALIGN_RIGHT;
         }
-        int mid_y = abs_pos.y + (this->size.y / 2) - (font->height / 2);
+        int mid_y = abs_pos.y + (this->size.y / 2) - (al_get_font_line_height(font) / 2);
         al_draw_text(font, this->text_draw_color, draw_x, mid_y, align, this->draw_text.c_str());
 
         if (this->is_selected)
@@ -53,7 +54,7 @@ void GuiPasswordTextBox::DoDraw() const
 
             xPos += this->cursor_text_width;
 
-            al_draw_line(xPos, mid_y, xPos, mid_y + font->height, al_map_rgb(255, 0, 255), 2);
+            al_draw_line(xPos, mid_y, xPos, mid_y + al_get_font_line_height(font), al_map_rgb(255, 0, 255), 2);
         }
     }
 

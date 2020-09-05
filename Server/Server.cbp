@@ -102,10 +102,6 @@
 		<Unit filename="sqlite3.h" />
 		<Unit filename="world.cpp" />
 		<Unit filename="world.hpp" />
-		<Extensions>
-			<code_completion />
-			<envvars />
-			<debugger />
-		</Extensions>
+		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

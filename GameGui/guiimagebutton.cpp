@@ -1,5 +1,7 @@
 #include "guiimagebutton.hpp"
 
+#include <allegro5/allegro.h>
+
 GuiImageButton::GuiImageButton() : GuiButton(), GuiImageElement()
 {}
 

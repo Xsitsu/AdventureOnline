@@ -102,10 +102,6 @@
 		<Unit filename="mapwarpbase.cpp" />
 		<Unit filename="mapwarpregular.cpp" />
 		<Unit filename="mapwarpregular.hpp" />
-		<Extensions>
-			<code_completion />
-			<envvars />
-			<debugger />
-		</Extensions>
+		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

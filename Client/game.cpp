@@ -241,8 +241,8 @@ void Game::Run()
                     ALLEGRO_FONT* font = FontService::Instance()->GetFont("debug");
                     ALLEGRO_COLOR color = al_map_rgb(255, 0, 255);
                     al_draw_textf(font, color, 5, 5, 0, "FPS: %i", game_fps);
-                    al_draw_textf(font, color, 5, 5 + font->height, 0, "Ping: %i", (int)ping);
-                    al_draw_textf(font, color, 5, 5 + font->height * 2, 0, "GameState: %s", this->state->GetStateName().c_str());
+                    al_draw_textf(font, color, 5, 5 + al_get_font_line_height(font), 0, "Ping: %i", (int)ping);
+                    al_draw_textf(font, color, 5, 5 + al_get_font_line_height(font) * 2, 0, "GameState: %s", this->state->GetStateName().c_str());
                 }
 
                 al_wait_for_vsync();

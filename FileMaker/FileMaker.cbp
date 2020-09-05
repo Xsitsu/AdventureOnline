@@ -15,7 +15,7 @@
 					<Add option="-g" />
 				</Compiler>
 				<Linker>
-					<Add library="../allegro/lib/liballegro-5.0.10-monolith-md-debug.a" />
+					<Add library="../allegro/lib/liballegro_monolith-debug.dll.a" />
 					<Add library="../GameUtil/bin/Debug/libGameUtil.a" />
 				</Linker>
 			</Target>
@@ -29,7 +29,7 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add library="../allegro/lib/liballegro-5.0.10-monolith-md.a" />
+					<Add library="../allegro/lib/liballegro_monolith.dll.a" />
 					<Add library="../GameUtil/bin/Release/libGameUtil.a" />
 				</Linker>
 			</Target>
@@ -47,9 +47,6 @@
 		</Compiler>
 		<Unit filename="main.cpp" />
 		<Extensions>
-			<code_completion />
-			<envvars />
-			<debugger />
 			<lib_finder disable_auto="1" />
 		</Extensions>
 	</Project>

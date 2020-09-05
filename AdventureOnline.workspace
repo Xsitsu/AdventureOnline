@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_workspace_file>
+	<Workspace title="Workspace">
+		<Project filename="Client/Client.cbp" />
+		<Project filename="Server/Server.cbp" />
+		<Project filename="GameWorld/GameWorld.cbp" />
+		<Project filename="GameGui/GameGui.cbp" />
+		<Project filename="GameNetwork/GameNetwork.cbp" />
+		<Project filename="GameUtil/GameUtil.cbp" />
+		<Project filename="FileMaker/FileMaker.cbp" />
+		<Project filename="MapAssembler/MapAssembler.cbp" />
+	</Workspace>
+</CodeBlocks_workspace_file>
