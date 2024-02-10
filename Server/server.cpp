@@ -76,7 +76,7 @@ void Server::Tick()
         if (packet->GetType() == PacketBase::PACKET_INIT)
         {
             //std::cout << "PacketInit" << std::endl;
-            unsigned short listen_port = static_cast<PacketInit*>(packet)->GetListenPort();
+            //unsigned short listen_port = static_cast<PacketInit*>(packet)->GetListenPort();
             //Address clientAddress(sender.GetAddress(), listen_port);
             Address clientAddress(sender.GetAddress(), sender.GetPort());
 
@@ -247,7 +247,7 @@ void Server::EstablishDatabaseConnection()
 {
     if (!this->database)
     {
-        this->database = new Database();
+        this->database = new SQLiteDatabase();
         this->database->Connect();
     }
 }

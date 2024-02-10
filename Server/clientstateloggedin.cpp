@@ -142,7 +142,7 @@ bool ClientStateLoggedIn::ProcessPacket(PacketBase* packet)
             {
                 database->CreateCharacter(accID, newCharacter);
             }
-            catch(std::exception problem)
+            catch(std::exception& problem)
             {
                 database->DeleteCharacter(newCharacter->GetName());
                 response->SetResponse(PacketCharacterCreationResponse::RESPONSE_ERROR);

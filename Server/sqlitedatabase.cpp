@@ -2,12 +2,12 @@
 
 #include <iostream>
 
-Database::Database() : is_connected(false)
+SQLiteDatabase::SQLiteDatabase()
 {
 
 }
 
-Database::~Database()
+SQLiteDatabase::~SQLiteDatabase()
 {
     if (this->IsConnected())
     {
@@ -15,11 +15,11 @@ Database::~Database()
     }
 }
 
-void Database::Connect()
+void SQLiteDatabase::Connect()
 {
     if (this->IsConnected()) throw DatabaseAlreadyConnectedException();
 
-    char filepath[] = "AO.db";
+    //char filepath[] = "AO.db";
 
     //rc = sqlite3_open(filepath, &db);
     if(rc)
@@ -31,7 +31,7 @@ void Database::Connect()
     this->is_connected = true;
 }
 
-void Database::Disconnect()
+void SQLiteDatabase::Disconnect()
 {
     if (!this->IsConnected()) throw DatabaseNotConnectedException();
 
@@ -40,7 +40,7 @@ void Database::Disconnect()
     this->is_connected = false;
 }
 
-void Database::CreateAccount(std::string email, std::string password)
+void SQLiteDatabase::CreateAccount(std::string email, std::string password)
 {
     /*
     sqlite3_stmt * ppStmt = nullptr;
@@ -56,7 +56,7 @@ void Database::CreateAccount(std::string email, std::string password)
     */
 }
 
-Account* Database::ReadAccount(std::string email)
+Account* SQLiteDatabase::ReadAccount(std::string email)
 {
     Account * account = nullptr;
 
@@ -79,7 +79,7 @@ Account* Database::ReadAccount(std::string email)
     return account;
 }
 
-void Database::UpdateAccount(Account* account)
+void SQLiteDatabase::UpdateAccount(Account* account)
 {
     if( ReadAccount(account->GetEmail())) throw DatabaseDataDoesNotExistException();
     /*
@@ -97,12 +97,12 @@ void Database::UpdateAccount(Account* account)
     */
 }
 
-void Database::DeleteAccount(Account* account)
+void SQLiteDatabase::DeleteAccount(Account* account)
 {
     // ToDo
 }
 
-vector<int> Database::ReadPlayerCharacters (std::string email)
+vector<int> SQLiteDatabase::ReadPlayerCharacters (std::string email)
 {
     /*
     sqlite3_stmt * ppStmt = nullptr;
@@ -136,7 +136,7 @@ vector<int> Database::ReadPlayerCharacters (std::string email)
 
 }
 
-Character * Database::ReadCharacterInfo( int ID)
+Character * SQLiteDatabase::ReadCharacterInfo( int ID)
 {
     Character * player_character = new Character();
     /*
@@ -226,7 +226,7 @@ Character * Database::ReadCharacterInfo( int ID)
     return player_character;
 }
 
-void Database::CreateCharacter(int accID, Character * toon)
+void SQLiteDatabase::CreateCharacter(int accID, Character * toon)
 {
     /*
     if(toon)
@@ -262,7 +262,7 @@ void Database::CreateCharacter(int accID, Character * toon)
     */
 }
 
-void Database::AddCharacterStat(int charID, std::string statname, int statValue)
+void SQLiteDatabase::AddCharacterStat(int charID, std::string statname, int statValue)
 {
     /*
     int statID = GetStatID(statname);
@@ -278,7 +278,7 @@ void Database::AddCharacterStat(int charID, std::string statname, int statValue)
     */
 }
 
-int Database::GetStatID(std::string name)
+int SQLiteDatabase::GetStatID(std::string name)
 {
     /*
     sqlite3_stmt * statement = nullptr;
@@ -296,7 +296,7 @@ int Database::GetStatID(std::string name)
     return statID;
 }
 
-bool Database::CharacterExists(std::string name)
+bool SQLiteDatabase::CharacterExists(std::string name)
 {
     /*
     sqlite3_stmt * statement = nullptr;
@@ -308,7 +308,7 @@ bool Database::CharacterExists(std::string name)
     return true;
 }
 
-void Database::DeleteCharacter(std::string name)
+void SQLiteDatabase::DeleteCharacter(std::string name)
 {
     /*
     sqlite3_stmt * statement = nullptr;
