@@ -65,8 +65,12 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add library="../GameUtil/bin/Linux/GameUtil.so" />
+					<Add library="../GameUtil/bin/Linux/libGameUtil.so" />
 				</Linker>
+				<ExtraCommands>
+					<Add before="pwd" />
+					<Mode after="always" />
+				</ExtraCommands>
 			</Target>
 		</Build>
 		<Compiler>

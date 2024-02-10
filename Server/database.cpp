@@ -21,10 +21,10 @@ void Database::Connect()
 
     char filepath[] = "AO.db";
 
-    rc = sqlite3_open(filepath, &db);
+    //rc = sqlite3_open(filepath, &db);
     if(rc)
     {
-        sqlite3_close(db);
+        //sqlite3_close(db);
         this->is_connected = false;
         throw DatabaseConnectionFailedException();
     }
@@ -35,13 +35,14 @@ void Database::Disconnect()
 {
     if (!this->IsConnected()) throw DatabaseNotConnectedException();
 
-    sqlite3_close(db);
+    //sqlite3_close(db);
 
     this->is_connected = false;
 }
 
 void Database::CreateAccount(std::string email, std::string password)
 {
+    /*
     sqlite3_stmt * ppStmt = nullptr;
     const char sql_statement[] = "insert into users values(?, ?, ?);";
 
@@ -52,11 +53,14 @@ void Database::CreateAccount(std::string email, std::string password)
     if ( sqlite3_step(ppStmt) != SQLITE_DONE) throw DatabaseException();
 
     sqlite3_finalize(ppStmt);
+    */
 }
 
 Account* Database::ReadAccount(std::string email)
 {
     Account * account = nullptr;
+
+    /*
     sqlite3_stmt * ppStmt = nullptr;
     const char sql_statement[] = "select rowid, * from users where useremail = ?;";
 
@@ -69,13 +73,16 @@ Account* Database::ReadAccount(std::string email)
     }
 
     sqlite3_finalize(ppStmt);
+    */
+
+    account = new Account(0, email, "1", "2");
     return account;
 }
 
 void Database::UpdateAccount(Account* account)
 {
     if( ReadAccount(account->GetEmail())) throw DatabaseDataDoesNotExistException();
-
+    /*
     sqlite3_stmt * ppStmt = nullptr;
     const char sql_statement[] = "UPDATE Users SET UserEmail = ?, UserSalt = ?, UserHash = ? WHERE rowid = ?";
 
@@ -87,6 +94,7 @@ void Database::UpdateAccount(Account* account)
 
     if ( sqlite3_step(ppStmt) != SQLITE_DONE) throw DatabaseException();
     sqlite3_finalize(ppStmt);
+    */
 }
 
 void Database::DeleteAccount(Account* account)
@@ -96,6 +104,7 @@ void Database::DeleteAccount(Account* account)
 
 vector<int> Database::ReadPlayerCharacters (std::string email)
 {
+    /*
     sqlite3_stmt * ppStmt = nullptr;
     sqlite3_stmt * Stmt2 = nullptr;
     const char sql_statement[] = "SELECT rowid FROM PlayerChar WHERE UserID = ?;";
@@ -121,6 +130,8 @@ vector<int> Database::ReadPlayerCharacters (std::string email)
 
     sqlite3_finalize(ppStmt);
 
+    */
+    vector<int> characters;
     return characters;
 
 }
@@ -128,6 +139,7 @@ vector<int> Database::ReadPlayerCharacters (std::string email)
 Character * Database::ReadCharacterInfo( int ID)
 {
     Character * player_character = new Character();
+    /*
     sqlite3_stmt * ppStmt = nullptr;
     const char sql_statement[] = "SELECT rowid, * FROM PlayerChar WHERE rowid = ?;";
     sqlite3_stmt * ppStmt2 = nullptr;
@@ -210,12 +222,13 @@ Character * Database::ReadCharacterInfo( int ID)
         }
         throw problem;
     }
-
+    */
     return player_character;
 }
 
 void Database::CreateCharacter(int accID, Character * toon)
 {
+    /*
     if(toon)
     {
         sqlite3_stmt * statement = nullptr;
@@ -246,10 +259,12 @@ void Database::CreateCharacter(int accID, Character * toon)
         AddCharacterStat(charID, "hair", static_cast<int>(toon->GetHair()));
         AddCharacterStat(charID, "haircolor", static_cast<int>(toon->GetHairColor()));
     }
+    */
 }
 
 void Database::AddCharacterStat(int charID, std::string statname, int statValue)
 {
+    /*
     int statID = GetStatID(statname);
     sqlite3_stmt * statement = nullptr;
     const char statInsert[] = "INSERT INTO CharStats VALUES( ?, ?, ?)";
@@ -260,10 +275,12 @@ void Database::AddCharacterStat(int charID, std::string statname, int statValue)
     if ( sqlite3_bind_int(statement, 3, statValue)) throw DatabaseException();
     if ( sqlite3_step(statement) != SQLITE_DONE) throw DatabaseException();
     //to do
+    */
 }
 
 int Database::GetStatID(std::string name)
 {
+    /*
     sqlite3_stmt * statement = nullptr;
     const char getStatID[] = "SELECT rowid FROM stat WHERE statname = ?";
     int statID = 0;
@@ -274,21 +291,26 @@ int Database::GetStatID(std::string name)
     statID = sqlite3_column_int(statement,0);
 
     sqlite3_finalize(statement);
+    */
+    int statID = 0;
     return statID;
 }
 
 bool Database::CharacterExists(std::string name)
 {
+    /*
     sqlite3_stmt * statement = nullptr;
     const char getcharacterid[] = "SELECT rowid FROM playerchar WHERE charname = ?";
     if ( sqlite3_prepare_v2(db,getcharacterid, sizeof(getcharacterid), &statement, nullptr))      throw DatabaseException();
     if ( sqlite3_bind_text(statement, 1, name.c_str(), name.size(), nullptr))   throw DatabaseException();
     if ( sqlite3_step(statement) != SQLITE_ROW) return false;
+    */
     return true;
 }
 
 void Database::DeleteCharacter(std::string name)
 {
+    /*
     sqlite3_stmt * statement = nullptr;
     const char getcharacterid[] = "SELECT rowid FROM playerchar WHERE charname = ?";
     const char deletecharacter[] = "DELETE FROM playerchar WHERE charname = ?";
@@ -310,4 +332,5 @@ void Database::DeleteCharacter(std::string name)
     if ( sqlite3_bind_int(statement, 1, charID) )   throw DatabaseException();
     if ( sqlite3_step(statement) != SQLITE_DONE )   throw DatabaseException();
     sqlite3_finalize(statement);
+    */
 }

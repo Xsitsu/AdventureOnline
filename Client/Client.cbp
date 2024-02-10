@@ -16,6 +16,7 @@
 					<Add option="-g" />
 					<Add option="-D_DEBUG" />
 					<Add option="-DPLATFORM=PLATFORM_WINDOWS" />
+					<Add option="-DWINDOWS" />
 				</Compiler>
 				<Linker>
 					<Add library="../allegro/lib/liballegro_monolith-debug.dll.a" />
@@ -33,6 +34,7 @@
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="-DPLATFORM=PLATFORM_WINDOWS" />
+					<Add option="-DWINDOWS" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -41,6 +43,31 @@
 					<Add library="../GameWorld/bin/Release/libGameWorld.a" />
 					<Add library="../GameUtil/bin/Release/libGameUtil.a" />
 					<Add library="../GameGui/bin/Release/libGameGui.a" />
+				</Linker>
+			</Target>
+			<Target title="Linux">
+				<Option output="bin/Linux/Client" prefix_auto="1" extension_auto="1" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-std=c11" />
+					<Add option="-fPIC" />
+					<Add option="-DPLATFORM=PLATFORM_UNIX" />
+				</Compiler>
+				<Linker>
+					<Add option="-Ialleg" />
+					<Add library="../GameNetwork/bin/Linux/libGameNetwork.so" />
+					<Add library="../GameUtil/bin/Linux/libGameUtil.so" />
+					<Add library="../GameGui/bin/Linux/libGameGui.so" />
+					<Add library="../GameWorld/bin/Linux/libGameWorld.so" />
+					<Add library="/usr/lib/liballegro_main.so" />
+					<Add library="/usr/lib/liballegro_image.so" />
+					<Add library="/usr/lib/liballegro.so" />
+					<Add library="/usr/lib/liballegro_primitives.so" />
+					<Add library="/usr/lib/liballegro_font.so" />
+					<Add library="/usr/lib/liballegro_ttf.so" />
+					<Add library="/usr/lib/liballegro_dialog.so" />
 				</Linker>
 			</Target>
 		</Build>
@@ -53,7 +80,6 @@
 			<Add option="-DPLATFORM_WINDOWS=1" />
 			<Add option="-DPLATFORM_MAC=2" />
 			<Add option="-DPLATFORM_UNIX=3" />
-			<Add option="-DWINDOWS" />
 			<Add directory=".." />
 			<Add directory="../allegro/include" />
 		</Compiler>

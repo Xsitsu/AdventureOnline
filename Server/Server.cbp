@@ -58,9 +58,9 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add library="../GameNetwork/bin/Linux/GameNetwork.so" />
-					<Add library="../GameWorld/bin/Linux/GameWorld.so" />
-					<Add library="../GameUtil/bin/Linux/GameUtil.so" />
+					<Add library="../GameNetwork/bin/Linux/libGameNetwork.so" />
+					<Add library="../GameWorld/bin/Linux/libGameWorld.so" />
+					<Add library="../GameUtil/bin/Linux/libGameUtil.so" />
 				</Linker>
 			</Target>
 		</Build>
@@ -96,10 +96,6 @@
 		<Unit filename="mapmanagerworld.hpp" />
 		<Unit filename="server.cpp" />
 		<Unit filename="server.hpp" />
-		<Unit filename="sqlite3.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="sqlite3.h" />
 		<Unit filename="world.cpp" />
 		<Unit filename="world.hpp" />
 		<Extensions />

@@ -1,5 +1,5 @@
 #include "guipasswordtextbox.hpp"
-#include <allegro5/allegro_font.h>.
+#include <allegro5/allegro_font.h>
 
 GuiPasswordTextBox::GuiPasswordTextBox() : GuiTextBox()
 {}

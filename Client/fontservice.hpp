@@ -4,6 +4,7 @@
 #include <unordered_map>
 
 #include <exception>
+#include <string>
 
 #include "allegro5/allegro.h"
 #include "allegro5/allegro_font.h"

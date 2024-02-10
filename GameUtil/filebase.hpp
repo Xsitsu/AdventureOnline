@@ -4,6 +4,7 @@
 #include <string>
 #include <fstream>
 #include <exception>
+#include <cstdint>
 
 #include "main.h"
 

@@ -1,5 +1,5 @@
 #include "guitextbox.hpp"
-#include <allegro5/allegro_font.h>.
+#include <allegro5/allegro_font.h>
 
 GuiTextBox::GuiTextBox() : GuiObject(), GuiTextElement(), cursor_position(0), is_selected(false),
 text_width(0), cursor_text_width(0)
