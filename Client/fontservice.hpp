@@ -39,6 +39,8 @@ public:
     void RegisterFont(std::string font_name, ALLEGRO_FONT* font);
     void UnregisterFont(std::string font_name);
 
+    static std::string FONT_PATH;
+    static std::string DEBUG_FONT;
 };
 
 class FontServiceException : public std::exception

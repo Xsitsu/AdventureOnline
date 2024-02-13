@@ -73,7 +73,8 @@ void Game::Init()
 	while (!this->client->Init(listen_port)) { ++listen_port; }
 	std::cout << "Started listening on port: " << listen_port << std::endl;
 
-	ALLEGRO_FONT* debug_font = al_load_font("C:/Windows/Fonts/arial.ttf", 18, 0);
+	std::string debug_font_name = FontService::FONT_PATH + FontService::DEBUG_FONT;
+	ALLEGRO_FONT* debug_font = al_load_font(debug_font_name.c_str(), 18, 0);
 	FontService::Instance()->RegisterFont("debug", debug_font);
 
 	// Initialize game state stuff

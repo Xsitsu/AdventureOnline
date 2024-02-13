@@ -4,6 +4,16 @@
 
 FontService* FontService::instance = NULL;
 
+#ifdef WINDOWS
+std::string FontService::FONT_PATH = "C:/Windows/Fonts/";
+std::string FontService::DEBUG_FONT = "arial.ttf";
+#endif // WINDOWS
+
+#ifdef LINUX
+std::string FontService::FONT_PATH = "/usr/share/fonts/";
+std::string FontService::DEBUG_FONT = "gnu-free/FreeSans.otf";
+#endif // LINUX
+
 ALLEGRO_FONT* FontService::GetFont(std::string font_name)
 {
     ALLEGRO_FONT* font = this->fonts[font_name];

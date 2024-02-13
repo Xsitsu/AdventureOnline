@@ -30,15 +30,16 @@ void GameStateInit::Tick()
     al_set_window_position(this->game->display, 100, 100);
 
 
+    std::string use_font_name = FontService::FONT_PATH + FontService::DEBUG_FONT;
 
 
-    ALLEGRO_FONT* button_font = al_load_font("C:/Windows/Fonts/arial.ttf", 22, 0);
+    ALLEGRO_FONT* button_font = al_load_font(use_font_name.c_str(), 22, 0);
     FontService::Instance()->RegisterFont("title_button", button_font);
 
-    ALLEGRO_FONT* stat_bar_font = al_load_font("C:/Windows/Fonts/arial.ttf", 14, 0);
+    ALLEGRO_FONT* stat_bar_font = al_load_font(use_font_name.c_str(), 14, 0);
     FontService::Instance()->RegisterFont("stat_bar", stat_bar_font);
 
-    ALLEGRO_FONT* actor_name_font = al_load_font("C:/Windows/Fonts/arial.ttf", 11, 0);
+    ALLEGRO_FONT* actor_name_font = al_load_font(use_font_name.c_str(), 11, 0);
     FontService::Instance()->RegisterFont("actor_name", actor_name_font);
 
 

@@ -54,6 +54,7 @@
 					<Add option="-std=c11" />
 					<Add option="-fPIC" />
 					<Add option="-DPLATFORM=PLATFORM_UNIX" />
+					<Add option="-DLINUX" />
 				</Compiler>
 				<Linker>
 					<Add option="-Ialleg" />
