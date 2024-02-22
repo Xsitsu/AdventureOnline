@@ -19,3 +19,5 @@ resource
 
 bin/
 obj/
+
+*.so
