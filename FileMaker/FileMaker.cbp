@@ -36,7 +36,7 @@
 				</Linker>
 			</Target>
 			<Target title="Linux">
-				<Option output="FileMaker" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/Linux/FileMaker" prefix_auto="1" extension_auto="1" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
@@ -49,6 +49,11 @@
 					<Add library="/usr/lib/liballegro_image.so" />
 					<Add library="/usr/lib/liballegro.so" />
 				</Linker>
+				<ExtraCommands>
+					<Add after="mkdir -p ../Client/bin/Linux/" />
+					<Add after="cp bin/Linux/FileMaker ../Client/bin/Linux/FileMaker" />
+					<Mode after="always" />
+				</ExtraCommands>
 			</Target>
 		</Build>
 		<Compiler>
