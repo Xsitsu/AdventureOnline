@@ -5,6 +5,7 @@
 using std::vector;
 
 #include <exception>
+#include <unordered_map>
 
 #include "Server/account.hpp"
 
@@ -31,6 +32,31 @@ public:
     virtual Character * ReadCharacterInfo(int) = 0;
     virtual bool CharacterExists(std::string name) = 0;
     virtual void DeleteCharacter(std::string name) = 0;
+};
+
+class FakeDatabase : public Database
+{
+protected:
+    std::unordered_map<std::string, Account*> accounts;
+    int account_id_counter;
+
+public:
+    FakeDatabase();
+    virtual ~FakeDatabase();
+
+    void Connect();
+    void Disconnect();
+
+    virtual void CreateAccount(std::string email, std::string password);
+    virtual Account* ReadAccount(std::string email);
+    virtual void UpdateAccount(Account* account);
+    virtual void DeleteAccount(Account* account);
+
+    virtual void CreateCharacter(int accID, Character * Character);
+    virtual vector<int> ReadPlayerCharacters (std::string email);
+    virtual Character * ReadCharacterInfo(int);
+    virtual bool CharacterExists(std::string name);
+    virtual void DeleteCharacter(std::string name);
 };
 
 class SQLiteDatabase : public Database

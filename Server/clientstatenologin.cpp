@@ -75,7 +75,8 @@ bool ClientStateNoLogin::ProcessPacket(PacketBase* packet)
         try
         {
             account = database->ReadAccount(login_request->GetEmail());
-            if (account)
+            std::cout << "Login request for " << login_request->GetEmail() << std::endl;
+            if (account != nullptr)
             {
                 can_login = (account->GetHash() == login_request->GetPassword());
                 if (can_login)
@@ -113,7 +114,6 @@ bool ClientStateNoLogin::ProcessPacket(PacketBase* packet)
         }
         else
         {
-            delete account;
             response->SetResponse(PacketLoginResponse::LOGINRESPONSE_FAIL);
         }
 

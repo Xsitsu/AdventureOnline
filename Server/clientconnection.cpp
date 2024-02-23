@@ -34,7 +34,6 @@ void ClientConnection::DoAccountLogout()
     if (this->account)
     {
         this->server->GetAccountService().UnregisterAccount(this->account->GetAccountId());
-        delete this->account;
         this->account = nullptr;
     }
 }

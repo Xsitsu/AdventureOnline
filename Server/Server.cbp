@@ -100,6 +100,7 @@
 		<Unit filename="clientstatenologin.cpp" />
 		<Unit filename="clientstateplaying.cpp" />
 		<Unit filename="database.hpp" />
+		<Unit filename="fakedatabase.cpp" />
 		<Unit filename="main.cpp" />
 		<Unit filename="mapmanagerworld.cpp" />
 		<Unit filename="mapmanagerworld.hpp" />

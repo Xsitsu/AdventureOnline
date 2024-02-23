@@ -247,7 +247,7 @@ void Server::EstablishDatabaseConnection()
 {
     if (!this->database)
     {
-        this->database = new SQLiteDatabase();
+        this->database = new FakeDatabase();
         this->database->Connect();
     }
 }
