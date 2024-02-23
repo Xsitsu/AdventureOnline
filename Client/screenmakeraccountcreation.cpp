@@ -191,9 +191,9 @@ GuiScreen* ScreenMakerAccountCreation::MakeScreen()
     GuiTextButton * done_button = CreateAccountCreationButton(8, "Exit", button_font);
 
     //text boxes
-    GuiTextBox * user_email = CreateAccountCreationBox(1, "email@oit.edu", button_font);
-    GuiTextBox * user_password = CreateAccountCreationBox(3, "mypassword", button_font);
-    GuiTextBox * user_password_confirmation = CreateAccountCreationBox(5, "mypassword", button_font);
+    GuiTextBox * user_email = CreateAccountCreationBox(1, "", button_font);
+    GuiTextBox * user_password = CreateAccountCreationBox(3, "", button_font);
+    GuiTextBox * user_password_confirmation = CreateAccountCreationBox(5, "", button_font);
 
     //setup buttons
     register_button->RegisterOnMouseEnter(mouse_enter_listener);
