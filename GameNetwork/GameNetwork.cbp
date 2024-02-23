@@ -55,7 +55,7 @@
 				</ExtraCommands>
 			</Target>
 			<Target title="Linux">
-				<Option output="bin/Linux/GameNetwork" prefix_auto="1" extension_auto="1" />
+				<Option output="GameNetwork" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Linux/" />
 				<Option type="3" />
 				<Option compiler="gcc" />
@@ -64,12 +64,17 @@
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="-Wall" />
-					<Add option="-DPLATFORM=PLATFORM_UNIX" />
 					<Add option="-fPIC" />
+					<Add option="-DPLATFORM=PLATFORM_UNIX" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
 				</Linker>
+				<ExtraCommands>
+					<Add after="cp libGameNetwork.so ../Client/libGameNetwork.so" />
+					<Add after="cp libGameNetwork.so ../Server/libGameNetwork.so" />
+					<Mode after="always" />
+				</ExtraCommands>
 			</Target>
 		</Build>
 		<Compiler>
