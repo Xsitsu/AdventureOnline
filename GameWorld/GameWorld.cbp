@@ -68,10 +68,8 @@
 					<Add library="./libGameUtil.so" />
 				</Linker>
 				<ExtraCommands>
-					<Add after="mkdir -p ../Server/bin/Linux/" />
-					<Add after="mkdir -p ../Client/bin/Linux/" />
-					<Add after="cp bin/Linux/libGameWorld.so ../Client/bin/Linux/libGameWorld.so" />
-					<Add after="cp bin/Linux/libGameWorld.so ../Server/bin/Linux/libGameWorld.so" />
+					<Add after="cp bin/Linux/libGameWorld.so ../Client/libGameWorld.so" />
+					<Add after="cp bin/Linux/libGameWorld.so ../Server/libGameWorld.so" />
 					<Mode after="always" />
 				</ExtraCommands>
 			</Target>

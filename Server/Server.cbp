@@ -65,6 +65,13 @@
 					<Add library="./libGameWorld.so" />
 					<Add library="./libGameUtil.so" />
 				</Linker>
+				<ExtraCommands>
+					<Add before="mkdir -p ./bin/Linux" />
+					<Add before="cp libGameUtil.so ./bin/Linux/libGameUtil.so" />
+					<Add before="cp libGameNetwork.so ./bin/Linux/libGameNetwork.so" />
+					<Add before="cp libGameWorld.so ./bin/Linux/libGameWorld.so" />
+					<Mode after="always" />
+				</ExtraCommands>
 			</Target>
 		</Build>
 		<Compiler>

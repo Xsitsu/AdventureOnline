@@ -70,6 +70,14 @@
 					<Add library="/usr/lib/liballegro_ttf.so" />
 					<Add library="/usr/lib/liballegro_dialog.so" />
 				</Linker>
+				<ExtraCommands>
+					<Add before="mkdir -p ./bin/Linux" />
+					<Add before="cp libGameUtil.so ./bin/Linux/libGameUtil.so" />
+					<Add before="cp libGameNetwork.so ./bin/Linux/libGameNetwork.so" />
+					<Add before="cp libGameWorld.so ./bin/Linux/libGameWorld.so" />
+					<Add before="cp libGameGui.so ./bin/Linux/libGameGui.so" />
+					<Mode after="always" />
+				</ExtraCommands>
 			</Target>
 		</Build>
 		<Compiler>

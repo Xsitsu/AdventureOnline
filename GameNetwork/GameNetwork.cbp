@@ -71,10 +71,8 @@
 					<Add option="-s" />
 				</Linker>
 				<ExtraCommands>
-					<Add after="mkdir -p ../Server/bin/Linux/" />
-					<Add after="mkdir -p ../Client/bin/Linux/" />
-					<Add after="cp bin/Linux/libGameNetwork.so ../Client/bin/Linux/libGameNetwork.so" />
-					<Add after="cp bin/Linux/libGameNetwork.so ../Server/bin/Linux/libGameNetwork.so" />
+					<Add after="cp bin/Linux/libGameNetwork.so ../Client/libGameNetwork.so" />
+					<Add after="cp bin/Linux/libGameNetwork.so ../Server/libGameNetwork.so" />
 					<Mode after="always" />
 				</ExtraCommands>
 			</Target>

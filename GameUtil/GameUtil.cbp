@@ -73,14 +73,10 @@
 					<Add option="-s" />
 				</Linker>
 				<ExtraCommands>
-					<Add after="mkdir -p ../GameWorld/bin/Linux/" />
-					<Add after="mkdir -p ../Server/bin/Linux/" />
-					<Add after="mkdir -p ../Client/bin/Linux/" />
-					<Add after="mkdir -p ../FileMaker/bin/Linux/" />
-					<Add after="cp bin/Linux/libGameUtil.so ../GameWorld/bin/Linux/libGameUtil.so" />
-					<Add after="cp bin/Linux/libGameUtil.so ../Server/bin/Linux/libGameUtil.so" />
-					<Add after="cp bin/Linux/libGameUtil.so ../Client/bin/Linux/libGameUtil.so" />
-					<Add after="cp bin/Linux/libGameUtil.so ../FileMaker/bin/Linux/libGameUtil.so" />
+					<Add after="cp bin/Linux/libGameUtil.so ../GameWorld/libGameUtil.so" />
+					<Add after="cp bin/Linux/libGameUtil.so ../Server/libGameUtil.so" />
+					<Add after="cp bin/Linux/libGameUtil.so ../Client/libGameUtil.so" />
+					<Add after="cp bin/Linux/libGameUtil.so ../FileMaker/libGameUtil.so" />
 					<Mode after="always" />
 				</ExtraCommands>
 			</Target>
