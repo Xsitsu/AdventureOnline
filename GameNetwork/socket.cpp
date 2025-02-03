@@ -161,7 +161,7 @@ void Socket::Close()
 #ifdef _WIN32
 	closesocket(this->handle);
 #else
-	close(this->handle)
+	close(this->handle);
 #endif // _WIN32
 }
 
