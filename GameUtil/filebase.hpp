@@ -1,6 +1,7 @@
 #ifndef FILEBASE_HPP_INCLUDE
 #define FILEBASE_HPP_INCLUDE
 
+#include <cstdint>
 #include <string>
 #include <fstream>
 #include <exception>
