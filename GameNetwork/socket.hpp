@@ -5,18 +5,13 @@
 
 #include <iostream>
 
-#if PLATFORM == PLATFORM_WINDOWS
-
+#ifdef _WIN32
 #include <winsock2.h>
-//#pragma comment(lib,"WS2_32")
-
-#elif PLATFORM == PLATFORM_MAC || PLATFORM == PLATFORM_UNIX
-
+#else
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <fcntl.h>
-
-#endif
+#endif // _WIN32
 
 bool
 #ifdef WINDOWS

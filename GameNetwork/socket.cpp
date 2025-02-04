@@ -3,11 +3,14 @@
 #include <string>
 #include <sstream>
 #include <stdio.h>
+
+#ifndef _WIN32
 #include <unistd.h>
+#endif
 
 bool InitializeSockets()
 {
-#if PLATFORM == PLATFORM_WINDOWS
+#ifdef _WIN32
 	WSADATA WsaData;
 	return WSAStartup(MAKEWORD(2, 2), &WsaData) == NO_ERROR;
 #else
@@ -17,7 +20,7 @@ bool InitializeSockets()
 
 void ShutdownSockets()
 {
-#if PLATFORM == PLATFORM_WINDOWS
+#ifdef _WIN32
 	WSACleanup();
 #endif
 }
@@ -133,23 +136,21 @@ bool Socket::Open(unsigned short port, bool is_server)
     }
 
 
-#if PLATFORM == PLATFORM_MAC || PLATFORM == PLATFORM_UNIX
-	int nonBlocking = 1;
-	if (fcntl(this->handle, F_SETFL, O_NONBLOCK, nonBlocking) == -1)
-	{
-		this->handle = 0;
-		return false;
-	}
-
-#elif PLATFORM == PLATFORM_WINDOWS
+#ifdef _WIN32
 	DWORD nonBlocking = 1;
 	if (ioctlsocket(handle, FIONBIO, &nonBlocking) != 0)
 	{
 		this->handle = 0;
 		return false;
 	}
-
-#endif
+#else
+	int nonBlocking = 1;
+	if (fcntl(this->handle, F_SETFL, O_NONBLOCK, nonBlocking) == -1)
+	{
+		this->handle = 0;
+		return false;
+	}
+#endif // _WIN32
 
     std::cout << "Successfully opened socket!" << std::endl;
 	return true;
@@ -157,11 +158,11 @@ bool Socket::Open(unsigned short port, bool is_server)
 
 void Socket::Close()
 {
-#if PLATFORM == PLATFORM_MAC || PLATFORM == PLATFORM_UNIX
-	close(this->handle);
-#elif PLATFORM == PLATFORM_WINDOWS
+#ifdef _WIN32
 	closesocket(this->handle);
-#endif
+#else
+	close(this->handle)
+#endif // _WIN32
 }
 
 bool Socket::IsOpen() const
@@ -179,9 +180,9 @@ bool Socket::Send(const Address& destination, const void* data, int size)
 
 int Socket::Receive(Address& sender, void* data, int size)
 {
-#if PLATFORM == PLATFORM_WINDOWS
+#ifdef _WIN32
 	typedef int socklen_t;
-#endif
+#endif // _WIN32
 
 	sockaddr_in from;
 	socklen_t fromLength = sizeof(from);
