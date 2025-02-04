@@ -35,7 +35,5 @@ append_allegro_include_dir("$<BUILD_INTERFACE:${CPM_PACKAGE_allegro_BINARY_DIR}/
 append_allegro_include_dir("$<BUILD_INTERFACE:${ALLEGRO_SOURCE_DIR}/addons/font>")
 append_allegro_include_dir("$<BUILD_INTERFACE:${ALLEGRO_SOURCE_DIR}/addons/native_dialog>")
 append_allegro_include_dir("$<BUILD_INTERFACE:${ALLEGRO_SOURCE_DIR}/addons/primitives>")
-#append_allegro_include_dir("$<BUILD_INTERFACE:${ALLEGRO_SOURCE_DIR}/addons/ttf>")
-
-#get_target_property(test allegro_monolith INTERFACE_INCLUDE_DIRECTORIES)
-#message(FATAL_ERROR "allegro_monolith include dirs: ${test}")
+append_allegro_include_dir("$<BUILD_INTERFACE:${ALLEGRO_SOURCE_DIR}/addons/image>")
+append_allegro_include_dir("$<BUILD_INTERFACE:${ALLEGRO_SOURCE_DIR}/addons/color>")

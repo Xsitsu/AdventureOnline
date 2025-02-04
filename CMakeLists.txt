@@ -23,7 +23,7 @@ include_directories(${CMAKE_CURRENT_LIST_DIR})
 
 #add_subdirectory(Client)
 #add_subdirectory(FileMaker)
-#add_subdirectory(GameGui)
+add_subdirectory(GameGui)
 add_subdirectory(GameNetwork)
 add_subdirectory(GameUtil)
 add_subdirectory(GameWorld)

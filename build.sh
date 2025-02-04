@@ -25,4 +25,4 @@ cmake -B "$build_dir" -S "$script_dir" -DCMAKE_BUILD_TYPE="$build_mode"
 cmake --build "$build_dir" --target mapassembler --config "$build_mode"
 
 cmake --build "$build_dir" --target server --config "$build_mode"
-#cmake --build "$build_dir" --target client --config "$build_mode"
+cmake --build "$build_dir" --target gui --config "$build_mode"
