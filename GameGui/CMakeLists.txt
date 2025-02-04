@@ -59,6 +59,7 @@ target_link_libraries(${target}
         allegro_color
         allegro_primitives
         allegro_image
+        allegro_ttf
 )
 
 project_dll_export(${target})

@@ -1,0 +1,32 @@
+include("@CPM_FILE@")
+
+CPMAddPackage(NAME freetype
+    GITHUB_REPOSITORY freetype/freetype
+    GIT_TAG master
+    DOWNLOAD_ONLY
+
+	OPTIONS "FT_DISABLE_HARFBUZZ ON"
+    OPTIONS "FT_REQUIRE_PNG OFF"
+    OPTIONS "FT_REQUIRE_BZIP2 OFF"
+)
+
+set(CMAKE_REQUIRED_LINK_DIRECTORIES "${CPM_PACKAGE_freetype_BINARY_DIR}")
+#link_directories("${CMAKE_REQUIRED_LINK_DIRECTORIES}")
+target_link_directories(freetype INTERFACE "$<BUILD_INTERFACE:${CMAKE_REQUIRED_LINK_DIRECTORIES}>")
+
+
+execute_process(COMMAND ${CMAKE_COMMAND} -B "${CPM_PACKAGE_freetype_BINARY_DIR}" -S "${CPM_PACKAGE_freetype_SOURCE_DIR}" -G "${CMAKE_GENERATOR}" -DFT_DISABLE_HARFBUZZ=ON -DFT_DISABLE_PNG=ON -DFT_REQUIRE_BZIP2=ON)
+execute_process(COMMAND ${CMAKE_COMMAND} --build "${CPM_PACKAGE_freetype_BINARY_DIR}")
+
+set(Freetype_FOUND TRUE)
+set(Freetype_INCLUDE_DIRS "${CPM_PACKAGE_freetype_SOURCE_DIR}/include")
+IF (WIN32)
+    set(Freetype_LIBRARIES "@CPM_PACKAGE_freetype_BINARY_DIR@/freetyped.lib")
+ELSE ()
+    set(Freetype_LIBRARIES "freetype")
+ENDIF ()
+
+
+set(FREETYPE_FOUND "${Freetype_FOUND}")
+set(FREETYPE_INCLUDE_DIRS "${Freetype_INCLUDE_DIRS}")
+set(FREETYPE_LIBRARIES "${Freetype_LIBRARIES}")
