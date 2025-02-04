@@ -10,12 +10,17 @@ last_timeout_check(std::time(NULL)), port(port), max_connections(max_connections
     {
         clients[i] = NULL;
     }
+
+    receive_buffer = new char[PacketBase::MAX_BUFFER];
+    send_buffer = new char[PacketBase::MAX_BUFFER];
 }
 
 Server::~Server()
 {
     delete[] clients;
     delete[] world;
+    delete[] receive_buffer;
+    delete[] send_buffer;
 }
 
 unsigned int Server::FindOpenConnectionId()
@@ -154,15 +159,13 @@ void Server::Tick()
 
 PacketBase* Server::ReceivePacket(Address& sender)
 {
-    char buffer[PacketBase::MAX_BUFFER];
-
     int bytes_read = 0;
     PacketBase* packet = NULL;
 
     bool reading = true;
     while (reading)
     {
-        bytes_read = socket.Receive(sender, buffer, sizeof(buffer));
+        bytes_read = socket.Receive(sender, receive_buffer, sizeof(receive_buffer));
 
         if (bytes_read <= 0)
         {
@@ -171,7 +174,7 @@ PacketBase* Server::ReceivePacket(Address& sender)
         else
         {
             PacketReader reader;
-            packet = reader.ReadPacket(buffer, bytes_read);
+            packet = reader.ReadPacket(receive_buffer, bytes_read);
             if (packet)
             {
                 reading = false;
@@ -200,11 +203,10 @@ void Server::SendPacketToAddress(PacketBase* packet, Address* address)
     packet->SetConnectionId(0);
 
     unsigned int data_size;
-    char buffer[PacketBase::MAX_BUFFER];
 
-    data_size = packet->Encode(buffer);
+    data_size = packet->Encode(send_buffer);
 
-    this->socket.Send(*address, buffer, data_size);
+    this->socket.Send(*address, send_buffer, data_size);
 }
 
 void Server::TickPacketAcks()

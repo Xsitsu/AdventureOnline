@@ -26,6 +26,9 @@ protected:
 
     const unsigned int max_connections;
 
+    char *receive_buffer;
+    char *send_buffer;
+
     std::list<ClientConnection*> clients_list;
     ClientConnection** clients;
     World* world;

@@ -14,4 +14,9 @@ target_include_directories(${target}
         ${CMAKE_CURRENT_LIST_DIR}
 )
 
+target_link_libraries(${target}
+    PRIVATE
+        $<$<PLATFORM_ID:Windows>:ws2_32>
+)
+
 project_dll_export(${target})

@@ -1,6 +1,25 @@
 set(target "server")
 
 add_executable(${target}
+    account.cpp
+    account.hpp
+
+    accountservice.cpp
+    accountservice.hpp
+
+    actormanagercharacter.cpp
+    actormanagercharacter.hpp
+
+    clientconnection.cpp
+    clientconnection.hpp
+
+    clientstate.hpp
+    clientstatebase.cpp
+    clientstateinit.cpp
+    clientstateloggedin.cpp
+    clientstatenologin.cpp
+    clientstateplaying.cpp
+
     database.cpp
     database.hpp
 
@@ -9,6 +28,9 @@ add_executable(${target}
 
     server.cpp
     server.hpp
+
+    sqlite3.c
+    sqlite3.h
 
     world.cpp
     world.hpp

@@ -21,3 +21,4 @@ bin/
 obj/
 cmake-build/
 .vscode/
+_dependency-cache/
