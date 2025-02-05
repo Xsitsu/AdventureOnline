@@ -3,11 +3,7 @@
 
 #include "main.h"
 
-struct
-#ifdef WINDOWS
-DLL_EXPORT
-#endif
-Color3
+struct DLL_EXPORT Color3
 {
     unsigned char r;
     unsigned char g;

@@ -6,11 +6,7 @@
 
 #include <allegro5/allegro_image.h>
 
-class
-#ifdef WINDOWS
-DLL_EXPORT
-#endif
-GuiImageLabel : public GuiLabel, public GuiImageElement
+class DLL_EXPORT GuiImageLabel : public GuiLabel, public GuiImageElement
 {
 protected:
     virtual void DoDraw() const;

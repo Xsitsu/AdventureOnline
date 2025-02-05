@@ -10,11 +10,7 @@
 
 #include "color3.hpp"
 
-class
-#ifdef WINDOWS
-DLL_EXPORT
-#endif
-GuiFrame : public GuiObject
+class DLL_EXPORT GuiFrame : public GuiObject
 {
 protected:
     virtual void DoDraw() const;

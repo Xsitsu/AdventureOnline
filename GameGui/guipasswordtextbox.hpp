@@ -3,11 +3,7 @@
 
 #include "guitextbox.hpp"
 
-class
-#ifdef WINDOWS
-DLL_EXPORT
-#endif
-GuiPasswordTextBox : public GuiTextBox
+class DLL_EXPORT GuiPasswordTextBox : public GuiTextBox
 {
     friend class GuiSelectionService;
 

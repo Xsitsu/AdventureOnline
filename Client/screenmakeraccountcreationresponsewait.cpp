@@ -4,6 +4,8 @@
 #include "gamestateaccountcreation.hpp"
 #include "GameNetwork/packet.hpp"
 
+#include "GameGui/guiincludes.hpp"
+
 namespace AccountCreationAwaitListeners
 {
 

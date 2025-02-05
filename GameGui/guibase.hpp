@@ -7,11 +7,7 @@
 #include "GameUtil/vector2.hpp"
 
 class GuiScreen;
-class
-#ifdef WINDOWS
-DLL_EXPORT
-#endif
-GuiBase
+class DLL_EXPORT GuiBase
 {
 private:
     Vector2 absolute_position;

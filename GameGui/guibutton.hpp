@@ -5,17 +5,9 @@
 
 #include "observer.hpp"
 
-struct
-#ifdef WINDOWS
-DLL_EXPORT
-#endif
-GuiButtonArgs;
+struct DLL_EXPORT GuiButtonArgs;
 
-class
-#ifdef WINDOWS
-DLL_EXPORT
-#endif
-GuiButton : public GuiObject
+class DLL_EXPORT GuiButton : public GuiObject
 {
 protected:
     Observer<GuiButtonArgs*> onClick;
@@ -52,11 +44,7 @@ public:
     void UnregisterOnMouseLeave(ListenerBase<GuiButtonArgs*>* listener);
 };
 
-struct
-#ifdef WINDOWS
-DLL_EXPORT
-#endif
-GuiButtonArgs
+struct DLL_EXPORT GuiButtonArgs
 {
     GuiButton* button;
 };

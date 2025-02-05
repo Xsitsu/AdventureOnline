@@ -37,3 +37,5 @@ append_allegro_include_dir("$<BUILD_INTERFACE:${ALLEGRO_SOURCE_DIR}/addons/nativ
 append_allegro_include_dir("$<BUILD_INTERFACE:${ALLEGRO_SOURCE_DIR}/addons/primitives>")
 append_allegro_include_dir("$<BUILD_INTERFACE:${ALLEGRO_SOURCE_DIR}/addons/image>")
 append_allegro_include_dir("$<BUILD_INTERFACE:${ALLEGRO_SOURCE_DIR}/addons/color>")
+append_allegro_include_dir("$<BUILD_INTERFACE:${ALLEGRO_SOURCE_DIR}/addons/ttf>")
+

@@ -13,11 +13,7 @@
 
 #include <unordered_map>
 
-class
-#ifdef WINDOWS
-DLL_EXPORT
-#endif
-GuiScreen
+class DLL_EXPORT GuiScreen
 {
 protected:
     GuiBase* base;

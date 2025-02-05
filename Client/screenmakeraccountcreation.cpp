@@ -6,6 +6,7 @@
 #include "GameNetwork/packet.hpp"
 #include "gamestateaccountcreationawaitresponse.hpp"
 
+#include "GameGui/guiincludes.hpp"
 
 
 GuiTextButton* CreateAccountCreationButton(int offset, std::string button_text, ALLEGRO_FONT* text_font)

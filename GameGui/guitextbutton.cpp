@@ -1,5 +1,5 @@
 #include "guitextbutton.hpp"
-#include "allegro5/allegro_font.h".
+#include "allegro5/allegro_font.h"
 
 GuiTextButton::GuiTextButton() : GuiButton(), GuiTextElement()
 {}

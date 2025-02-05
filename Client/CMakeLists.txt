@@ -1,4 +1,4 @@
-find_package(Freetype REQUIRED)
+#find_package(Freetype REQUIRED)
 
 set(target "client")
 
@@ -79,14 +79,14 @@ target_link_libraries(${target}
 	PRIVATE
 		gameworld
 		util
-        network
-        gui
+		network
+		gui
 
-        freetype
+		#freetype
 
-        allegro
-        allegro_color
-        allegro_primitives
-        allegro_image
-        allegro_ttf
+		allegro
+		allegro_color
+		allegro_primitives
+		allegro_image
+		allegro_ttf
 )

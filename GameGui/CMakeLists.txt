@@ -3,6 +3,8 @@ set(target "gui")
 add_library(${target} STATIC
     color3.hpp
     
+    guiincludes.hpp
+
     guibase.cpp
     guibase.hpp
 

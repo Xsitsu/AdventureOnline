@@ -8,11 +8,7 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_font.h>
 
-class
-#ifdef WINDOWS
-DLL_EXPORT
-#endif
-GuiTextElement
+class DLL_EXPORT GuiTextElement
 {
 public:
     enum TextAlign {ALIGN_LEFT, ALIGN_RIGHT, ALIGN_CENTER};
