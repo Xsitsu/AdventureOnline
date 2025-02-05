@@ -1,6 +1,8 @@
 #ifndef GUIOBJECT_HPP_INCLUDE
 #define GUIOBJECT_HPP_INCLUDE
 
+#include "gui_dll_export.h"
+
 #include "guibase.hpp"
 
 #include "allegro5/allegro.h"

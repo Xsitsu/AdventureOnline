@@ -1,6 +1,8 @@
 #ifndef GUIIMAGEBUTTON_HPP_INCLUDE
 #define GUIIMAGEBUTTON_HPP_INCLUDE
 
+#include "gui_dll_export.h"
+
 #include "guibutton.hpp"
 #include "guiimageelement.hpp"
 

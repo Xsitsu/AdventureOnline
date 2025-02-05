@@ -1,6 +1,8 @@
 #ifndef GUIIMAGELABEL_HPP_INCLUDE
 #define GUIIMAGELABEL_HPP_INCLUDE
 
+#include "gui_dll_export.h"
+
 #include "guilabel.hpp"
 #include "guiimageelement.hpp"
 

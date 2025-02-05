@@ -1,6 +1,8 @@
 #ifndef GUIBASE_HPP_INCLUDE
 #define GUIBASE_HPP_INCLUDE
 
+#include "gui_dll_export.h"
+
 #include <list>
 #include <iostream>
 

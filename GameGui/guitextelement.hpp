@@ -1,6 +1,8 @@
 #ifndef GUITEXTELEMENT_HPP_INCLUDE
 #define GUITEXTELEMENT_HPP_INCLUDE
 
+#include "gui_dll_export.h"
+
 #include <string>
 
 #include "color3.hpp"

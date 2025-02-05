@@ -1,6 +1,8 @@
 #ifndef GUIBUTTON_HPP_INCLUDE
 #define GUIBUTTON_HPP_INCLUDE
 
+#include "gui_dll_export.h"
+
 #include "guiobject.hpp"
 
 #include "observer.hpp"

@@ -1,6 +1,8 @@
 #ifndef GUIPASSWORDTEXTBOX_HPP_INCLUDE
 #define GUIPASSWORDTEXTBOX_HPP_INCLUDE
 
+#include "gui_dll_export.h"
+
 #include "guitextbox.hpp"
 
 class DLL_EXPORT GuiPasswordTextBox : public GuiTextBox

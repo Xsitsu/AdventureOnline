@@ -1,6 +1,8 @@
 #ifndef GUILABEL_HPP_INCLUDE
 #define GUILABEL_HPP_INCLUDE
 
+#include "gui_dll_export.h"
+
 #include "guiobject.hpp"
 
 class DLL_EXPORT GuiLabel : public GuiObject

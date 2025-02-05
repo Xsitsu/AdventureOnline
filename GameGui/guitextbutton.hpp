@@ -1,6 +1,8 @@
 #ifndef GUITEXTBUTTON_HPP_INCLUDE
 #define GUITEXTBUTTON_HPP_INCLUDE
 
+#include "gui_dll_export.h"
+
 #include "guibutton.hpp"
 #include "guitextelement.hpp"
 

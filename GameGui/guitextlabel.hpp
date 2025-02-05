@@ -1,6 +1,8 @@
 #ifndef GUITEXTLABEL_HPP_INCLUDE
 #define GUITEXTLABEL_HPP_INCLUDE
 
+#include "gui_dll_export.h"
+
 #include "guilabel.hpp"
 #include "guitextelement.hpp"
 

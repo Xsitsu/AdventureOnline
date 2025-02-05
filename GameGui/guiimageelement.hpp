@@ -1,6 +1,8 @@
 #ifndef GUIIMAGEELEMENT_HPP_INCLUDE
 #define GUIIMAGEELEMENT_HPP_INCLUDE
 
+#include "gui_dll_export.h"
+
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 

@@ -1,6 +1,8 @@
 #ifndef GUISELECTIONSERVICE_HPP_INCLUDE
 #define GUISELECTIONSERVICE_HPP_INCLUDE
 
+#include "gui_dll_export.h"
+
 class GuiTextBox;
 
 #include <stack>

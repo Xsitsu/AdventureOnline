@@ -1,6 +1,8 @@
 #ifndef GUISCREEN_HPP_INCLUDE
 #define GUISCREEN_HPP_INCLUDE
 
+#include "gui_dll_export.h"
+
 #include "guibase.hpp"
 #include "guibutton.hpp"
 #include "guitextbox.hpp"

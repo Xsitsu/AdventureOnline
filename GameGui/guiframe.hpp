@@ -1,6 +1,8 @@
 #ifndef GUIFRAME_HPP_INCLUDE
 #define GUIFRAME_HPP_INCLUDE
 
+#include "gui_dll_export.h"
+
 #include <unordered_map>
 
 #include "allegro5/allegro.h"

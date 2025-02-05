@@ -1,7 +1,7 @@
 #ifndef COLOR3_HPP_INCLUDE
 #define COLOR3_HPP_INCLUDE
 
-#include "main.h"
+#include "gui_dll_export.h"
 
 struct DLL_EXPORT Color3
 {
