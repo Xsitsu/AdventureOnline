@@ -76,17 +76,16 @@ target_include_directories(${target}
 		${CMAKE_CURRENT_LIST_DIR}
 )
 target_link_libraries(${target}
-	PRIVATE
-		gameworld
-		util
-		network
-		gui
+    PRIVATE
+        gameworld
+        util
+        network
+        gui
 
-		#freetype
-
-		allegro
-		allegro_color
-		allegro_primitives
-		allegro_image
-		allegro_ttf
+        allegro
+        allegro_color
+        allegro_primitives
+        allegro_image
+        allegro_ttf
+        allegro_dialog
 )

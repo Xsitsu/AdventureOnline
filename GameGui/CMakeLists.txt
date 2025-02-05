@@ -41,6 +41,9 @@ add_library(${target} STATIC
     guitextbox.cpp
     guitextbox.hpp
 
+    guitextbutton.cpp
+    guitextbutton.hpp
+
     guitextelement.cpp
     guitextelement.hpp
 
